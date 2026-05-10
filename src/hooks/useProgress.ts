@@ -14,6 +14,7 @@ export interface UserProgress {
   lastStudyDate: string;
   xp: number;
   practiceScores: Record<number, number>;
+  srsCards: Record<string, import('@/engine/srs').SrsCard>;
 }
 
 export function useProgress() {
@@ -74,6 +75,7 @@ export function useProgress() {
     lastStudyDate: store.lastStudyDate,
     xp: store.xp,
     practiceScores: store.practiceScores,
+    srsCards: store.srsCards,
   };
 
   return {

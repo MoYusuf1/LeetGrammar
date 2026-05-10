@@ -1,12 +1,13 @@
 /**
- * Zustand store for user progress.
- * Replaces useProgress hook with global state + persistence.
+ * Zustand store for user progress + SRS (Spaced Repetition).
  */
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { SrsCard } from '@/engine/srs';
+import { createCard, reviewCard } from '@/engine/srs';
 
-const STORAGE_KEY = 'leet-somali-progress-v6';
+const STORAGE_KEY = 'leet-somali-progress-v7';
 
 export interface UserProgress {
   completedLessons: number[];
@@ -14,6 +15,7 @@ export interface UserProgress {
   lastStudyDate: string;
   xp: number;
   practiceScores: Record<number, number>;
+  srsCards: Record<string, SrsCard>;
 }
 
 const defaultProgress: UserProgress = {
@@ -22,6 +24,7 @@ const defaultProgress: UserProgress = {
   lastStudyDate: '',
   xp: 0,
   practiceScores: {},
+  srsCards: {},
 };
 
 function getToday(): string {
@@ -52,6 +55,11 @@ interface ProgressState extends UserProgress {
   getTopicProgress: (lessonIds: number[]) => { completed: number; total: number };
   arePrerequisitesMet: (prereqLessonIds: number[]) => boolean;
   completionPercentage: number;
+
+  // SRS
+  reviewConcept: (conceptId: string, quality: number) => void;
+  getSrsCard: (conceptId: string) => SrsCard | undefined;
+  initSrsCard: (conceptId: string) => void;
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -136,6 +144,34 @@ export const useProgressStore = create<ProgressState>()(
       get completionPercentage() {
         return Math.round((get().completedLessons.length / 50) * 100);
       },
+
+      // SRS
+      reviewConcept: (conceptId: string, quality: number) => {
+        set((state) => {
+          const existing = state.srsCards[conceptId];
+          const card = existing ? reviewCard(existing, quality) : reviewCard(createCard(conceptId), quality);
+          return {
+            ...state,
+            srsCards: { ...state.srsCards, [conceptId]: card },
+            lastStudyDate: getToday(),
+            xp: state.xp + quality * 2,
+          };
+        });
+      },
+
+      getSrsCard: (conceptId: string) => {
+        return get().srsCards[conceptId];
+      },
+
+      initSrsCard: (conceptId: string) => {
+        set((state) => {
+          if (state.srsCards[conceptId]) return state;
+          return {
+            ...state,
+            srsCards: { ...state.srsCards, [conceptId]: createCard(conceptId) },
+          };
+        });
+      },
     }),
     {
       name: STORAGE_KEY,
@@ -145,6 +181,7 @@ export const useProgressStore = create<ProgressState>()(
         lastStudyDate: state.lastStudyDate,
         xp: state.xp,
         practiceScores: state.practiceScores,
+        srsCards: state.srsCards,
       }),
     }
   )

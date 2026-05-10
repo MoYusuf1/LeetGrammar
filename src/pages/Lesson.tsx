@@ -5,7 +5,7 @@ import {
   ChevronRight, ListChecks, Bookmark, Check
 } from 'lucide-react';
 import { getProblemById } from '@/data/problems';
-import { getProblemContent } from '@/data/problemLessons';
+import { getProblemContent } from '@/data/problem-lessons';
 import { useProgress } from '@/hooks/useProgress';
 import { Markdown } from '@/components/Markdown';
 

@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { ArrowLeft, Check, X, BookOpen, RotateCcw, Play, Send, ChevronRight, GraduationCap, Terminal } from 'lucide-react';
 import { getProblemById } from '@/data/problems';
-import { getProblemContent } from '@/data/problemLessons';
+import { getProblemContent } from '@/data/problem-lessons';
 import { useProgress } from '@/hooks/useProgress';
 import ExerciseCard from '@/components/ExerciseCard';
 import CelebrationOverlay from '@/components/CelebrationOverlay';

@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { Check, Sparkles } from 'lucide-react';
-import { grammarTopics } from '@/data/grammarTopics';
+import { grammarTopics } from '@/data/grammar-topics';
 import { useProgress } from '@/hooks/useProgress';
 import TopicDialog from '@/components/TopicDialog';
 import type { RoadmapTopic } from '@/types';

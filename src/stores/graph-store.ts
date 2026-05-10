@@ -7,6 +7,7 @@ import { create } from 'zustand';
 import { GraphEngine } from '@/engine/graph-engine';
 import { ChunkStore } from '@/engine/chunk-store';
 import { GraphPersistence } from '@/engine/persistence';
+import { ingestTextbook } from '@/engine/ingestion';
 import { exportToJSON, downloadJSON, downloadSQLite } from '@/engine/export-import';
 import type {
   Node,
@@ -17,6 +18,7 @@ import type {
   TraversalOptions,
   GraphSnapshot,
 } from '@/engine/types';
+import type { TextbookPayload, IngestionResult } from '@/engine/ingestion';
 
 interface GraphState {
   engine: GraphEngine;
@@ -32,6 +34,7 @@ interface GraphState {
   removeEdge: (id: string) => void;
   addConstruction: (construction: Construction) => void;
   removeConstruction: (id: string) => void;
+  ingestPayload: (payload: TextbookPayload) => IngestionResult;
 
   // Queries
   getNode: (id: string) => Node | undefined;
@@ -49,6 +52,7 @@ interface GraphState {
   exportToJSON: () => void;
   exportToSQLite: () => Promise<void>;
   importFromJSON: (data: GraphSnapshot & { chunks: import('@/engine/types').Chunk[] }) => void;
+  setLoading: (v: boolean) => void;
 
   // Stats
   stats: { nodes: number; edges: number; constructions: number };
@@ -101,6 +105,12 @@ export const useGraphStore = create<GraphState>((set, get) => {
     removeConstruction: (id) => {
       engine.removeConstruction(id);
       refresh();
+    },
+
+    ingestPayload: (payload) => {
+      const result = ingestTextbook(engine, chunks, payload);
+      refresh();
+      return result;
     },
 
     getNode: (id) => engine.getNode(id),
@@ -163,6 +173,8 @@ export const useGraphStore = create<GraphState>((set, get) => {
       set({ isPersisted: false });
       refresh();
     },
+
+    setLoading: (v) => set({ isLoading: v }),
 
     stats: engine.stats,
   };

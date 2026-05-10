@@ -1,0 +1,198 @@
+/**
+ * Cloud Sync Engine — bidirectional sync between local progress and Supabase.
+ *
+ * Merge strategy: union of completed lessons, max of scores,
+ * SRS cards merge by higher mastery or more recent review.
+ */
+
+import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
+import type { UserProgress } from '@/stores/progress-store';
+import type { SrsCard } from './srs';
+
+export interface RemoteProgress {
+  completed_lessons: number[];
+  practice_scores: Record<number, number>;
+  srs_cards: Record<string, SrsCard>;
+  xp: number;
+  streak: number;
+  last_study_date: string;
+  updated_at: string;
+}
+
+function normalizeRemote(data: Record<string, unknown>): RemoteProgress {
+  return {
+    completed_lessons: Array.isArray(data.completed_lessons) ? data.completed_lessons as number[] : [],
+    practice_scores: typeof data.practice_scores === 'object' && data.practice_scores !== null
+      ? (data.practice_scores as Record<number, number>) : {},
+    srs_cards: typeof data.srs_cards === 'object' && data.srs_cards !== null
+      ? (data.srs_cards as Record<string, SrsCard>) : {},
+    xp: typeof data.xp === 'number' ? data.xp : 0,
+    streak: typeof data.streak === 'number' ? data.streak : 0,
+    last_study_date: typeof data.last_study_date === 'string' ? data.last_study_date : '',
+    updated_at: typeof data.updated_at === 'string' ? data.updated_at : '',
+  };
+}
+
+/**
+ * Merge two SRS card records. Keeps the card with higher mastery,
+ * or if equal mastery, the more recently reviewed one.
+ */
+function mergeSrsCards(local: Record<string, SrsCard>, remote: Record<string, SrsCard>): Record<string, SrsCard> {
+  const merged: Record<string, SrsCard> = { ...local };
+  for (const [conceptId, remoteCard] of Object.entries(remote)) {
+    const localCard = merged[conceptId];
+    if (!localCard) {
+      merged[conceptId] = remoteCard;
+      continue;
+    }
+    if (remoteCard.mastery > localCard.mastery) {
+      merged[conceptId] = remoteCard;
+    } else if (remoteCard.mastery === localCard.mastery && remoteCard.lastReviewed > localCard.lastReviewed) {
+      merged[conceptId] = remoteCard;
+    }
+  }
+  return merged;
+}
+
+/**
+ * Merge local and remote progress.
+ */
+export function mergeProgress(local: UserProgress, remote: RemoteProgress): UserProgress {
+  // Union of completed lessons
+  const completedSet = new Set([...local.completedLessons, ...remote.completed_lessons]);
+
+  // Max of practice scores
+  const scores: Record<number, number> = { ...local.practiceScores };
+  for (const [key, value] of Object.entries(remote.practice_scores)) {
+    const id = Number(key);
+    scores[id] = Math.max(scores[id] ?? 0, value);
+  }
+
+  // Merge SRS cards
+  const srs = mergeSrsCards(local.srsCards, remote.srs_cards);
+
+  // Max of XP
+  const xp = Math.max(local.xp, remote.xp);
+
+  // Latest streak (if dates differ, take the one with later study date)
+  const streak = local.lastStudyDate > (remote.last_study_date ?? '') ? local.streak : remote.streak;
+  const lastStudyDate = local.lastStudyDate > (remote.last_study_date ?? '') ? local.lastStudyDate : remote.last_study_date;
+
+  return {
+    completedLessons: Array.from(completedSet),
+    practiceScores: scores,
+    srsCards: srs,
+    xp,
+    streak,
+    lastStudyDate,
+  };
+}
+
+/**
+ * Fetch remote progress for the current user.
+ */
+export async function pullProgress(userId: string): Promise<RemoteProgress | null> {
+  if (!isSupabaseConfigured) return null;
+
+  const { data, error } = await getSupabase()
+    .from('user_progress')
+    .select('*')
+    .eq('user_id', userId)
+    .single();
+
+  if (error || !data) {
+    if ((error as { code?: string })?.code !== 'PGRST116') {
+      console.error('Sync pull error:', error);
+    }
+    return null;
+  }
+
+  return normalizeRemote(data as Record<string, unknown>);
+}
+
+/**
+ * Push local progress to the cloud.
+ */
+export async function pushProgress(userId: string, progress: UserProgress): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+
+  const payload = {
+    user_id: userId,
+    completed_lessons: progress.completedLessons,
+    practice_scores: progress.practiceScores,
+    srs_cards: progress.srsCards,
+    xp: progress.xp,
+    streak: progress.streak,
+    last_study_date: progress.lastStudyDate,
+    updated_at: new Date().toISOString(),
+  };
+
+  const { error } = await getSupabase()
+    .from('user_progress')
+    .upsert(payload, { onConflict: 'user_id' });
+
+  if (error) {
+    console.error('Sync push error:', error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Ensure user has a profile row.
+ */
+export async function ensureProfile(userId: string, email?: string): Promise<void> {
+  if (!isSupabaseConfigured) return;
+
+  const { data } = await getSupabase()
+    .from('profiles')
+    .select('id')
+    .eq('id', userId)
+    .single();
+
+  if (!data) {
+    await getSupabase()
+      .from('profiles')
+      .insert({ id: userId, email });
+  }
+}
+
+/**
+ * Fetch user profile.
+ */
+export async function fetchProfile(userId: string) {
+  if (!isSupabaseConfigured) return null;
+
+  const { data, error } = await getSupabase()
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('Fetch profile error:', error);
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * Update user profile.
+ */
+export async function updateProfile(userId: string, updates: { username?: string; display_name?: string; avatar_url?: string }) {
+  if (!isSupabaseConfigured) return false;
+
+  const { error } = await getSupabase()
+    .from('profiles')
+    .update(updates)
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Update profile error:', error);
+    return false;
+  }
+
+  return true;
+}

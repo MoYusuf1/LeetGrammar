@@ -28,10 +28,6 @@ Larger design proposals that need review before implementation live in [RFCs](./
 
 - [RFC-001: Hypergraph Schema v1](./rfc/001-hypergraph-schema.md)
 
-## Research Notes
-
-Cutting-edge papers, articles, and concepts we are evaluating live in [Research](./research/).
-
 ## Conventions
 
 - **Dates:** ISO 8601 (`2026-05-10`)
