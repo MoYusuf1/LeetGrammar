@@ -1,0 +1,132 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+      },
+      colors: {
+        accent: '#ffa116',
+        'accent-light': '#ffa11620',
+        'accent-dark': '#e69115',
+        success: '#00b8a3',
+        'success-light': '#00b8a320',
+        error: '#ff375f',
+        'error-light': '#ff375f20',
+        warning: '#ffc01e',
+        'warning-light': '#ffc01e20',
+        'bg-primary': '#0f0f0f',
+        'bg-secondary': '#1a1a1a',
+        'bg-tertiary': '#282828',
+        'text-primary': '#eff1f6',
+        'text-secondary': '#8c8c8c',
+        'text-tertiary': '#5c5c5c',
+        'ios-border': '#3e3e3e',
+        'path-gold': '#ffc01e',
+        'path-current': '#ffa116',
+        'path-locked': '#5c5c5c',
+        'nc-blue': '#3b82f6',
+        'nc-cyan': '#06b6d4',
+        'nc-teal': '#14b8a6',
+        'nc-green': '#22c55e',
+        'nc-lime': '#84cc16',
+        'nc-yellow': '#eab308',
+        'nc-orange': '#f97316',
+        'nc-red': '#ef4444',
+        'nc-purple': '#a855f7',
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        xl: "16px",
+        lg: "12px",
+        md: "8px",
+        sm: "6px",
+        xs: "4px",
+      },
+      boxShadow: {
+        card: "0 2px 12px rgba(0,0,0,0.3)",
+        'card-hover': "0 4px 20px rgba(0,0,0,0.4)",
+        cta: "0 4px 12px rgba(255,161,22,0.3)",
+        xs: "0 1px 2px 0 rgb(0 0 0 / 0.2)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "confetti-fall": {
+          "0%": { transform: "translateY(-100vh) rotate(0deg)", opacity: "1" },
+          "100%": { transform: "translateY(100vh) rotate(720deg)", opacity: "0" },
+        },
+        "scale-in": {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "slide-up": {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "shake": {
+          "0%, 100%": { transform: "translateX(0)" },
+          "25%": { transform: "translateX(-5px)" },
+          "50%": { transform: "translateX(5px)" },
+          "75%": { transform: "translateX(-5px)" },
+        },
+        "pulse-ring": {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.15)", opacity: "0.5" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "confetti-fall": "confetti-fall 3s ease-in forwards",
+        "scale-in": "scale-in 0.3s ease-out forwards",
+        "slide-up": "slide-up 0.4s ease-out forwards",
+        "shake": "shake 0.4s ease-in-out",
+        "pulse-ring": "pulse-ring 2s ease-in-out infinite",
+        "fade-in": "fade-in 0.3s ease-out",
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+}
