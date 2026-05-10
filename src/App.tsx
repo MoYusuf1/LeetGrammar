@@ -7,6 +7,9 @@ import Lesson from '@/pages/Lesson';
 import Profile from '@/pages/Profile';
 import Learn from '@/pages/Learn';
 import About from '@/pages/About';
+import Wiki from '@/pages/Wiki';
+import Concepts from '@/pages/Concepts';
+import Curriculum from '@/pages/Curriculum';
 
 export default function App() {
   return (
@@ -21,6 +24,9 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/about" element={<About />} />
+          <Route path="/wiki/:conceptId" element={<Wiki />} />
+          <Route path="/concepts" element={<Concepts />} />
+          <Route path="/curriculum" element={<Curriculum />} />
           {/* Redirects for old routes */}
           <Route path="/path" element={<Navigate to="/roadmap" replace />} />
           <Route path="/practice" element={<Navigate to="/problems" replace />} />

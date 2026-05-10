@@ -1,6 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
+/**
+ * Backward-compatible hook wrapping the Zustand progress store.
+ *
+ * All state logic has moved to src/stores/progress-store.ts.
+ * This hook remains as a thin adapter for existing components.
+ */
 
-const STORAGE_KEY = 'soomaali-grammar-progress-v5';
+import { useProgressStore } from '@/stores/progress-store';
+import { useCallback } from 'react';
 
 export interface UserProgress {
   completedLessons: number[];
@@ -10,150 +16,65 @@ export interface UserProgress {
   practiceScores: Record<number, number>;
 }
 
-const defaultProgress: UserProgress = {
-  completedLessons: [],
-  streak: 0,
-  lastStudyDate: '',
-  xp: 0,
-  practiceScores: {},
-};
-
-function loadProgress(): UserProgress {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return { ...defaultProgress, ...JSON.parse(stored) };
-    }
-  } catch {
-    // ignore parse errors
-  }
-  return { ...defaultProgress };
-}
-
-function saveProgress(progress: UserProgress) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  } catch {
-    // ignore storage errors
-  }
-}
-
-function getToday(): string {
-  return new Date().toISOString().split('T')[0];
-}
-
-function getYesterday(): string {
-  return new Date(Date.now() - 86400000).toISOString().split('T')[0];
-}
-
-function updateStreak(progress: UserProgress): number {
-  const today = getToday();
-  const yesterday = getYesterday();
-
-  if (progress.lastStudyDate === today) {
-    return progress.streak;
-  }
-  if (progress.lastStudyDate === yesterday) {
-    return progress.streak + 1;
-  }
-  return 1;
-}
-
 export function useProgress() {
-  const [progress, setProgress] = useState<UserProgress>(loadProgress);
+  const store = useProgressStore();
 
-  useEffect(() => {
-    saveProgress(progress);
-  }, [progress]);
-
-  const completeLesson = useCallback((lessonId: number) => {
-    setProgress((prev) => {
-      if (prev.completedLessons.includes(lessonId)) {
-        return {
-          ...prev,
-          lastStudyDate: getToday(),
-        };
-      }
-      const newStreak = updateStreak(prev);
-      return {
-        ...prev,
-        completedLessons: [...prev.completedLessons, lessonId],
-        streak: newStreak,
-        lastStudyDate: getToday(),
-        xp: prev.xp + 10,
-      };
-    });
-  }, []);
+  // Wrap store methods in useCallback to maintain API compatibility
+  const completeLesson = useCallback(
+    (lessonId: number) => store.completeLesson(lessonId),
+    [store]
+  );
 
   const isLessonCompleted = useCallback(
-    (lessonId: number) => progress.completedLessons.includes(lessonId),
-    [progress.completedLessons]
+    (lessonId: number) => store.isLessonCompleted(lessonId),
+    [store]
   );
 
   const getLessonStatus = useCallback(
-    (lessonId: number): 'completed' | 'current' | 'locked' => {
-      if (progress.completedLessons.includes(lessonId)) return 'completed';
-      // Current = previous lesson is completed OR this is the first lesson
-      const prevLesson = lessonId - 1;
-      if (prevLesson === 0 || progress.completedLessons.includes(prevLesson)) {
-        return 'current';
-      }
-      return 'locked';
-    },
-    [progress.completedLessons]
+    (lessonId: number): 'completed' | 'current' | 'locked' =>
+      store.getLessonStatus(lessonId),
+    [store]
   );
 
-  const recordPracticeScore = useCallback((lessonId: number, score: number) => {
-    setProgress((prev) => {
-      const existing = prev.practiceScores[lessonId] || 0;
-      const bonus = score > existing ? (score - existing) * 5 : 0;
-      return {
-        ...prev,
-        practiceScores: { ...prev.practiceScores, [lessonId]: Math.max(score, existing) },
-        xp: prev.xp + bonus,
-        lastStudyDate: getToday(),
-      };
-    });
-  }, []);
-
-  const completionPercentage = Math.round(
-    (progress.completedLessons.length / 50) * 100
+  const recordPracticeScore = useCallback(
+    (lessonId: number, score: number) =>
+      store.recordPracticeScore(lessonId, score),
+    [store]
   );
 
-  const resetProgress = useCallback(() => {
-    setProgress({ ...defaultProgress });
-  }, []);
+  const resetProgress = useCallback(() => store.resetProgress(), [store]);
 
   const isTopicCompleted = useCallback(
-    (lessonIds: number[]) => lessonIds.every((id) => progress.completedLessons.includes(id)),
-    [progress.completedLessons]
+    (lessonIds: number[]) => store.isTopicCompleted(lessonIds),
+    [store]
   );
 
   const getTopicStatus = useCallback(
-    (lessonIds: number[], _prerequisiteTopicIds: string[]): 'completed' | 'in-progress' | 'locked' => {
-      // Check if any prerequisite topics are incomplete
-      // (prerequisiteTopicIds should be checked by caller with their own lessonIds)
-      const allCompleted = lessonIds.every((id) => progress.completedLessons.includes(id));
-      if (allCompleted) return 'completed';
-      const someCompleted = lessonIds.some((id) => progress.completedLessons.includes(id));
-      if (someCompleted) return 'in-progress';
-      return 'locked';
-    },
-    [progress.completedLessons]
+    (
+      lessonIds: number[],
+      _prerequisiteTopicIds: string[] = []
+    ): 'completed' | 'in-progress' | 'locked' =>
+      store.getTopicStatus(lessonIds),
+    [store]
   );
 
   const getTopicProgress = useCallback(
-    (lessonIds: number[]) => {
-      const completed = lessonIds.filter((id) => progress.completedLessons.includes(id)).length;
-      return { completed, total: lessonIds.length };
-    },
-    [progress.completedLessons]
+    (lessonIds: number[]) => store.getTopicProgress(lessonIds),
+    [store]
   );
 
   const arePrerequisitesMet = useCallback(
-    (prereqLessonIds: number[]) => prereqLessonIds.every((id) => progress.completedLessons.includes(id)),
-    [progress.completedLessons]
+    (prereqLessonIds: number[]) => store.arePrerequisitesMet(prereqLessonIds),
+    [store]
   );
+
+  const progress: UserProgress = {
+    completedLessons: store.completedLessons,
+    streak: store.streak,
+    lastStudyDate: store.lastStudyDate,
+    xp: store.xp,
+    practiceScores: store.practiceScores,
+  };
 
   return {
     progress,
@@ -161,7 +82,7 @@ export function useProgress() {
     isLessonCompleted,
     getLessonStatus,
     recordPracticeScore,
-    completionPercentage,
+    completionPercentage: store.completionPercentage,
     resetProgress,
     isTopicCompleted,
     getTopicStatus,

@@ -1,11 +1,13 @@
 import { useLocation, useNavigate } from 'react-router';
-import { Map, List, BookOpen, User, Flame, Code2 } from 'lucide-react';
+import { Map, List, BookOpen, User, Flame, Code2, Network, Route } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
 
 const navLinks = [
   { path: '/roadmap', label: 'Roadmap', icon: Map },
   { path: '/problems', label: 'Problems', icon: List },
   { path: '/learn', label: 'Learn', icon: BookOpen },
+  { path: '/concepts', label: 'Wiki', icon: Network },
+  { path: '/curriculum', label: 'Path', icon: Route },
 ];
 
 export default function TopNav() {
