@@ -24,6 +24,7 @@ import {
   ScrollText,
   ListTree,
   Dumbbell,
+  GraduationCap,
 } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
 import ConceptGraph from '@/components/ConceptGraph';
@@ -265,8 +266,15 @@ export default function Wiki() {
           {/* Actions */}
           <div className="flex items-center gap-2 mt-3">
             <button
-              onClick={() => navigate(`/quiz/${node.id}`)}
+              onClick={() => navigate(`/study/${node.id}`)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-xs font-bold hover:bg-[#ffb800] transition-colors"
+            >
+              <GraduationCap size={13} />
+              Study
+            </button>
+            <button
+              onClick={() => navigate(`/quiz/${node.id}`)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1a1a1a] border border-[#ffffff10] text-xs font-medium text-[#c8c8c8] hover:text-[#eff1f6] hover:bg-[#222222] transition-colors"
             >
               <Dumbbell size={13} />
               Practice

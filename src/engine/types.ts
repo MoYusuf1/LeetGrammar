@@ -1,5 +1,5 @@
 /**
- * Core type definitions for the LeetSomali Knowledge Graph Engine.
+ * Core type definitions for the LeetGrammar Knowledge Graph Engine.
  *
  * Tier 2 Architecture: Property graph for most relations;
  * Construction hypergraph for grammatical patterns only.

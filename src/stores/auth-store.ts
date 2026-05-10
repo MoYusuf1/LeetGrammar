@@ -18,6 +18,7 @@ interface AuthState {
   syncStatus: SyncStatus;
   lastSyncedAt: string | null;
   isConfigured: boolean;
+  isAdmin: boolean;
 
   // Actions
   setSession: (session: Session | null) => void;
@@ -36,6 +37,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   syncStatus: 'idle',
   lastSyncedAt: null,
   isConfigured: isSupabaseConfigured,
+  isAdmin: false,
 
   setSession: (session) => set({ session }),
   setUser: (user) => set({ user }),
@@ -47,7 +49,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (!isSupabaseConfigured) return;
     try {
       await getSupabase().auth.signOut();
-      set({ user: null, session: null, syncStatus: 'idle', lastSyncedAt: null });
+      set({ user: null, session: null, syncStatus: 'idle', lastSyncedAt: null, isAdmin: false });
     } catch {
       // Silently fail in guest mode
     }
@@ -65,17 +67,42 @@ export const useAuthStore = create<AuthState>((set) => ({
 
       // Check existing session
       const { data } = await supabase.auth.getSession();
+      const user = data.session?.user ?? null;
+
+      // Load admin status if user is logged in
+      let isAdmin = false;
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', user.id)
+          .maybeSingle();
+        isAdmin = profile?.is_admin ?? false;
+      }
+
       set({
         session: data.session,
-        user: data.session?.user ?? null,
+        user,
+        isAdmin,
         isLoading: false,
       });
 
       // Listen for auth state changes
-      supabase.auth.onAuthStateChange((_event, session) => {
+      supabase.auth.onAuthStateChange(async (_event, session) => {
+        const newUser = session?.user ?? null;
+        let newAdmin = false;
+        if (newUser) {
+          const { data: p } = await supabase
+            .from('profiles')
+            .select('is_admin')
+            .eq('id', newUser.id)
+            .maybeSingle();
+          newAdmin = p?.is_admin ?? false;
+        }
         set({
           session,
-          user: session?.user ?? null,
+          user: newUser,
+          isAdmin: newAdmin,
           isLoading: false,
         });
       });

@@ -34,7 +34,7 @@ export default function Lesson() {
 
   const problem = getProblemById(lessonId);
   const lesson = getProblemContent(lessonId);
-  const { getLessonStatus } = useProgress();
+  const { getLessonStatus, completeLesson } = useProgress();
 
   const [readSections, setReadSections] = useState<Set<string>>(new Set());
 
@@ -308,6 +308,17 @@ export default function Lesson() {
       {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-[#0f0f0f]/95 backdrop-blur-md border-t border-[#ffffff10] z-30">
         <div className="max-w-[800px] mx-auto px-5 py-3 flex items-center gap-3">
+          {!isCompleted && (
+            <button
+              onClick={() => {
+                completeLesson(lessonId);
+              }}
+              className="h-11 px-4 rounded-xl font-semibold text-sm text-[#22c55e] bg-[#22c55e]15 border border-[#22c55e]30 hover:bg-[#22c55e]25 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+            >
+              <Check size={16} strokeWidth={3} />
+              Mark Done
+            </button>
+          )}
           <button
             onClick={() => navigate(`/problem/${lessonId}`)}
             className="flex-1 h-11 rounded-xl font-semibold text-sm text-[#0f0f0f] bg-[#ffa116] hover:bg-[#ffb84d] hover:shadow-[0_0_20px_rgba(255,161,22,0.25)] transition-all flex items-center justify-center gap-2 active:scale-[0.98]"

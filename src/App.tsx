@@ -1,8 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router';
+import { Routes, Route, Navigate, useNavigate } from 'react-router';
+import { Shield } from 'lucide-react';
 import { useAuthInit } from '@/hooks/useAuthInit';
 import TopNav from '@/components/TopNav';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { useAdmin } from '@/hooks/useAdmin';
 
 /* ─── Core routes (eager) ─── */
 import Problems from '@/pages/Problems';
@@ -20,6 +22,31 @@ const Curriculum = lazy(() => import('@/pages/Curriculum'));
 const Ingest = lazy(() => import('@/pages/Ingest'));
 const Quiz = lazy(() => import('@/pages/Quiz'));
 const Review = lazy(() => import('@/pages/Review'));
+const StudyHub = lazy(() => import('@/pages/StudyHub'));
+const AdminSettings = lazy(() => import('@/pages/AdminSettings'));
+
+function AdminIngest() {
+  const isAdmin = useAdmin();
+  const navigate = useNavigate();
+  if (!isAdmin) {
+    return (
+      <div className="min-h-full bg-[#0f0f0f] flex items-center justify-center px-4">
+        <div className="text-center">
+          <Shield size={40} className="text-[#ef4444] mx-auto mb-3" />
+          <h1 className="text-lg font-bold text-[#eff1f6]">Access Denied</h1>
+          <p className="text-sm text-[#8c8c8c] mt-1">Admin only.</p>
+          <button
+            onClick={() => navigate('/profile')}
+            className="mt-4 px-4 py-2 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-sm font-semibold"
+          >
+            Go to Profile
+          </button>
+        </div>
+      </div>
+    );
+  }
+  return <Ingest />;
+}
 
 function PageLoader() {
   return (
@@ -49,9 +76,11 @@ export default function App() {
               <Route path="/wiki/:conceptId" element={<Wiki />} />
               <Route path="/concepts" element={<Concepts />} />
               <Route path="/curriculum" element={<Curriculum />} />
-              <Route path="/ingest" element={<Ingest />} />
+              <Route path="/ingest" element={<AdminIngest />} />
               <Route path="/quiz/:conceptId" element={<Quiz />} />
               <Route path="/review" element={<Review />} />
+              <Route path="/study/:conceptId" element={<StudyHub />} />
+              <Route path="/admin" element={<AdminSettings />} />
               {/* Redirects for old routes */}
               <Route path="/path" element={<Navigate to="/roadmap" replace />} />
               <Route path="/practice" element={<Navigate to="/problems" replace />} />

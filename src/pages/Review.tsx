@@ -1,9 +1,13 @@
 /**
- * Review Page — SRS flashcard review with graph-aware scheduling.
+ * Review Page v2 — Graph-Aware SRS with FIRe-style implicit repetition.
+ *
+ * Ratings: 0=Again, 1=Hard, 2=Good, 3=Easy
+ * Mastery: continuous [0,1]
+ * Implicit updates: credit travels down prerequisites, penalties travel up
  */
 
-import { useState, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router';
 import {
   BrainCircuit,
   RotateCcw,
@@ -14,97 +18,102 @@ import {
   Award,
   Sparkles,
   Zap,
+  ArrowDown,
+  ArrowUp,
 } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
 import { useGraphInit } from '@/hooks/useGraphInit';
-import { useProgressStore } from '@/stores/progress-store';
-import {
-  getDueConcepts,
-  getNewConcepts,
-  getSrsStats,
-} from '@/engine/srs';
+import { useGraphSrs } from '@/hooks/useGraphSrs';
+import type { ReviewRating, ReviewResult } from '@/engine/graph-srs';
 
-const QUALITY_LABELS: Record<number, { label: string; color: string; desc: string }> = {
-  0: { label: 'Blackout', color: '#ef4444', desc: 'Complete failure to recall' },
-  1: { label: 'Wrong', color: '#f97316', desc: 'Incorrect response, recognized correct one' },
-  2: { label: 'Hard', color: '#eab308', desc: 'Incorrect response, easy to recall' },
-  3: { label: 'Good', color: '#22c55e', desc: 'Correct with difficulty' },
-  4: { label: 'Easy', color: '#3b82f6', desc: 'Correct with hesitation' },
-  5: { label: 'Perfect', color: '#a855f7', desc: 'Perfect response' },
+const RATING_INFO: Record<ReviewRating, { label: string; color: string; desc: string }> = {
+  0: { label: 'Again', color: '#ef4444', desc: 'Forgot it' },
+  1: { label: 'Hard', color: '#f97316', desc: 'Struggled' },
+  2: { label: 'Good', color: '#22c55e', desc: 'Got it' },
+  3: { label: 'Easy', color: '#3b82f6', desc: 'Effortless' },
 };
 
 export default function Review() {
   useGraphInit();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { engine, chunks } = useGraphStore();
-  const { srsCards, reviewConcept, initSrsCard } = useProgressStore();
-
-  const cardsMap = useMemo(() => {
-    const map = new Map(Object.entries(srsCards));
-    return map;
-  }, [srsCards]);
-
-  const dueConcepts = useMemo(() => getDueConcepts(engine, cardsMap), [engine, cardsMap]);
-  const newConcepts = useMemo(() => getNewConcepts(engine, cardsMap), [engine, cardsMap]);
-  const stats = useMemo(() => getSrsStats(cardsMap), [cardsMap]);
+  const { states, dueConcepts, learningFrontier, stats, review, initConcept } =
+    useGraphSrs();
 
   const [sessionActive, setSessionActive] = useState(false);
   const [sessionConcepts, setSessionConcepts] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [sessionResults, setSessionResults] = useState<Record<string, number>>({});
+  const [lastResult, setLastResult] = useState<ReviewResult | null>(null);
+  const [sessionResults, setSessionResults] = useState<Record<string, ReviewRating>>({});
 
   const currentConceptId = sessionConcepts[currentIndex];
   const currentNode = currentConceptId ? engine.getNode(currentConceptId) : undefined;
-  const currentCard = currentConceptId ? cardsMap.get(currentConceptId) : undefined;
+  const currentState = currentConceptId ? states.get(currentConceptId) : undefined;
 
-  const startSession = useCallback((conceptIds: string[]) => {
-    // Initialize cards for any new concepts
-    for (const id of conceptIds) {
-      if (!cardsMap.has(id)) {
-        initSrsCard(id);
+  const startSession = useCallback(
+    (conceptIds: string[]) => {
+      for (const id of conceptIds) {
+        if (!states.has(id)) initConcept(id);
+      }
+      setSessionConcepts(conceptIds);
+      setCurrentIndex(0);
+      setFlipped(false);
+      setLastResult(null);
+      setSessionResults({});
+      setSessionActive(true);
+    },
+    [states, initConcept]
+  );
+
+  // Auto-start session from query params
+  useEffect(() => {
+    const conceptsParam = searchParams.get('concepts');
+    if (conceptsParam && !sessionActive && sessionConcepts.length === 0) {
+      const ids = conceptsParam.split(',').filter(Boolean);
+      if (ids.length > 0) {
+        startSession(ids);
       }
     }
-    setSessionConcepts(conceptIds);
-    setCurrentIndex(0);
-    setFlipped(false);
-    setSessionResults({});
-    setSessionActive(true);
-  }, [cardsMap, initSrsCard]);
+  }, [searchParams, sessionActive, sessionConcepts.length, startSession]);
 
   const handleFlip = useCallback(() => {
     setFlipped(true);
   }, []);
 
-  const handleRate = useCallback((quality: number) => {
-    const conceptId = sessionConcepts[currentIndex];
-    if (!conceptId) return;
+  const handleRate = useCallback(
+    (rating: ReviewRating) => {
+      const conceptId = sessionConcepts[currentIndex];
+      if (!conceptId) return;
 
-    reviewConcept(conceptId, quality);
-    setSessionResults((prev) => ({ ...prev, [conceptId]: quality }));
+      const result = review(conceptId, rating);
+      setLastResult(result);
+      setSessionResults((prev) => ({ ...prev, [conceptId]: rating }));
 
-    if (currentIndex < sessionConcepts.length - 1) {
-      setCurrentIndex((i) => i + 1);
-      setFlipped(false);
-    } else {
-      setSessionActive(false);
-    }
-  }, [sessionConcepts, currentIndex, reviewConcept]);
+      if (currentIndex < sessionConcepts.length - 1) {
+        setCurrentIndex((i) => i + 1);
+        setFlipped(false);
+      } else {
+        setSessionActive(false);
+      }
+    },
+    [sessionConcepts, currentIndex, review]
+  );
 
   const handleRestart = useCallback(() => {
     setSessionActive(false);
     setSessionConcepts([]);
     setCurrentIndex(0);
     setFlipped(false);
+    setLastResult(null);
     setSessionResults({});
   }, []);
 
   // Session complete screen
   if (!sessionActive && sessionConcepts.length > 0 && Object.keys(sessionResults).length > 0) {
     const total = sessionConcepts.length;
-    const avgQuality =
-      Object.values(sessionResults).reduce((a, b) => a + b, 0) / total;
-    const goodCount = Object.values(sessionResults).filter((q) => q >= 3).length;
+    const goodCount = Object.values(sessionResults).filter((q) => q >= 2).length;
 
     return (
       <div className="min-h-full bg-[#0f0f0f] px-4 py-8">
@@ -116,9 +125,37 @@ export default function Review() {
           <p className="text-sm text-[#8c8c8c] mt-2">
             {goodCount} / {total} concepts recalled successfully
           </p>
-          <p className="text-sm text-[#8c8c8c] mt-1">
-            Average quality: {avgQuality.toFixed(1)} / 5
-          </p>
+
+          {lastResult && lastResult.implicitUpdates.length > 0 && (
+            <div className="mt-6 rounded-xl bg-[#141414] border border-[#ffffff08] p-4 text-left max-w-[400px] mx-auto">
+              <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-2">
+                Graph Updates
+              </p>
+              <div className="space-y-1.5">
+                {lastResult.implicitUpdates.slice(0, 5).map((u) => (
+                  <div key={u.conceptId} className="flex items-center gap-2 text-xs">
+                    {u.direction === 'down' ? (
+                      <ArrowDown size={12} className="text-[#22c55e]" />
+                    ) : (
+                      <ArrowUp size={12} className="text-[#ef4444]" />
+                    )}
+                    <span className={u.credit > 0 ? 'text-[#22c55e]' : 'text-[#ef4444]'}>
+                      {u.credit > 0 ? '+' : ''}
+                      {(u.credit * 100).toFixed(0)}%
+                    </span>
+                    <span className="text-[#8c8c8c]">
+                      {engine.getNode(u.conceptId)?.labels.default ?? u.conceptId}
+                    </span>
+                  </div>
+                ))}
+                {lastResult.implicitUpdates.length > 5 && (
+                  <p className="text-[10px] text-[#5c5c5c] text-center">
+                    +{lastResult.implicitUpdates.length - 5} more
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="flex gap-3 justify-center mt-8">
             <button
@@ -140,7 +177,8 @@ export default function Review() {
       .map((cid) => chunks.get(cid))
       .filter(Boolean);
 
-    const firstDef = definitions[0]?.payload ?? currentNode.labels.english ?? 'No definition available.';
+    const firstDef =
+      definitions[0]?.payload ?? currentNode.labels.english ?? 'No definition available.';
 
     return (
       <div className="min-h-full bg-[#0f0f0f] flex flex-col">
@@ -185,22 +223,30 @@ export default function Review() {
                   </span>
                   <h2 className="text-2xl font-bold text-[#eff1f6]">{currentNode.labels.default}</h2>
                   {currentNode.labels.somali && (
-                    <p className="text-sm text-[#8c8c8c] mt-2 font-mono">{currentNode.labels.somali}</p>
+                    <p className="text-sm text-[#8c8c8c] mt-2 font-mono">
+                      {currentNode.labels.somali}
+                    </p>
                   )}
                   <p className="text-xs text-[#5c5c5c] mt-6">Tap to reveal</p>
                 </>
               ) : (
                 <>
-                  <h2 className="text-xl font-bold text-[#eff1f6] mb-3">{currentNode.labels.default}</h2>
+                  <h2 className="text-xl font-bold text-[#eff1f6] mb-3">
+                    {currentNode.labels.default}
+                  </h2>
                   <p className="text-sm text-[#c8c8c8] leading-relaxed">{firstDef}</p>
                   {currentNode.labels.english && (
-                    <p className="text-xs text-[#8c8c8c] mt-3 italic">{currentNode.labels.english}</p>
+                    <p className="text-xs text-[#8c8c8c] mt-3 italic">
+                      {currentNode.labels.english}
+                    </p>
                   )}
-                  {currentCard && (
+                  {currentState && (
                     <div className="flex items-center gap-3 mt-4 text-[10px] text-[#5c5c5c]">
-                      <span>Mastery: {currentCard.mastery}/5</span>
+                      <span>Mastery: {(currentState.mastery * 100).toFixed(0)}%</span>
                       <span>·</span>
-                      <span>Streak: {currentCard.repetition}</span>
+                      <span>Stability: {currentState.stability.toFixed(1)}d</span>
+                      <span>·</span>
+                      <span>Reviews: {currentState.reviewCount}</span>
                     </div>
                   )}
                 </>
@@ -216,9 +262,9 @@ export default function Review() {
               <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3 text-center">
                 How well did you know this?
               </p>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                {[0, 1, 2, 3, 4, 5].map((q) => {
-                  const info = QUALITY_LABELS[q];
+              <div className="grid grid-cols-4 gap-2">
+                {([0, 1, 2, 3] as ReviewRating[]).map((q) => {
+                  const info = RATING_INFO[q];
                   return (
                     <button
                       key={q}
@@ -226,9 +272,9 @@ export default function Review() {
                       className="flex flex-col items-center gap-1 p-2.5 rounded-xl bg-[#141414] border border-[#ffffff08] hover:border-[#ffffff15] transition-colors"
                     >
                       <span className="text-xs font-bold" style={{ color: info.color }}>
-                        {q}
+                        {info.label}
                       </span>
-                      <span className="text-[9px] text-[#5c5c5c]">{info.label}</span>
+                      <span className="text-[9px] text-[#5c5c5c]">{info.desc}</span>
                     </button>
                   );
                 })}
@@ -251,7 +297,7 @@ export default function Review() {
             <h1 className="text-xl font-bold text-[#eff1f6]">Review</h1>
           </div>
           <p className="text-xs text-[#8c8c8c]">
-            Spaced repetition based on your textbook concepts
+            Graph-aware spaced repetition — credit travels down, penalties travel up
           </p>
         </div>
       </div>
@@ -260,10 +306,26 @@ export default function Review() {
         <div className="max-w-[640px] mx-auto space-y-5">
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatCard icon={<Clock size={14} className="text-[#ef4444]" />} label="Due Today" value={stats.dueToday} />
-            <StatCard icon={<Zap size={14} className="text-[#eab308]" />} label="Learning" value={stats.learning} />
-            <StatCard icon={<Award size={14} className="text-[#22c55e]" />} label="Mastered" value={stats.mastered} />
-            <StatCard icon={<TrendingUp size={14} className="text-[#3b82f6]" />} label="Total Tracked" value={stats.total} />
+            <StatCard
+              icon={<Clock size={14} className="text-[#ef4444]" />}
+              label="Due Today"
+              value={stats.dueToday}
+            />
+            <StatCard
+              icon={<Zap size={14} className="text-[#eab308]" />}
+              label="Learning"
+              value={stats.learning}
+            />
+            <StatCard
+              icon={<Award size={14} className="text-[#22c55e]" />}
+              label="Mastered"
+              value={stats.mastered}
+            />
+            <StatCard
+              icon={<TrendingUp size={14} className="text-[#3b82f6]" />}
+              label="Avg Mastery"
+              value={`${(stats.avgMastery * 100).toFixed(0)}%`}
+            />
           </div>
 
           {/* Due Concepts */}
@@ -274,7 +336,7 @@ export default function Review() {
                   Due for Review ({dueConcepts.length})
                 </p>
                 <button
-                  onClick={() => startSession(dueConcepts)}
+                  onClick={() => startSession(dueConcepts.map((c) => c.conceptId))}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-xs font-semibold hover:bg-[#ffb800] transition-colors"
                 >
                   <RotateCcw size={12} />
@@ -282,31 +344,36 @@ export default function Review() {
                 </button>
               </div>
               <div className="space-y-1.5">
-                {dueConcepts.map((id) => {
-                  const node = engine.getNode(id);
-                  const card = cardsMap.get(id);
+                {dueConcepts.map((state) => {
+                  const node = engine.getNode(state.conceptId);
                   if (!node) return null;
                   return (
                     <button
-                      key={id}
-                      onClick={() => startSession([id])}
+                      key={state.conceptId}
+                      onClick={() => startSession([state.conceptId])}
                       className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:border-[#ffffff15] hover:bg-[#1a1a1a] transition-all text-left"
                     >
                       <div
                         className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                         style={{
-                          backgroundColor: `${masteryColor(card?.mastery ?? 0)}15`,
-                          border: `1px solid ${masteryColor(card?.mastery ?? 0)}30`,
+                          backgroundColor: `${masteryColor(state.mastery)}15`,
+                          border: `1px solid ${masteryColor(state.mastery)}30`,
                         }}
                       >
-                        <span className="text-xs font-bold" style={{ color: masteryColor(card?.mastery ?? 0) }}>
-                          {card?.mastery ?? 0}
+                        <span
+                          className="text-xs font-bold"
+                          style={{ color: masteryColor(state.mastery) }}
+                        >
+                          {(state.mastery * 100).toFixed(0)}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-[#eff1f6] truncate">{node.labels.default}</p>
+                        <p className="text-sm font-medium text-[#eff1f6] truncate">
+                          {node.labels.default}
+                        </p>
                         <p className="text-[10px] text-[#5c5c5c]">
-                          Interval: {card?.interval ?? 0}d · EF: {(card?.ef ?? 2.5).toFixed(1)}
+                          Stability: {state.stability.toFixed(1)}d · Retrievability:{' '}
+                          {(state.retrievability * 100).toFixed(0)}%
                         </p>
                       </div>
                       <ChevronRight size={14} className="text-[#3e3e3e] flex-shrink-0" />
@@ -317,63 +384,65 @@ export default function Review() {
             </section>
           )}
 
-          {/* New Concepts */}
-          {newConcepts.length > 0 && (
+          {/* Learning Frontier */}
+          {learningFrontier.length > 0 && (
             <section>
               <div className="flex items-center justify-between mb-2.5">
                 <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider">
-                  New to Learn ({newConcepts.length})
+                  Ready to Learn ({learningFrontier.length})
                 </p>
                 <button
-                  onClick={() => startSession(newConcepts.slice(0, 10))}
+                  onClick={() =>
+                    navigate(`/study/${learningFrontier[0].conceptId}`)
+                  }
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1a1a1a] border border-[#ffffff10] text-[#eff1f6] text-xs font-semibold hover:bg-[#222222] transition-colors"
                 >
                   <Sparkles size={12} />
-                  Learn {Math.min(newConcepts.length, 10)}
+                  Start
                 </button>
               </div>
               <div className="space-y-1.5">
-                {newConcepts.slice(0, 8).map((id) => {
-                  const node = engine.getNode(id);
-                  if (!node) return null;
-                  return (
-                    <button
-                      key={id}
-                      onClick={() => navigate(`/wiki/${id}`)}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:border-[#ffffff15] hover:bg-[#1a1a1a] transition-all text-left"
-                    >
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#3b82f6]10 border border-[#3b82f6]25">
-                        <Sparkles size={13} className="text-[#3b82f6]" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-[#eff1f6] truncate">{node.labels.default}</p>
-                        <p className="text-[10px] text-[#5c5c5c]">{node.type}</p>
-                      </div>
-                      <ChevronRight size={14} className="text-[#3e3e3e] flex-shrink-0" />
-                    </button>
-                  );
-                })}
-                {newConcepts.length > 8 && (
+                {learningFrontier.slice(0, 8).map((item) => (
+                  <button
+                    key={item.conceptId}
+                    onClick={() => navigate(`/study/${item.conceptId}`)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:border-[#ffffff15] hover:bg-[#1a1a1a] transition-all text-left"
+                  >
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#3b82f6]10 border border-[#3b82f6]25">
+                      <Sparkles size={13} className="text-[#3b82f6]" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-[#eff1f6] truncate">
+                        {item.label}
+                      </p>
+                      <p className="text-[10px] text-[#5c5c5c]">
+                        Depth {item.depth} · {item.conceptId.replace(/^concept:/, '')}
+                      </p>
+                    </div>
+                    <ChevronRight size={14} className="text-[#3e3e3e] flex-shrink-0" />
+                  </button>
+                ))}
+                {learningFrontier.length > 8 && (
                   <p className="text-[10px] text-[#5c5c5c] text-center py-1">
-                    +{newConcepts.length - 8} more concepts
+                    +{learningFrontier.length - 8} more concepts
                   </p>
                 )}
               </div>
             </section>
           )}
 
-          {dueConcepts.length === 0 && newConcepts.length === 0 && (
+          {dueConcepts.length === 0 && learningFrontier.length === 0 && (
             <div className="text-center py-12">
               <BrainCircuit size={40} className="text-[#3e3e3e] mx-auto mb-3" />
               <p className="text-sm text-[#8c8c8c]">No concepts ready for review.</p>
               <p className="text-xs text-[#5c5c5c] mt-1">
-                Ingest textbooks or complete lessons to build your review queue.
+                Complete lessons to build your review queue.
               </p>
               <button
-                onClick={() => navigate('/ingest')}
+                onClick={() => navigate('/problems')}
                 className="mt-4 px-4 py-2 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-sm font-semibold"
               >
-                Ingest Textbooks
+                Start Learning
               </button>
             </div>
           )}
@@ -390,7 +459,7 @@ function StatCard({
 }: {
   icon: React.ReactNode;
   label: string;
-  value: number;
+  value: string | number;
 }) {
   return (
     <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-3.5 text-center">
@@ -404,9 +473,8 @@ function StatCard({
 }
 
 function masteryColor(mastery: number): string {
-  if (mastery >= 4) return '#22c55e';
-  if (mastery >= 3) return '#3b82f6';
-  if (mastery >= 2) return '#eab308';
-  if (mastery >= 1) return '#f97316';
+  if (mastery >= 0.8) return '#22c55e';
+  if (mastery >= 0.5) return '#3b82f6';
+  if (mastery >= 0.2) return '#eab308';
   return '#ef4444';
 }

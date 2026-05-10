@@ -1,0 +1,41 @@
+[
+  {
+    "id": "concept:directionals",
+    "type": "CONCEPT",
+    "labels": {
+      "default": "Directionals",
+      "english": "Directionals"
+    },
+    "attributes": {
+      "synthetic": true,
+      "source": "problem-curriculum-bridge"
+    },
+    "definition_cids": []
+  },
+  {
+    "id": "concept:colors",
+    "type": "CONCEPT",
+    "labels": {
+      "default": "Colors",
+      "english": "Colors"
+    },
+    "attributes": {
+      "synthetic": true,
+      "source": "problem-curriculum-bridge"
+    },
+    "definition_cids": []
+  },
+  {
+    "id": "concept:modal-verbs",
+    "type": "CONCEPT",
+    "labels": {
+      "default": "Modal Verbs",
+      "english": "Modal Verbs"
+    },
+    "attributes": {
+      "synthetic": true,
+      "source": "problem-curriculum-bridge"
+    },
+    "definition_cids": []
+  }
+]

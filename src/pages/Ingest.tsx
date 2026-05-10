@@ -1,5 +1,5 @@
 /**
- * Ingestion page — drag & drop swarm JSON, preview, validate, commit.
+ * Ingestion page — drag & drop knowledge graph JSON, preview, validate, commit.
  */
 
 import { useState, useCallback, useRef, useMemo } from 'react';
@@ -189,7 +189,7 @@ export default function Ingest() {
                 className={`mx-auto mb-3 ${isDragging ? 'text-[#ffa116]' : 'text-[#5c5c5c]'}`}
               />
               <p className="text-sm font-medium text-[#c8c8c8]">
-                Drop swarm JSON files here, or click to browse
+                Drop JSON files here, or click to browse
               </p>
               <p className="text-[10px] text-[#5c5c5c] mt-1.5">
                 Accepts single chapter objects or arrays of chapters

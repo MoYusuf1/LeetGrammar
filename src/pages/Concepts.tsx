@@ -158,7 +158,7 @@ export default function Concepts() {
               return (
                 <button
                   key={node.id}
-                  onClick={() => navigate(`/wiki/${node.id}`)}
+                  onClick={() => navigate(`/study/${node.id}`)}
                   className="flex items-start gap-3 p-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:bg-[#1a1a1a] hover:border-[#ffffff15] transition-all text-left"
                 >
                   <div

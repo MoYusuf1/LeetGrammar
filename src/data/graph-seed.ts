@@ -1,5 +1,5 @@
 /**
- * Seed data for the LeetSomali Knowledge Graph.
+ * Seed data for the LeetGrammar Knowledge Graph.
  * Populates u0 (Sounds & Greetings) and u1 (Noun System).
  */
 

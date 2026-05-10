@@ -23,7 +23,7 @@ export default function About() {
           <div className="w-16 h-16 rounded-2xl bg-accent-light flex items-center justify-center mx-auto mb-4">
             <BookOpen size={32} className="text-accent" />
           </div>
-          <h2 className="text-xl font-bold text-text-primary mb-1">Soomaali Grammar</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-1">LeetGrammar</h2>
           <p className="text-sm text-text-secondary">A guided course for learning Somali grammar</p>
         </div>
 

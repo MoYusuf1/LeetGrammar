@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { Check, Sparkles } from 'lucide-react';
 import { grammarTopics } from '@/data/grammar-topics';
 import { useProgress } from '@/hooks/useProgress';
@@ -13,7 +13,6 @@ const PAD_X = 80;
 const PAD_Y = 80;
 const MIN_COL_W = 280;
 
-// Compute depth (longest path from root) for each topic
 function computeDepths(topics: RoadmapTopic[]): Map<string, number> {
   const depths = new Map<string, number>();
   function getDepth(id: string): number {
@@ -32,7 +31,6 @@ function computeDepths(topics: RoadmapTopic[]): Map<string, number> {
   return depths;
 }
 
-// Group topics by depth and assign x positions
 function computeLayout(topics: RoadmapTopic[]) {
   const depths = computeDepths(topics);
   const maxDepth = Math.max(...Array.from(depths.values()));
@@ -46,12 +44,9 @@ function computeLayout(topics: RoadmapTopic[]) {
   const rowWidths: number[] = [];
 
   rows.forEach((row, d) => {
-    // Sort by unitId for consistent ordering
     row.sort((a, b) => a.unitId - b.unitId);
-
     const rowWidth = Math.max(row.length * MIN_COL_W, 500);
     rowWidths.push(rowWidth);
-
     row.forEach((topic, i) => {
       const x = rowWidth / 2 - (row.length * MIN_COL_W) / 2 + i * MIN_COL_W + MIN_COL_W / 2 - NODE_W / 2;
       positions.set(topic.id, { x, y: d });
@@ -63,18 +58,68 @@ function computeLayout(topics: RoadmapTopic[]) {
 
 export default function Roadmap() {
   const { isTopicCompleted, getTopicProgress } = useProgress();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const currentRef = useRef<HTMLDivElement>(null);
 
   const [selectedTopic, setSelectedTopic] = useState<RoadmapTopic | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // ─── Pan / Drag State ───
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef({ startX: 0, startY: 0, panX: 0, panY: 0 });
 
   const { positions, rows, maxDepth, rowWidths } = useMemo(() => computeLayout(grammarTopics), []);
   const maxRowWidth = Math.max(...rowWidths, 600);
   const canvasW = maxRowWidth + PAD_X * 2;
   const canvasH = PAD_Y + (maxDepth + 1) * ROW_H + 60;
 
-  // Derive topic status (all unlocked)
+  // Center the canvas initially
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const cx = container.clientWidth / 2 - canvasW / 2;
+    const cy = container.clientHeight / 2 - canvasH / 2;
+    setPan({ x: cx, y: cy });
+  }, [canvasW, canvasH]);
+
+  // ─── Drag Handlers ───
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    setIsDragging(true);
+    dragRef.current = { startX: e.clientX, startY: e.clientY, panX: pan.x, panY: pan.y };
+  }, [pan]);
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    setPan({ x: dragRef.current.panX + dx, y: dragRef.current.panY + dy });
+  }, [isDragging]);
+
+  const onMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    const t = e.touches[0];
+    setIsDragging(true);
+    dragRef.current = { startX: t.clientX, startY: t.clientY, panX: pan.x, panY: pan.y };
+  }, [pan]);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging) return;
+    const t = e.touches[0];
+    const dx = t.clientX - dragRef.current.startX;
+    const dy = t.clientY - dragRef.current.startY;
+    setPan({ x: dragRef.current.panX + dx, y: dragRef.current.panY + dy });
+  }, [isDragging]);
+
+  const onTouchEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // ─── Topic Status ───
   const topicStatus = useMemo(() => {
     const map = new Map<string, 'completed' | 'current'>();
     for (const topic of grammarTopics) {
@@ -87,32 +132,9 @@ export default function Roadmap() {
     return map;
   }, [isTopicCompleted]);
 
-  // Find the "current" topic for auto-scroll
-  const currentTopic = useMemo(() => {
-    for (const topic of grammarTopics) {
-      if (topicStatus.get(topic.id) === 'current') return topic;
-    }
-    return grammarTopics[0];
-  }, [topicStatus]);
+  const totalCompleted = grammarTopics.filter((t) => topicStatus.get(t.id) === 'completed').length;
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (currentRef.current && scrollRef.current) {
-        const container = scrollRef.current;
-        const el = currentRef.current;
-        const cRect = container.getBoundingClientRect();
-        const eRect = el.getBoundingClientRect();
-        container.scrollTo({
-          left: eRect.left - cRect.left + container.scrollLeft - cRect.width / 2 + NODE_W / 2,
-          top: eRect.top - cRect.top + container.scrollTop - cRect.height / 2 + NODE_H / 2,
-          behavior: 'smooth',
-        });
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Lines: from bottom of parent to top of child
+  // ─── Lines ───
   const lines = useMemo(() => {
     const result: { x1: number; y1: number; x2: number; y2: number; color: string; key: string }[] = [];
     for (const topic of grammarTopics) {
@@ -134,44 +156,54 @@ export default function Roadmap() {
     return result;
   }, [positions]);
 
-  const totalCompleted = grammarTopics.filter((t) => topicStatus.get(t.id) === 'completed').length;
-
   const handleTopicClick = (topic: RoadmapTopic) => {
     setSelectedTopic(topic);
     setDialogOpen(true);
   };
 
   return (
-    <div className="min-h-full bg-[#0f0f0f]">
-      {/* Header */}
-      <div className="px-8 py-5 border-b border-[#ffffff10]">
-        <div className="flex items-center justify-between max-w-[1400px]">
-          <div>
-            <h1 className="text-xl font-semibold text-[#eff1f6]">Soomaali Grammar Roadmap</h1>
-            <p className="text-sm text-[#8c8c8c] mt-1">
-              This graph shows the recommended order to learn different grammar topics. Click a topic to see its lessons.
-            </p>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold text-[#eff1f6]">
-              {totalCompleted}<span className="text-[#5c5c5c]">/{grammarTopics.length}</span>
-            </div>
-            <div className="text-xs text-[#8c8c8c]">topics completed</div>
-          </div>
+    <div className="h-[calc(100vh-50px)] bg-[#0f0f0f] relative overflow-hidden select-none">
+      {/* Floating Header */}
+      <div className="absolute top-4 left-4 z-20 px-4 py-3 rounded-xl bg-[#0f0f0f]/90 backdrop-blur-md border border-[#ffffff10] shadow-xl">
+        <h1 className="text-sm font-semibold text-[#eff1f6]">Grammar Roadmap</h1>
+        <p className="text-[11px] text-[#8c8c8c] mt-0.5">
+          {totalCompleted}/{grammarTopics.length} completed · Drag to pan
+        </p>
+        <div className="h-1.5 w-32 bg-[#1a1a1a] rounded-full overflow-hidden mt-2">
+          <div className="h-full rounded-full bg-[#ffa116] transition-all" style={{ width: `${(totalCompleted / grammarTopics.length) * 100}%` }} />
         </div>
       </div>
 
-      {/* Canvas */}
-      <div ref={scrollRef} className="overflow-auto scrollbar-hide relative" style={{ minHeight: 'calc(100vh - 120px)' }}>
-        {/* Dot grid background */}
+      {/* Canvas Container */}
+      <div
+        ref={containerRef}
+        className={`w-full h-full ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {/* Panned Content */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-30"
+          className="absolute"
           style={{
-            backgroundImage: 'radial-gradient(circle, #282828 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
+            transform: `translate(${pan.x}px, ${pan.y}px)`,
+            width: canvasW,
+            height: canvasH,
+            willChange: 'transform',
           }}
-        />
-        <div className="relative mx-auto" style={{ width: canvasW, height: canvasH }}>
+        >
+          {/* Dot grid background */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-30"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #282828 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+            }}
+          />
 
           {/* Level Labels */}
           {rows.map((_, d) => (
@@ -203,7 +235,7 @@ export default function Roadmap() {
 
           {/* Topic Nodes */}
           {grammarTopics.map((topic) => {
-            const status = topicStatus.get(topic.id) ?? 'locked';
+            const status = topicStatus.get(topic.id) ?? 'current';
             const isCurrent = status === 'current';
             const isCompleted = status === 'completed';
 
@@ -217,7 +249,6 @@ export default function Roadmap() {
             return (
               <div
                 key={topic.id}
-                ref={topic.id === currentTopic?.id ? currentRef : undefined}
                 className="absolute"
                 style={{ left, top, width: NODE_W, height: NODE_H, zIndex: 2 }}
               >
@@ -247,11 +278,6 @@ export default function Roadmap() {
                     {isCurrent && (
                       <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[#ffa11620]">
                         <Sparkles size={12} className="text-[#ffa116]" />
-                      </div>
-                    )}
-                    {!isCompleted && !isCurrent && (
-                      <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ border: `1.5px solid ${topic.color}40` }}>
-                        <span className="text-[9px] font-bold" style={{ color: `${topic.color}80` }}>{topic.unitId + 1}</span>
                       </div>
                     )}
                   </div>

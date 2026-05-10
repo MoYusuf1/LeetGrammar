@@ -1,0 +1,4622 @@
+[
+  {
+    "id": "edge:req-p2-concept-greeting-concept-somali-alphabet",
+    "from_node": "concept:greeting",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p3-concept-noun-gender-concept-somali-alphabet",
+    "from_node": "concept:noun-gender",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p4-concept-definite-article-concept-noun-gender",
+    "from_node": "concept:definite-article",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p5-concept-indefinite-noun-concept-definite-article",
+    "from_node": "concept:indefinite-noun",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p6-concept-plural-formation-concept-noun-gender",
+    "from_node": "concept:plural-formation",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p7-concept-semantic-vs-grammatical-gender-concept-plural-formation",
+    "from_node": "concept:semantic-vs-grammatical-gender",
+    "to_node": "concept:plural-formation",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p8-concept-subject-case-concept-definite-article",
+    "from_node": "concept:subject-case",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p9-concept-independent-pronoun-concept-greeting",
+    "from_node": "concept:independent-pronoun",
+    "to_node": "concept:greeting",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p10-concept-verbal-subject-pronoun-concept-independent-pronoun",
+    "from_node": "concept:verbal-subject-pronoun",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p11-concept-word-order-concept-verbal-subject-pronoun",
+    "from_node": "concept:word-order",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p12-concept-verb-to-be-concept-word-order",
+    "from_node": "concept:verb-to-be",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p13-concept-verbless-declarative-concept-verb-to-be",
+    "from_node": "concept:verbless-declarative",
+    "to_node": "concept:verb-to-be",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p14-concept-focus-marker-concept-verbal-subject-pronoun",
+    "from_node": "concept:focus-marker",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p14-concept-focus-marker-concept-verbless-declarative",
+    "from_node": "concept:focus-marker",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p15-concept-verb-conjugation-concept-word-order",
+    "from_node": "concept:verb-conjugation",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p16-concept-present-habitual-concept-verb-conjugation",
+    "from_node": "concept:present-habitual",
+    "to_node": "concept:verb-conjugation",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p17-concept-present-progressive-concept-present-habitual",
+    "from_node": "concept:present-progressive",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p18-concept-general-past-tense-concept-present-habitual",
+    "from_node": "concept:general-past-tense",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p19-concept-future-tense-concept-general-past-tense",
+    "from_node": "concept:future-tense",
+    "to_node": "concept:general-past-tense",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p20-concept-negation-concept-present-habitual",
+    "from_node": "concept:negation",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p21-concept-yes-no-question-concept-negation",
+    "from_node": "concept:yes-no-question",
+    "to_node": "concept:negation",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p22-concept-imperative-concept-present-habitual",
+    "from_node": "concept:imperative",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p23-concept-demonstrative-concept-noun-gender",
+    "from_node": "concept:demonstrative",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p24-concept-possessive-pronoun-concept-noun-gender",
+    "from_node": "concept:possessive-pronoun",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p24-concept-possessive-pronoun-concept-independent-pronoun",
+    "from_node": "concept:possessive-pronoun",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p25-concept-cardinal-number-concept-noun-gender",
+    "from_node": "concept:cardinal-number",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p26-concept-number-system-concept-cardinal-number",
+    "from_node": "concept:number-system",
+    "to_node": "concept:cardinal-number",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p27-concept-adjective-concept-noun-gender",
+    "from_node": "concept:adjective",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p28-concept-stative-verb-concept-verb-to-be",
+    "from_node": "concept:stative-verb",
+    "to_node": "concept:verb-to-be",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p28-concept-stative-verb-concept-adjective",
+    "from_node": "concept:stative-verb",
+    "to_node": "concept:adjective",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p29-concept-preposition-concept-word-order",
+    "from_node": "concept:preposition",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p30-concept-preposition-fusion-concept-preposition",
+    "from_node": "concept:preposition-fusion",
+    "to_node": "concept:preposition",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p31-concept-directionals-concept-preposition",
+    "from_node": "concept:directionals",
+    "to_node": "concept:preposition",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p32-concept-object-pronoun-concept-word-order",
+    "from_node": "concept:object-pronoun",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p33-concept-pronoun-preposition-cluster-concept-preposition-fusion",
+    "from_node": "concept:pronoun-preposition-cluster",
+    "to_node": "concept:preposition-fusion",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p33-concept-pronoun-preposition-cluster-concept-object-pronoun",
+    "from_node": "concept:pronoun-preposition-cluster",
+    "to_node": "concept:object-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p34-concept-existential-concept-verb-to-be",
+    "from_node": "concept:existential",
+    "to_node": "concept:verb-to-be",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p35-concept-comparative-concept-stative-verb",
+    "from_node": "concept:comparative",
+    "to_node": "concept:stative-verb",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p36-concept-superlative-concept-comparative",
+    "from_node": "concept:superlative",
+    "to_node": "concept:comparative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p37-concept-colors-concept-adjective",
+    "from_node": "concept:colors",
+    "to_node": "concept:adjective",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p38-concept-adverbial-concept-word-order",
+    "from_node": "concept:adverbial",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p39-concept-locative-concept-word-order",
+    "from_node": "concept:locative",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p40-concept-conjunction-concept-word-order",
+    "from_node": "concept:conjunction",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p41-concept-question-word-concept-word-order",
+    "from_node": "concept:question-word",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p42-concept-interrogative-sentence-concept-question-word",
+    "from_node": "concept:interrogative-sentence",
+    "to_node": "concept:question-word",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p43-concept-relative-clause-concept-conjunction",
+    "from_node": "concept:relative-clause",
+    "to_node": "concept:conjunction",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p44-concept-conditional-concept-relative-clause",
+    "from_node": "concept:conditional",
+    "to_node": "concept:relative-clause",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p45-concept-indirect-speech-concept-conditional",
+    "from_node": "concept:indirect-speech",
+    "to_node": "concept:conditional",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p46-concept-passive-construction-concept-object-pronoun",
+    "from_node": "concept:passive-construction",
+    "to_node": "concept:object-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p47-concept-modal-verbs-concept-future-tense",
+    "from_node": "concept:modal-verbs",
+    "to_node": "concept:future-tense",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p48-concept-reflexive-reciprocal-concept-object-pronoun",
+    "from_node": "concept:reflexive-reciprocal",
+    "to_node": "concept:object-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p49-concept-causative-concept-modal-verbs",
+    "from_node": "concept:causative",
+    "to_node": "concept:modal-verbs",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-p50-concept-subordinate-clause-concept-relative-clause",
+    "from_node": "concept:subordinate-clause",
+    "to_node": "concept:relative-clause",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-masculine-gender-concept-somali-alphabet",
+    "from_node": "concept:masculine-gender",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-feminine-gender-concept-somali-alphabet",
+    "from_node": "concept:feminine-gender",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-masculine-noun-concept-somali-alphabet",
+    "from_node": "concept:masculine-noun",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-feminine-noun-concept-somali-alphabet",
+    "from_node": "concept:feminine-noun",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-semantic-vs-grammatical-gender-concept-somali-alphabet",
+    "from_node": "concept:semantic-vs-grammatical-gender",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-gender-noun-agreement-concept-somali-alphabet",
+    "from_node": "rule:gender-noun-agreement",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ka-concept-somali-alphabet",
+    "from_node": "morpheme:ka",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-kii-concept-somali-alphabet",
+    "from_node": "morpheme:kii",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ha-concept-somali-alphabet",
+    "from_node": "morpheme:ha",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-hii-concept-somali-alphabet",
+    "from_node": "morpheme:hii",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ga-concept-somali-alphabet",
+    "from_node": "morpheme:ga",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-gii-concept-somali-alphabet",
+    "from_node": "morpheme:gii",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-a-masc-concept-somali-alphabet",
+    "from_node": "morpheme:a-masc",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ii-masc-concept-somali-alphabet",
+    "from_node": "morpheme:ii-masc",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-aabbe-concept-somali-alphabet",
+    "from_node": "word:aabbe",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-albaab-concept-somali-alphabet",
+    "from_node": "word:albaab",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-cadaw-concept-somali-alphabet",
+    "from_node": "word:cadaw",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-dad-concept-somali-alphabet",
+    "from_node": "word:dad",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-dakhtar-concept-somali-alphabet",
+    "from_node": "word:dakhtar",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-fasal-concept-somali-alphabet",
+    "from_node": "word:fasal",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-guri-concept-somali-alphabet",
+    "from_node": "word:guri",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-miis-concept-somali-alphabet",
+    "from_node": "word:miis",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-nin-concept-somali-alphabet",
+    "from_node": "word:nin",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-qof-concept-somali-alphabet",
+    "from_node": "word:qof",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-shaah-concept-somali-alphabet",
+    "from_node": "word:shaah",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-shaqaale-concept-somali-alphabet",
+    "from_node": "word:shaqaale",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-suuq-concept-somali-alphabet",
+    "from_node": "word:suuq",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-taksi-concept-somali-alphabet",
+    "from_node": "word:taksi",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-waqtiga-concept-somali-alphabet",
+    "from_node": "word:waqtiga",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ta-concept-somali-alphabet",
+    "from_node": "morpheme:ta",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-tii-concept-somali-alphabet",
+    "from_node": "morpheme:tii",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-da-concept-somali-alphabet",
+    "from_node": "morpheme:da",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-dii-concept-somali-alphabet",
+    "from_node": "morpheme:dii",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-dha-concept-somali-alphabet",
+    "from_node": "morpheme:dha",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-dhii-concept-somali-alphabet",
+    "from_node": "morpheme:dhii",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-sha-concept-somali-alphabet",
+    "from_node": "morpheme:sha",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-shii-concept-somali-alphabet",
+    "from_node": "morpheme:shii",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-alaab-concept-somali-alphabet",
+    "from_node": "word:alaab",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-bad-concept-somali-alphabet",
+    "from_node": "word:bad",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-bil-concept-somali-alphabet",
+    "from_node": "word:bil",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-buur-concept-somali-alphabet",
+    "from_node": "word:buur",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-cadceed-concept-somali-alphabet",
+    "from_node": "word:cadceed",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-dakhtarad-concept-somali-alphabet",
+    "from_node": "word:dakhtarad",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-farriin-concept-somali-alphabet",
+    "from_node": "word:farriin",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-gabadh-concept-somali-alphabet",
+    "from_node": "word:gabadh",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-gacan-concept-somali-alphabet",
+    "from_node": "word:gacan",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-maalin-concept-somali-alphabet",
+    "from_node": "word:maalin",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-makhaayad-concept-somali-alphabet",
+    "from_node": "word:makhaayad",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-meel-concept-somali-alphabet",
+    "from_node": "word:meel",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-mindi-concept-somali-alphabet",
+    "from_node": "word:mindi",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-naag-concept-somali-alphabet",
+    "from_node": "word:naag",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-xurriyad-concept-somali-alphabet",
+    "from_node": "word:xurriyad",
+    "to_node": "concept:somali-alphabet",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ka-concept-noun-gender",
+    "from_node": "morpheme:ka",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-kii-concept-noun-gender",
+    "from_node": "morpheme:kii",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ta-concept-noun-gender",
+    "from_node": "morpheme:ta",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-tii-concept-noun-gender",
+    "from_node": "morpheme:tii",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ka-def-concept-noun-gender",
+    "from_node": "morpheme:ka-def",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ta-def-concept-noun-gender",
+    "from_node": "morpheme:ta-def",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-gender-noun-agreement-concept-noun-gender",
+    "from_node": "rule:gender-noun-agreement",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-weyn-concept-definite-article",
+    "from_node": "word:weyn",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-plural-o-concept-noun-gender",
+    "from_node": "morpheme:plural-o",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-la-pronoun-concept-greeting",
+    "from_node": "concept:la-pronoun",
+    "to_node": "concept:greeting",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-is-pronoun-concept-greeting",
+    "from_node": "concept:is-pronoun",
+    "to_node": "concept:greeting",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme--aan-concept-independent-pronoun",
+    "from_node": "morpheme:-aan",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme--aad-concept-independent-pronoun",
+    "from_node": "morpheme:-aad",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme--uu-concept-independent-pronoun",
+    "from_node": "morpheme:-uu",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme--ay-concept-independent-pronoun",
+    "from_node": "morpheme:-ay",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme--aynu-concept-independent-pronoun",
+    "from_node": "morpheme:-aynu",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme--aannu-concept-independent-pronoun",
+    "from_node": "morpheme:-aannu",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme--aydin-concept-independent-pronoun",
+    "from_node": "morpheme:-aydin",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-short-form-to-be-concept-word-order",
+    "from_node": "concept:short-form-to-be",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-past-to-be-concept-word-order",
+    "from_node": "concept:past-to-be",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-be-1sg-concept-word-order",
+    "from_node": "morpheme:be-1sg",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-be-3msg-concept-word-order",
+    "from_node": "morpheme:be-3msg",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-be-3fsg-concept-word-order",
+    "from_node": "morpheme:be-3fsg",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-be-past-1sg-concept-word-order",
+    "from_node": "morpheme:be-past-1sg",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-waa-concept-verbal-subject-pronoun",
+    "from_node": "morpheme:waa",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-baa-concept-verbal-subject-pronoun",
+    "from_node": "morpheme:baa",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ayaa-concept-verbal-subject-pronoun",
+    "from_node": "morpheme:ayaa",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-waxaa-concept-verbal-subject-pronoun",
+    "from_node": "morpheme:waxaa",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-waxa-concept-verbal-subject-pronoun",
+    "from_node": "morpheme:waxa",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-focus-classifier-position-concept-verbal-subject-pronoun",
+    "from_node": "rule:focus-classifier-position",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-focus-non-focus-coexist-concept-verbal-subject-pronoun",
+    "from_node": "rule:focus-non-focus-coexist",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-waa-concept-verbless-declarative",
+    "from_node": "morpheme:waa",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-baa-concept-verbless-declarative",
+    "from_node": "morpheme:baa",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ayaa-concept-verbless-declarative",
+    "from_node": "morpheme:ayaa",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-waxaa-concept-verbless-declarative",
+    "from_node": "morpheme:waxaa",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-waxa-concept-verbless-declarative",
+    "from_node": "morpheme:waxa",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-focus-classifier-position-concept-verbless-declarative",
+    "from_node": "rule:focus-classifier-position",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-focus-non-focus-coexist-concept-verbless-declarative",
+    "from_node": "rule:focus-non-focus-coexist",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-conjugation-1-concept-word-order",
+    "from_node": "concept:conjugation-1",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-conjugation-2a-concept-word-order",
+    "from_node": "concept:conjugation-2a",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-conjugation-2b-concept-word-order",
+    "from_node": "concept:conjugation-2b",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-conjugation-3a-concept-word-order",
+    "from_node": "concept:conjugation-3a",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-conjugation-3b-concept-word-order",
+    "from_node": "concept:conjugation-3b",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-verb-conjugation-classes-concept-word-order",
+    "from_node": "rule:verb-conjugation-classes",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-potential-mood-concept-word-order",
+    "from_node": "concept:potential-mood",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-inchoative-concept-word-order",
+    "from_node": "concept:inchoative",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-feker-concept-word-order",
+    "from_node": "word:feker",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-fikir-concept-word-order",
+    "from_node": "word:fikir",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-doon-concept-general-past-tense",
+    "from_node": "morpheme:doon",
+    "to_node": "concept:general-past-tense",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-future-doon-concept-general-past-tense",
+    "from_node": "rule:future-doon",
+    "to_node": "concept:general-past-tense",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-negative-general-past-concept-present-habitual",
+    "from_node": "concept:negative-general-past",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-negative-general-present-concept-present-habitual",
+    "from_node": "concept:negative-general-present",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-negative-imperative-concept-present-habitual",
+    "from_node": "concept:negative-imperative",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-negative-future-concept-present-habitual",
+    "from_node": "concept:negative-future",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-maya-concept-present-habitual",
+    "from_node": "morpheme:maya",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ma-neg-concept-present-habitual",
+    "from_node": "morpheme:ma-neg",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-negation-ma-aan-concept-present-habitual",
+    "from_node": "rule:negation-ma-aan",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-saan-concept-present-habitual",
+    "from_node": "morpheme:saan",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ha-concept-present-habitual",
+    "from_node": "morpheme:ha",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-nin-concept-present-habitual",
+    "from_node": "morpheme:nin",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-n-neg-concept-present-habitual",
+    "from_node": "morpheme:n-neg",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ha-neg-imp-concept-present-habitual",
+    "from_node": "morpheme:ha-neg-imp",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-singular-imperative-concept-present-habitual",
+    "from_node": "concept:singular-imperative",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-concept-plural-imperative-concept-present-habitual",
+    "from_node": "concept:plural-imperative",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-a-plural-imp-concept-present-habitual",
+    "from_node": "morpheme:a-plural-imp",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ya-concept-present-habitual",
+    "from_node": "morpheme:ya",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-imperative-formation-concept-present-habitual",
+    "from_node": "rule:imperative-formation",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-kan-concept-noun-gender",
+    "from_node": "morpheme:kan",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-kaa-concept-noun-gender",
+    "from_node": "morpheme:kaa",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-kaas-concept-noun-gender",
+    "from_node": "morpheme:kaas",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-tan-concept-noun-gender",
+    "from_node": "morpheme:tan",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-taa-fem-concept-noun-gender",
+    "from_node": "morpheme:taa-fem",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-taas-concept-noun-gender",
+    "from_node": "morpheme:taas",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-possessive-suffix-concept-noun-gender",
+    "from_node": "rule:possessive-suffix",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-possessive-suffix-concept-independent-pronoun",
+    "from_node": "rule:possessive-suffix",
+    "to_node": "concept:independent-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-kow-concept-noun-gender",
+    "from_node": "word:kow",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-laba-concept-noun-gender",
+    "from_node": "word:laba",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-number-agreement-concept-cardinal-number",
+    "from_node": "rule:number-agreement",
+    "to_node": "concept:cardinal-number",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-different-words-for-one-concept-cardinal-number",
+    "from_node": "rule:different-words-for-one",
+    "to_node": "concept:cardinal-number",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-number-oo-construction-concept-cardinal-number",
+    "from_node": "rule:number-oo-construction",
+    "to_node": "concept:cardinal-number",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ku-concept-word-order",
+    "from_node": "morpheme:ku",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ka-prep-concept-word-order",
+    "from_node": "morpheme:ka-prep",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-u-concept-word-order",
+    "from_node": "morpheme:u",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-la-concept-word-order",
+    "from_node": "morpheme:la",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-preposition-fusion-concept-word-order",
+    "from_node": "rule:preposition-fusion",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-kuula-concept-preposition",
+    "from_node": "morpheme:kuula",
+    "to_node": "concept:preposition",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-loola-concept-preposition",
+    "from_node": "morpheme:loola",
+    "to_node": "concept:preposition",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-i-obj-concept-word-order",
+    "from_node": "morpheme:i-obj",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ku-obj-concept-word-order",
+    "from_node": "morpheme:ku-obj",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ka-obj-concept-word-order",
+    "from_node": "morpheme:ka-obj",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-la-obj-concept-word-order",
+    "from_node": "morpheme:la-obj",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-na-obj-concept-word-order",
+    "from_node": "morpheme:na-obj",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-idin-concept-word-order",
+    "from_node": "morpheme:idin",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-laha-neg-concept-verb-to-be",
+    "from_node": "morpheme:laha-neg",
+    "to_node": "concept:verb-to-be",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-hoos-concept-word-order",
+    "from_node": "word:hoos",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-taalla-concept-word-order",
+    "from_node": "word:taalla",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-yaalla-concept-word-order",
+    "from_node": "word:yaalla",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-conjunction-iyo-concept-word-order",
+    "from_node": "morpheme:conjunction-iyo",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-conjunction-oo-concept-word-order",
+    "from_node": "morpheme:conjunction-oo",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-conjunction-ee-concept-word-order",
+    "from_node": "morpheme:conjunction-ee",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ee-conj-concept-word-order",
+    "from_node": "morpheme:ee-conj",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-na-clitic-concept-word-order",
+    "from_node": "morpheme:na-clitic",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-se-clitic-concept-word-order",
+    "from_node": "morpheme:se-clitic",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-ba-clitic-concept-word-order",
+    "from_node": "morpheme:ba-clitic",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-haddii-concept-word-order",
+    "from_node": "morpheme:haddii",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-laakiin-concept-word-order",
+    "from_node": "morpheme:laakiin",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-waayo-concept-word-order",
+    "from_node": "morpheme:waayo",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-inkastoo-concept-word-order",
+    "from_node": "morpheme:inkastoo",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-max-concept-word-order",
+    "from_node": "morpheme:max",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-maxay-concept-word-order",
+    "from_node": "word:maxay",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-word-maxaad-concept-word-order",
+    "from_node": "word:maxaad",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-sidee-concept-word-order",
+    "from_node": "morpheme:sidee",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-xaggee-concept-word-order",
+    "from_node": "morpheme:xaggee",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-maxay-concept-word-order",
+    "from_node": "morpheme:maxay",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-goorma-concept-word-order",
+    "from_node": "morpheme:goorma",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-yaa-concept-word-order",
+    "from_node": "morpheme:yaa",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-question-ma-concept-question-word",
+    "from_node": "rule:question-ma",
+    "to_node": "concept:question-word",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-relative-clause-concept-conjunction",
+    "from_node": "rule:relative-clause",
+    "to_node": "concept:conjunction",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-haddii-concept-relative-clause",
+    "from_node": "morpheme:haddii",
+    "to_node": "concept:relative-clause",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-leh-neg-concept-relative-clause",
+    "from_node": "morpheme:leh-neg",
+    "to_node": "concept:relative-clause",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-rule-condition-haddii-concept-relative-clause",
+    "from_node": "rule:condition-haddii",
+    "to_node": "concept:relative-clause",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-iy-caus-concept-modal-verbs",
+    "from_node": "morpheme:iy-caus",
+    "to_node": "concept:modal-verbs",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-down-morpheme-is-caus-concept-modal-verbs",
+    "from_node": "morpheme:is-caus",
+    "to_node": "concept:modal-verbs",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-verb-to-be-concept-sentence-structure",
+    "from_node": "concept:verb-to-be",
+    "to_node": "concept:sentence-structure",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-focus-marker-concept-declarative-sentence",
+    "from_node": "concept:focus-marker",
+    "to_node": "concept:declarative-sentence",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-verb-conjugation-concept-sentence-structure",
+    "from_node": "concept:verb-conjugation",
+    "to_node": "concept:sentence-structure",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-preposition-concept-sentence-structure",
+    "from_node": "concept:preposition",
+    "to_node": "concept:sentence-structure",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-object-pronoun-concept-sentence-structure",
+    "from_node": "concept:object-pronoun",
+    "to_node": "concept:sentence-structure",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-pronoun-preposition-cluster-concept-verbal-pronoun",
+    "from_node": "concept:pronoun-preposition-cluster",
+    "to_node": "concept:verbal-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-adverbial-concept-sentence-structure",
+    "from_node": "concept:adverbial",
+    "to_node": "concept:sentence-structure",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-locative-concept-sentence-structure",
+    "from_node": "concept:locative",
+    "to_node": "concept:sentence-structure",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-conjunction-concept-sentence-structure",
+    "from_node": "concept:conjunction",
+    "to_node": "concept:sentence-structure",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-question-word-concept-sentence-structure",
+    "from_node": "concept:question-word",
+    "to_node": "concept:sentence-structure",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-passive-construction-concept-verbal-pronoun",
+    "from_node": "concept:passive-construction",
+    "to_node": "concept:verbal-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-isa-up-concept-reflexive-reciprocal-concept-verbal-pronoun",
+    "from_node": "concept:reflexive-reciprocal",
+    "to_node": "concept:verbal-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--ka-concept-noun-gender",
+    "from_node": "morpheme:-ka",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--ta-concept-noun-gender",
+    "from_node": "morpheme:-ta",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--ku-concept-noun-gender",
+    "from_node": "morpheme:-ku",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--tu-concept-noun-gender",
+    "from_node": "morpheme:-tu",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--kii-concept-noun-gender",
+    "from_node": "morpheme:-kii",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--tii-concept-noun-gender",
+    "from_node": "morpheme:-tii",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-lesson-ch4-noun-gender-concept-noun-gender",
+    "from_node": "lesson:ch4-noun-gender",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-dhakhtar-concept-noun-gender",
+    "from_node": "word:dhakhtar",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-macallin-concept-noun-gender",
+    "from_node": "word:macallin",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-naag-concept-noun-gender",
+    "from_node": "word:naag",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-nin-concept-noun-gender",
+    "from_node": "word:nin",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-walaal-concept-noun-gender",
+    "from_node": "word:walaal",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-inan-masc-concept-noun-gender",
+    "from_node": "word:inan-masc",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-lesson-ch4-noun-gender-concept-definite-article",
+    "from_node": "lesson:ch4-noun-gender",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-dhakhtar-concept-definite-article",
+    "from_node": "word:dhakhtar",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-macallin-concept-definite-article",
+    "from_node": "word:macallin",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-naag-concept-definite-article",
+    "from_node": "word:naag",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-nin-concept-definite-article",
+    "from_node": "word:nin",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-walaal-concept-definite-article",
+    "from_node": "word:walaal",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-inan-masc-concept-definite-article",
+    "from_node": "word:inan-masc",
+    "to_node": "concept:definite-article",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--o-plural-concept-noun-gender",
+    "from_node": "morpheme:-o-plural",
+    "to_node": "concept:noun-gender",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-lesson-ch2-basic-statements-concept-verbal-subject-pronoun",
+    "from_node": "lesson:ch2-basic-statements",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-buug-concept-verbal-subject-pronoun",
+    "from_node": "word:buug",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-koob-concept-verbal-subject-pronoun",
+    "from_node": "word:koob",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-laabbis-concept-verbal-subject-pronoun",
+    "from_node": "word:laabbis",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-sac-concept-verbal-subject-pronoun",
+    "from_node": "word:sac",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-libaax-concept-verbal-subject-pronoun",
+    "from_node": "word:libaax",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-guri-concept-verbal-subject-pronoun",
+    "from_node": "word:guri",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-suuq-concept-verbal-subject-pronoun",
+    "from_node": "word:suuq",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-shimbir-concept-verbal-subject-pronoun",
+    "from_node": "word:shimbir",
+    "to_node": "concept:verbal-subject-pronoun",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-lesson-ch2-basic-statements-concept-verbless-declarative",
+    "from_node": "lesson:ch2-basic-statements",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-buug-concept-verbless-declarative",
+    "from_node": "word:buug",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-koob-concept-verbless-declarative",
+    "from_node": "word:koob",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-laabbis-concept-verbless-declarative",
+    "from_node": "word:laabbis",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-sac-concept-verbless-declarative",
+    "from_node": "word:sac",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-libaax-concept-verbless-declarative",
+    "from_node": "word:libaax",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-guri-concept-verbless-declarative",
+    "from_node": "word:guri",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-suuq-concept-verbless-declarative",
+    "from_node": "word:suuq",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-shimbir-concept-verbless-declarative",
+    "from_node": "word:shimbir",
+    "to_node": "concept:verbless-declarative",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--ay-progressive-concept-present-habitual",
+    "from_node": "morpheme:-ay-progressive",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-lesson-ch7-imperatives-concept-present-habitual",
+    "from_node": "lesson:ch7-imperatives",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-gal-concept-present-habitual",
+    "from_node": "word:gal",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-bax-concept-present-habitual",
+    "from_node": "word:bax",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-bar-concept-present-habitual",
+    "from_node": "word:bar",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-sheeg-concept-present-habitual",
+    "from_node": "word:sheeg",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-fur-concept-present-habitual",
+    "from_node": "word:fur",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-xir-concept-present-habitual",
+    "from_node": "word:xir",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-keen-concept-present-habitual",
+    "from_node": "word:keen",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-cun-concept-present-habitual",
+    "from_node": "word:cun",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-jar-concept-present-habitual",
+    "from_node": "word:jar",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-dir-concept-present-habitual",
+    "from_node": "word:dir",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-tag-concept-present-habitual",
+    "from_node": "word:tag",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-qor-concept-present-habitual",
+    "from_node": "word:qor",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-qaad-concept-present-habitual",
+    "from_node": "word:qaad",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-dhig-concept-present-habitual",
+    "from_node": "word:dhig",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-shid-concept-present-habitual",
+    "from_node": "word:shid",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-hay-concept-present-habitual",
+    "from_node": "word:hay",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-hel-concept-present-habitual",
+    "from_node": "word:hel",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-sii-concept-present-habitual",
+    "from_node": "word:sii",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-akhri-concept-present-habitual",
+    "from_node": "word:akhri",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-kari-concept-present-habitual",
+    "from_node": "word:kari",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-bislee-concept-present-habitual",
+    "from_node": "word:bislee",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-safee-concept-present-habitual",
+    "from_node": "word:safee",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-word-samee-concept-present-habitual",
+    "from_node": "word:samee",
+    "to_node": "concept:present-habitual",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--na-concept-word-order",
+    "from_node": "morpheme:-na",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme-iyo-concept-word-order",
+    "from_node": "morpheme:iyo",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--ba-concept-word-order",
+    "from_node": "morpheme:-ba",
+    "to_node": "concept:word-order",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  },
+  {
+    "id": "edge:req-partof-down-morpheme--i-causative-concept-modal-verbs",
+    "from_node": "morpheme:-i-causative",
+    "to_node": "concept:modal-verbs",
+    "type": "REQUIRES",
+    "qualifiers": {
+      "source": {
+        "textbookId": "problem-curriculum"
+      },
+      "confidence": 0.95,
+      "dialects": [
+        "standard"
+      ]
+    }
+  }
+]

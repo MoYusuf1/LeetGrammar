@@ -147,7 +147,7 @@ export default function Curriculum() {
                     {validation.orphanedNodes.map((n) => (
                       <button
                         key={n.id}
-                        onClick={() => navigate(`/wiki/${n.id}`)}
+                        onClick={() => navigate(`/study/${n.id}`)}
                         className="text-[10px] px-2 py-1 rounded-md bg-[#1a1a1a] text-[#8c8c8c] hover:text-[#eff1f6]"
                       >
                         {n.labels.default}
@@ -199,7 +199,7 @@ export default function Curriculum() {
                       <div key={node.id} className="flex items-center gap-1.5">
                         {i > 0 && <span className="text-[#5c5c5c]">→</span>}
                         <button
-                          onClick={() => navigate(`/wiki/${node.id}`)}
+                          onClick={() => navigate(`/study/${node.id}`)}
                           className={`text-xs px-2.5 py-1 rounded-md transition-colors ${
                             node.id === targetId
                               ? 'bg-[#ffa116]20 text-[#ffa116] border border-[#ffa116]30'
@@ -261,7 +261,7 @@ export default function Curriculum() {
                     <div key={node.id} className="flex items-center gap-1.5">
                       {i > 0 && <span className="text-[#5c5c5c]">→</span>}
                       <button
-                        onClick={() => navigate(`/wiki/${node.id}`)}
+                        onClick={() => navigate(`/study/${node.id}`)}
                         className="text-xs px-2.5 py-1 rounded-md bg-[#1a1a1a] text-[#c8c8c8] border border-[#ffffff08] hover:text-[#eff1f6]"
                       >
                         {node.labels.default}

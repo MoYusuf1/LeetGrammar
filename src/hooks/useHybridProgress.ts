@@ -6,7 +6,7 @@
 import { useMemo, useCallback } from 'react';
 import { useProgressStore } from '@/stores/progress-store';
 import { useGraphStore } from '@/stores/graph-store';
-import { buildGraphPath, getGraphLessonStatus } from '@/engine/lesson-generator';
+import { buildGraphPath } from '@/engine/lesson-generator';
 import { allProblems } from '@/data/problems';
 import type { ProblemMeta } from '@/data/problems';
 
@@ -118,20 +118,9 @@ export function useHybridProgress() {
   const getLessonStatus = useCallback(
     (lessonId: number): 'completed' | 'current' | 'locked' => {
       if (store.completedLessons.includes(lessonId)) return 'completed';
-
-      // Graph lessons use prerequisite-based unlocking
-      if (lessonId >= 100000) {
-        return getGraphLessonStatus(lessonId, store.completedLessons, graphLessons);
-      }
-
-      // Hardcoded lessons use sequential unlocking
-      const prevLesson = lessonId - 1;
-      if (prevLesson === 0 || store.completedLessons.includes(prevLesson)) {
-        return 'current';
-      }
-      return 'locked';
+      return 'current';
     },
-    [store.completedLessons, graphLessons]
+    [store.completedLessons]
   );
 
   const completeLesson = useCallback(

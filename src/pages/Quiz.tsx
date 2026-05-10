@@ -103,7 +103,7 @@ export default function Quiz() {
             This concept doesn't have enough data to generate questions yet.
           </p>
           <button
-            onClick={() => conceptId && navigate(`/wiki/${conceptId}`)}
+            onClick={() => conceptId && navigate(`/study/${conceptId}`)}
             className="mt-4 px-4 py-2 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-sm font-semibold"
           >
             Back to Article
@@ -121,7 +121,7 @@ export default function Quiz() {
       <div className="min-h-full bg-[#0f0f0f] px-4 py-8">
         <div className="max-w-[640px] mx-auto">
           <button
-            onClick={() => conceptId && navigate(`/wiki/${conceptId}`)}
+            onClick={() => conceptId && navigate(`/study/${conceptId}`)}
             className="flex items-center gap-1.5 text-[#8c8c8c] hover:text-[#eff1f6] transition-colors mb-6"
           >
             <ArrowLeft size={14} />
@@ -191,7 +191,7 @@ export default function Quiz() {
               Retry
             </button>
             <button
-              onClick={() => conceptId && navigate(`/wiki/${conceptId}`)}
+              onClick={() => conceptId && navigate(`/study/${conceptId}`)}
               className="flex-1 h-12 rounded-xl bg-[#ffa116] text-[#0f0f0f] font-bold text-sm flex items-center justify-center gap-2"
             >
               <BookOpen size={15} />
@@ -210,7 +210,7 @@ export default function Quiz() {
         <div className="max-w-[640px] mx-auto">
           <div className="flex items-center justify-between mb-3">
             <button
-              onClick={() => conceptId && navigate(`/wiki/${conceptId}`)}
+              onClick={() => conceptId && navigate(`/study/${conceptId}`)}
               className="flex items-center gap-1.5 text-[#8c8c8c] hover:text-[#eff1f6] transition-colors"
             >
               <ArrowLeft size={14} />

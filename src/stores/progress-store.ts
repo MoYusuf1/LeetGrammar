@@ -90,11 +90,7 @@ export const useProgressStore = create<ProgressState>()(
       getLessonStatus: (lessonId: number) => {
         const state = get();
         if (state.completedLessons.includes(lessonId)) return 'completed';
-        const prevLesson = lessonId - 1;
-        if (prevLesson === 0 || state.completedLessons.includes(prevLesson)) {
-          return 'current';
-        }
-        return 'locked';
+        return 'current';
       },
 
       recordPracticeScore: (lessonId: number, score: number) => {
