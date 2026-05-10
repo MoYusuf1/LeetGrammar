@@ -28,7 +28,7 @@ export interface LessonContent {
   rule: string;
   keyConcepts: string[];
   examples: LessonExample[];
-  testCases: TestCase[];
+  testCases?: TestCase[];
   commonMistakes: { mistake: string; correction: string; explanation: string }[];
   exercises: { question: string; options: string[]; answer: number; explanation: string }[];
   quickRef: { label: string; value: string }[];

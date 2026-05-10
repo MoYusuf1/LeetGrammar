@@ -1,17 +1,20 @@
 import { useLocation, useNavigate } from 'react-router';
-import { Map, List, User, Flame, Code2 } from 'lucide-react';
+import { Map, List, BookOpen, User, Flame, Code2 } from 'lucide-react';
+import { useProgress } from '@/hooks/useProgress';
 
 const navLinks = [
   { path: '/roadmap', label: 'Roadmap', icon: Map },
   { path: '/problems', label: 'Problems', icon: List },
-  { path: '/profile', label: 'Profile', icon: User },
+  { path: '/learn', label: 'Learn', icon: BookOpen },
 ];
 
 export default function TopNav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { progress } = useProgress();
 
-  // Don't show top nav during problem solving
+  // Don't show top nav during problem solving (immersive mode)
+  // Show it on lesson pages so users can navigate away
   if (location.pathname.startsWith('/problem/')) {
     return null;
   }
@@ -57,9 +60,12 @@ export default function TopNav() {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1 text-[#ffc01e]">
           <Flame size={14} />
-          <span className="text-xs font-semibold">0</span>
+          <span className="text-xs font-semibold">{progress.streak}</span>
         </div>
-        <button className="w-7 h-7 rounded-full bg-[#3e3e3e] flex items-center justify-center text-[#8c8c8c] hover:text-[#eff1f6] tap-scale">
+        <button
+          onClick={() => navigate('/profile')}
+          className="w-7 h-7 rounded-full bg-[#3e3e3e] flex items-center justify-center text-[#8c8c8c] hover:text-[#eff1f6] tap-scale"
+        >
           <User size={14} />
         </button>
       </div>

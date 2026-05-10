@@ -5,6 +5,7 @@ import Problems from '@/pages/Problems';
 import Problem from '@/pages/Problem';
 import Lesson from '@/pages/Lesson';
 import Profile from '@/pages/Profile';
+import Learn from '@/pages/Learn';
 import About from '@/pages/About';
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/problem/:id" element={<Problem />} />
           <Route path="/roadmap" element={<Roadmap />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/learn" element={<Learn />} />
           <Route path="/about" element={<About />} />
           {/* Redirects for old routes */}
           <Route path="/path" element={<Navigate to="/roadmap" replace />} />

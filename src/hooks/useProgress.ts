@@ -130,7 +130,7 @@ export function useProgress() {
   );
 
   const getTopicStatus = useCallback(
-    (lessonIds: number[], prerequisiteTopicIds: string[]): 'completed' | 'in-progress' | 'locked' => {
+    (lessonIds: number[], _prerequisiteTopicIds: string[]): 'completed' | 'in-progress' | 'locked' => {
       // Check if any prerequisite topics are incomplete
       // (prerequisiteTopicIds should be checked by caller with their own lessonIds)
       const allCompleted = lessonIds.every((id) => progress.completedLessons.includes(id));

@@ -38,12 +38,6 @@ export default function ExerciseCard({
 
   const isCorrect = selected === answer;
 
-  const reset = useCallback(() => {
-    setSelected(null);
-    setShowResult(false);
-    setShaking(null);
-  }, []);
-
   return (
     <div className="space-y-4">
       <p className="text-[15px] font-medium text-[#eff1f6] leading-relaxed">{question}</p>

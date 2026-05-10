@@ -22,7 +22,7 @@ export default function Problem() {
     testCaseResults: { input: string; expected: string; actual: string; passed: boolean }[];
     message: string;
   } | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [, setSubmitted] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [exerciseKey, setExerciseKey] = useState(0); // Used to reset ExerciseCard
 
@@ -30,12 +30,6 @@ export default function Problem() {
 
   const exercise = lesson?.exercises?.[0] ?? null;
   const testCases = lesson?.testCases ?? [];
-
-  // Determine what the "output" would be for each test case based on user's answer
-  const getTestCaseAnswer = useCallback((selectedOption: string | null) => {
-    if (!exercise || selectedOption === null) return 'No answer';
-    return selectedOption;
-  }, [exercise]);
 
   const handleRun = useCallback((correct: boolean) => {
     if (!exercise) return;
@@ -196,8 +190,11 @@ export default function Problem() {
         <div className="flex-1 flex flex-col bg-[#0f0f0f] overflow-hidden border-l border-[#ffffff10]">
           {/* Exercise Area */}
           <div className="flex-1 overflow-y-auto">
-            <div className="h-[40px] bg-[#1a1a1a] border-b border-[#ffffff10] flex items-center px-4 sticky top-0 z-10">
-              <span className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wider">Code</span>
+            <div className="h-[40px] bg-[#1a1a1a] border-b border-[#ffffff10] flex items-center px-4 sticky top-0 z-10 justify-between">
+              <span className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wider">Exercise</span>
+              {isCompleted && (
+                <span className="text-[10px] font-medium text-[#00b8a3] bg-[#00b8a315] px-2 py-0.5 rounded">Solved</span>
+              )}
             </div>
             <div className="p-4">
               {exercise ? (
@@ -265,19 +262,19 @@ export default function Problem() {
           <div className="h-[52px] bg-[#1a1a1a] border-t border-[#ffffff10] flex items-center px-4 gap-3 flex-shrink-0">
             <button
               onClick={handleReset}
-              className="h-8 px-4 rounded-lg bg-[#3e3e3e] text-[#eff1f6] font-medium text-xs flex items-center gap-1.5 hover:bg-[#4e4e4e] transition-colors"
+              className="h-8 px-4 rounded-lg bg-[#3e3e3e] text-[#eff1f6] font-medium text-xs flex items-center gap-1.5 hover:bg-[#505050] active:bg-[#3e3e3e] transition-colors"
             >
               <Play size={12} /> Run
             </button>
             <button
               onClick={handleSubmit}
               disabled={isCompleted || !runResult?.correct}
-              className={`h-8 px-4 rounded-lg font-medium text-xs flex items-center gap-1.5 transition-colors ${
+              className={`h-8 px-4 rounded-lg font-medium text-xs flex items-center gap-1.5 transition-all ${
                 isCompleted
                   ? 'bg-[#00b8a320] text-[#00b8a3] cursor-default'
                   : runResult?.correct
-                  ? 'bg-[#ffa116] text-[#0f0f0f] hover:bg-[#e69115] cursor-pointer'
-                  : 'bg-[#ffa11630] text-[#ffa11660] cursor-not-allowed'
+                  ? 'bg-[#ffa116] text-[#0f0f0f] hover:bg-[#ffb84d] hover:shadow-[0_0_12px_rgba(255,161,22,0.3)] cursor-pointer'
+                  : 'bg-[#282828] text-[#5c5c5c] cursor-not-allowed'
               }`}
             >
               {isCompleted ? <Check size={12} /> : <Send size={12} />}
@@ -286,7 +283,7 @@ export default function Problem() {
             {isCompleted && (
               <button
                 onClick={() => navigate(`/problem/${problemId + 1}`)}
-                className="ml-auto h-8 px-3 rounded-lg border border-[#ffffff15] text-[#8c8c8c] hover:text-[#eff1f6] hover:border-[#ffffff25] text-xs flex items-center gap-1 transition-colors"
+                className="ml-auto h-8 px-3 rounded-lg border border-[#ffffff15] text-[#8c8c8c] hover:text-[#eff1f6] hover:border-[#ffffff30] hover:bg-[#ffffff08] text-xs flex items-center gap-1 transition-all"
               >
                 Next <ChevronRight size={12} />
               </button>

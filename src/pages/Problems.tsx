@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, Check, Lock, Circle, Shuffle } from 'lucide-react';
+import { Search, Check, Circle, Shuffle } from 'lucide-react';
 import { allProblems, getAllTags } from '@/data/problems';
 import { useProgress } from '@/hooks/useProgress';
 
@@ -63,7 +63,7 @@ export default function Problems() {
             <div className="flex items-center gap-3">
               <button
                 onClick={handleRandom}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#ffffff10] text-[#8c8c8c] hover:text-[#eff1f6] hover:bg-[#ffffff15] text-xs font-medium transition-colors tap-scale"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#ffa116] text-[#0f0f0f] hover:bg-[#ffb84d] text-xs font-semibold transition-colors tap-scale"
               >
                 <Shuffle size={13} />
                 Pick One
@@ -140,17 +140,14 @@ export default function Problems() {
               {filteredProblems.map((problem) => {
                 const status = getLessonStatus(problem.id);
                 const isCompleted = status === 'completed';
-                const isLocked = status === 'locked';
+
                 const diffColor = getDifficultyColor(problem.difficulty);
 
                 return (
                   <button
                     key={problem.id}
-                    onClick={() => { if (!isLocked) navigate(`/problem/${problem.id}`); }}
-                    disabled={isLocked}
-                    className={`w-full grid grid-cols-[52px_56px_1fr_100px_100px_140px] gap-2 px-5 py-3 text-left transition-colors border-b border-[#ffffff08] last:border-b-0
-                      ${isLocked ? 'opacity-30 cursor-not-allowed' : 'hover:bg-[#ffffff08] cursor-pointer'}
-                    `}
+                    onClick={() => navigate(`/problem/${problem.id}`)}
+                    className="w-full grid grid-cols-[52px_56px_1fr_100px_100px_140px] gap-2 px-5 py-3 text-left transition-colors border-b border-[#ffffff08] last:border-b-0 hover:bg-[#ffffff08] cursor-pointer"
                   >
                     {/* Status */}
                     <div className="flex items-center justify-center">
@@ -158,8 +155,6 @@ export default function Problems() {
                         <div className="w-[18px] h-[18px] rounded-full bg-[#00b8a3] flex items-center justify-center">
                           <Check size={11} className="text-[#0f0f0f]" strokeWidth={3} />
                         </div>
-                      ) : isLocked ? (
-                        <Lock size={15} className="text-[#5c5c5c]" />
                       ) : (
                         <Circle size={15} className="text-[#3e3e3e]" />
                       )}
@@ -171,7 +166,7 @@ export default function Problems() {
                     </span>
 
                     {/* Title */}
-                    <span className={`text-sm flex items-center ${isLocked ? 'text-[#5c5c5c]' : 'text-[#eff1f6]'}`}>
+                    <span className="text-sm flex items-center text-[#eff1f6]">
                       {problem.title}
                     </span>
 

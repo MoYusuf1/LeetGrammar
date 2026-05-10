@@ -1,5 +1,4 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router';
 import { Check, Sparkles } from 'lucide-react';
 import { grammarTopics } from '@/data/grammarTopics';
 import { useProgress } from '@/hooks/useProgress';
@@ -63,8 +62,7 @@ function computeLayout(topics: RoadmapTopic[]) {
 }
 
 export default function Roadmap() {
-  const navigate = useNavigate();
-  const { isTopicCompleted, getTopicProgress, arePrerequisitesMet } = useProgress();
+  const { isTopicCompleted, getTopicProgress } = useProgress();
   const scrollRef = useRef<HTMLDivElement>(null);
   const currentRef = useRef<HTMLDivElement>(null);
 
@@ -123,7 +121,6 @@ export default function Roadmap() {
       for (const prereqId of topic.prerequisites) {
         const parentPos = positions.get(prereqId);
         if (!parentPos) continue;
-        const parentTopic = grammarTopics.find((t) => t.id === prereqId);
         result.push({
           x1: PAD_X + parentPos.x + NODE_W / 2,
           y1: PAD_Y + parentPos.y * ROW_H + NODE_H,
@@ -166,13 +163,21 @@ export default function Roadmap() {
 
       {/* Canvas */}
       <div ref={scrollRef} className="overflow-auto scrollbar-hide relative" style={{ minHeight: 'calc(100vh - 120px)' }}>
+        {/* Dot grid background */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-30"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #282828 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+          }}
+        />
         <div className="relative mx-auto" style={{ width: canvasW, height: canvasH }}>
 
           {/* Level Labels */}
           {rows.map((_, d) => (
             <div
               key={`level-${d}`}
-              className="absolute text-[10px] font-bold text-[#3e3e3e] uppercase tracking-wider"
+              className="absolute text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider"
               style={{
                 left: 24,
                 top: PAD_Y + d * ROW_H + NODE_H / 2 - 6,
@@ -218,14 +223,14 @@ export default function Roadmap() {
               >
                 <button
                   onClick={() => handleTopicClick(topic)}
-
-                  className={`w-full h-full rounded-xl flex items-center gap-2.5 px-3.5 text-left transition-all duration-150 cursor-pointer hover:scale-[1.03] hover:shadow-lg
-                    ${isCurrent ? 'shadow-[0_0_20px_rgba(255,161,22,0.25)]' : ''}
+                  className={`w-full h-full rounded-xl flex items-center gap-2.5 px-3.5 text-left transition-all duration-200 cursor-pointer
+                    ${isCurrent ? 'shadow-[0_0_24px_rgba(255,161,22,0.2)] hover:shadow-[0_0_28px_rgba(255,161,22,0.3)]' : 'hover:shadow-lg'}
+                    hover:scale-[1.03] hover:-translate-y-0.5
                   `}
                   style={{
-                    backgroundColor: isCompleted ? `${topic.color}18` : '#1a1a1a',
-                    border: `2px solid ${
-                      isCompleted ? topic.color : isCurrent ? '#ffa116' : topic.color
+                    backgroundColor: isCompleted ? `${topic.color}15` : '#161616',
+                    border: `1.5px solid ${
+                      isCompleted ? `${topic.color}80` : isCurrent ? '#ffa116' : `${topic.color}50`
                     }`,
                   }}
                 >
@@ -244,7 +249,11 @@ export default function Roadmap() {
                         <Sparkles size={12} className="text-[#ffa116]" />
                       </div>
                     )}
-                    {!isCompleted && !isCurrent && <Sparkles size={12} className="text-[#5c5c5c]" />}
+                    {!isCompleted && !isCurrent && (
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ border: `1.5px solid ${topic.color}40` }}>
+                        <span className="text-[9px] font-bold" style={{ color: `${topic.color}80` }}>{topic.unitId + 1}</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Title + count */}

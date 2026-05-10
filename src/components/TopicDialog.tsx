@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { Check, Sparkles, Play } from 'lucide-react';
+import { Check, Sparkles, ChevronRight } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -39,7 +39,7 @@ export default function TopicDialog({ topic, open, onOpenChange }: TopicDialogPr
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-md bg-[#0f0f0f] border-l border-[#ffffff15] p-0 flex flex-col">
+      <SheetContent side="right" className="w-full sm:max-w-md bg-[#0f0f0f] border-l border-[#ffffff10] p-0 flex flex-col">
         {/* Header */}
         <SheetHeader className="p-6 pb-4 border-b border-[#ffffff10]">
           <div className="flex items-center gap-3">
@@ -75,6 +75,9 @@ export default function TopicDialog({ topic, open, onOpenChange }: TopicDialogPr
 
         {/* Lesson List */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
+          <div className="px-2 mb-2">
+            <span className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider">{lessons.length} Lessons</span>
+          </div>
           {lessons.map((lesson) => {
             if (!lesson) return null;
             const status = getLessonStatus(lesson.id);
@@ -89,8 +92,8 @@ export default function TopicDialog({ topic, open, onOpenChange }: TopicDialogPr
                   navigate(`/lesson/${lesson.id}`);
                 }}
                 className={`w-full text-left rounded-lg border transition-all duration-150 group cursor-pointer
-                  border-[#ffffff10] bg-[#1a1a1a] hover:border-[#ffffff25] hover:bg-[#222222]
-                  ${isCurrent ? 'ring-1 ring-[#ffa11640]' : ''}
+                  border-[#ffffff08] bg-[#141414] hover:border-[#ffffff18] hover:bg-[#1c1c1c] hover:shadow-sm
+                  ${isCurrent ? 'ring-1 ring-[#ffa11630]' : ''}
                 `}
               >
                 <div className="flex items-center gap-3 px-4 py-3">
@@ -143,7 +146,7 @@ export default function TopicDialog({ topic, open, onOpenChange }: TopicDialogPr
                     {lesson.difficulty[0]}
                   </span>
 
-                  <Play size={12} className="text-[#5c5c5c] group-hover:text-[#8c8c8c] flex-shrink-0 transition-colors" />
+                  <ChevronRight size={14} className="text-[#3e3e3e] group-hover:text-[#8c8c8c] flex-shrink-0 transition-colors" />
                 </div>
               </button>
             );
