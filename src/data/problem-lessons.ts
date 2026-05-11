@@ -6,9 +6,9 @@
 
 import { lessons as oldLessons, type LessonContent, type TestCase } from './lessons-complete';
 
-function remap(oldId: number, newId: number, newTitle?: string, testCases?: TestCase[]): LessonContent {
+function remap(oldId: number, newId: number, newTitle?: string, testCases?: TestCase[], opts: Partial<LessonContent> = {}): LessonContent {
   const old = oldLessons.find((l) => l.id === oldId)!;
-  return { ...old, id: newId, title: newTitle || old.title, testCases: testCases || [] };
+  return { ...old, id: newId, title: newTitle || old.title, testCases: testCases || [], ...opts };
 }
 
 function scaffold(
@@ -48,13 +48,28 @@ const allLessons: LessonContent[] = [
         { question: 'Which letter represents the voiced pharyngeal fricative?', options: ['k', 'c', 'x', 'q'], answer: 1, explanation: 'c = ʕ, the voiced pharyngeal fricative.' },
       ],
       quickRef: [{ label: 'c', value: 'ʕ — voiced pharyngeal' }, { label: 'x', value: 'ħ — voiceless pharyngeal' }, { label: 'kh', value: 'x — velar fricative' }],
+      drills: [
+        { type: 'multiple_choice', question: 'Which letter represents the voiced pharyngeal fricative /ʕ/?', options: ['k', 'c', 'x', 'q'], answer: 'c', explanation: 'c = ʕ, the voiced pharyngeal fricative. This is unlike English where c sounds like /k/ or /s/.' },
+        { type: 'multiple_choice', question: 'What sound does the letter x represent in Somali?', options: ['/ks/', '/ħ/', '/z/', '/ʃ/'], answer: '/ħ/', explanation: 'x = ħ, the voiceless pharyngeal fricative. It is not the English /ks/ sound.' },
+        { type: 'fill_blank', question: 'The letter ___ represents the uvular stop, articulated further back than /k/.', prompt: 'q', options: ['c', 'x', 'kh', 'q'], answer: 'q', explanation: 'q is the uvular stop, produced at the back of the throat.' },
+        { type: 'multiple_choice', question: 'What does kh represent in Somali?', options: ['/k/', '/x/ (velar fricative)', '/h/', '/ʔ/'], answer: '/x/ (velar fricative)', explanation: 'kh = x, the voiceless velar fricative, like the ch in Scottish "loch".' },
+        { type: 'fill_blank', question: 'In Somali, vowel ___ is grammatically meaningful.', options: ['color', 'length', 'pitch', 'speed'], answer: 'length', explanation: 'Long vs short vowels can change the meaning of a word in Somali.' },
+      ],
     }
   ),
   remap(5, 2, 'Greetings & Introductions', [
     { input: 'Morning greeting', output: 'Subax wanaagsan', explanation: 'Subax = morning, wanaagsan = good. The standard morning greeting.' },
     { input: 'Response to "How are you?"', output: 'Waan fiicanahay, mahadsanid', explanation: 'Waan fiicanahay = I am fine, mahadsanid = thank you.' },
     { input: 'Formal "peace be with you"', output: 'Nabad gelyo', explanation: 'Nabad = peace, gelyo = arrival/coming. The most formal greeting.' },
-  ]),
+  ],
+  {
+    drills: [
+      { type: 'multiple_choice', question: 'What is the standard morning greeting in Somali?', options: ['Habeen wanaagsan', 'Subax wanaagsan', 'Galab wanaagsan', 'Nabad gelyo'], answer: 'Subax wanaagsan', explanation: 'Subax = morning, wanaagsan = good. Subax wanaagsan = Good morning.' },
+      { type: 'fill_blank', question: 'The response to "How are you?" is: ___ fiicanahay, mahadsanid.', options: ['Waxaan', 'Waan', 'Waxay', 'Way'], answer: 'Waan', explanation: 'Waan fiicanahay = I am fine. The waan contraction is waa + aan (statement + I).' },
+      { type: 'multiple_choice', question: 'What does "Nabad gelyo" mean?', options: ['Good night', 'Peace be with you', 'Thank you', 'Goodbye'], answer: 'Peace be with you', explanation: 'Nabad = peace, gelyo = arrival/coming. This is the most formal greeting.' },
+      { type: 'fill_blank', question: 'The most ___ greeting in Somali is "Nabad gelyo".', options: ['casual', 'formal', 'rare', 'modern'], answer: 'formal', explanation: 'Nabad gelyo is used in very formal or respectful contexts.' },
+    ],
+  }),
 
   // UNIT 1: The Noun System
   scaffold(3, 'Noun Gender',
@@ -161,7 +176,23 @@ const allLessons: LessonContent[] = [
     { input: '"I am eating" → clitic form', output: 'Waan cunayaa', explanation: 'waan = waa + aan (I). The clitic fuses with the focus marker.' },
     { input: '"He is reading" → clitic form', output: 'Wuu akhrisaa', explanation: 'wuu = waa + uu (he). Third person masculine clitic.' },
     { input: '"They are going" → clitic form', output: 'Way tegayaan', explanation: 'way = waa + ay (they). Third person plural clitic.' },
-  ]),
+  ],
+  {
+    drills: [
+      { type: 'recognize', question: 'What marker is in this sentence?', prompt: 'Cali wuu tegay.', options: ['wuu (statement, he)', 'bay (focus, she)', 'ma (question)', 'waxaan (spotlight, I)'], answer: 'wuu (statement, he)', explanation: 'wuu = waa + uu. This is a statement marker fused with the masculine pronoun "he".' },
+      { type: 'recognize', question: 'What marker is in this sentence?', prompt: 'Hooyada bay cuntay.', options: ['wuu (statement, he)', 'bay (focus, she)', 'ma (question)', 'waxaan (spotlight, I)'], answer: 'bay (focus, she)', explanation: 'bay = baa + ay. This is a focus marker fused with the feminine pronoun "she/they".' },
+      { type: 'recognize', question: 'What marker is in this sentence?', prompt: 'Ma cunaysaa?', options: ['wuu (statement, he)', 'bay (focus, she)', 'ma (question)', 'waxaan (spotlight, I)'], answer: 'ma (question)', explanation: 'Ma at the start of a sentence turns it into a yes/no question.' },
+      { type: 'decomposition', question: 'Break this contraction into its two parts.', prompt: 'waan', parts: ['waa', 'aan'], partLabels: ['Marker', 'Pronoun'], answer: 'waa + aan', explanation: 'waan = waa (statement marker) + aan (I).' },
+      { type: 'decomposition', question: 'Break this contraction into its two parts.', prompt: 'wuu', parts: ['waa', 'uu'], partLabels: ['Marker', 'Pronoun'], answer: 'waa + uu', explanation: 'wuu = waa (statement marker) + uu (he).' },
+      { type: 'decomposition', question: 'Break this contraction into its two parts.', prompt: 'way', parts: ['waa', 'ay'], partLabels: ['Marker', 'Pronoun'], answer: 'waa + ay', explanation: 'way = waa (statement marker) + ay (she/they).' },
+      { type: 'decomposition', question: 'Break this contraction into its two parts.', prompt: 'waxaan', parts: ['waxa', 'aan'], partLabels: ['Marker', 'Pronoun'], answer: 'waxa + aan', explanation: 'waxaan = waxa (spotlight marker) + aan (I).' },
+      { type: 'choose', question: 'Fill in the blank. "Ali ate." (emphasis on the action of eating)', prompt: 'Cali ___ cunay.', options: ['wuu', 'baa', 'waxuu'], answer: 'wuu', explanation: 'wuu = statement marker. The emphasis is on the verb (eating), so we use the plain statement marker.' },
+      { type: 'choose', question: 'Fill in the blank. "It was ALI who ate the food." (emphasis on Ali)', prompt: 'Cali ___ cuntada cunay.', options: ['wuu', 'baa', 'waxuu'], answer: 'baa', explanation: 'baa = focus marker. The emphasis is on the subject (Ali), so we use baa.' },
+      { type: 'choose', question: 'Fill in the blank. "What Ali ate was meat." (spotlight construction)', prompt: '___ Cali cunay waa hilib.', options: ['Wuu', 'Baa', 'Waxuu'], answer: 'Waxuu', explanation: 'Waxuu = waxa (spotlight) + uu (he). This is a cleft/spotlight construction.' },
+      { type: 'ordering', question: 'Arrange these words into the correct Somali sentence.', prompt: 'Ali ate.', words: ['cunay', 'Cali', 'wuu'], answer: 'Cali wuu cunay.', explanation: 'SOV order: Subject (Cali) + Marker (wuu) + Verb (cunay).' },
+      { type: 'ordering', question: 'Arrange these words into the correct Somali sentence.', prompt: 'It was the boy who read the book.', words: ['buugga', 'akhriyay', 'baa', 'wiilka'], answer: 'Wiilka baa buugga akhriyay.', explanation: 'SOV with focus: Subject (Wiilka) + Focus marker (baa) + Object (buugga) + Verb (akhriyay).' },
+    ],
+  }),
   scaffold(11, 'SOV Word Order',
     'Somali is strictly SOV: Subject-Object-Verb. The verb always comes last.',
     'Order: Subject (clitic) → Object → Verb. Preverbal clitics (prepositions, object pronouns) come before the verb.',
@@ -176,6 +207,16 @@ const allLessons: LessonContent[] = [
         { question: 'What is the Somali word order?', options: ['SVO', 'SOV', 'VSO'], answer: 1, explanation: 'Somali is strictly SOV.' },
       ],
       quickRef: [{ label: 'S', value: 'Subject + clitic' }, { label: 'O', value: 'Object (noun/clitic)' }, { label: 'V', value: 'Verb (always last)' }],
+      drills: [
+        { type: 'multiple_choice', question: 'What is the basic Somali word order?', options: ['SVO (Subject-Verb-Object)', 'SOV (Subject-Object-Verb)', 'VSO (Verb-Subject-Object)'], answer: 'SOV (Subject-Object-Verb)', explanation: 'Somali is strictly SOV: the verb always comes last.' },
+        { type: 'ordering', question: 'Arrange into correct Somali word order.', prompt: 'The girl went to school.', words: ['tegay', 'way', 'dugsiga', 'gabadha'], answer: 'Gabadha way tegay dugsiga.', explanation: 'SOV: Subject (Gabadha) + Marker (way) + Verb (tegay) + Object (dugsiga).' },
+        { type: 'ordering', question: 'Arrange into correct Somali word order.', prompt: 'The boy played.', words: ['ciyaaray', 'wiilka', 'wuu'], answer: 'Wiilka wuu ciyaaray.', explanation: 'SOV: Subject (Wiilka) + Marker (wuu) + Verb (ciyaaray).' },
+        { type: 'ordering', question: 'Arrange into correct Somali word order.', prompt: 'It was the man who went to the market.', words: ['suuqa', 'baa', 'tegay', 'ninka'], answer: 'Ninka baa suuqa tegay.', explanation: 'SOV with focus: Subject (Ninka) + Focus (baa) + Object (suuqa) + Verb (tegay).' },
+        { type: 'fill_blank', question: 'In Somali, the ___ always comes last in the sentence.', options: ['subject', 'object', 'verb', 'marker'], answer: 'verb', explanation: 'Somali is SOV: Subject-Object-Verb. The verb is always final.' },
+        { type: 'multiple_choice', question: 'In "Waan cabay biyo", what is the object?', options: ['Waan', 'cabay', 'biyo', 'Waa'], answer: 'biyo', explanation: 'SOV: Subject+Marker (Waan) + Object (biyo) + Verb (cabay). The object is biyo (water).' },
+        { type: 'ordering', question: 'Arrange into correct Somali word order.', prompt: 'I drank water.', words: ['cabay', 'waan', 'biyo'], answer: 'Waan cabay biyo.', explanation: 'SOV: Subject+Marker (Waan) + Verb (cabay) + Object (biyo).' },
+        { type: 'ordering', question: 'Arrange into correct Somali word order.', prompt: 'What mother cooked was rice.', words: ['dhigtay', 'hooyada', 'bariis', 'waxay'], answer: 'Hooyada waxay dhigtay bariis.', explanation: 'SOV with spotlight: Subject (Hooyada) + Spotlight (waxay) + Verb (dhigtay) + Object (bariis).' },
+      ],
     }
   ),
   scaffold(12, 'The Copula yahay',
@@ -214,7 +255,23 @@ const allLessons: LessonContent[] = [
     { input: '"ALI ate the bread" (focus on subject)', output: 'Cali baa rootiga cunay', explanation: 'baa focuses on the subject Cali: Cali baa = ALI (did).' },
     { input: '"Ali ate THE BREAD" (focus on object)', output: 'Rootiga baa Cali cunay', explanation: 'baa focuses on the object rootiga: Rootiga baa = THE BREAD (is what).' },
     { input: '"Ali ATE the bread" (focus on verb)', output: 'Cunay baa Cali rootiga', explanation: 'baa can also focus on the verb/action.' },
-  ]),
+  ],
+  {
+    drills: [
+      { type: 'recognize', question: 'What type of marker is in this sentence?', prompt: 'Cali baa cuntada cunay.', options: ['Statement marker (waa)', 'Focus marker (baa)', 'Question marker (ma)', 'Spotlight marker (waxa)'], answer: 'Focus marker (baa)', explanation: 'baa = focus marker. It highlights the noun before it: CALI ate the food.' },
+      { type: 'recognize', question: 'What type of marker is in this sentence?', prompt: 'Waxaan akhriyay buug.', options: ['Statement marker (waa)', 'Focus marker (baa)', 'Question marker (ma)', 'Spotlight marker (waxa)'], answer: 'Spotlight marker (waxa)', explanation: 'waxaan = waxa (spotlight) + aan (I). It spotlights what comes after: What I read was a book.' },
+      { type: 'recognize', question: 'What type of marker is in this sentence?', prompt: 'Macallinka wuu shaqeeyay.', options: ['Statement marker (waa)', 'Focus marker (baa)', 'Question marker (ma)', 'Spotlight marker (waxa)'], answer: 'Statement marker (waa)', explanation: 'wuu = waa (statement) + uu (he). It makes a plain declaration about the action.' },
+      { type: 'choose', question: 'Fill in the blank. "Ali ate." (emphasis on the action)', prompt: 'Cali ___ cunay.', options: ['wuu', 'baa', 'waxuu'], answer: 'wuu', explanation: 'wuu = statement marker. The emphasis is on the verb/action (eating), not on Ali.' },
+      { type: 'choose', question: 'Fill in the blank. "It was ALI who ate the food." (emphasis on Ali)', prompt: 'Cali ___ cuntada cunay.', options: ['wuu', 'baa', 'waxuu'], answer: 'baa', explanation: 'baa = focus marker. The emphasis is on the subject (Ali).' },
+      { type: 'choose', question: 'Fill in the blank. "What Ali ate was meat." (spotlight)', prompt: '___ Cali cunay waa hilib.', options: ['Wuu', 'Baa', 'Waxuu'], answer: 'Waxuu', explanation: 'Waxuu = waxa (spotlight) + uu (he). This is a cleft construction.' },
+      { type: 'choose', question: 'Fill in the blank. "Mother brought food." (emphasis: she BROUGHT it)', prompt: 'Hooyada ___ keentay cunto.', options: ['wuu', 'way', 'baa', 'waxay'], answer: 'way', explanation: 'way = waa (statement) + ay (she). The emphasis is on the action of bringing.' },
+      { type: 'choose', question: 'Fill in the blank. "It was MOTHER who brought food." (emphasis on mother)', prompt: '___ cunto keentay.', options: ['Hooyada wuu', 'Hooyada baa', 'Hooyada waxay'], answer: 'Hooyada baa', explanation: 'baa focuses on the noun before it. Hooyada baa = It was MOTHER who...' },
+      { type: 'multiple_choice', question: 'Which sentence uses baa to focus on the SUBJECT?', options: ['Cali wuu cunay.', 'Cali baa cuntada cunay.', 'Waxuu Cali cunay waa cunto.'], answer: 'Cali baa cuntada cunay.', explanation: 'baa after the subject (Cali) focuses on the subject: ALI ate the food.' },
+      { type: 'multiple_choice', question: 'Which sentence uses waxa as a spotlight/cleft?', options: ['Cali wuu cunay.', 'Cali baa cuntada cunay.', 'Waxuu Cali cunay waa hilib.'], answer: 'Waxuu Cali cunay waa hilib.', explanation: 'Waxuu = waxa + uu. This is a spotlight construction: What Ali ate was meat.' },
+      { type: 'ordering', question: 'Write the sentence three ways. First: with waa (verb focus).', prompt: 'Ali / ate / the food (Cali, cunay, cuntada)', words: ['Cali', 'wuu', 'cuntada', 'cunay'], answer: 'Cali wuu cuntada cunay.', explanation: 'waa (→ wuu) focuses on the action: Ali ATE the food.' },
+      { type: 'ordering', question: 'Write the sentence with baa (noun focus).', prompt: 'Ali / ate / the food (Cali, cunay, cuntada)', words: ['Cali', 'baa', 'cuntada', 'cunay'], answer: 'Cali baa cuntada cunay.', explanation: 'baa focuses on the noun: ALI ate the food.' },
+    ],
+  }),
 
   // UNIT 3: The Verb
   remap(6, 15, 'Verb Classes', [
@@ -329,7 +386,23 @@ const allLessons: LessonContent[] = [
     { input: '"for" → Somali preposition', output: 'u', explanation: 'u = for, to (benefactive/directional).' },
     { input: '"in" → Somali preposition', output: 'ku', explanation: 'ku = in, at, on (locative).' },
     { input: '"from" → Somali preposition', output: 'ka', explanation: 'ka = from (ablative).' },
-  ]),
+  ],
+  {
+    drills: [
+      { type: 'multiple_choice', question: 'Which preposition means "to / for"?', options: ['u', 'ku', 'ka', 'la'], answer: 'u', explanation: 'u = to, for (benefactive/directional). Think "handing something toward".' },
+      { type: 'multiple_choice', question: 'Which preposition means "in / at / by means of"?', options: ['u', 'ku', 'ka', 'la'], answer: 'ku', explanation: 'ku = in, at, on (locative). Think "located in" or "using".' },
+      { type: 'multiple_choice', question: 'Which preposition means "from"?', options: ['u', 'ku', 'ka', 'la'], answer: 'ka', explanation: 'ka = from (ablative). Think "coming from" or "about".' },
+      { type: 'multiple_choice', question: 'Which preposition means "with"?', options: ['u', 'ku', 'ka', 'la'], answer: 'la', explanation: 'la = with (comitative). Think "together with someone".' },
+      { type: 'choose', question: 'Fill in the blank. "He went TO the market."', prompt: 'Wuu _____ tegay suuqa.', options: ['u', 'ku', 'ka', 'la'], answer: 'u', explanation: 'u = to. Wuu u tegay suuqa = He went to the market.' },
+      { type: 'choose', question: 'Fill in the blank. "I am staying IN the house."', prompt: 'Waan _____ joogaa guriga.', options: ['u', 'ku', 'ka', 'la'], answer: 'ku', explanation: 'ku = in. Waan ku joogaa guriga = I am staying in the house.' },
+      { type: 'choose', question: 'Fill in the blank. "He came FROM school."', prompt: 'Wuu _____ yimid dugsiga.', options: ['u', 'ku', 'ka', 'la'], answer: 'ka', explanation: 'ka = from. Wuu ka yimid dugsiga = He came from school.' },
+      { type: 'choose', question: 'Fill in the blank. "She worked WITH Ali."', prompt: 'Way _____ shaqeysay Cali.', options: ['u', 'ku', 'ka', 'la'], answer: 'la', explanation: 'la = with. Way la shaqeysay Cali = She worked with Ali.' },
+      { type: 'fill_blank', question: 'The preposition ___ means "for / to" and implies handing something toward someone.', options: ['u', 'ku', 'ka', 'la'], answer: 'u', explanation: 'u = to, for. Example: u keenay = brought for.' },
+      { type: 'fill_blank', question: 'The preposition ___ means "with" and implies doing something together.', options: ['u', 'ku', 'ka', 'la'], answer: 'la', explanation: 'la = with. Example: la shaqeeyay = worked with.' },
+      { type: 'multiple_choice', question: 'What does "ugu" mean?', options: ['for + in', 'from + with', 'in + together', 'to + away'], answer: 'for + in', explanation: 'ugu = u (for) + ku (in). It is a blended preposition.' },
+      { type: 'multiple_choice', question: 'What does "kaga" mean?', options: ['for + in', 'from + in', 'with + together', 'to + away'], answer: 'from + in', explanation: 'kaga = ka (from) + ku (in). It is a blended preposition.' },
+    ],
+  }),
   scaffold(30, 'Preposition Blending', 'Prepositions combine: ugu, kaga, ula, kala.', 'u+ku=ugu, ka+ku=kaga, u+la=ula, ka+la=kala.', {
     testCases: [
       { input: '"for+in" → blended', output: 'ugu', explanation: 'u (for) + ku (in) = ugu (for-in).' },
@@ -345,7 +418,21 @@ const allLessons: LessonContent[] = [
     { input: '"towards speaker" → directional', output: 'soo', explanation: 'soo = hither, towards the speaker.' },
     { input: '"away from speaker" → directional', output: 'sii', explanation: 'sii = thither, away from the speaker.' },
     { input: '"together" → directional', output: 'wada', explanation: 'wada = together, jointly.' },
-  ]),
+  ],
+  {
+    drills: [
+      { type: 'multiple_choice', question: 'Which directional means "toward the speaker"?', options: ['soo', 'sii', 'wada', 'kala'], answer: 'soo', explanation: 'soo = toward speaker. Mental image: ← coming IN to you.' },
+      { type: 'multiple_choice', question: 'Which directional means "away from the speaker"?', options: ['soo', 'sii', 'wada', 'kala'], answer: 'sii', explanation: 'sii = away from speaker. Mental image: → going AWAY from you.' },
+      { type: 'multiple_choice', question: 'Which directional means "together"?', options: ['soo', 'sii', 'wada', 'kala'], answer: 'wada', explanation: 'wada = together. Mental image: ↔ merging, joining.' },
+      { type: 'multiple_choice', question: 'Which directional means "apart / separately"?', options: ['soo', 'sii', 'wada', 'kala'], answer: 'kala', explanation: 'kala = apart. Mental image: ⇆ separating, splitting.' },
+      { type: 'choose', question: 'Fill in the blank. "He kept going (away)."', prompt: 'Wuu _____ tegay.', options: ['soo', 'sii', 'wada', 'kala'], answer: 'sii', explanation: 'sii = away. Wuu sii tegay = He kept going away.' },
+      { type: 'choose', question: 'Fill in the blank. "She came INTO the house (toward speaker)."', prompt: 'Way _____ gashay guriga.', options: ['soo', 'sii', 'wada', 'kala'], answer: 'soo', explanation: 'soo = toward. Way soo gashay guriga = She came into the house.' },
+      { type: 'choose', question: 'Fill in the blank. "I brought food (toward here)."', prompt: 'Waan _____ keenay cunto.', options: ['soo', 'sii', 'wada', 'kala'], answer: 'soo', explanation: 'soo = toward speaker. Waan soo keenay cunto = I brought food (here).' },
+      { type: 'choose', question: 'Fill in the blank. "He sent (it away)."', prompt: 'Wuu _____ diray.', options: ['soo', 'sii', 'wada', 'kala'], answer: 'sii', explanation: 'sii = away. Wuu sii diray = He sent it away.' },
+      { type: 'ordering', question: 'Arrange: "He brought (it) to me (toward speaker)."', words: ['u', 'soo', 'keenay', 'Wuu'], answer: 'Wuu u soo keenay.', explanation: 'Subject+Marker (Wuu) + Prep (u) + Direction (soo) + Verb (keenay).' },
+      { type: 'ordering', question: 'Arrange: "She came back from school."', words: ['ka', 'dugsiga', 'noqotay', 'Way', 'soo'], answer: 'Way ka soo noqotay dugsiga.', explanation: 'Subject+Marker (Way) + Prep (ka) + Direction (soo) + Verb (noqotay) + Object (dugsiga).' },
+    ],
+  }),
   remap(13, 32, 'Object Clitics', [
     { input: '"me" (object clitic)', output: 'i', explanation: 'i = me (1st person singular object).' },
     { input: '"you" (object clitic)', output: 'ku', explanation: 'ku = you (2nd person singular object).' },
@@ -418,7 +505,22 @@ const allLessons: LessonContent[] = [
     { input: '"and" (connector between nouns)', output: 'iyo', explanation: 'iyo = and (connects nouns and noun phrases).' },
     { input: '"and" (connector between clauses)', output: '-na', explanation: '-na = and (clitic attached to second element in clause coordination).' },
     { input: '"but" → connector', output: '-se', explanation: '-se = but (contrastive connector, clitic).' },
-  ]),
+  ],
+  {
+    drills: [
+      { type: 'multiple_choice', question: 'Which connector joins NOUNS?', options: ['iyo', '-na', '-se', 'oo'], answer: 'iyo', explanation: 'iyo = and (nouns only). Example: Cali iyo Sahra = Ali and Sahra.' },
+      { type: 'multiple_choice', question: 'Which connector joins SENTENCES and means "and also"?', options: ['iyo', '-na', '-se', 'oo'], answer: '-na', explanation: '-na = and (sentences). It attaches to the first word of the next clause.' },
+      { type: 'multiple_choice', question: 'Which connector means "but / however"?', options: ['iyo', '-na', '-se', 'oo'], answer: '-se', explanation: '-se = but. It introduces a contrast.' },
+      { type: 'multiple_choice', question: 'Which connector means "which / that" and links relative clauses?', options: ['iyo', '-na', '-se', 'oo'], answer: 'oo', explanation: 'oo = which/that. Example: guri oo weyn = a house which is big.' },
+      { type: 'choose', question: 'Fill in the blank. "Ali AND Sahra went to school." (joining nouns)', prompt: 'Cali _____ Sahra way tegeen dugsiga.', options: ['iyo', '-na', '-se', 'oo'], answer: 'iyo', explanation: 'iyo joins nouns. Cali iyo Sahra = Ali and Sahra.' },
+      { type: 'choose', question: 'Fill in the blank. "He ate, AND you ate too." (joining sentences)', prompt: 'Wuu cunay, waad_____ cuntay.', options: ['iyo', '-na', '-se', 'oo'], answer: '-na', explanation: '-na joins sentences. Waadna = and you.' },
+      { type: 'choose', question: 'Fill in the blank. "The man went, BUT the woman stayed."', prompt: 'Ninka wuu tegay, naagta_____ way joogtay.', options: ['iyo', '-na', '-se', 'oo'], answer: '-se', explanation: '-se = but. Naagtase = but the woman.' },
+      { type: 'choose', question: 'Fill in the blank. "I read a book WHICH (was) big."', prompt: 'Buug _____ weyn baan akhriyay.', options: ['iyo', '-na', '-se', 'oo'], answer: 'oo', explanation: 'oo = which/that. Buug oo weyn = a book which is big.' },
+      { type: 'multiple_choice', question: 'In "Waan cunay bariis, biyona waan cabay", what does -na mean?', options: ['but', 'and also', 'which', 'or'], answer: 'and also', explanation: 'biyona = biyo + na = water + and. It joins the second sentence: ...and I drank water.' },
+      { type: 'multiple_choice', question: 'In "Gabadha way akhrisay, wiilkase wuu ciyaaray", what does -se mean?', options: ['and', 'but', 'which', 'or'], answer: 'but', explanation: 'wiilkase = wiilka + se = the boy + but. It introduces a contrast.' },
+      { type: 'ordering', question: 'Combine: "The boy read a book, BUT the girl played."', words: ['buug', 'wiilka', 'wuu', 'akhriyay,', 'gabadha-se', 'way', 'ciyaartay.'], answer: 'Wiilka wuu akhriyay buug, gabadha-se way ciyaartay.', explanation: '-se attaches to the noun in the contrasting clause.' },
+    ],
+  }),
   scaffold(41, 'Question Words', 'maxaa, yaa, sidee, goorma, xagge.', 'Wh-questions use question words at the beginning or in situ.', {
     testCases: [
       { input: '"What?" → Somali', output: 'Maxaa?', explanation: 'maxaa = what.' },

@@ -16,6 +16,7 @@ export interface RemoteProgress {
   xp: number;
   streak: number;
   last_study_date: string;
+  activity_log: string[];
   updated_at: string;
 }
 
@@ -29,6 +30,7 @@ function normalizeRemote(data: Record<string, unknown>): RemoteProgress {
     xp: typeof data.xp === 'number' ? data.xp : 0,
     streak: typeof data.streak === 'number' ? data.streak : 0,
     last_study_date: typeof data.last_study_date === 'string' ? data.last_study_date : '',
+    activity_log: Array.isArray(data.activity_log) ? data.activity_log as string[] : [],
     updated_at: typeof data.updated_at === 'string' ? data.updated_at : '',
   };
 }
@@ -78,6 +80,9 @@ export function mergeProgress(local: UserProgress, remote: RemoteProgress): User
   const streak = local.lastStudyDate > (remote.last_study_date ?? '') ? local.streak : remote.streak;
   const lastStudyDate = local.lastStudyDate > (remote.last_study_date ?? '') ? local.lastStudyDate : remote.last_study_date;
 
+  // Union of activity log
+  const activitySet = new Set([...local.activityLog, ...remote.activity_log]);
+
   return {
     completedLessons: Array.from(completedSet),
     practiceScores: scores,
@@ -85,6 +90,7 @@ export function mergeProgress(local: UserProgress, remote: RemoteProgress): User
     xp,
     streak,
     lastStudyDate,
+    activityLog: Array.from(activitySet).sort(),
   };
 }
 
@@ -124,6 +130,7 @@ export async function pushProgress(userId: string, progress: UserProgress): Prom
     xp: progress.xp,
     streak: progress.streak,
     last_study_date: progress.lastStudyDate,
+    activity_log: progress.activityLog,
     updated_at: new Date().toISOString(),
   };
 
@@ -149,7 +156,7 @@ export async function ensureProfile(userId: string, email?: string): Promise<voi
     .from('profiles')
     .select('id')
     .eq('id', userId)
-    .single();
+    .maybeSingle();
 
   if (!data) {
     await getSupabase()
@@ -168,7 +175,7 @@ export async function fetchProfile(userId: string) {
     .from('profiles')
     .select('*')
     .eq('id', userId)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Fetch profile error:', error);
@@ -181,7 +188,7 @@ export async function fetchProfile(userId: string) {
 /**
  * Update user profile.
  */
-export async function updateProfile(userId: string, updates: { username?: string; display_name?: string; avatar_url?: string }) {
+export async function updateProfile(userId: string, updates: { username?: string; display_name?: string; first_name?: string; last_name?: string; avatar_url?: string }) {
   if (!isSupabaseConfigured) return false;
 
   const { error } = await getSupabase()
@@ -191,6 +198,67 @@ export async function updateProfile(userId: string, updates: { username?: string
 
   if (error) {
     console.error('Update profile error:', error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Upload avatar image to Supabase Storage.
+ */
+export async function uploadAvatar(userId: string, file: File): Promise<string | null> {
+  if (!isSupabaseConfigured) return null;
+
+  const ext = file.name.split('.').pop() || 'png';
+  const path = `${userId}/avatar.${ext}`;
+
+  const { error: uploadError } = await getSupabase()
+    .storage
+    .from('avatars')
+    .upload(path, file, { upsert: true, contentType: file.type });
+
+  if (uploadError) {
+    console.error('Avatar upload error:', uploadError);
+    return null;
+  }
+
+  const { data } = getSupabase().storage.from('avatars').getPublicUrl(path);
+  return data.publicUrl;
+}
+
+/**
+ * Fetch all profiles (admin only).
+ */
+export async function fetchAllProfiles() {
+  if (!isSupabaseConfigured) return [];
+
+  const { data, error } = await getSupabase()
+    .from('profiles')
+    .select('id, email, first_name, last_name, is_admin')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Fetch all profiles error:', error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
+/**
+ * Set a user's admin status (admin only).
+ */
+export async function setAdminStatus(userId: string, isAdmin: boolean): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+
+  const { error } = await getSupabase()
+    .from('profiles')
+    .update({ is_admin: isAdmin })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Set admin status error:', error);
     return false;
   }
 

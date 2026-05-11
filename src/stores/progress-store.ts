@@ -16,6 +16,7 @@ export interface UserProgress {
   xp: number;
   practiceScores: Record<number, number>;
   srsCards: Record<string, SrsCard>;
+  activityLog: string[]; // Array of YYYY-MM-DD strings
 }
 
 const defaultProgress: UserProgress = {
@@ -25,6 +26,7 @@ const defaultProgress: UserProgress = {
   xp: 0,
   practiceScores: {},
   srsCards: {},
+  activityLog: [],
 };
 
 function getToday(): string {
@@ -42,6 +44,14 @@ function computeStreak(lastStudyDate: string, currentStreak: number): number {
   if (lastStudyDate === today) return currentStreak;
   if (lastStudyDate === yesterday) return currentStreak + 1;
   return 1;
+}
+
+function addActivity(state: UserProgress): UserProgress {
+  const today = getToday();
+  if (!state.activityLog.includes(today)) {
+    return { ...state, activityLog: [...state.activityLog, today] };
+  }
+  return state;
 }
 
 interface ProgressState extends UserProgress {
@@ -70,16 +80,16 @@ export const useProgressStore = create<ProgressState>()(
       completeLesson: (lessonId: number) => {
         set((state) => {
           if (state.completedLessons.includes(lessonId)) {
-            return { ...state, lastStudyDate: getToday() };
+            return addActivity({ ...state, lastStudyDate: getToday() });
           }
           const newStreak = computeStreak(state.lastStudyDate, state.streak);
-          return {
+          return addActivity({
             ...state,
             completedLessons: [...state.completedLessons, lessonId],
             streak: newStreak,
             lastStudyDate: getToday(),
             xp: state.xp + 10,
-          };
+          });
         });
       },
 
@@ -97,7 +107,7 @@ export const useProgressStore = create<ProgressState>()(
         set((state) => {
           const existing = state.practiceScores[lessonId] || 0;
           const bonus = score > existing ? (score - existing) * 5 : 0;
-          return {
+          return addActivity({
             ...state,
             practiceScores: {
               ...state.practiceScores,
@@ -105,7 +115,7 @@ export const useProgressStore = create<ProgressState>()(
             },
             xp: state.xp + bonus,
             lastStudyDate: getToday(),
-          };
+          });
         });
       },
 
@@ -146,12 +156,12 @@ export const useProgressStore = create<ProgressState>()(
         set((state) => {
           const existing = state.srsCards[conceptId];
           const card = existing ? reviewCard(existing, quality) : reviewCard(createCard(conceptId), quality);
-          return {
+          return addActivity({
             ...state,
             srsCards: { ...state.srsCards, [conceptId]: card },
             lastStudyDate: getToday(),
             xp: state.xp + quality * 2,
-          };
+          });
         });
       },
 
@@ -178,6 +188,7 @@ export const useProgressStore = create<ProgressState>()(
         xp: state.xp,
         practiceScores: state.practiceScores,
         srsCards: state.srsCards,
+        activityLog: state.activityLog,
       }),
     }
   )

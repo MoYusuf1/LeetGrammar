@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { Check, Sparkles } from 'lucide-react';
+import { Check, Sparkles, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { grammarTopics } from '@/data/grammar-topics';
 import { useProgress } from '@/hooks/useProgress';
 import TopicDialog from '@/components/TopicDialog';
@@ -62,9 +62,10 @@ export default function Roadmap() {
   const [selectedTopic, setSelectedTopic] = useState<RoadmapTopic | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // ─── Pan / Drag State ───
+  // ─── Pan / Zoom State ───
   const containerRef = useRef<HTMLDivElement>(null);
   const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [scale, setScale] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef({ startX: 0, startY: 0, panX: 0, panY: 0 });
 
@@ -80,7 +81,19 @@ export default function Roadmap() {
     const cx = container.clientWidth / 2 - canvasW / 2;
     const cy = container.clientHeight / 2 - canvasH / 2;
     setPan({ x: cx, y: cy });
+    setScale(1);
   }, [canvasW, canvasH]);
+
+  const zoomIn = () => setScale((s) => Math.min(s * 1.2, 3));
+  const zoomOut = () => setScale((s) => Math.max(s / 1.2, 0.4));
+  const resetView = () => {
+    const container = containerRef.current;
+    if (!container) return;
+    const cx = container.clientWidth / 2 - canvasW / 2;
+    const cy = container.clientHeight / 2 - canvasH / 2;
+    setPan({ x: cx, y: cy });
+    setScale(1);
+  };
 
   // ─── Drag Handlers ───
   const onMouseDown = useCallback((e: React.MouseEvent) => {
@@ -132,7 +145,7 @@ export default function Roadmap() {
     return map;
   }, [isTopicCompleted]);
 
-  const totalCompleted = grammarTopics.filter((t) => topicStatus.get(t.id) === 'completed').length;
+
 
   // ─── Lines ───
   const lines = useMemo(() => {
@@ -164,14 +177,33 @@ export default function Roadmap() {
   return (
     <div className="h-[calc(100vh-50px)] bg-[#0f0f0f] relative overflow-hidden select-none">
       {/* Floating Header */}
-      <div className="absolute top-4 left-4 z-20 px-4 py-3 rounded-xl bg-[#0f0f0f]/90 backdrop-blur-md border border-[#ffffff10] shadow-xl">
+      <div className="absolute top-4 left-4 z-20 px-4 py-2.5 rounded-xl bg-[#0f0f0f]/90 backdrop-blur-md border border-[#ffffff10] shadow-xl">
         <h1 className="text-sm font-semibold text-[#eff1f6]">Grammar Roadmap</h1>
-        <p className="text-[11px] text-[#8c8c8c] mt-0.5">
-          {totalCompleted}/{grammarTopics.length} completed · Drag to pan
-        </p>
-        <div className="h-1.5 w-32 bg-[#1a1a1a] rounded-full overflow-hidden mt-2">
-          <div className="h-full rounded-full bg-[#ffa116] transition-all" style={{ width: `${(totalCompleted / grammarTopics.length) * 100}%` }} />
-        </div>
+      </div>
+
+      {/* Zoom Controls */}
+      <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-1.5">
+        <button
+          onClick={zoomIn}
+          className="w-9 h-9 rounded-lg bg-[#1a1a1a] border border-[#ffffff10] flex items-center justify-center text-[#8c8c8c] hover:text-[#eff1f6] hover:border-[#ffffff20] transition-colors"
+          title="Zoom in"
+        >
+          <ZoomIn size={16} />
+        </button>
+        <button
+          onClick={zoomOut}
+          className="w-9 h-9 rounded-lg bg-[#1a1a1a] border border-[#ffffff10] flex items-center justify-center text-[#8c8c8c] hover:text-[#eff1f6] hover:border-[#ffffff20] transition-colors"
+          title="Zoom out"
+        >
+          <ZoomOut size={16} />
+        </button>
+        <button
+          onClick={resetView}
+          className="w-9 h-9 rounded-lg bg-[#1a1a1a] border border-[#ffffff10] flex items-center justify-center text-[#8c8c8c] hover:text-[#eff1f6] hover:border-[#ffffff20] transition-colors"
+          title="Reset view"
+        >
+          <RotateCcw size={16} />
+        </button>
       </div>
 
       {/* Canvas Container */}
@@ -190,7 +222,7 @@ export default function Roadmap() {
         <div
           className="absolute"
           style={{
-            transform: `translate(${pan.x}px, ${pan.y}px)`,
+            transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
             width: canvasW,
             height: canvasH,
             willChange: 'transform',

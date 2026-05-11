@@ -20,5 +20,5 @@ export function Markdown({ text }: { text: string }) {
     })
     .join('');
 
-  return <div className="text-[15px] text-[#1F1F1F]" dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div className="text-[15px] text-[#d4d4d4]" dangerouslySetInnerHTML={{ __html: html }} />;
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { Map, List, BookOpen, Flame, Code2, Route, LogIn, Search, Shield } from 'lucide-react';
+import { Map, List, BookOpen, Flame, Code2, LogIn, Search } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
 import { useAuthStore } from '@/stores/auth-store';
 import { useGraphStore } from '@/stores/graph-store';
@@ -11,14 +11,13 @@ const navLinks = [
   { path: '/roadmap', label: 'Roadmap', icon: Map },
   { path: '/problems', label: 'Problems', icon: List },
   { path: '/learn', label: 'Learn', icon: BookOpen },
-  { path: '/curriculum', label: 'Journey', icon: Route },
 ];
 
 export default function TopNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { progress } = useProgress();
-  const { user, signOut, syncStatus, isAdmin } = useAuthStore();
+  const { user, signOut, syncStatus } = useAuthStore();
   const { isLoading: graphLoading } = useGraphStore();
   const [authOpen, setAuthOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -34,11 +33,6 @@ export default function TopNav() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  // Don't show top nav during problem solving (immersive mode)
-  if (location.pathname.startsWith('/problem/')) {
-    return null;
-  }
 
   const userInitial = user?.email?.charAt(0).toUpperCase() ?? '?';
 
@@ -135,15 +129,12 @@ export default function TopNav() {
                 >
                   Profile
                 </button>
-                {isAdmin && (
-                  <button
-                    onClick={() => navigate('/admin')}
-                    className="w-full text-left px-3 py-2 text-xs text-[#c8c8c8] hover:text-[#eff1f6] hover:bg-[#ffffff06] transition-colors flex items-center gap-1.5"
-                  >
-                    <Shield size={11} className="text-[#ffa116]" />
-                    Admin Settings
-                  </button>
-                )}
+                <button
+                  onClick={() => navigate('/settings')}
+                  className="w-full text-left px-3 py-2 text-xs text-[#c8c8c8] hover:text-[#eff1f6] hover:bg-[#ffffff06] transition-colors"
+                >
+                  Settings
+                </button>
                 <button
                   onClick={() => signOut()}
                   className="w-full text-left px-3 py-2 text-xs text-[#ef4444] hover:bg-[#ef4444]08 transition-colors rounded-b-xl"

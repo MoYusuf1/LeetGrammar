@@ -3,30 +3,30 @@
  *
  * Layout:
  *   Left sidebar (260px): Avatar, name, rank, community stats
- *   Main area: Problems solved, heatmap, SRS stats, recent activity
+ *   Main area: Problems solved, heatmap, knowledge graph, course progress
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import {
   RotateCcw,
-  Info,
   TrendingUp,
   Trophy,
-  LogOut,
   Cloud,
   CloudOff,
   Loader2,
   MapPin,
   Calendar,
   Target,
-  BrainCircuit,
+  Camera,
+  Route,
+  ChevronRight,
 } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
 import { allProblems } from '@/data/problems';
 import { useAuthStore } from '@/stores/auth-store';
 import { useGraphStore } from '@/stores/graph-store';
-import { fetchProfile, updateProfile } from '@/engine/sync';
+import { fetchProfile, updateProfile, uploadAvatar } from '@/engine/sync';
 
 const RANK_COLORS = [
   { max: 100, label: 'Novice', color: '#5c5c5c', bg: '#1a1a1a' },
@@ -41,25 +41,41 @@ function getRank(xp: number) {
   return RANK_COLORS.find((r) => xp < r.max) ?? RANK_COLORS[RANK_COLORS.length - 1];
 }
 
+function getInitials(first?: string, last?: string, email?: string) {
+  if (first && last) return `${first[0]}${last[0]}`.toUpperCase();
+  if (first) return first[0].toUpperCase();
+  if (email) return email[0].toUpperCase();
+  return '?';
+}
+
 /* ────────────────────────────────────────────────────────────────────────── */
 
 export default function Profile() {
   const navigate = useNavigate();
   const { progress, completionPercentage, resetProgress } = useProgress();
-  const { user, signOut, syncStatus, isConfigured } = useAuthStore();
+  const { user, syncStatus, isConfigured } = useAuthStore();
   const { stats } = useGraphStore();
 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
   const [saving, setSaving] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Load profile from Supabase
   useEffect(() => {
     if (!user) return;
     fetchProfile(user.id).then((data) => {
       if (data) {
+        setFirstName(data.first_name ?? '');
+        setLastName(data.last_name ?? '');
         setDisplayName(data.display_name ?? '');
         setUsername(data.username ?? '');
+        setAvatarUrl(data.avatar_url ?? '');
       }
       setProfileLoaded(true);
     });
@@ -68,13 +84,31 @@ export default function Profile() {
   const handleSaveProfile = async () => {
     if (!user) return;
     setSaving(true);
-    await updateProfile(user.id, { display_name: displayName, username });
+    await updateProfile(user.id, {
+      first_name: firstName,
+      last_name: lastName,
+      display_name: displayName,
+      username,
+    });
     setSaving(false);
   };
 
-  const rank = getRank(progress.xp);
-  const userInitial = user?.email?.charAt(0).toUpperCase() ?? '?';
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setUploadingAvatar(true);
+    const url = await uploadAvatar(user.id, file);
+    if (url) {
+      setAvatarUrl(url);
+      await updateProfile(user.id, { avatar_url: url });
+    }
+    setUploadingAvatar(false);
+    e.target.value = '';
+  };
 
+  const rank = getRank(progress.xp);
+  const fullName = `${firstName} ${lastName}`.trim() || displayName || user?.email?.split('@')[0] || 'Guest';
+  const initials = getInitials(firstName, lastName, user?.email ?? undefined);
 
   // Problems by difficulty
   const problemsByDifficulty = useMemo(() => ({
@@ -89,20 +123,20 @@ export default function Profile() {
     Advanced: problemsByDifficulty.Advanced.filter((p) => progress.completedLessons.includes(p.id)).length,
   }), [progress.completedLessons, problemsByDifficulty]);
 
-  // Heatmap
+  // Real activity heatmap from activityLog
   const heatmap = useMemo(() => {
     const days = 49; // 7 weeks
+    const logSet = new Set(progress.activityLog);
     const cells = [];
     for (let i = 0; i < days; i++) {
       const date = new Date();
       date.setDate(date.getDate() - (days - 1 - i));
       const dateStr = date.toISOString().split('T')[0];
-      // Count how many activities on this date (simplified: just check lastStudyDate)
-      const isActive = progress.lastStudyDate === dateStr;
-      cells.push({ date: dateStr, intensity: isActive ? 1 : 0 });
+      const count = logSet.has(dateStr) ? 1 : 0;
+      cells.push({ date: dateStr, intensity: count });
     }
     return cells;
-  }, [progress.lastStudyDate]);
+  }, [progress.activityLog]);
 
   const heatmapByWeek = useMemo(() => {
     const weeks: typeof heatmap[] = [];
@@ -112,7 +146,23 @@ export default function Profile() {
     return weeks;
   }, [heatmap]);
 
-
+  // Month labels for heatmap
+  const monthLabels = useMemo(() => {
+    const labels: { index: number; label: string }[] = [];
+    let lastMonth = '';
+    heatmapByWeek.forEach((week, wi) => {
+      const midDay = week[3];
+      if (midDay) {
+        const d = new Date(midDay.date);
+        const month = d.toLocaleDateString('en-US', { month: 'short' });
+        if (month !== lastMonth) {
+          labels.push({ index: wi, label: month });
+          lastMonth = month;
+        }
+      }
+    });
+    return labels;
+  }, [heatmapByWeek]);
 
   return (
     <div className="min-h-full bg-[#0f0f0f]">
@@ -123,20 +173,34 @@ export default function Profile() {
             {/* Avatar Card */}
             <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5 text-center">
               <div className="relative inline-block">
-                <div className="w-20 h-20 rounded-full bg-[#3b82f6] flex items-center justify-center text-white text-2xl font-bold mx-auto border-4 border-[#0f0f0f]">
-                  {userInitial}
-                </div>
-                <div
-                  className="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-[10px] font-bold border-2 border-[#0f0f0f]"
-                  style={{ color: rank.color, backgroundColor: rank.bg }}
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt="Profile"
+                    className="w-20 h-20 rounded-full object-cover border-4 border-[#0f0f0f]"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-[#3b82f6] flex items-center justify-center text-white text-2xl font-bold mx-auto border-4 border-[#0f0f0f]">
+                    {initials}
+                  </div>
+                )}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#1a1a1a] border border-[#ffffff15] flex items-center justify-center text-[#8c8c8c] hover:text-[#eff1f6] hover:bg-[#222222] transition-colors"
+                  title="Change photo"
                 >
-                  {rank.label}
-                </div>
+                  {uploadingAvatar ? <Loader2 size={12} className="animate-spin" /> : <Camera size={12} />}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleAvatarChange}
+                />
               </div>
 
-              <h2 className="text-base font-bold text-[#eff1f6] mt-3">
-                {displayName || user?.email?.split('@')[0] || 'Guest'}
-              </h2>
+              <h2 className="text-base font-bold text-[#eff1f6] mt-3">{fullName}</h2>
               {username && <p className="text-xs text-[#5c5c5c] mt-0.5">@{username}</p>}
               {user && (
                 <p className="text-xs text-[#5c5c5c] mt-1 flex items-center justify-center gap-1">
@@ -144,6 +208,14 @@ export default function Profile() {
                   {user.email}
                 </p>
               )}
+
+              {/* Rank badge */}
+              <div
+                className="inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full text-[10px] font-bold border"
+                style={{ color: rank.color, backgroundColor: rank.bg, borderColor: `${rank.color}30` }}
+              >
+                {rank.label}
+              </div>
 
               {/* Community stats */}
               <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-[#ffffff08]">
@@ -165,6 +237,28 @@ export default function Profile() {
             {/* Edit profile */}
             {user && profileLoaded && (
               <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4 space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">First Name</label>
+                    <input
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      placeholder="First"
+                      className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">Last Name</label>
+                    <input
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      placeholder="Last"
+                      className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors"
+                    />
+                  </div>
+                </div>
                 <div>
                   <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">Display Name</label>
                   <input
@@ -220,15 +314,24 @@ export default function Profile() {
               </div>
             )}
 
+            {/* Journey */}
+            <button
+              onClick={() => navigate('/curriculum')}
+              className="w-full rounded-xl bg-[#141414] border border-[#ffffff08] p-4 text-left hover:bg-[#1a1a1a] transition-colors group"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Route size={14} className="text-[#ffa116]" />
+                <span className="text-xs font-bold text-[#eff1f6]">Your Journey</span>
+                <ChevronRight size={12} className="text-[#5c5c5c] ml-auto group-hover:text-[#8c8c8c] transition-colors" />
+              </div>
+              <div className="h-1.5 bg-[#0f0f0f] rounded-full overflow-hidden mb-1.5">
+                <div className="h-full bg-[#ffa116] rounded-full transition-all" style={{ width: `${completionPercentage}%` }} />
+              </div>
+              <p className="text-[10px] text-[#5c5c5c]">{progress.completedLessons.length} of {allProblems.length} completed</p>
+            </button>
+
             {/* Actions */}
             <div className="space-y-2">
-              <button
-                onClick={() => navigate('/about')}
-                className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:bg-[#1a1a1a] transition-colors text-left"
-              >
-                <Info size={16} className="text-[#8c8c8c]" />
-                <span className="text-xs font-medium text-[#eff1f6]">About</span>
-              </button>
               <button
                 onClick={() => { if (window.confirm('Reset all progress?')) resetProgress(); }}
                 className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:bg-[#1a1a1a] transition-colors text-left"
@@ -236,15 +339,6 @@ export default function Profile() {
                 <RotateCcw size={16} className="text-[#ef4444]" />
                 <span className="text-xs font-medium text-[#eff1f6]">Reset Progress</span>
               </button>
-              {user && (
-                <button
-                  onClick={() => signOut()}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:bg-[#1a1a1a] transition-colors text-left"
-                >
-                  <LogOut size={16} className="text-[#ef4444]" />
-                  <span className="text-xs font-medium text-[#ef4444]">Sign Out</span>
-                </button>
-              )}
             </div>
           </aside>
 
@@ -265,7 +359,6 @@ export default function Profile() {
                 <div className="relative w-28 h-28 flex-shrink-0">
                   <svg width="112" height="112" viewBox="0 0 112 112">
                     <circle cx="56" cy="56" r="48" fill="none" stroke="#1a1a1a" strokeWidth="10" />
-                    {/* Beginner */}
                     <circle
                       cx="56" cy="56" r="48" fill="none" stroke="#00b8a3" strokeWidth="10"
                       strokeDasharray={`${2 * Math.PI * 48 * (solvedByDiff.Beginner / allProblems.length)} ${2 * Math.PI * 48}`}
@@ -273,7 +366,6 @@ export default function Profile() {
                       strokeLinecap="round"
                       transform="rotate(-90 56 56)"
                     />
-                    {/* Intermediate */}
                     <circle
                       cx="56" cy="56" r="48" fill="none" stroke="#ffc01e" strokeWidth="10"
                       strokeDasharray={`${2 * Math.PI * 48 * (solvedByDiff.Intermediate / allProblems.length)} ${2 * Math.PI * 48}`}
@@ -281,7 +373,6 @@ export default function Profile() {
                       strokeLinecap="round"
                       transform="rotate(-90 56 56)"
                     />
-                    {/* Advanced */}
                     <circle
                       cx="56" cy="56" r="48" fill="none" stroke="#ff375f" strokeWidth="10"
                       strokeDasharray={`${2 * Math.PI * 48 * (solvedByDiff.Advanced / allProblems.length)} ${2 * Math.PI * 48}`}
@@ -299,9 +390,9 @@ export default function Profile() {
                 {/* Difficulty breakdown */}
                 <div className="flex-1 w-full space-y-3">
                   {[
-                    { key: 'Beginner' as const, label: 'Beginner', color: '#00b8a3', solved: solvedByDiff.Beginner, total: problemsByDifficulty.Beginner.length },
-                    { key: 'Intermediate' as const, label: 'Intermediate', color: '#ffc01e', solved: solvedByDiff.Intermediate, total: problemsByDifficulty.Intermediate.length },
-                    { key: 'Advanced' as const, label: 'Advanced', color: '#ff375f', solved: solvedByDiff.Advanced, total: problemsByDifficulty.Advanced.length },
+                    { key: 'Beginner' as const, label: 'Easy', color: '#00b8a3', solved: solvedByDiff.Beginner, total: problemsByDifficulty.Beginner.length },
+                    { key: 'Intermediate' as const, label: 'Medium', color: '#ffc01e', solved: solvedByDiff.Intermediate, total: problemsByDifficulty.Intermediate.length },
+                    { key: 'Advanced' as const, label: 'Hard', color: '#ff375f', solved: solvedByDiff.Advanced, total: problemsByDifficulty.Advanced.length },
                   ].map((d) => {
                     const pct = d.total > 0 ? Math.round((d.solved / d.total) * 100) : 0;
                     return (
@@ -323,31 +414,28 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* SRS Stats */}
-            <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <BrainCircuit size={16} className="text-[#8c8c8c]" />
-                <h3 className="text-sm font-bold text-[#eff1f6]">Spaced Repetition</h3>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { label: 'Due Today', value: Object.values(progress.srsCards).filter((c) => c.dueDate <= new Date().toISOString().split('T')[0]).length, color: '#ef4444' },
-                  { label: 'Learning', value: Object.values(progress.srsCards).filter((c) => c.mastery < 3).length, color: '#eab308' },
-                  { label: 'Mastered', value: Object.values(progress.srsCards).filter((c) => c.mastery >= 3).length, color: '#22c55e' },
-                ].map((s) => (
-                  <div key={s.label} className="text-center p-3 rounded-lg bg-[#0f0f0f]">
-                    <p className="text-lg font-bold" style={{ color: s.color }}>{s.value}</p>
-                    <p className="text-[10px] text-[#5c5c5c] mt-0.5">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Activity Heatmap */}
             <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Calendar size={16} className="text-[#8c8c8c]" />
                 <h3 className="text-sm font-bold text-[#eff1f6]">Activity</h3>
+                <span className="text-xs text-[#5c5c5c] ml-auto">
+                  {progress.activityLog.length} active day{progress.activityLog.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+
+              {/* Month labels */}
+              <div className="flex gap-1.5 ml-6 mb-1">
+                {heatmapByWeek.map((_, wi) => {
+                  const month = monthLabels.find((m) => m.index === wi);
+                  return (
+                    <div key={wi} className="w-[22px] flex-shrink-0">
+                      {month && (
+                        <span className="text-[9px] text-[#5c5c5c]">{month.label}</span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               <div className="flex gap-1.5 overflow-x-auto pb-1">
@@ -356,10 +444,10 @@ export default function Profile() {
                     {week.map((cell, di) => (
                       <div
                         key={di}
-                        className="w-3.5 h-3.5 rounded-sm flex-shrink-0"
+                        className="w-3 h-3 rounded-sm flex-shrink-0"
                         style={{
                           backgroundColor: cell.intensity > 0 ? '#ffa116' : '#1a1a1a',
-                          opacity: cell.intensity > 0 ? 0.6 + cell.intensity * 0.4 : 1,
+                          opacity: cell.intensity > 0 ? 1 : 1,
                         }}
                         title={cell.date}
                       />

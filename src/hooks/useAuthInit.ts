@@ -38,6 +38,7 @@ export function useAuthInit() {
               xp: progress.xp,
               streak: progress.streak,
               lastStudyDate: progress.lastStudyDate,
+              activityLog: progress.activityLog,
             },
             remote
           );
@@ -49,6 +50,7 @@ export function useAuthInit() {
             xp: merged.xp,
             streak: merged.streak,
             lastStudyDate: merged.lastStudyDate,
+            activityLog: merged.activityLog,
           });
         }
 
@@ -60,6 +62,7 @@ export function useAuthInit() {
           xp: progress.xp,
           streak: progress.streak,
           lastStudyDate: progress.lastStudyDate,
+          activityLog: progress.activityLog,
         });
 
         setSyncStatus(success ? 'synced' : 'error');
@@ -89,6 +92,7 @@ export function useAuthInit() {
         xp: progress.xp,
         streak: progress.streak,
         lastStudyDate: progress.lastStudyDate,
+        activityLog: progress.activityLog,
       });
       setSyncStatus(success ? 'synced' : 'error');
       setLastSyncedAt(new Date().toISOString());

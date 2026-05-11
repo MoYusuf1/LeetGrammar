@@ -25,6 +25,45 @@ import type { GraphSnapshot } from '@/engine/types';
 
 let globalBootstrapStarted = false;
 
+/** Normalize snake_case fields from Supabase RPC to camelCase. */
+function normalizeNode(node: any): import('@/engine/types').Node {
+  return {
+    id: node.id,
+    type: node.type,
+    labels: node.labels ?? (node.label ? { default: node.label } : { default: node.id }),
+    attributes: node.attributes ?? {},
+    definitionCids: node.definitionCids ?? node.definition_cids ?? [],
+  };
+}
+
+function normalizeEdge(edge: any): import('@/engine/types').Edge {
+  return {
+    id: edge.id,
+    from: edge.from ?? edge.from_id ?? edge.from_node,
+    to: edge.to ?? edge.to_id ?? edge.to_node,
+    type: edge.type,
+    qualifiers: edge.qualifiers ?? {},
+  };
+}
+
+function normalizeConstruction(c: any): import('@/engine/types').Construction {
+  return {
+    id: c.id,
+    type: 'CONSTRUCTION',
+    name: c.name,
+    members: c.members ?? [],
+    qualifiers: c.qualifiers ?? {},
+  };
+}
+
+function normalizeChunk(chunk: any): import('@/engine/types').Chunk {
+  return {
+    cid: chunk.cid,
+    contentType: chunk.contentType ?? chunk.content_type ?? 'text/plain',
+    payload: chunk.payload,
+  };
+}
+
 /** Hydrate engine + chunks from a JSON snapshot. */
 function hydrateFromSnapshot(
   engine: import('@/engine/graph-engine').GraphEngine,
@@ -34,15 +73,27 @@ function hydrateFromSnapshot(
   engine.clear();
   chunks.clear();
   for (const node of snapshot.nodes) {
-    try { engine.addNode(node); } catch { /* ignore duplicates */ }
+    try { engine.addNode(normalizeNode(node)); } catch { /* ignore duplicates */ }
   }
   for (const edge of snapshot.edges) {
-    try { engine.addEdge(edge); } catch { /* ignore duplicates */ }
+    try { engine.addEdge(normalizeEdge(edge)); } catch { /* ignore duplicates */ }
   }
   for (const c of snapshot.constructions) {
-    try { engine.addConstruction(c); } catch { /* ignore duplicates */ }
+    try { engine.addConstruction(normalizeConstruction(c)); } catch { /* ignore duplicates */ }
   }
-  chunks.fromArray(snapshot.chunks);
+  chunks.fromArray(snapshot.chunks.map(normalizeChunk));
+}
+
+/** Race an async operation against a timeout. */
+async function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Promise<T | 'timeout'> {
+  const timeout = new Promise<'timeout'>((_, reject) =>
+    setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)
+  );
+  try {
+    return await Promise.race([promise, timeout]);
+  } catch {
+    return 'timeout';
+  }
 }
 
 export function useGraphInit() {
@@ -61,85 +112,86 @@ export function useGraphInit() {
     globalBootstrapStarted = true;
 
     async function bootstrap() {
-      // ─── Step 1: Try Supabase (canonical cloud graph) ─────────────────────
-      if (isSupabaseConfigured) {
-        try {
-          setLoading(true);
-          const { data, error } = await getSupabase().rpc('get_full_graph');
-          if (!error && data && data.meta?.node_count > 0) {
-            hydrateFromSnapshot(engine, chunks, {
-              nodes: data.nodes,
-              edges: data.edges,
-              constructions: data.constructions,
-              chunks: data.chunks,
-            });
-            // Persist to SQLite cache for faster next load
-            try {
-              await useGraphStore.getState().saveToSQLite();
-            } catch {
-              // Cache failure is non-fatal
-            }
-            setLoading(false);
-            // Still fall through to Textbook B ingestion
-          } else {
-            if (error) {
-              // eslint-disable-next-line no-console
-              console.warn('[useGraphInit] Supabase graph unavailable:', error.message);
-            }
-          }
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.warn('[useGraphInit] Supabase RPC failed:', err);
-        } finally {
-          setLoading(false);
-        }
-      }
+      setLoading(true);
+      const done = () => {
+        setLoading(false);
+      };
 
-      // ─── Step 2: Try local SQLite cache ───────────────────────────────────
-      if (engine.stats.nodes === 0) {
-        try {
-          await persistence.init();
-          const stats = persistence.stats();
-          if (stats && stats.nodes > 0) {
-            setLoading(true);
-            await useGraphStore.getState().loadFromSQLite();
-            setLoading(false);
-          }
-        } catch {
-          // SQLite not available or empty — proceed to seeds
-        }
-      }
-
-      // ─── Step 3: Static seeds (last resort) ───────────────────────────────
-      if (engine.stats.nodes === 0) {
-        chunks.fromArray(seedChunks);
-        for (const node of seedNodes) {
-          if (!engine.hasNode(node.id)) {
-            try { engine.addNode(node); } catch { /* ignore */ }
-          }
-        }
-        for (const edge of seedEdges) {
-          try { engine.addEdge(edge); } catch { /* ignore */ }
-          }
-        for (const c of seedConstructions) {
-          try { engine.addConstruction(c); } catch { /* ignore */ }
-        }
-      }
-
-      // ─── Step 4: Ingest Textbook B ────────────────────────────────────────
-      ingestTextbook(engine, chunks, {
-        textbookId: textbookBId,
-        chunks: textbookBChunks,
-        nodes: textbookBNodes,
-        edges: textbookBEdges,
-        constructions: textbookBConstructions,
-      });
-
-      // ─── Step 5: Persist to SQLite cache ──────────────────────────────────
       try {
-        await useGraphStore.getState().saveToSQLite();
-      } catch {
-        // Persistence failed, but graph is still usable in memory
+        // ─── Step 1: Try Supabase (canonical cloud graph) ─────────────────────
+        if (isSupabaseConfigured) {
+          try {
+            const rpcResult = await withTimeout(
+              getSupabase().rpc('get_full_graph'),
+              8000,
+              'Supabase RPC'
+            );
+            if (rpcResult !== 'timeout' && rpcResult.data && rpcResult.data.meta?.node_count > 0) {
+              hydrateFromSnapshot(engine, chunks, {
+                nodes: rpcResult.data.nodes,
+                edges: rpcResult.data.edges,
+                constructions: rpcResult.data.constructions,
+                chunks: rpcResult.data.chunks,
+              });
+              // Persist to SQLite cache for faster next load
+              try {
+                await withTimeout(useGraphStore.getState().saveToSQLite(), 5000, 'SQLite save');
+              } catch {
+                // Cache failure is non-fatal
+              }
+            }
+          } catch (err) {
+            // eslint-disable-next-line no-console
+            console.warn('[useGraphInit] Supabase RPC failed:', err);
+          }
+        }
+
+        // ─── Step 2: Try local SQLite cache ───────────────────────────────────
+        if (engine.stats.nodes === 0) {
+          try {
+            await withTimeout(persistence.init(), 5000, 'SQLite init');
+            const stats = persistence.stats();
+            if (stats && stats.nodes > 0) {
+              await withTimeout(useGraphStore.getState().loadFromSQLite(), 5000, 'SQLite load');
+            }
+          } catch {
+            // SQLite not available or empty — proceed to seeds
+          }
+        }
+
+        // ─── Step 3: Static seeds (last resort) ───────────────────────────────
+        if (engine.stats.nodes === 0) {
+          chunks.fromArray(seedChunks);
+          for (const node of seedNodes) {
+            if (!engine.hasNode(node.id)) {
+              try { engine.addNode(node); } catch { /* ignore */ }
+            }
+          }
+          for (const edge of seedEdges) {
+            try { engine.addEdge(edge); } catch { /* ignore */ }
+            }
+          for (const c of seedConstructions) {
+            try { engine.addConstruction(c); } catch { /* ignore */ }
+          }
+        }
+
+        // ─── Step 4: Ingest Textbook B ────────────────────────────────────────
+        ingestTextbook(engine, chunks, {
+          textbookId: textbookBId,
+          chunks: textbookBChunks,
+          nodes: textbookBNodes,
+          edges: textbookBEdges,
+          constructions: textbookBConstructions,
+        });
+
+        // ─── Step 5: Persist to SQLite cache ──────────────────────────────────
+        try {
+          await withTimeout(useGraphStore.getState().saveToSQLite(), 5000, 'SQLite save');
+        } catch {
+          // Persistence failed, but graph is still usable in memory
+        }
+      } finally {
+        done();
       }
     }
 

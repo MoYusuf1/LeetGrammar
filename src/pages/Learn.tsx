@@ -70,7 +70,7 @@ export default function Learn() {
       {/* Header with tabs */}
       <div className="px-4 pt-4 pb-0 bg-[#0f0f0f] border-b border-[#ffffff08]">
         <div className="max-w-[900px] mx-auto">
-          <h1 className="text-xl font-bold text-[#eff1f6] mb-3">Learn Somali Grammar</h1>
+          <h1 className="text-xl font-bold text-[#eff1f6] mb-3">Learn Grammar</h1>
 
           {/* Tabs */}
           <div className="flex items-center gap-1 -mb-px">

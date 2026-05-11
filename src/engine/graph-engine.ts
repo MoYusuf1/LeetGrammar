@@ -33,9 +33,19 @@ export class GraphEngine {
     if (this.nodes.has(node.id)) {
       throw new Error(`Node with id "${node.id}" already exists`);
     }
-    this.nodes.set(node.id, node);
-    this.outEdges.set(node.id, new Set());
-    this.inEdges.set(node.id, new Set());
+    // Defensive: normalize snake_case fields and ensure arrays
+    const rawLabels = (node as any).labels;
+    const rawLabel = (node as any).label;
+    const normalized: Node = {
+      id: node.id,
+      type: node.type,
+      labels: rawLabels ?? (rawLabel ? { default: rawLabel } : { default: node.id }),
+      attributes: (node as any).attributes ?? {},
+      definitionCids: (node as any).definitionCids ?? (node as any).definition_cids ?? [],
+    };
+    this.nodes.set(normalized.id, normalized);
+    this.outEdges.set(normalized.id, new Set());
+    this.inEdges.set(normalized.id, new Set());
   }
 
   getNode(id: string): Node | undefined {
@@ -79,19 +89,30 @@ export class GraphEngine {
   // ─── Edges ──────────────────────────────────────────────────────────────────
 
   addEdge(edge: Edge): void {
-    if (!this.nodes.has(edge.from)) {
-      throw new Error(`Source node "${edge.from}" does not exist`);
+    // Defensive: normalize snake_case fields
+    const from = (edge as any).from ?? (edge as any).from_id;
+    const to = (edge as any).to ?? (edge as any).to_id;
+    if (!this.nodes.has(from)) {
+      throw new Error(`Source node "${from}" does not exist`);
     }
-    if (!this.nodes.has(edge.to)) {
-      throw new Error(`Target node "${edge.to}" does not exist`);
+    if (!this.nodes.has(to)) {
+      throw new Error(`Target node "${to}" does not exist`);
     }
     if (this.edges.has(edge.id)) {
       throw new Error(`Edge with id "${edge.id}" already exists`);
     }
 
-    this.edges.set(edge.id, edge);
-    this.outEdges.get(edge.from)!.add(edge.id);
-    this.inEdges.get(edge.to)!.add(edge.id);
+    const normalized: Edge = {
+      id: edge.id,
+      from,
+      to,
+      type: edge.type,
+      qualifiers: (edge as any).qualifiers ?? {},
+    };
+
+    this.edges.set(normalized.id, normalized);
+    this.outEdges.get(normalized.from)!.add(normalized.id);
+    this.inEdges.get(normalized.to)!.add(normalized.id);
   }
 
   getEdge(id: string): Edge | undefined {

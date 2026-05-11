@@ -8,7 +8,7 @@ import {
   SheetDescription,
   SheetFooter,
 } from '@/components/ui/sheet';
-import { allProblems } from '@/data/problems';
+import { allProblems, displayDifficulty } from '@/data/problems';
 import { useProgress } from '@/hooks/useProgress';
 import type { RoadmapTopic } from '@/types';
 
@@ -143,7 +143,7 @@ export default function TopicDialog({ topic, open, onOpenChange }: TopicDialogPr
                           : 'rgba(255, 55, 95, 0.1)',
                     }}
                   >
-                    {lesson.difficulty[0]}
+                    {displayDifficulty(lesson.difficulty)}
                   </span>
 
                   <ChevronRight size={14} className="text-[#3e3e3e] group-hover:text-[#8c8c8c] flex-shrink-0 transition-colors" />

@@ -10,7 +10,7 @@ import { useAdmin } from '@/hooks/useAdmin';
 import Problems from '@/pages/Problems';
 import Roadmap from '@/pages/Roadmap';
 import Learn from '@/pages/Learn';
-import About from '@/pages/About';
+import Landing from '@/pages/Landing';
 
 /* ─── Heavy routes (lazy-loaded) ─── */
 const Problem = lazy(() => import('@/pages/Problem'));
@@ -23,7 +23,7 @@ const Ingest = lazy(() => import('@/pages/Ingest'));
 const Quiz = lazy(() => import('@/pages/Quiz'));
 const Review = lazy(() => import('@/pages/Review'));
 const StudyHub = lazy(() => import('@/pages/StudyHub'));
-const AdminSettings = lazy(() => import('@/pages/AdminSettings'));
+const Settings = lazy(() => import('@/pages/Settings'));
 
 function AdminIngest() {
   const isAdmin = useAdmin();
@@ -66,13 +66,12 @@ export default function App() {
         <div className="flex-1 overflow-y-auto scrollbar-hide">
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<Navigate to="/problems" replace />} />
+              <Route path="/" element={<Landing />} />
               <Route path="/problems" element={<Problems />} />
               <Route path="/problem/:id" element={<Problem />} />
               <Route path="/roadmap" element={<Roadmap />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/learn" element={<Learn />} />
-              <Route path="/about" element={<About />} />
               <Route path="/wiki/:conceptId" element={<Wiki />} />
               <Route path="/concepts" element={<Concepts />} />
               <Route path="/curriculum" element={<Curriculum />} />
@@ -80,7 +79,8 @@ export default function App() {
               <Route path="/quiz/:conceptId" element={<Quiz />} />
               <Route path="/review" element={<Review />} />
               <Route path="/study/:conceptId" element={<StudyHub />} />
-              <Route path="/admin" element={<AdminSettings />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/admin" element={<Navigate to="/settings" replace />} />
               {/* Redirects for old routes */}
               <Route path="/path" element={<Navigate to="/roadmap" replace />} />
               <Route path="/practice" element={<Navigate to="/problems" replace />} />

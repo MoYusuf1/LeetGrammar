@@ -21,6 +21,33 @@ export interface TestCase {
   explanation: string;
 }
 
+export type DrillType =
+  | 'multiple_choice'
+  | 'recognize'
+  | 'choose'
+  | 'fill_blank'
+  | 'ordering'
+  | 'decomposition';
+
+export interface Drill {
+  type: DrillType;
+  /** The question prompt (e.g. "What marker is in this sentence?") */
+  question: string;
+  /** Optional context: a Somali sentence, English hint, etc. */
+  prompt?: string;
+  /** Options for multiple_choice / fill_blank */
+  options?: string[];
+  /** Correct answer string */
+  answer: string;
+  /** For ordering drills: the words to arrange */
+  words?: string[];
+  /** For decomposition: the two parts expected (e.g. ['waa','uu']) */
+  parts?: [string, string];
+  /** Labels for decomposition parts (e.g. ['Marker','Pronoun']) */
+  partLabels?: [string, string];
+  explanation: string;
+}
+
 export interface LessonContent {
   id: number;
   title: string;
@@ -32,6 +59,8 @@ export interface LessonContent {
   commonMistakes: { mistake: string; correction: string; explanation: string }[];
   exercises: { question: string; options: string[]; answer: number; explanation: string }[];
   quickRef: { label: string; value: string }[];
+  /** Drill set — scaffolded exercises for this lesson */
+  drills?: Drill[];
 }
 
 export const lessons: LessonContent[] = [

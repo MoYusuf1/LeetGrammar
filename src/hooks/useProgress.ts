@@ -15,6 +15,7 @@ export interface UserProgress {
   xp: number;
   practiceScores: Record<number, number>;
   srsCards: Record<string, import('@/engine/srs').SrsCard>;
+  activityLog: string[];
 }
 
 export function useProgress() {
@@ -76,6 +77,7 @@ export function useProgress() {
     xp: store.xp,
     practiceScores: store.practiceScores,
     srsCards: store.srsCards,
+    activityLog: store.activityLog,
   };
 
   return {

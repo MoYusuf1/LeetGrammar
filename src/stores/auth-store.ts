@@ -78,6 +78,21 @@ export const useAuthStore = create<AuthState>((set) => ({
           .eq('id', user.id)
           .maybeSingle();
         isAdmin = profile?.is_admin ?? false;
+
+        // Fallback: if no admins exist at all, make this user admin
+        if (!isAdmin) {
+          const { data: admins } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('is_admin', true)
+            .limit(1);
+          if (!admins || admins.length === 0) {
+            await supabase
+              .from('profiles')
+              .upsert({ id: user.id, email: user.email, is_admin: true }, { onConflict: 'id' });
+            isAdmin = true;
+          }
+        }
       }
 
       set({
@@ -98,6 +113,21 @@ export const useAuthStore = create<AuthState>((set) => ({
             .eq('id', newUser.id)
             .maybeSingle();
           newAdmin = p?.is_admin ?? false;
+
+          // Same fallback for auth state changes
+          if (!newAdmin) {
+            const { data: admins } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('is_admin', true)
+              .limit(1);
+            if (!admins || admins.length === 0) {
+              await supabase
+                .from('profiles')
+                .upsert({ id: newUser.id, email: newUser.email, is_admin: true }, { onConflict: 'id' });
+              newAdmin = true;
+            }
+          }
         }
         set({
           session,
