@@ -18,6 +18,10 @@ export interface ProblemMeta {
   description: string;
   acceptance: number;
   isPremium: boolean;
+  /** @deprecated backward-compat alias for section */
+  unit: string;
+  /** @deprecated backward-compat alias for sectionId */
+  unitId: number;
 }
 
 export interface ProblemSection {
@@ -295,7 +299,7 @@ export const allProblems: ProblemMeta[] = [
     description: 'Write a short story (6–8 sentences) in Somali about your day. Must use: 2 tenses, 1 focus marker, 1 preposition+directional, 1 connector, 1 relative clause.',
     acceptance: 18, isPremium: false,
   },
-];
+].map((p) => ({ ...p, unit: p.section, unitId: p.sectionId })) as ProblemMeta[];
 
 // Helper lookups
 const problemMap = new Map(allProblems.map((p) => [p.id, p]));

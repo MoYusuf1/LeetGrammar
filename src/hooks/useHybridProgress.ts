@@ -5,8 +5,6 @@
 
 import { useMemo, useCallback } from 'react';
 import { useProgressStore } from '@/stores/progress-store';
-import { useGraphStore } from '@/stores/graph-store';
-import { buildGraphPath } from '@/engine/lesson-generator';
 import { allProblems } from '@/data/problems';
 import type { ProblemMeta } from '@/data/problems';
 
@@ -48,72 +46,36 @@ function problemToHybrid(p: ProblemMeta): HybridLesson {
 }
 
 export function useHybridPath() {
-  const { engine, chunks } = useGraphStore();
-
-  const { lessons: graphLessons, units: graphUnits } = useMemo(
-    () => buildGraphPath(engine, chunks),
-    [engine, chunks]
-  );
-
-  const hasGraphContent = graphLessons.length > 0;
-
-  // Build hybrid units
+  // Only return hardcoded problem lessons.
+  // Graph-generated lessons are kept out of the Learn page.
   const units = useMemo<HybridUnit[]>(() => {
-    if (!hasGraphContent) {
-      // Fallback to hardcoded units
-      const unitMap = new Map<number, HybridUnit>();
-      for (const p of allProblems) {
-        if (!unitMap.has(p.unitId)) {
-          unitMap.set(p.unitId, {
-            unitId: p.unitId,
-            title: p.unit,
-            description: '',
-            color: '',
-            lessonIds: [],
-            prerequisites: [],
-          });
-        }
-        unitMap.get(p.unitId)!.lessonIds.push(p.id);
+    const unitMap = new Map<number, HybridUnit>();
+    for (const p of allProblems) {
+      if (!unitMap.has(p.unitId)) {
+        unitMap.set(p.unitId, {
+          unitId: p.unitId,
+          title: p.unit,
+          description: '',
+          color: '',
+          lessonIds: [],
+          prerequisites: [],
+        });
       }
-      return Array.from(unitMap.values());
+      unitMap.get(p.unitId)!.lessonIds.push(p.id);
     }
+    return Array.from(unitMap.values());
+  }, []);
 
-    return graphUnits.map((u) => ({
-      ...u,
-      lessonIds: u.lessonIds,
-    }));
-  }, [hasGraphContent, graphUnits]);
-
-  // Build hybrid lessons
   const lessons = useMemo<HybridLesson[]>(() => {
-    if (!hasGraphContent) {
-      return allProblems.map(problemToHybrid);
-    }
+    return allProblems.map(problemToHybrid);
+  }, []);
 
-    const hardcoded = allProblems.map(problemToHybrid);
-    const graph = graphLessons.map((l) => ({
-      id: l.id,
-      title: l.title,
-      unitId: l.unitId,
-      unitTitle: l.unitTitle,
-      unitColor: l.unitColor,
-      isGraph: true,
-      conceptId: l.conceptId,
-      difficulty: l.difficulty,
-      description: l.description,
-      prerequisites: l.prerequisites,
-    }));
-
-    // Sort: graph lessons first, then hardcoded
-    return [...graph, ...hardcoded];
-  }, [hasGraphContent, graphLessons]);
-
-  return { lessons, units, hasGraphContent, graphLessons };
+  return { lessons, units };
 }
 
 export function useHybridProgress() {
   const store = useProgressStore();
-  const { lessons, units, hasGraphContent, graphLessons } = useHybridPath();
+  const { lessons, units } = useHybridPath();
 
   const getLessonStatus = useCallback(
     (lessonId: number): 'completed' | 'current' | 'locked' => {
@@ -166,7 +128,7 @@ export function useHybridProgress() {
     getTopicProgress,
     lessons,
     units,
-    hasGraphContent,
-    graphLessons,
+    hasGraphContent: false,
+    graphLessons: [],
   };
 }

@@ -1,10 +1,12 @@
 // ============================================================================
-// UNIFIED PROBLEM LESSONS — Maps 50 problem IDs to lesson content
-// Existing 20 lessons are mapped; 30 new lessons are scaffolded
-// Each lesson has exactly ONE exercise and 2-3 test cases in Input/Output format
+// UNIFIED PROBLEM LESSONS — Maps 30 problem IDs to lesson content
+// Generated from problem metadata + drills. Old 50-lesson content kept as
+// fallback for IDs not in the new problem set.
 // ============================================================================
 
 import { lessons as oldLessons, type LessonContent, type TestCase } from './lessons-complete';
+import { allProblems, getProblemById } from './problems';
+import { getDrillsForProblem } from './problem-drills';
 
 function remap(oldId: number, newId: number, newTitle?: string, testCases?: TestCase[], opts: Partial<LessonContent> = {}): LessonContent {
   const old = oldLessons.find((l) => l.id === oldId)!;
@@ -30,6 +32,40 @@ function scaffold(
     exercises: opts.exercises || [],
     quickRef: opts.quickRef || [],
   };
+}
+
+function generateLessonFromProblem(problem: typeof allProblems[0]): LessonContent {
+  const drills = getDrillsForProblem(problem.id);
+  const drillExamples = drills.slice(0, 3).map((d) => ({
+    input: d.prompt ?? d.question ?? '',
+    output: d.correctAnswer?.toString() ?? d.correctOrder?.join(' ') ?? (Array.isArray(d.parts) && d.parts.length > 0 && typeof (d.parts[0] as any).answer === 'string' ? (d.parts as { answer: string }[]).map((p) => p.answer).join(' ') : Array.isArray(d.parts) ? (d.parts as string[]).join(' ') : 'See explanation'),
+    explanation: d.explanation ?? '',
+  }));
+
+  return scaffold(
+    problem.id,
+    problem.title,
+    problem.description,
+    `This problem tests ${problem.tags.join(', ')}.`,
+    {
+      keyConcepts: problem.tags.map((t) => t.replace(/-/g, ' ')),
+      testCases: drillExamples.length > 0 ? drillExamples : [
+        { input: problem.description, output: 'Complete the drill set to verify understanding.', explanation: `This ${problem.difficulty} problem tests: ${problem.tags.join(', ')}.` },
+      ],
+      exercises: drills.length > 0 ? [{
+        question: `Drill set with ${drills.length} exercises. Complete them on the Problem page.`,
+        options: [],
+        answer: 0,
+        explanation: 'Use the Problem page to attempt the full drill set.',
+      }] : [],
+      quickRef: problem.prerequisites.length > 0
+        ? problem.prerequisites.map((pid) => {
+            const prereq = getProblemById(pid);
+            return { label: `Prereq: ${prereq?.title ?? `#${pid}`}`, value: `Problem ${pid}` };
+          })
+        : [{ label: 'Section', value: problem.section }],
+    }
+  );
 }
 
 const allLessons: LessonContent[] = [
@@ -599,7 +635,13 @@ const allLessons: LessonContent[] = [
 ];
 
 const lessonMap = new Map(allLessons.map((l) => [l.id, l]));
+const generatedLessonMap = new Map(allProblems.map((p) => [p.id, generateLessonFromProblem(p)]));
 
 export function getProblemContent(problemId: number): LessonContent | undefined {
+  // New problem IDs (1-30) get generated content from problem metadata
+  if (generatedLessonMap.has(problemId)) {
+    return generatedLessonMap.get(problemId);
+  }
+  // Fallback to old 50-lesson content for any legacy IDs
   return lessonMap.get(problemId);
 }

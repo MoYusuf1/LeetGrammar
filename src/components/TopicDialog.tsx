@@ -76,7 +76,7 @@ export default function TopicDialog({ topic, open, onOpenChange }: TopicDialogPr
         {/* Lesson List */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
           <div className="px-2 mb-2">
-            <span className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider">{lessons.length} Lessons</span>
+            <span className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider">{lessons.length} Problems</span>
           </div>
           {lessons.map((lesson) => {
             if (!lesson) return null;
@@ -89,7 +89,7 @@ export default function TopicDialog({ topic, open, onOpenChange }: TopicDialogPr
                 key={lesson.id}
                 onClick={() => {
                   onOpenChange(false);
-                  navigate(`/lesson/${lesson.id}`);
+                  navigate(`/problem/${lesson.id}`);
                 }}
                 className={`w-full text-left rounded-lg border transition-all duration-150 group cursor-pointer
                   border-[#ffffff08] bg-[#141414] hover:border-[#ffffff18] hover:bg-[#1c1c1c] hover:shadow-sm
@@ -159,17 +159,17 @@ export default function TopicDialog({ topic, open, onOpenChange }: TopicDialogPr
             onClick={() => {
               if (nextLesson) {
                 onOpenChange(false);
-                navigate(`/lesson/${nextLesson.id}`);
+                navigate(`/problem/${nextLesson.id}`);
               }
             }}
             className="w-full py-2.5 rounded-lg font-medium text-sm transition-colors text-[#0f0f0f] hover:opacity-90"
             style={{ backgroundColor: topic.color }}
           >
             {completed === total
-              ? 'Review Lessons'
+              ? 'Review Problems'
               : completed > 0
-              ? 'Continue Learning'
-              : 'Start Learning'}
+              ? 'Continue Solving'
+              : 'Start Solving'}
           </button>
         </SheetFooter>
       </SheetContent>

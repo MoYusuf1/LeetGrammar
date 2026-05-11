@@ -1,60 +1,11 @@
 import { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { Check, BookOpen, RotateCcw, Send, ChevronRight, GraduationCap, ListChecks, Eye } from 'lucide-react';
+import { Check, BookOpen, RotateCcw, Send, ChevronRight, GraduationCap, ListChecks } from 'lucide-react';
 import { getProblemById, displayDifficulty } from '@/data/problems';
-import { getProblemContent } from '@/data/problem-lessons';
+import { getDrillsForProblem, hasDrills } from '@/data/problem-drills';
 import { useProgress } from '@/hooks/useProgress';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import { DrillRunner } from '@/components/DrillRunner';
-
-function RevealableProblemExample({
-  index,
-  input,
-  output,
-  explanation,
-}: {
-  index: number;
-  input: string;
-  output: string;
-  explanation: string;
-}) {
-  const [revealed, setRevealed] = useState(false);
-
-  return (
-    <div className="bg-[#1a1a1a] rounded-xl p-4 border border-[#ffffff10]">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider">Example {index + 1}</span>
-      </div>
-      <div className="space-y-2">
-        <div className="flex gap-2">
-          <span className="text-[11px] font-semibold text-[#8c8c8c] w-20 flex-shrink-0">Prompt:</span>
-          <span className="text-sm text-[#eff1f6] font-mono">{input}</span>
-        </div>
-
-        {!revealed ? (
-          <button
-            onClick={() => setRevealed(true)}
-            className="w-full mt-1 py-2 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-xs text-[#8c8c8c] hover:text-[#eff1f6] hover:border-[#ffffff15] transition-colors flex items-center justify-center gap-1.5"
-          >
-            <Eye size={13} />
-            Reveal Answer
-          </button>
-        ) : (
-          <>
-            <div className="flex gap-2">
-              <span className="text-[11px] font-semibold text-[#8c8c8c] w-20 flex-shrink-0">Answer:</span>
-              <span className="text-sm text-[#ffa116] font-mono">{output}</span>
-            </div>
-            <div className="flex gap-2 pt-1">
-              <span className="text-[11px] font-semibold text-[#8c8c8c] w-20 flex-shrink-0">Explanation:</span>
-              <span className="text-xs text-[#b0b0b0] leading-relaxed">{explanation}</span>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
 
 export default function Problem() {
   const { id } = useParams<{ id: string }>();
@@ -62,7 +13,6 @@ export default function Problem() {
   const problemId = parseInt(id || '1', 10);
 
   const problem = getProblemById(problemId);
-  const lesson = getProblemContent(problemId);
   const { completeLesson, progress, getLessonStatus } = useProgress();
 
   const [activeTab, setActiveTab] = useState<'description' | 'examples' | 'submissions'>('description');
@@ -72,8 +22,8 @@ export default function Problem() {
 
   const isCompleted = getLessonStatus(problemId) === 'completed';
 
-  const drills = lesson?.drills ?? [];
-  const hasDrills = drills.length > 0;
+  const drills = getDrillsForProblem(problemId);
+  const problemHasDrills = hasDrills(problemId);
 
   const handleDrillComplete = useCallback((_score: number, _total: number, passed: boolean) => {
     if (passed) {
@@ -97,7 +47,7 @@ export default function Problem() {
     setDrillKey((k) => k + 1);
   }, []);
 
-  if (!problem || !lesson) {
+  if (!problem) {
     return (
       <div className="h-full bg-[#0f0f0f] flex items-center justify-center">
         <p className="text-[#8c8c8c]">Problem not found</p>
@@ -135,7 +85,7 @@ export default function Problem() {
               <BookOpen size={12} className="inline mr-1.5" />Description
             </button>
             <button onClick={() => setActiveTab('examples')} className={`px-5 py-3 text-xs font-semibold border-b-2 transition-colors ${activeTab === 'examples' ? 'border-[#ffa116] text-[#eff1f6]' : 'border-transparent text-[#8c8c8c] hover:text-[#eff1f6]'}`}>
-              <ListChecks size={12} className="inline mr-1.5" />Examples{(lesson?.testCases?.length ?? 0) > 0 && <span className="ml-1 text-[10px] text-[#5c5c5c]">({lesson?.testCases?.length})</span>}
+              <ListChecks size={12} className="inline mr-1.5" />Examples
             </button>
             <button onClick={() => setActiveTab('submissions')} className={`px-5 py-3 text-xs font-semibold border-b-2 transition-colors ${activeTab === 'submissions' ? 'border-[#ffa116] text-[#eff1f6]' : 'border-transparent text-[#8c8c8c] hover:text-[#eff1f6]'}`}>
               <RotateCcw size={12} className="inline mr-1.5" />Submissions
@@ -156,18 +106,18 @@ export default function Problem() {
 
               {/* Problem Statement */}
               <div className="text-[15px] text-[#d4d4d4] leading-relaxed">
-                {lesson?.exercises?.[0]?.question ?? 'Practice this grammar concept.'}
+                {problem.description}
               </div>
 
-              {/* Constraints */}
-              {lesson.keyConcepts.length > 0 && (
+              {/* Concepts Tested */}
+              {problem.tags.length > 0 && (
                 <div>
-                  <h3 className="text-xs font-bold text-[#5c5c5c] uppercase tracking-wider mb-2">Key Concepts</h3>
+                  <h3 className="text-xs font-bold text-[#5c5c5c] uppercase tracking-wider mb-2">Concepts Tested</h3>
                   <ul className="space-y-1.5">
-                    {lesson.keyConcepts.slice(0, 4).map((concept, i) => (
+                    {problem.tags.map((tag, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-[#8c8c8c]">
                         <span className="text-[#5c5c5c] mt-0.5">•</span>
-                        <span>{concept}</span>
+                        <span className="capitalize">{tag.replace(/-/g, ' ')}</span>
                       </li>
                     ))}
                   </ul>
@@ -178,19 +128,12 @@ export default function Problem() {
 
           {activeTab === 'examples' && (
             <div className="p-6 space-y-4 max-w-[720px]">
-              {(lesson?.testCases?.length ?? 0) > 0 ? (
-                lesson!.testCases!.map((tc, i) => (
-                  <RevealableProblemExample
-                    key={i}
-                    index={i}
-                    input={tc.input}
-                    output={tc.output}
-                    explanation={tc.explanation}
-                  />
-                ))
-              ) : (
-                <p className="text-sm text-[#8c8c8c]">No examples for this problem.</p>
-              )}
+              <div className="bg-[#1a1a1a] rounded-xl p-4 border border-[#ffffff10]">
+                <p className="text-sm text-[#8c8c8c]">
+                  The drill set on the right contains {drills.length} exercises that serve as interactive examples.
+                  Each drill tests a specific aspect of this problem. Complete them to unlock submission.
+                </p>
+              </div>
             </div>
           )}
 
@@ -215,7 +158,7 @@ export default function Problem() {
                   <span className="text-[10px] font-medium text-[#00b8a3] bg-[#00b8a315] px-2 py-0.5 rounded">Solved</span>
                 )}
                 <button
-                  onClick={() => navigate(`/lesson/${problemId}`)}
+                  onClick={() => navigate('/learn')}
                   className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#ffa116]15 text-[#ffa116] hover:bg-[#ffa116]25 transition-colors text-[11px] font-medium"
                 >
                   <GraduationCap size={12} />
@@ -224,18 +167,13 @@ export default function Problem() {
               </div>
             </div>
             <div className="flex-1 overflow-y-auto">
-              {hasDrills ? (
+              {problemHasDrills ? (
                 <DrillRunner
                   key={drillKey}
                   drills={drills}
                   onComplete={handleDrillComplete}
                   onRetry={handleDrillRetry}
                 />
-              ) : lesson?.exercises?.[0] ? (
-                <div className="p-4">
-                  <p className="text-sm text-[#8c8c8c] mb-4">This lesson uses the legacy exercise format.</p>
-                  {/* Legacy fallback could go here */}
-                </div>
               ) : (
                 <div className="text-center py-8 text-[#8c8c8c] text-sm">No drills available for this problem yet.</div>
               )}

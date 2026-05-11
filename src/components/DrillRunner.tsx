@@ -1,14 +1,27 @@
 import { useState, useCallback } from 'react';
 import { Check, X, RotateCcw, ChevronRight, Trophy, Eye, Dumbbell } from 'lucide-react';
-import type { Drill, DrillType } from '@/data/lessons-complete';
+export interface Exercise {
+  id?: string | number;
+  type: string;
+  question?: string;
+  prompt?: string;
+  options?: string[];
+  answer?: string;
+  correctAnswer?: string | number;
+  words?: string[];
+  correctOrder?: string[];
+  parts?: [string, string] | { part: string; answer: string }[];
+  partLabels?: [string, string];
+  explanation?: string;
+}
 
 interface DrillRunnerProps {
-  drills: Drill[];
+  drills: Exercise[];
   onComplete?: (score: number, total: number, passed: boolean) => void;
   onRetry?: () => void;
 }
 
-const TYPE_LABELS: Record<DrillType, string> = {
+const TYPE_LABELS: Record<string, string> = {
   multiple_choice: 'Multiple Choice',
   recognize: 'Recognize',
   choose: 'Choose',
@@ -45,6 +58,29 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
   const total = drillSet.length;
   const isLast = index === total - 1;
 
+  // Normalize old Drill vs new Exercise format
+  const qText = current?.question ?? current?.prompt ?? '';
+  const correctAnswer = (() => {
+    if (current?.answer !== undefined) return current.answer;
+    if (typeof current?.correctAnswer === 'number') {
+      return current.options?.[current.correctAnswer] ?? '';
+    }
+    return current?.correctAnswer ?? '';
+  })();
+  const wordBank = current?.words ?? current?.correctOrder;
+  const decompParts = (() => {
+    const p = current?.parts;
+    if (!p) return undefined as [string, string] | undefined;
+    if (Array.isArray(p) && p.length === 2 && typeof p[0] === 'string') {
+      return p as [string, string];
+    }
+    if (Array.isArray(p) && p.length > 0 && typeof (p[0] as any).answer === 'string') {
+      const arr = p as { answer: string }[];
+      return [arr[0]?.answer ?? '', arr[1]?.answer ?? ''] as [string, string];
+    }
+    return undefined;
+  })();
+
   const resetLocal = useCallback(() => {
     setSelectedOption(null);
     setOrderedWords([]);
@@ -62,15 +98,15 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
       case 'recognize':
       case 'choose':
       case 'fill_blank':
-        correct = selectedOption === current.answer;
+        correct = selectedOption === correctAnswer;
         break;
       case 'ordering':
-        correct = orderedWords.join(' ') === current.answer;
+        correct = orderedWords.join(' ') === correctAnswer;
         break;
       case 'decomposition':
         correct =
-          partA.trim().toLowerCase() === (current.parts?.[0] ?? '').toLowerCase() &&
-          partB.trim().toLowerCase() === (current.parts?.[1] ?? '').toLowerCase();
+          partA.trim().toLowerCase() === (decompParts?.[0] ?? '').toLowerCase() &&
+          partB.trim().toLowerCase() === (decompParts?.[1] ?? '').toLowerCase();
         break;
     }
 
@@ -132,7 +168,7 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
                 <div className="flex items-start gap-2">
                   {ok ? <Check size={13} className="text-[#22c55e] flex-shrink-0 mt-0.5" /> : <X size={13} className="text-[#ef4444] flex-shrink-0 mt-0.5" />}
                   <div className="flex-1 min-w-0">
-                    <p className="text-[11px] text-[#c8c8c8] line-clamp-2">{d.question}</p>
+                    <p className="text-[11px] text-[#c8c8c8] line-clamp-2">{d.question ?? d.prompt}</p>
                     <p className="text-[10px] text-[#5c5c5c] mt-1">{d.explanation}</p>
                   </div>
                 </div>
@@ -181,7 +217,7 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
         <div className="max-w-[560px] mx-auto space-y-5">
           {/* Question */}
           <div>
-            <p className="text-[15px] font-medium text-[#eff1f6] leading-relaxed">{current.question}</p>
+            <p className="text-[15px] font-medium text-[#eff1f6] leading-relaxed">{qText}</p>
             {current.prompt && (
               <p className="mt-2 text-sm text-[#d4d4d4] font-mono bg-[#1a1a1a] rounded-lg px-3 py-2 border border-[#ffffff08]">
                 {current.prompt}
@@ -195,7 +231,7 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
               {current.options.map((opt) => {
                 let bg = 'bg-[#1a1a1a] border border-[#ffffff15] hover:border-[#ffa11650]';
                 if (revealed) {
-                  if (opt === current.answer) bg = 'bg-[#00b8a315] border border-[#00b8a3]';
+                  if (opt === correctAnswer) bg = 'bg-[#00b8a315] border border-[#00b8a3]';
                   else if (opt === selectedOption) bg = 'bg-[#ff375f15] border border-[#ff375f]';
                   else bg = 'bg-[#1a1a1a] border border-[#ffffff08] opacity-50';
                 } else if (opt === selectedOption) {
@@ -209,8 +245,8 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
                     className={`${bg} w-full text-left px-4 py-3 rounded-lg text-sm transition-all flex items-center gap-3`}
                   >
                     <span className="flex-1 text-[#eff1f6]">{opt}</span>
-                    {revealed && opt === current.answer && <Check size={15} className="text-[#00b8a3] flex-shrink-0" />}
-                    {revealed && opt === selectedOption && opt !== current.answer && <X size={15} className="text-[#ff375f] flex-shrink-0" />}
+                    {revealed && opt === correctAnswer && <Check size={15} className="text-[#00b8a3] flex-shrink-0" />}
+                    {revealed && opt === selectedOption && opt !== correctAnswer && <X size={15} className="text-[#ff375f] flex-shrink-0" />}
                   </button>
                 );
               })}
@@ -218,7 +254,7 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
           )}
 
           {/* ── ordering ── */}
-          {current.type === 'ordering' && current.words && (
+          {current.type === 'ordering' && wordBank && (
             <div className="space-y-4">
               {/* Built sentence */}
               <div className="min-h-[44px] bg-[#0f0f0f] rounded-lg border border-[#ffffff10] px-3 py-2 flex flex-wrap gap-2 items-center">
@@ -239,8 +275,8 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
 
               {/* Word bank */}
               <div className="flex flex-wrap gap-2">
-                {current.words
-                  .filter((w) => !orderedWords.includes(w) || orderedWords.filter((x) => x === w).length < current.words!.filter((x) => x === w).length)
+                {wordBank
+                  .filter((w) => !orderedWords.includes(w) || orderedWords.filter((x) => x === w).length < wordBank!.filter((x) => x === w).length)
                   .map((w, i) => (
                     <button
                       key={`${w}-${i}`}
@@ -254,18 +290,18 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
               </div>
 
               {revealed && (
-                <div className={`rounded-lg p-3 text-sm border ${orderedWords.join(' ') === current.answer ? 'bg-[#00b8a310] border-[#00b8a330] text-[#00b8a3]' : 'bg-[#ff375f10] border-[#ff375f30] text-[#ff7b7b]'}`}>
+                <div className={`rounded-lg p-3 text-sm border ${orderedWords.join(' ') === correctAnswer ? 'bg-[#00b8a310] border-[#00b8a330] text-[#00b8a3]' : 'bg-[#ff375f10] border-[#ff375f30] text-[#ff7b7b]'}`}>
                   <p className="font-semibold">
-                    {orderedWords.join(' ') === current.answer ? 'Correct!' : 'Not quite'}
+                    {orderedWords.join(' ') === correctAnswer ? 'Correct!' : 'Not quite'}
                   </p>
-                  <p className="text-[#c8c8c8] mt-1">Correct order: <span className="text-[#eff1f6] font-mono">{current.answer}</span></p>
+                  <p className="text-[#c8c8c8] mt-1">Correct order: <span className="text-[#eff1f6] font-mono">{correctAnswer}</span></p>
                 </div>
               )}
             </div>
           )}
 
           {/* ── decomposition ── */}
-          {current.type === 'decomposition' && current.parts && (
+          {current.type === 'decomposition' && decompParts && (
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="text-sm text-[#8c8c8c]">{current.partLabels?.[0] ?? 'Part 1'}:</span>
@@ -290,12 +326,12 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
               </div>
 
               {revealed && (
-                <div className={`rounded-lg p-3 text-sm border ${(partA.trim().toLowerCase() === current.parts[0].toLowerCase() && partB.trim().toLowerCase() === current.parts[1].toLowerCase()) ? 'bg-[#00b8a310] border-[#00b8a330] text-[#00b8a3]' : 'bg-[#ff375f10] border-[#ff375f30] text-[#ff7b7b]'}`}>
+                <div className={`rounded-lg p-3 text-sm border ${(partA.trim().toLowerCase() === decompParts[0].toLowerCase() && partB.trim().toLowerCase() === decompParts[1].toLowerCase()) ? 'bg-[#00b8a310] border-[#00b8a330] text-[#00b8a3]' : 'bg-[#ff375f10] border-[#ff375f30] text-[#ff7b7b]'}`}>
                   <p className="font-semibold">
-                    {(partA.trim().toLowerCase() === current.parts[0].toLowerCase() && partB.trim().toLowerCase() === current.parts[1].toLowerCase()) ? 'Correct!' : 'Not quite'}
+                    {(partA.trim().toLowerCase() === decompParts[0].toLowerCase() && partB.trim().toLowerCase() === decompParts[1].toLowerCase()) ? 'Correct!' : 'Not quite'}
                   </p>
                   <p className="text-[#c8c8c8] mt-1">
-                    Answer: <span className="text-[#eff1f6]">{current.parts[0]}</span> + <span className="text-[#eff1f6]">{current.parts[1]}</span>
+                    Answer: <span className="text-[#eff1f6]">{decompParts[0]}</span> + <span className="text-[#eff1f6]">{decompParts[1]}</span>
                   </p>
                 </div>
               )}
@@ -305,7 +341,7 @@ export default function DrillRunner({ drills, onComplete, onRetry }: DrillRunner
           {/* Explanation (shown after reveal) */}
           {revealed && current.type !== 'ordering' && current.type !== 'decomposition' && (
             <div className={`rounded-lg p-3.5 text-sm border ${results[index] ? 'bg-[#00b8a310] border-[#00b8a330] text-[#00b8a3]' : 'bg-[#ff375f10] border-[#ff375f30] text-[#ff7b7b]'}`}>
-              <p className="font-semibold mb-1">{results[index] ? 'Correct!' : `The answer was: ${current.answer}`}</p>
+              <p className="font-semibold mb-1">{results[index] ? 'Correct!' : `The answer was: ${correctAnswer}`}</p>
               <p className="text-[#c8c8c8]">{current.explanation}</p>
             </div>
           )}
