@@ -1,24 +1,23 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import {
   Shield,
   User,
   RotateCcw,
-  Cloud,
-  CloudOff,
-  Loader2,
-  Camera,
   GitMerge,
   Database,
   Users,
   ArrowRight,
   Check,
   X,
+  Loader2,
 } from 'lucide-react';
-import { useAuthStore } from '@/stores/auth-store';
 import { useProgress } from '@/hooks/useProgress';
 import { useAdmin } from '@/hooks/useAdmin';
-import { fetchProfile, updateProfile, uploadAvatar, fetchAllProfiles, setAdminStatus } from '@/engine/sync';
+import { fetchAllProfiles, setAdminStatus } from '@/engine/sync';
+import ProfileEditor from '@/components/ProfileEditor';
+import SyncStatusCard from '@/components/SyncStatusCard';
+import CloudSyncNotice from '@/components/CloudSyncNotice';
 
 /* ─── Tabs ─── */
 type TabKey = 'general' | 'admin';
@@ -30,151 +29,15 @@ const TABS: { key: TabKey; label: string; icon: typeof User; adminOnly?: boolean
 
 /* ─── General Tab ─── */
 function GeneralTab() {
-  const { user, syncStatus, isConfigured } = useAuthStore();
   const { resetProgress } = useProgress();
-
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [username, setUsername] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [profileLoaded, setProfileLoaded] = useState(false);
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    fetchProfile(user.id).then((data) => {
-      if (data) {
-        setFirstName(data.first_name ?? '');
-        setLastName(data.last_name ?? '');
-        setDisplayName(data.display_name ?? '');
-        setUsername(data.username ?? '');
-        setAvatarUrl(data.avatar_url ?? '');
-      }
-      setProfileLoaded(true);
-    });
-  }, [user]);
-
-  const handleSave = async () => {
-    if (!user) return;
-    setSaving(true);
-    await updateProfile(user.id, {
-      first_name: firstName,
-      last_name: lastName,
-      display_name: displayName,
-      username,
-    });
-    setSaving(false);
-  };
-
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-    setUploadingAvatar(true);
-    const url = await uploadAvatar(user.id, file);
-    if (url) {
-      setAvatarUrl(url);
-      await updateProfile(user.id, { avatar_url: url });
-    }
-    setUploadingAvatar(false);
-    e.target.value = '';
-  };
-
-  const fullName = `${firstName} ${lastName}`.trim() || displayName || user?.email?.split('@')[0] || 'Guest';
 
   return (
     <div className="space-y-5">
       {/* Profile Card */}
-      <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
-        <h3 className="text-sm font-bold text-[#eff1f6] mb-4 flex items-center gap-2">
-          <User size={14} className="text-[#8c8c8c]" /> Profile
-        </h3>
-
-        {user && profileLoaded ? (
-          <div className="space-y-4">
-            {/* Avatar */}
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                {avatarUrl ? (
-                  <img src={avatarUrl} alt="Profile" className="w-16 h-16 rounded-full object-cover border-2 border-[#0f0f0f]" />
-                ) : (
-                  <div className="w-16 h-16 rounded-full bg-[#3b82f6] flex items-center justify-center text-white text-xl font-bold">
-                    {fullName.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#1a1a1a] border border-[#ffffff15] flex items-center justify-center text-[#8c8c8c] hover:text-[#eff1f6] transition-colors"
-                >
-                  {uploadingAvatar ? <Loader2 size={11} className="animate-spin" /> : <Camera size={11} />}
-                </button>
-                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-[#eff1f6]">{fullName}</p>
-                <p className="text-xs text-[#5c5c5c]">{user.email}</p>
-              </div>
-            </div>
-
-            {/* Fields */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">First Name</label>
-                <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First"
-                  className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors" />
-              </div>
-              <div>
-                <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">Last Name</label>
-                <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last"
-                  className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors" />
-              </div>
-            </div>
-            <div>
-              <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">Display Name</label>
-              <input type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Your name"
-                className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors" />
-            </div>
-            <div>
-              <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">Username</label>
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="@username"
-                className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors" />
-            </div>
-            <button onClick={handleSave} disabled={saving}
-              className="w-full h-9 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-xs font-bold hover:bg-[#ffb800] transition-colors disabled:opacity-50">
-              {saving ? 'Saving...' : 'Save Profile'}
-            </button>
-          </div>
-        ) : (
-          <p className="text-xs text-[#5c5c5c]">Sign in to edit your profile.</p>
-        )}
-      </div>
+      <ProfileEditor />
 
       {/* Sync Status */}
-      {user && (
-        <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
-          <h3 className="text-sm font-bold text-[#eff1f6] mb-3">Sync Status</h3>
-          <div className="flex items-center gap-2">
-            {syncStatus === 'synced' ? (
-              <>
-                <Cloud size={14} className="text-[#22c55e]" />
-                <span className="text-xs text-[#22c55e]">Synced</span>
-              </>
-            ) : syncStatus === 'syncing' ? (
-              <>
-                <Loader2 size={14} className="text-[#ffa116] animate-spin" />
-                <span className="text-xs text-[#ffa116]">Syncing...</span>
-              </>
-            ) : (
-              <>
-                <CloudOff size={14} className="text-[#ef4444]" />
-                <span className="text-xs text-[#ef4444]">Offline</span>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+      <SyncStatusCard />
 
       {/* Reset Progress */}
       <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
@@ -191,13 +54,7 @@ function GeneralTab() {
       </div>
 
       {/* Unconfigured notice */}
-      {!isConfigured && (
-        <div className="rounded-xl bg-[#eab308]08 border border-[#eab308]15 p-3.5">
-          <p className="text-xs text-[#eab308]">
-            Cloud sync is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file to enable sync.
-          </p>
-        </div>
-      )}
+      <CloudSyncNotice />
     </div>
   );
 }

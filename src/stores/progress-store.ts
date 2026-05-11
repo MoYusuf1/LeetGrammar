@@ -17,6 +17,10 @@ export interface UserProgress {
   practiceScores: Record<number, number>;
   srsCards: Record<string, SrsCard>;
   activityLog: string[]; // Array of YYYY-MM-DD strings
+
+  // Workbook progress
+  completedWorkbookLevels: number[];
+  workbookLevelScores: Record<number, number>;
 }
 
 const defaultProgress: UserProgress = {
@@ -27,6 +31,8 @@ const defaultProgress: UserProgress = {
   practiceScores: {},
   srsCards: {},
   activityLog: [],
+  completedWorkbookLevels: [],
+  workbookLevelScores: {},
 };
 
 function getToday(): string {
@@ -65,6 +71,13 @@ interface ProgressState extends UserProgress {
   getTopicProgress: (lessonIds: number[]) => { completed: number; total: number };
   arePrerequisitesMet: (prereqLessonIds: number[]) => boolean;
   completionPercentage: number;
+
+  // Workbook
+  completeWorkbookLevel: (levelId: number, score: number) => void;
+  isWorkbookLevelCompleted: (levelId: number) => boolean;
+  getWorkbookLevelStatus: (levelId: number) => 'available' | 'completed';
+  getWorkbookLevelScore: (levelId: number) => number;
+  workbookCompletionPercentage: number;
 
   // SRS
   reviewConcept: (conceptId: string, quality: number) => void;
@@ -151,6 +164,45 @@ export const useProgressStore = create<ProgressState>()(
         return Math.round((get().completedLessons.length / 50) * 100);
       },
 
+      // Workbook progress
+      completeWorkbookLevel: (levelId: number, score: number) => {
+        set((state) => {
+          const alreadyCompleted = state.completedWorkbookLevels.includes(levelId);
+          const newStreak = computeStreak(state.lastStudyDate, state.streak);
+          const bestScore = Math.max(score, state.workbookLevelScores[levelId] || 0);
+          const bonus = alreadyCompleted ? 0 : 25;
+          return addActivity({
+            ...state,
+            completedWorkbookLevels: alreadyCompleted
+              ? state.completedWorkbookLevels
+              : [...state.completedWorkbookLevels, levelId],
+            workbookLevelScores: { ...state.workbookLevelScores, [levelId]: bestScore },
+            streak: newStreak,
+            lastStudyDate: getToday(),
+            xp: state.xp + bonus,
+          });
+        });
+      },
+
+      isWorkbookLevelCompleted: (levelId: number) => {
+        return get().completedWorkbookLevels.includes(levelId);
+      },
+
+      getWorkbookLevelStatus: (levelId: number): 'available' | 'completed' => {
+        const state = get();
+        if (state.completedWorkbookLevels.includes(levelId)) return 'completed';
+        return 'available';
+      },
+
+      getWorkbookLevelScore: (levelId: number) => {
+        return get().workbookLevelScores[levelId] || 0;
+      },
+
+      get workbookCompletionPercentage() {
+        return Math.round((get().completedWorkbookLevels.length / 7) * 100);
+      },
+
+
       // SRS
       reviewConcept: (conceptId: string, quality: number) => {
         set((state) => {
@@ -189,6 +241,8 @@ export const useProgressStore = create<ProgressState>()(
         practiceScores: state.practiceScores,
         srsCards: state.srsCards,
         activityLog: state.activityLog,
+        completedWorkbookLevels: state.completedWorkbookLevels,
+        workbookLevelScores: state.workbookLevelScores,
       }),
     }
   )

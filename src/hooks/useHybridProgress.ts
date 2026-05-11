@@ -1,12 +1,11 @@
 /**
- * Hybrid progress hook — supports both hardcoded lessons (1–50)
- * and graph-generated lessons (100000+).
+ * Hybrid progress hook — feeds the Learn page lesson grid.
+ * Now returns workbook levels as lessons mapped to the Hybrid shape.
  */
 
 import { useMemo, useCallback } from 'react';
 import { useProgressStore } from '@/stores/progress-store';
-import { allProblems } from '@/data/problems';
-import type { ProblemMeta } from '@/data/problems';
+import { allLevels } from '@/data/workbook';
 
 export interface HybridLesson {
   id: number;
@@ -30,44 +29,39 @@ export interface HybridUnit {
   prerequisites: number[];
 }
 
-function problemToHybrid(p: ProblemMeta): HybridLesson {
+/** Map workbook levels into HybridLesson shape. */
+function levelToHybrid(level: typeof allLevels[0], unitId: number, unitTitle: string, unitColor: string): HybridLesson {
   return {
-    id: p.id,
-    title: p.title,
-    unitId: p.unitId,
-    unitTitle: p.unit,
-    unitColor: '', // filled by unit
+    id: level.id,
+    title: level.title,
+    unitId,
+    unitTitle,
+    unitColor,
     isGraph: false,
-    conceptId: undefined,
-    difficulty: p.difficulty,
-    description: p.description,
-    prerequisites: p.prerequisites,
+    difficulty: level.id <= 2 ? 'Beginner' : level.id <= 5 ? 'Intermediate' : 'Advanced',
+    description: level.description,
+    prerequisites: level.prerequisiteLevelId ? [level.prerequisiteLevelId] : [],
   };
 }
 
+/** Static unit definitions that group workbook levels visually. */
+const WORKBOOK_UNITS: HybridUnit[] = [
+  { unitId: 1, title: 'Foundations', description: 'Marker identification', color: '#3b82f6', lessonIds: [1], prerequisites: [] },
+  { unitId: 2, title: 'Core Markers', description: 'waa vs baa vs waxa', color: '#22c55e', lessonIds: [2, 3], prerequisites: [1] },
+  { unitId: 3, title: 'Sentence Structure', description: 'SOV word order assembly', color: '#a855f7', lessonIds: [4], prerequisites: [3] },
+  { unitId: 4, title: 'Space & Modifiers', description: 'Prepositions and direction', color: '#f59e0b', lessonIds: [5], prerequisites: [4] },
+  { unitId: 5, title: 'Complex Grammar', description: 'Connectors and compound sentences', color: '#ec4899', lessonIds: [6], prerequisites: [5] },
+  { unitId: 6, title: 'Mastery', description: 'Full sentence construction', color: '#ffa116', lessonIds: [7], prerequisites: [6] },
+];
+
 export function useHybridPath() {
-  // Only return hardcoded problem lessons.
-  // Graph-generated lessons are kept out of the Learn page.
-  const units = useMemo<HybridUnit[]>(() => {
-    const unitMap = new Map<number, HybridUnit>();
-    for (const p of allProblems) {
-      if (!unitMap.has(p.unitId)) {
-        unitMap.set(p.unitId, {
-          unitId: p.unitId,
-          title: p.unit,
-          description: '',
-          color: '',
-          lessonIds: [],
-          prerequisites: [],
-        });
-      }
-      unitMap.get(p.unitId)!.lessonIds.push(p.id);
-    }
-    return Array.from(unitMap.values());
-  }, []);
+  const units = useMemo<HybridUnit[]>(() => WORKBOOK_UNITS, []);
 
   const lessons = useMemo<HybridLesson[]>(() => {
-    return allProblems.map(problemToHybrid);
+    return allLevels.map((level) => {
+      const unit = WORKBOOK_UNITS.find((u) => u.lessonIds.includes(level.id))!;
+      return levelToHybrid(level, unit.unitId, unit.title, unit.color);
+    });
   }, []);
 
   return { lessons, units };
@@ -78,50 +72,45 @@ export function useHybridProgress() {
   const { lessons, units } = useHybridPath();
 
   const getLessonStatus = useCallback(
-    (lessonId: number): 'completed' | 'current' | 'locked' => {
-      if (store.completedLessons.includes(lessonId)) return 'completed';
+    (lessonId: number): 'completed' | 'current' => {
+      const status = store.getWorkbookLevelStatus(lessonId);
+      if (status === 'completed') return 'completed';
       return 'current';
     },
-    [store.completedLessons]
+    [store]
   );
 
   const completeLesson = useCallback(
     (lessonId: number) => {
-      store.completeLesson(lessonId);
+      store.completeWorkbookLevel(lessonId, 100);
     },
     [store]
   );
 
   const getTopicStatus = useCallback(
     (lessonIds: number[]): 'completed' | 'in-progress' | 'locked' => {
-      const allCompleted = lessonIds.every((id) => store.completedLessons.includes(id));
+      const allCompleted = lessonIds.every((id) => store.isWorkbookLevelCompleted(id));
       if (allCompleted) return 'completed';
-      const someCompleted = lessonIds.some((id) => store.completedLessons.includes(id));
+      const someCompleted = lessonIds.some((id) => store.isWorkbookLevelCompleted(id));
       if (someCompleted) return 'in-progress';
-
-      // Check if prerequisites for first lesson are met
-      const firstLesson = lessons.find((l) => l.id === lessonIds[0]);
-      if (firstLesson && firstLesson.prerequisites.every((p) => store.completedLessons.includes(p))) {
-        return 'locked'; // ready but not started
-      }
       return 'locked';
     },
-    [store.completedLessons, lessons]
+    [store]
   );
 
   const getTopicProgress = useCallback(
     (lessonIds: number[]) => {
-      const completed = lessonIds.filter((id) => store.completedLessons.includes(id)).length;
+      const completed = lessonIds.filter((id) => store.isWorkbookLevelCompleted(id)).length;
       return { completed, total: lessonIds.length };
     },
-    [store.completedLessons]
+    [store]
   );
 
   return {
-    completedLessons: store.completedLessons,
+    completedLessons: store.completedWorkbookLevels,
     streak: store.streak,
     xp: store.xp,
-    completionPercentage: store.completionPercentage,
+    completionPercentage: store.workbookCompletionPercentage,
     getLessonStatus,
     completeLesson,
     getTopicStatus,

@@ -18,6 +18,8 @@ export interface RemoteProgress {
   last_study_date: string;
   activity_log: string[];
   updated_at: string;
+  completed_workbook_levels?: number[];
+  workbook_level_scores?: Record<number, number>;
 }
 
 function normalizeRemote(data: Record<string, unknown>): RemoteProgress {
@@ -32,6 +34,9 @@ function normalizeRemote(data: Record<string, unknown>): RemoteProgress {
     last_study_date: typeof data.last_study_date === 'string' ? data.last_study_date : '',
     activity_log: Array.isArray(data.activity_log) ? data.activity_log as string[] : [],
     updated_at: typeof data.updated_at === 'string' ? data.updated_at : '',
+    completed_workbook_levels: Array.isArray(data.completed_workbook_levels) ? data.completed_workbook_levels as number[] : [],
+    workbook_level_scores: typeof data.workbook_level_scores === 'object' && data.workbook_level_scores !== null
+      ? (data.workbook_level_scores as Record<number, number>) : {},
   };
 }
 
@@ -83,6 +88,14 @@ export function mergeProgress(local: UserProgress, remote: RemoteProgress): User
   // Union of activity log
   const activitySet = new Set([...local.activityLog, ...remote.activity_log]);
 
+  // Workbook levels
+  const workbookLevelsSet = new Set([...local.completedWorkbookLevels, ...(remote.completed_workbook_levels ?? [])]);
+  const workbookScores: Record<number, number> = { ...local.workbookLevelScores };
+  for (const [key, value] of Object.entries(remote.workbook_level_scores ?? {})) {
+    const id = Number(key);
+    workbookScores[id] = Math.max(workbookScores[id] ?? 0, value);
+  }
+
   return {
     completedLessons: Array.from(completedSet),
     practiceScores: scores,
@@ -91,6 +104,8 @@ export function mergeProgress(local: UserProgress, remote: RemoteProgress): User
     streak,
     lastStudyDate,
     activityLog: Array.from(activitySet).sort(),
+    completedWorkbookLevels: Array.from(workbookLevelsSet),
+    workbookLevelScores: workbookScores,
   };
 }
 
@@ -131,6 +146,8 @@ export async function pushProgress(userId: string, progress: UserProgress): Prom
     streak: progress.streak,
     last_study_date: progress.lastStudyDate,
     activity_log: progress.activityLog,
+    completed_workbook_levels: progress.completedWorkbookLevels,
+    workbook_level_scores: progress.workbookLevelScores,
     updated_at: new Date().toISOString(),
   };
 
@@ -259,6 +276,101 @@ export async function setAdminStatus(userId: string, isAdmin: boolean): Promise<
 
   if (error) {
     console.error('Set admin status error:', error);
+    return false;
+  }
+
+  return true;
+}
+
+// ─── Workbook Attempts ─────────────────────────────────────────────────────
+
+export interface WorkbookAttempt {
+  drill_id: number;
+  answer: string;
+  is_correct: boolean;
+  attempted_at: string;
+}
+
+/**
+ * Fetch all attempts for a given level.
+ */
+export async function fetchWorkbookAttempts(userId: string, levelId: number): Promise<WorkbookAttempt[]> {
+  if (!isSupabaseConfigured) return [];
+
+  const { data, error } = await getSupabase()
+    .from('workbook_attempts')
+    .select('drill_id, answer, is_correct, attempted_at')
+    .eq('user_id', userId)
+    .eq('level_id', levelId)
+    .order('drill_id', { ascending: true });
+
+  if (error) {
+    console.error('Fetch workbook attempts error:', error);
+    return [];
+  }
+
+  return (data ?? []) as WorkbookAttempt[];
+}
+
+/**
+ * Save a single workbook attempt (upsert).
+ */
+export async function saveWorkbookAttempt(
+  userId: string,
+  levelId: number,
+  drillId: number,
+  answer: string,
+  isCorrect: boolean
+): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+
+  const { error } = await getSupabase()
+    .from('workbook_attempts')
+    .upsert(
+      {
+        user_id: userId,
+        level_id: levelId,
+        drill_id: drillId,
+        answer,
+        is_correct: isCorrect,
+        attempted_at: new Date().toISOString(),
+      },
+      { onConflict: 'user_id, level_id, drill_id' }
+    );
+
+  if (error) {
+    console.error('Save workbook attempt error:', error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Batch save workbook attempts for a level.
+ */
+export async function saveWorkbookAttemptsBatch(
+  userId: string,
+  levelId: number,
+  attempts: Array<{ drillId: number; answer: string; isCorrect: boolean }>
+): Promise<boolean> {
+  if (!isSupabaseConfigured || attempts.length === 0) return false;
+
+  const rows = attempts.map((a) => ({
+    user_id: userId,
+    level_id: levelId,
+    drill_id: a.drillId,
+    answer: a.answer,
+    is_correct: a.isCorrect,
+    attempted_at: new Date().toISOString(),
+  }));
+
+  const { error } = await getSupabase()
+    .from('workbook_attempts')
+    .upsert(rows, { onConflict: 'user_id, level_id, drill_id' });
+
+  if (error) {
+    console.error('Save workbook attempts batch error:', error);
     return false;
   }
 

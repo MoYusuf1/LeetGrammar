@@ -39,6 +39,8 @@ export function useAuthInit() {
               streak: progress.streak,
               lastStudyDate: progress.lastStudyDate,
               activityLog: progress.activityLog,
+              completedWorkbookLevels: progress.completedWorkbookLevels,
+              workbookLevelScores: progress.workbookLevelScores,
             },
             remote
           );
@@ -51,6 +53,8 @@ export function useAuthInit() {
             streak: merged.streak,
             lastStudyDate: merged.lastStudyDate,
             activityLog: merged.activityLog,
+            completedWorkbookLevels: merged.completedWorkbookLevels,
+            workbookLevelScores: merged.workbookLevelScores,
           });
         }
 
@@ -63,6 +67,8 @@ export function useAuthInit() {
           streak: progress.streak,
           lastStudyDate: progress.lastStudyDate,
           activityLog: progress.activityLog,
+          completedWorkbookLevels: progress.completedWorkbookLevels,
+          workbookLevelScores: progress.workbookLevelScores,
         });
 
         setSyncStatus(success ? 'synced' : 'error');
@@ -93,6 +99,8 @@ export function useAuthInit() {
         streak: progress.streak,
         lastStudyDate: progress.lastStudyDate,
         activityLog: progress.activityLog,
+        completedWorkbookLevels: progress.completedWorkbookLevels,
+        workbookLevelScores: progress.workbookLevelScores,
       });
       setSyncStatus(success ? 'synced' : 'error');
       setLastSyncedAt(new Date().toISOString());
@@ -109,5 +117,7 @@ export function useAuthInit() {
     progress.xp,
     progress.streak,
     progress.lastStudyDate,
+    progress.completedWorkbookLevels.length,
+    progress.workbookLevelScores,
   ]);
 }

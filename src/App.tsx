@@ -14,7 +14,7 @@ import Landing from '@/pages/Landing';
 
 /* ─── Heavy routes (lazy-loaded) ─── */
 const Problem = lazy(() => import('@/pages/Problem'));
-const Lesson = lazy(() => import('@/pages/Lesson'));
+const WorkbookLevel = lazy(() => import('@/pages/WorkbookLevel'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Wiki = lazy(() => import('@/pages/Wiki'));
 const Concepts = lazy(() => import('@/pages/Concepts'));
@@ -84,7 +84,7 @@ export default function App() {
               {/* Redirects for old routes */}
               <Route path="/path" element={<Navigate to="/roadmap" replace />} />
               <Route path="/practice" element={<Navigate to="/problems" replace />} />
-              <Route path="/lesson/:id" element={<Lesson />} />
+              <Route path="/workbook/level/:id" element={<WorkbookLevel />} />
             </Routes>
           </Suspense>
         </div>

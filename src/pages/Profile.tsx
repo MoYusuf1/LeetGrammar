@@ -6,19 +6,15 @@
  *   Main area: Problems solved, heatmap, knowledge graph, course progress
  */
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import {
   RotateCcw,
   TrendingUp,
   Trophy,
-  Cloud,
-  CloudOff,
-  Loader2,
   MapPin,
   Calendar,
   Target,
-  Camera,
   Route,
   ChevronRight,
 } from 'lucide-react';
@@ -26,7 +22,9 @@ import { useProgress } from '@/hooks/useProgress';
 import { allProblems } from '@/data/problems';
 import { useAuthStore } from '@/stores/auth-store';
 import { useGraphStore } from '@/stores/graph-store';
-import { fetchProfile, updateProfile, uploadAvatar } from '@/engine/sync';
+import ProfileEditor, { useProfileData } from '@/components/ProfileEditor';
+import SyncStatusCard from '@/components/SyncStatusCard';
+import CloudSyncNotice from '@/components/CloudSyncNotice';
 
 const RANK_COLORS = [
   { max: 100, label: 'Novice', color: '#5c5c5c', bg: '#1a1a1a' },
@@ -34,18 +32,11 @@ const RANK_COLORS = [
   { max: 600, label: 'Scholar', color: '#3b82f6', bg: '#3b82f615' },
   { max: 1000, label: 'Expert', color: '#a855f7', bg: '#a855f715' },
   { max: 1500, label: 'Master', color: '#ffc01e', bg: '#ffc01e15' },
-  { max: Infinity, label: 'Grandmaster', color: '#ef4444', bg: '#ef444415' },
+  { max: Infinity, label: 'Grandmaster', color: '#ef4444', bg: '#ef444515' },
 ];
 
 function getRank(xp: number) {
   return RANK_COLORS.find((r) => xp < r.max) ?? RANK_COLORS[RANK_COLORS.length - 1];
-}
-
-function getInitials(first?: string, last?: string, email?: string) {
-  if (first && last) return `${first[0]}${last[0]}`.toUpperCase();
-  if (first) return first[0].toUpperCase();
-  if (email) return email[0].toUpperCase();
-  return '?';
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -53,62 +44,12 @@ function getInitials(first?: string, last?: string, email?: string) {
 export default function Profile() {
   const navigate = useNavigate();
   const { progress, completionPercentage, resetProgress } = useProgress();
-  const { user, syncStatus, isConfigured } = useAuthStore();
+  const { user } = useAuthStore();
   const { stats } = useGraphStore();
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [username, setUsername] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [profileLoaded, setProfileLoaded] = useState(false);
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Load profile from Supabase
-  useEffect(() => {
-    if (!user) return;
-    fetchProfile(user.id).then((data) => {
-      if (data) {
-        setFirstName(data.first_name ?? '');
-        setLastName(data.last_name ?? '');
-        setDisplayName(data.display_name ?? '');
-        setUsername(data.username ?? '');
-        setAvatarUrl(data.avatar_url ?? '');
-      }
-      setProfileLoaded(true);
-    });
-  }, [user]);
-
-  const handleSaveProfile = async () => {
-    if (!user) return;
-    setSaving(true);
-    await updateProfile(user.id, {
-      first_name: firstName,
-      last_name: lastName,
-      display_name: displayName,
-      username,
-    });
-    setSaving(false);
-  };
-
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-    setUploadingAvatar(true);
-    const url = await uploadAvatar(user.id, file);
-    if (url) {
-      setAvatarUrl(url);
-      await updateProfile(user.id, { avatar_url: url });
-    }
-    setUploadingAvatar(false);
-    e.target.value = '';
-  };
+  const { fullName, initials, avatarUrl } = useProfileData();
 
   const rank = getRank(progress.xp);
-  const fullName = `${firstName} ${lastName}`.trim() || displayName || user?.email?.split('@')[0] || 'Guest';
-  const initials = getInitials(firstName, lastName, user?.email ?? undefined);
 
   // Problems by difficulty
   const problemsByDifficulty = useMemo(() => ({
@@ -184,24 +125,10 @@ export default function Profile() {
                     {initials}
                   </div>
                 )}
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#1a1a1a] border border-[#ffffff15] flex items-center justify-center text-[#8c8c8c] hover:text-[#eff1f6] hover:bg-[#222222] transition-colors"
-                  title="Change photo"
-                >
-                  {uploadingAvatar ? <Loader2 size={12} className="animate-spin" /> : <Camera size={12} />}
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleAvatarChange}
-                />
               </div>
 
               <h2 className="text-base font-bold text-[#eff1f6] mt-3">{fullName}</h2>
-              {username && <p className="text-xs text-[#5c5c5c] mt-0.5">@{username}</p>}
+              {/* Username is rendered inside ProfileEditor, not needed here */}
               {user && (
                 <p className="text-xs text-[#5c5c5c] mt-1 flex items-center justify-center gap-1">
                   <MapPin size={10} />
@@ -235,84 +162,10 @@ export default function Profile() {
             </div>
 
             {/* Edit profile */}
-            {user && profileLoaded && (
-              <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4 space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">First Name</label>
-                    <input
-                      type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="First"
-                      className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">Last Name</label>
-                    <input
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      placeholder="Last"
-                      className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">Display Name</label>
-                  <input
-                    type="text"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="Your name"
-                    className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1 block">Username</label>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="@username"
-                    className="w-full h-9 px-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa116]50 transition-colors"
-                  />
-                </div>
-                <button
-                  onClick={handleSaveProfile}
-                  disabled={saving}
-                  className="w-full h-9 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-xs font-bold hover:bg-[#ffb800] transition-colors disabled:opacity-50"
-                >
-                  {saving ? 'Saving...' : 'Save Profile'}
-                </button>
-              </div>
-            )}
+            <ProfileEditor compact />
 
             {/* Sync status */}
-            {user && (
-              <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4">
-                <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-2">Sync Status</p>
-                <div className="flex items-center gap-2">
-                  {syncStatus === 'synced' ? (
-                    <>
-                      <Cloud size={14} className="text-[#22c55e]" />
-                      <span className="text-xs text-[#22c55e]">Synced</span>
-                    </>
-                  ) : syncStatus === 'syncing' ? (
-                    <>
-                      <Loader2 size={14} className="text-[#ffa116] animate-spin" />
-                      <span className="text-xs text-[#ffa116]">Syncing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <CloudOff size={14} className="text-[#ef4444]" />
-                      <span className="text-xs text-[#ef4444]">Offline</span>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
+            <SyncStatusCard compact />
 
             {/* Journey */}
             <button
@@ -505,15 +358,9 @@ export default function Profile() {
       </div>
 
       {/* Unconfigured notice */}
-      {!isConfigured && (
-        <div className="max-w-[1000px] mx-auto px-4 pb-6">
-          <div className="rounded-xl bg-[#eab308]08 border border-[#eab308]15 p-3.5">
-            <p className="text-xs text-[#eab308]">
-              Cloud sync is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file to enable sync.
-            </p>
-          </div>
-        </div>
-      )}
+      <div className="max-w-[1000px] mx-auto px-4 pb-6">
+        <CloudSyncNotice />
+      </div>
     </div>
   );
 }

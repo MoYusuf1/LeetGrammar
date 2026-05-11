@@ -106,7 +106,7 @@ export function MockB_BabbelGrid() {
                 return (
                   <button
                     key={lesson.id}
-                    onClick={() => navigate(`/lesson/${lesson.id}`)}
+                    onClick={() => navigate(`/workbook/level/${lesson.id}`)}
                     className={`w-full flex items-center gap-4 p-3.5 rounded-xl border text-left transition-all ${
                       isCompleted
                         ? 'bg-[#ffa11608] border-[#ffa11640] hover:border-[#ffa11660]'
