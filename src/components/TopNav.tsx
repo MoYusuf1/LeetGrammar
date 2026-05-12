@@ -42,7 +42,7 @@ export default function TopNav() {
         {/* Logo + Search */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/problems')}
+            onClick={() => navigate('/')}
             className="flex items-center gap-2 tap-scale"
           >
             <div className="w-7 h-7 rounded-lg bg-[#ffa116] flex items-center justify-center">

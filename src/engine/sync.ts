@@ -112,6 +112,7 @@ export function mergeProgress(local: UserProgress, remote: RemoteProgress): User
     activityLog: Array.from(activitySet).sort(),
     completedWorkbookLevels: Array.from(workbookLevelsSet),
     workbookLevelScores: workbookScores,
+    dailyGoal: local.dailyGoal,
   };
 }
 

@@ -18,7 +18,6 @@ import {
   Network,
   ChevronRight,
 } from 'lucide-react';
-import { useAuthStore } from '@/stores/auth-store';
 import AuthModal from '@/components/AuthModal';
 
 const STATS = [
@@ -69,13 +68,9 @@ const STEPS = [
 
 export default function Landing() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   const [authOpen, setAuthOpen] = useState(false);
 
-  if (user) {
-    navigate('/problems', { replace: true });
-    return null;
-  }
+  // Landing page is now the homepage for all users — no redirect
 
   return (
     <div className="min-h-full bg-[#0f0f0f] overflow-y-auto">

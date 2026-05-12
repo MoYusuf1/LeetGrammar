@@ -18,6 +18,7 @@ export interface UserProgress {
   practiceScores: Record<number, number>;
   srsCards: Record<string, SrsCard>;
   activityLog: string[]; // Array of YYYY-MM-DD strings
+  dailyGoal: number; // XP target per day (15, 30, or 50)
 
   // Workbook progress
   completedWorkbookLevels: number[];
@@ -33,6 +34,7 @@ const defaultProgress: UserProgress = {
   practiceScores: {},
   srsCards: {},
   activityLog: [],
+  dailyGoal: 30,
   completedWorkbookLevels: [],
   workbookLevelScores: {},
 };
@@ -271,6 +273,7 @@ export const useProgressStore = create<ProgressState>()(
         activityLog: state.activityLog,
         completedWorkbookLevels: state.completedWorkbookLevels,
         workbookLevelScores: state.workbookLevelScores,
+        dailyGoal: state.dailyGoal,
       }),
     }
   )
