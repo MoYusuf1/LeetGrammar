@@ -31,6 +31,7 @@ import ConceptGraph from '@/components/ConceptGraph';
 import SourceBadge from '@/components/SourceBadge';
 import SourceFilter from '@/components/SourceFilter';
 import { useGraphInit } from '@/hooks/useGraphInit';
+import { useWikiLayout, type WikiLayout } from '@/hooks/useWikiLayout';
 import type { Edge, EdgeType, Node, NodeType } from '@/engine/types';
 import type { GraphEngine } from '@/engine/graph-engine';
 
@@ -83,6 +84,7 @@ export default function Wiki() {
   const [activeSources, setActiveSources] = useState<string[]>([]);
   const [tocOpen, setTocOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { layout, setLayout, layouts } = useWikiLayout();
 
   const { engine, chunks, getEdgesFrom, getEdgesTo, getConstructionsForNode, getPrerequisiteClosure } =
     useGraphStore();
@@ -286,6 +288,24 @@ export default function Wiki() {
               <BookOpen size={13} />
               Review
             </button>
+
+            {/* Layout Toggle */}
+            <div className="ml-auto flex items-center gap-1 bg-[#1a1a1a] border border-[#ffffff08] rounded-lg p-0.5">
+              {layouts.map((l) => (
+                <button
+                  key={l.id}
+                  onClick={() => setLayout(l.id)}
+                  title={l.description}
+                  className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
+                    layout === l.id
+                      ? 'bg-[#ffffff12] text-[#eff1f6]'
+                      : 'text-[#5c5c5c] hover:text-[#8c8c8c]'
+                  }`}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Source Filter */}
@@ -297,10 +317,10 @@ export default function Wiki() {
 
       {/* ── Main Content ── */}
       <div className="px-4 py-6">
-        <div className="max-w-[1100px] mx-auto">
-          <div className="flex gap-6 items-start">
+        <div className={`mx-auto ${layout === 'stream' ? 'max-w-[640px]' : layout === 'cards' ? 'max-w-[720px]' : 'max-w-[1100px]'}`}>
+          <div className={`flex gap-6 items-start ${layout === 'stream' ? 'justify-center' : ''}`}>
             {/* ── Left: TOC Sidebar (desktop) ── */}
-            <aside className="hidden lg:block w-[180px] flex-shrink-0 sticky top-4">
+            <aside className={`hidden lg:block w-[180px] flex-shrink-0 sticky top-4 ${layout !== 'classic' ? 'lg:hidden' : ''}`}>
               <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-3.5">
                 <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
                   <ListTree size={11} />
@@ -323,7 +343,7 @@ export default function Wiki() {
             {/* ── Center: Article ── */}
             <div ref={contentRef} className="flex-1 min-w-0">
               {/* Mobile TOC toggle */}
-              <div className="lg:hidden mb-4">
+              <div className={`lg:hidden mb-4 ${layout !== 'classic' ? 'hidden' : ''}`}>
                 <button
                   onClick={() => setTocOpen(!tocOpen)}
                   className="flex items-center gap-2 text-xs text-[#8c8c8c] hover:text-[#eff1f6] transition-colors"
@@ -364,7 +384,7 @@ export default function Wiki() {
 
               {/* Definition */}
               {hasDefinition && (
-                <WikiSection id="definition" title="Definition" icon={<BookOpen size={13} className="text-[#5c5c5c]" />}>
+                <WikiSection id="definition" title="Definition" icon={<BookOpen size={13} className="text-[#5c5c5c]" />} layout={layout}>
                   <div className="space-y-3">
                     {definitions.map((def) => (
                       <div key={def!.cid} className="text-sm text-[#c8c8c8] leading-relaxed">
@@ -384,7 +404,7 @@ export default function Wiki() {
 
               {/* Examples */}
               {hasExamples && (
-                <WikiSection id="examples" title="Examples" icon={<MessageSquareQuote size={13} className="text-[#5c5c5c]" />}>
+                <WikiSection id="examples" title="Examples" icon={<MessageSquareQuote size={13} className="text-[#5c5c5c]" />} layout={layout}>
                   <div className="space-y-3">
                     {examples.map((edge) => {
                       const exNode = engine.getNode(edge.from);
@@ -412,6 +432,7 @@ export default function Wiki() {
                   id="constructions"
                   title="Constructions"
                   icon={<Construction size={13} className="text-[#5c5c5c]" />}
+                  layout={layout}
                 >
                   <div className="space-y-4">
                     {constructions.map((c) => (
@@ -469,7 +490,7 @@ export default function Wiki() {
 
               {/* Related Concepts */}
               {hasRelated && (
-                <WikiSection id="related" title="Related Concepts" icon={<Link2 size={13} className="text-[#5c5c5c]" />}>
+                <WikiSection id="related" title="Related Concepts" icon={<Link2 size={13} className="text-[#5c5c5c]" />} layout={layout}>
                   <div className="space-y-4">
                     {Array.from(groupedEdges.entries()).map(([type, edges]) => (
                       <div key={type}>
@@ -523,6 +544,7 @@ export default function Wiki() {
                   id="prerequisites"
                   title="Prerequisites"
                   icon={<GitFork size={13} className="text-[#5c5c5c]" />}
+                  layout={layout}
                 >
                   <div className="flex flex-wrap gap-2">
                     {prerequisites.map((p) => (
@@ -544,7 +566,7 @@ export default function Wiki() {
 
               {/* References / Citations */}
               {hasCitations && (
-                <WikiSection id="citations" title="References" icon={<ScrollText size={13} className="text-[#5c5c5c]" />}>
+                <WikiSection id="citations" title="References" icon={<ScrollText size={13} className="text-[#5c5c5c]" />} layout={layout}>
                   <ol className="space-y-1.5 list-decimal list-inside">
                     {citations.map((cite, i) => (
                       <li key={i} className="text-xs text-[#8c8c8c]">
@@ -558,13 +580,13 @@ export default function Wiki() {
               )}
 
               {/* Concept Map */}
-              <WikiSection id="graph" title="Concept Map" icon={<ExternalLink size={13} className="text-[#5c5c5c]" />}>
+              <WikiSection id="graph" title="Concept Map" icon={<ExternalLink size={13} className="text-[#5c5c5c]" />} layout={layout}>
                 <ConceptGraph rootId={node.id} maxDepth={1} onNodeClick={(id) => navigate(`/wiki/${id}`)} />
               </WikiSection>
             </div>
 
             {/* ── Right: Infobox (desktop) ── */}
-            <aside className="hidden xl:block w-[240px] flex-shrink-0">
+            <aside className={`hidden xl:block w-[240px] flex-shrink-0 ${layout !== 'classic' ? 'xl:hidden' : ''}`}>
               <InfoBox node={node} engine={engine} onNavigate={(id) => navigate(`/wiki/${id}`)} />
             </aside>
           </div>
@@ -583,12 +605,38 @@ function WikiSection({
   title,
   icon,
   children,
+  layout = 'classic',
 }: {
   id: string;
   title: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  layout?: WikiLayout;
 }) {
+  if (layout === 'cards') {
+    return (
+      <section id={id} className="mb-6 scroll-mt-4">
+        <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#ffffff08]">
+            {icon}
+            <h2 className="text-sm font-bold text-[#eff1f6] uppercase tracking-wider">{title}</h2>
+          </div>
+          {children}
+        </div>
+      </section>
+    );
+  }
+
+  if (layout === 'stream') {
+    return (
+      <section id={id} className="mb-8 scroll-mt-4">
+        <h2 className="text-xs font-semibold text-[#5c5c5c] uppercase tracking-wider mb-3">{title}</h2>
+        {children}
+        <div className="mt-6 border-b border-[#ffffff06]" />
+      </section>
+    );
+  }
+
   return (
     <section id={id} className="mb-8 scroll-mt-4">
       <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#ffffff08]">
@@ -604,56 +652,223 @@ function WikiSection({
  * Renders markdown-like content with clickable concept links.
  * Looks for [[nodeId|Display Text]] or [[nodeId]] syntax.
  */
-function WikiMarkdown({ payload, onLinkClick }: { payload: string; onLinkClick: (id: string) => void }) {
-  // Simple regex to find [[id|label]] or [[id]]
-  const parts: React.ReactNode[] = [];
-  const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
-  let lastIndex = 0;
-  let match;
+const NODE_ID_REGEX = /\b(concept|example|word|morpheme|rule|lesson|textbook):[a-z0-9_-]+\b/g;
 
-  while ((match = regex.exec(payload)) !== null) {
-    const before = payload.slice(lastIndex, match.index);
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+export function renderInline(text: string, onLinkClick: (id: string) => void): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  // Process [[id|label]] or [[id]] links
+  const linkRegex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
+  while ((match = linkRegex.exec(text)) !== null) {
+    const before = text.slice(lastIndex, match.index);
     if (before) {
-      parts.push(
-        <span
-          key={lastIndex}
-          dangerouslySetInnerHTML={{
-            __html: before
-              .replace(/\*\*(.+?)\*\*/g, '<strong class="text-[#eff1f6]">$1</strong>')
-              .replace(/\*(.+?)\*/g, '<em>$1</em>'),
-          }}
-        />
-      );
+      parts.push(renderNodeIdsAndFormatting(before, onLinkClick));
     }
     const nodeId = match[1].trim();
     const label = match[2]?.trim() ?? nodeId;
     parts.push(
       <button
-        key={match.index}
+        key={`link-${match.index}`}
         onClick={() => onLinkClick(nodeId)}
         className="text-[#3b82f6] hover:text-[#60a5fa] hover:underline transition-colors font-medium"
       >
         {label}
       </button>
     );
-    lastIndex = regex.lastIndex;
+    lastIndex = linkRegex.lastIndex;
   }
 
-  const remaining = payload.slice(lastIndex);
+  const remaining = text.slice(lastIndex);
   if (remaining) {
-    parts.push(
-      <span
-        key={lastIndex}
-        dangerouslySetInnerHTML={{
-          __html: remaining
-            .replace(/\*\*(.+?)\*\*/g, '<strong class="text-[#eff1f6]">$1</strong>')
-            .replace(/\*(.+?)\*/g, '<em>$1</em>'),
-        }}
-      />
-    );
+    parts.push(renderNodeIdsAndFormatting(remaining, onLinkClick));
   }
 
   return <>{parts}</>;
+}
+
+export function renderNodeIdsAndFormatting(text: string, onLinkClick: (id: string) => void): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = NODE_ID_REGEX.exec(text)) !== null) {
+    const before = text.slice(lastIndex, match.index);
+    if (before) {
+      parts.push(<span key={`txt-${match.index}`} dangerouslySetInnerHTML={{ __html: formatInlineHtml(before) }} />);
+    }
+    const nodeId = match[0];
+    const type = nodeId.split(':')[0] as import('@/engine/types').NodeType;
+    const color = TYPE_COLORS[type] ?? '#8c8c8c';
+    parts.push(
+      <button
+        key={`id-${match.index}`}
+        onClick={() => onLinkClick(nodeId)}
+        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-medium border transition-colors hover:opacity-80"
+        style={{ color, backgroundColor: `${color}12`, borderColor: `${color}30` }}
+        title={nodeId}
+      >
+        {nodeId}
+      </button>
+    );
+    lastIndex = NODE_ID_REGEX.lastIndex;
+  }
+
+  const remaining = text.slice(lastIndex);
+  if (remaining) {
+    parts.push(<span key={`txt-end`} dangerouslySetInnerHTML={{ __html: formatInlineHtml(remaining) }} />);
+  }
+
+  return <>{parts}</>;
+}
+
+export function formatInlineHtml(text: string): string {
+  let html = escapeHtml(text);
+  html = html
+    .replace(/`([^`]+)`/g, '<code class="px-1 py-0.5 rounded bg-[#1a1a1a] text-[#c8c8c8] text-[11px] font-mono border border-[#ffffff08]">$1</code>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-[#eff1f6]">$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/~~(.+?)~~/g, '<del class="text-[#5c5c5c]">$1</del>');
+  return html;
+}
+
+export function WikiMarkdown({ payload, onLinkClick }: { payload: string; onLinkClick: (id: string) => void }) {
+  const lines = payload.split('\n');
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+  let listItems: React.ReactNode[] | null = null;
+  let listOrdered = false;
+
+  function flushList() {
+    if (!listItems) return;
+    const Tag = listOrdered ? 'ol' : 'ul';
+    elements.push(
+      <Tag key={`list-${i}`} className={`${listOrdered ? 'list-decimal' : 'list-disc'} list-inside space-y-1 my-3 text-sm text-[#c8c8c8]`}>
+        {listItems}
+      </Tag>
+    );
+    listItems = null;
+    listOrdered = false;
+  }
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Empty line
+    if (!line.trim()) {
+      flushList();
+      i++;
+      continue;
+    }
+
+    // Horizontal rule
+    if (/^(---|___|\*\*\*)$/.test(line.trim())) {
+      flushList();
+      elements.push(<hr key={`hr-${i}`} className="my-4 border-[#ffffff08]" />);
+      i++;
+      continue;
+    }
+
+    // Code block
+    if (line.trim().startsWith('```')) {
+      flushList();
+      const lang = line.trim().slice(3).trim();
+      const start = i + 1;
+      let end = start;
+      while (end < lines.length && !lines[end].trim().startsWith('```')) {
+        end++;
+      }
+      const code = lines.slice(start, end).join('\n');
+      elements.push(
+        <div key={`code-${i}`} className="my-3 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] overflow-hidden">
+          {lang && <div className="px-3 py-1 text-[10px] text-[#5c5c5c] bg-[#1a1a1a] border-b border-[#ffffff08] uppercase">{lang}</div>}
+          <pre className="p-3 text-xs text-[#c8c8c8] font-mono overflow-x-auto">{code}</pre>
+        </div>
+      );
+      i = end + 1;
+      continue;
+    }
+
+    // Headings
+    const hMatch = line.match(/^(#{1,4})\s+(.*)$/);
+    if (hMatch) {
+      flushList();
+      const level = hMatch[1].length;
+      const text = hMatch[2];
+      const sizes = ['text-lg', 'text-base', 'text-sm', 'text-xs'];
+      const margins = ['mb-3 mt-5', 'mb-2 mt-4', 'mb-2 mt-3', 'mb-1.5 mt-2'];
+      const Tag = `h${level + 1}` as 'h2' | 'h3' | 'h4' | 'h5';
+      elements.push(
+        <Tag key={`h-${i}`} className={`${sizes[level - 1]} font-bold text-[#eff1f6] ${margins[level - 1]} tracking-tight`}>
+          {renderInline(text, onLinkClick)}
+        </Tag>
+      );
+      i++;
+      continue;
+    }
+
+    // Unordered list
+    const ulMatch = line.match(/^(\s*)[-*+]\s+(.*)$/);
+    if (ulMatch) {
+      if (listOrdered) flushList();
+      if (!listItems) listItems = [];
+      listItems.push(
+        <li key={`li-${i}`} className="leading-relaxed">
+          {renderInline(ulMatch[2], onLinkClick)}
+        </li>
+      );
+      i++;
+      continue;
+    }
+
+    // Ordered list
+    const olMatch = line.match(/^(\s*)\d+\.\s+(.*)$/);
+    if (olMatch) {
+      if (!listOrdered && listItems) flushList();
+      if (!listItems) listItems = [];
+      listOrdered = true;
+      listItems.push(
+        <li key={`li-${i}`} className="leading-relaxed">
+          {renderInline(olMatch[2], onLinkClick)}
+        </li>
+      );
+      i++;
+      continue;
+    }
+
+    // Blockquote
+    const bqMatch = line.match(/^>\s?(.*)$/);
+    if (bqMatch) {
+      flushList();
+      elements.push(
+        <blockquote key={`bq-${i}`} className="my-3 pl-3 border-l-2 border-[#ffa116]40 text-[#8c8c8c] text-sm italic">
+          {renderInline(bqMatch[1], onLinkClick)}
+        </blockquote>
+      );
+      i++;
+      continue;
+    }
+
+    // Regular paragraph
+    flushList();
+    elements.push(
+      <p key={`p-${i}`} className="my-2 text-sm text-[#c8c8c8] leading-relaxed">
+        {renderInline(line, onLinkClick)}
+      </p>
+    );
+    i++;
+  }
+
+  flushList();
+  return <div className="wiki-markdown">{elements}</div>;
 }
 
 /**

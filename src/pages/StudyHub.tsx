@@ -1,8 +1,7 @@
 /**
  * Study Hub — unified learning view for a single concept.
  *
- * Consolidates Learn, Wiki, Quiz, and Review into one page with tabs.
- * This is the foundation of Option C: a concept-centric learning experience.
+ * Consolidates Wiki, Quiz, and Review into one page with tabs.
  */
 
 import { useState, useMemo } from 'react';
@@ -12,22 +11,18 @@ import {
   BookOpen,
   BrainCircuit,
   Dumbbell,
-  GraduationCap,
   Sparkles,
   CheckCircle2,
-  Lock,
   Clock,
-  ChevronRight,
-  Circle,
 } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
 import { useGraphInit } from '@/hooks/useGraphInit';
 import { useProgressStore } from '@/stores/progress-store';
 import { generateQuiz } from '@/engine/quiz-generator';
+import { WikiMarkdown } from '@/pages/Wiki';
 import SourceBadge from '@/components/SourceBadge';
 
 const TABS = [
-  { id: 'learn', label: 'Learn', icon: GraduationCap },
   { id: 'wiki', label: 'Wiki', icon: BookOpen },
   { id: 'quiz', label: 'Quiz', icon: Dumbbell },
   { id: 'review', label: 'Review', icon: BrainCircuit },
@@ -42,7 +37,7 @@ export default function StudyHub() {
   const { engine, chunks } = useGraphStore();
   const srsCards = useProgressStore((s) => s.srsCards);
 
-  const [activeTab, setActiveTab] = useState<TabId>('learn');
+  const [activeTab, setActiveTab] = useState<TabId>('wiki');
 
   const node = conceptId ? engine.getNode(conceptId) : undefined;
 
@@ -179,15 +174,6 @@ export default function StudyHub() {
       {/* Content */}
       <div className="px-4 py-5">
         <div className="max-w-[720px] mx-auto">
-          {activeTab === 'learn' && (
-            <LearnTab
-              node={node}
-              prerequisites={prerequisites}
-              nextConcepts={nextConcepts}
-              onNavigate={(id) => navigate(`/study/${id}`)}
-            />
-          )}
-
           {activeTab === 'wiki' && (
             <WikiTab
               node={node}
@@ -195,6 +181,8 @@ export default function StudyHub() {
               constructions={constructions}
               chunks={chunks}
               engine={engine}
+              prerequisites={prerequisites}
+              nextConcepts={nextConcepts}
               onNavigate={(id) => navigate(`/study/${id}`)}
             />
           )}
@@ -216,183 +204,6 @@ export default function StudyHub() {
   );
 }
 
-/* ─── Learn Tab ─── */
-
-function LearnTab({
-  node,
-  prerequisites,
-  nextConcepts,
-  onNavigate,
-}: {
-  node: import('@/engine/types').Node;
-  prerequisites: import('@/engine/types').Node[];
-  nextConcepts: import('@/engine/types').Node[];
-  onNavigate: (id: string) => void;
-}) {
-  const { engine } = useGraphStore();
-  const { srsCards } = useProgressStore();
-
-  // Build the longest prerequisite path from root to this concept
-  const prerequisitePath = useMemo(() => {
-    const path: import('@/engine/types').Node[] = [];
-    const visited = new Set<string>();
-
-    function dfs(currentId: string): boolean {
-      if (visited.has(currentId)) return false;
-      visited.add(currentId);
-
-      const n = engine.getNode(currentId);
-      if (!n) return false;
-
-      // Get prerequisites sorted by how many things depend on them (most central first)
-      const prereqs = engine.getEdgesTo(currentId, { type: 'REQUIRES' });
-      if (prereqs.length === 0) {
-        path.push(n);
-        return true;
-      }
-
-      // Sort by number of downstream dependents (bottleneck first)
-      const sorted = prereqs
-        .map((e) => ({ edge: e, node: engine.getNode(e.from) }))
-        .filter((item): item is { edge: typeof item.edge; node: NonNullable<typeof item.node> } => !!item.node)
-        .sort((a, b) => {
-          const aDeps = engine.getEdgesFrom(a.node.id, { type: 'REQUIRES' }).length;
-          const bDeps = engine.getEdgesFrom(b.node.id, { type: 'REQUIRES' }).length;
-          return bDeps - aDeps;
-        });
-
-      for (const { node: prereqNode } of sorted) {
-        if (dfs(prereqNode.id)) {
-          path.push(n);
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    dfs(node.id);
-    return path;
-  }, [engine, node.id]);
-
-  function statusOf(id: string): 'mastered' | 'ready' | 'locked' {
-    const card = srsCards[id];
-    if (card && card.mastery >= 3) return 'mastered';
-
-    const prereqEdges = engine.getEdgesTo(id, { type: 'REQUIRES' });
-    if (prereqEdges.length === 0) return node.id === id ? 'ready' : 'locked';
-
-    const allMastered = prereqEdges.every((e) => {
-      const c = srsCards[e.from];
-      return c && c.mastery >= 3;
-    });
-
-    return allMastered ? 'ready' : 'locked';
-  }
-
-  return (
-    <div className="space-y-5">
-      {/* Prerequisite Path */}
-      {prerequisitePath.length > 1 && (
-        <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4">
-          <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3">Learning Path</p>
-          <div className="flex flex-col gap-2">
-            {prerequisitePath.map((n, i) => {
-              const status = statusOf(n.id);
-              const isLast = i === prerequisitePath.length - 1;
-              return (
-                <div key={n.id} className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 flex-1">
-                    {status === 'mastered' ? (
-                      <CheckCircle2 size={14} className="text-[#22c55e] flex-shrink-0" />
-                    ) : status === 'ready' ? (
-                      <Circle size={14} className="text-[#ffa116] flex-shrink-0" />
-                    ) : (
-                      <Lock size={14} className="text-[#5c5c5c] flex-shrink-0" />
-                    )}
-                    <button
-                      onClick={() => onNavigate(n.id)}
-                      className={`text-xs hover:underline transition-colors ${
-                        isLast ? 'font-semibold text-[#eff1f6]' : 'text-[#8c8c8c]'
-                      }`}
-                    >
-                      {n.labels.default}
-                    </button>
-                  </div>
-                  {!isLast && (
-                    <ChevronRight size={12} className="text-[#3e3e3e] flex-shrink-0" />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Direct Prerequisites */}
-      {prerequisites.length > 0 && (
-        <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4">
-          <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3">Prerequisites</p>
-          <div className="flex flex-wrap gap-2">
-            {prerequisites.map((p) => {
-              const status = statusOf(p.id);
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => onNavigate(p.id)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs transition-colors ${
-                    status === 'mastered'
-                      ? 'bg-[#22c55e10] border-[#22c55e30] text-[#22c55e]'
-                      : status === 'ready'
-                      ? 'bg-[#ffa11610] border-[#ffa11630] text-[#ffa116]'
-                      : 'bg-[#0f0f0f] border-[#ffffff08] text-[#c8c8c8] hover:text-[#eff1f6] hover:border-[#ffffff15]'
-                  }`}
-                >
-                  {status === 'mastered' ? (
-                    <CheckCircle2 size={11} />
-                  ) : status === 'ready' ? (
-                    <Sparkles size={11} />
-                  ) : (
-                    <Lock size={11} />
-                  )}
-                  {p.labels.default}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Concept summary */}
-      <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4">
-        <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3">Summary</p>
-        <p className="text-sm text-[#c8c8c8] leading-relaxed">
-          {(node.attributes.description as string) || `Learn about ${node.labels.default} and how it functions in Somali grammar.`}
-        </p>
-      </div>
-
-      {/* Next up */}
-      {nextConcepts.length > 0 && (
-        <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4">
-          <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3">Next Up</p>
-          <div className="flex flex-wrap gap-2">
-            {nextConcepts.map((n) => (
-              <button
-                key={n.id}
-                onClick={() => onNavigate(n.id)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-xs text-[#c8c8c8] hover:text-[#eff1f6] hover:border-[#ffffff15] transition-colors"
-              >
-                <Sparkles size={11} className="text-[#ffa116]" />
-                {n.labels.default}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 /* ─── Wiki Tab ─── */
 
 function WikiTab({
@@ -401,6 +212,8 @@ function WikiTab({
   constructions,
   chunks,
   engine,
+  prerequisites,
+  nextConcepts,
   onNavigate,
 }: {
   node: import('@/engine/types').Node;
@@ -408,6 +221,8 @@ function WikiTab({
   constructions: import('@/engine/types').Construction[];
   chunks: import('@/engine/chunk-store').ChunkStore;
   engine: import('@/engine/graph-engine').GraphEngine;
+  prerequisites: import('@/engine/types').Node[];
+  nextConcepts: import('@/engine/types').Node[];
   onNavigate: (id: string) => void;
 }) {
   const definitions = node.definitionCids
@@ -416,6 +231,24 @@ function WikiTab({
 
   return (
     <div className="space-y-5">
+      {/* Prerequisites */}
+      {prerequisites.length > 0 && (
+        <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4">
+          <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3">Prerequisites</p>
+          <div className="flex flex-wrap gap-2">
+            {prerequisites.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => onNavigate(p.id)}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-xs text-[#c8c8c8] hover:text-[#eff1f6] hover:border-[#ffffff15] transition-colors"
+              >
+                {p.labels.default}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Definitions */}
       {definitions.length > 0 && (
         <div className="space-y-3">
@@ -423,7 +256,7 @@ function WikiTab({
           {definitions.map((def) => (
             <div key={def.cid} className="text-sm text-[#c8c8c8] leading-relaxed">
               {def.contentType === 'text/markdown' ? (
-                <div className="whitespace-pre-wrap">{def.payload}</div>
+                <WikiMarkdown payload={def.payload} onLinkClick={(id) => onNavigate(id)} />
               ) : (
                 def.payload
               )}
@@ -480,12 +313,25 @@ function WikiTab({
         </div>
       )}
 
-      <button
-        onClick={() => onNavigate(node.id)}
-        className="text-xs text-[#ffa116] hover:underline"
-      >
-        Read full article →
-      </button>
+      {/* Next Up */}
+      {nextConcepts.length > 0 && (
+        <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4">
+          <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3">Next Up</p>
+          <div className="flex flex-wrap gap-2">
+            {nextConcepts.map((n) => (
+              <button
+                key={n.id}
+                onClick={() => onNavigate(n.id)}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0f0f0f] border border-[#ffffff08] text-xs text-[#c8c8c8] hover:text-[#eff1f6] hover:border-[#ffffff15] transition-colors"
+              >
+                <Sparkles size={11} className="text-[#ffa116]" />
+                {n.labels.default}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

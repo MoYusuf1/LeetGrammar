@@ -10,6 +10,7 @@ import { useNavigate } from "react-router";
 import { BookOpen, Check, Circle } from "lucide-react";
 import { useGraphLessons } from "@/hooks/useGraphLessons";
 import { useProgressStore } from "@/stores/progress-store";
+import type { GraphLesson } from "@/lib/supabase/lesson-types";
 
 const TEXTBOOK_LABELS: Record<string, string> = {
   "colloquial-somali-1995": "Colloquial Somali",
@@ -40,7 +41,30 @@ export default function LessonGrid() {
   const { groupedLessons, loading, error, refetch } = useGraphLessons();
   const store = useProgressStore();
 
-  const textbooks = useMemo(() => Object.keys(groupedLessons), [groupedLessons]);
+  // Merge textbook groups that share the same display label
+  const mergedGroupedLessons = useMemo(() => {
+    const merged: Record<string, GraphLesson[]> = {};
+    for (const [textbookId, lessons] of Object.entries(groupedLessons)) {
+      const label = TEXTBOOK_LABELS[textbookId] ?? textbookId;
+      const key = Object.keys(TEXTBOOK_LABELS).find(
+        (k) => TEXTBOOK_LABELS[k] === label && merged[k]
+      ) ?? textbookId;
+      if (!merged[key]) merged[key] = [];
+      merged[key].push(...lessons);
+    }
+    // Sort lessons within each group by order_index or title
+    for (const key of Object.keys(merged)) {
+      merged[key].sort((a, b) => {
+        if (a.sort_key != null && b.sort_key != null) {
+          return a.sort_key - b.sort_key;
+        }
+        return a.title.localeCompare(b.title);
+      });
+    }
+    return merged;
+  }, [groupedLessons]);
+
+  const textbooks = useMemo(() => Object.keys(mergedGroupedLessons), [mergedGroupedLessons]);
 
   if (loading) {
     return (
@@ -87,7 +111,7 @@ export default function LessonGrid() {
   return (
     <div className="space-y-8">
       {textbooks.map((textbookId) => {
-        const lessons = groupedLessons[textbookId];
+        const lessons = mergedGroupedLessons[textbookId];
         const color = TEXTBOOK_COLORS[textbookId] ?? "#8c8c8c";
         const label = TEXTBOOK_LABELS[textbookId] ?? textbookId;
 

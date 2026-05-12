@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { Check, Sparkles, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
-import { grammarTopics } from '@/data/grammar-topics';
 import { useProgress } from '@/hooks/useProgress';
+import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
 import TopicDialog from '@/components/TopicDialog';
 import type { RoadmapTopic } from '@/types';
 
@@ -33,7 +33,7 @@ function computeDepths(topics: RoadmapTopic[]): Map<string, number> {
 
 function computeLayout(topics: RoadmapTopic[]) {
   const depths = computeDepths(topics);
-  const maxDepth = Math.max(...Array.from(depths.values()));
+  const maxDepth = Math.max(...Array.from(depths.values()), -1);
 
   const rows: RoadmapTopic[][] = [];
   for (let d = 0; d <= maxDepth; d++) {
@@ -56,8 +56,62 @@ function computeLayout(topics: RoadmapTopic[]) {
   return { positions, rows, maxDepth, rowWidths };
 }
 
+function useRoadmapTopics() {
+  const [topics, setTopics] = useState<RoadmapTopic[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      if (!isSupabaseConfigured) {
+        setError('Supabase not configured');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data, error: rpcError } = await getSupabase()
+          .rpc('get_roadmap_topics');
+
+        if (cancelled) return;
+
+        if (rpcError) {
+          setError(rpcError.message);
+          setLoading(false);
+          return;
+        }
+
+        if (data && Array.isArray(data)) {
+          const mapped: RoadmapTopic[] = data.map((u: any) => ({
+            id: u.id,
+            title: u.title,
+            description: u.description ?? '',
+            unitId: u.unit_order,
+            color: u.color,
+            lessonIds: u.problem_ids ?? [],
+            prerequisites: u.prerequisite_ids ?? [],
+          }));
+          setTopics(mapped);
+        }
+      } catch (e: any) {
+        if (!cancelled) setError(e.message ?? 'Failed to load roadmap');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => { cancelled = true; };
+  }, []);
+
+  return { topics, loading, error };
+}
+
 export default function Roadmap() {
   const { isTopicCompleted, getTopicProgress } = useProgress();
+  const { topics, loading, error } = useRoadmapTopics();
 
   const [selectedTopic, setSelectedTopic] = useState<RoadmapTopic | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -69,7 +123,10 @@ export default function Roadmap() {
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef({ startX: 0, startY: 0, panX: 0, panY: 0 });
 
-  const { positions, rows, maxDepth, rowWidths } = useMemo(() => computeLayout(grammarTopics), []);
+  const { positions, rows, maxDepth, rowWidths } = useMemo(
+    () => (topics.length > 0 ? computeLayout(topics) : { positions: new Map(), rows: [], maxDepth: -1, rowWidths: [] }),
+    [topics]
+  );
   const maxRowWidth = Math.max(...rowWidths, 600);
   const canvasW = maxRowWidth + PAD_X * 2;
   const canvasH = PAD_Y + (maxDepth + 1) * ROW_H + 60;
@@ -135,7 +192,7 @@ export default function Roadmap() {
   // ─── Topic Status ───
   const topicStatus = useMemo(() => {
     const map = new Map<string, 'completed' | 'current'>();
-    for (const topic of grammarTopics) {
+    for (const topic of topics) {
       if (isTopicCompleted(topic.lessonIds)) {
         map.set(topic.id, 'completed');
       } else {
@@ -143,14 +200,12 @@ export default function Roadmap() {
       }
     }
     return map;
-  }, [isTopicCompleted]);
-
-
+  }, [topics, isTopicCompleted]);
 
   // ─── Lines ───
   const lines = useMemo(() => {
     const result: { x1: number; y1: number; x2: number; y2: number; color: string; key: string }[] = [];
-    for (const topic of grammarTopics) {
+    for (const topic of topics) {
       const childPos = positions.get(topic.id);
       if (!childPos) continue;
       for (const prereqId of topic.prerequisites) {
@@ -167,12 +222,39 @@ export default function Roadmap() {
       }
     }
     return result;
-  }, [positions]);
+  }, [topics, positions]);
 
   const handleTopicClick = (topic: RoadmapTopic) => {
     setSelectedTopic(topic);
     setDialogOpen(true);
   };
+
+  // ─── Empty / Loading State ───
+  if (loading) {
+    return (
+      <div className="h-[calc(100vh-50px)] bg-[#0f0f0f] flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <div className="w-8 h-8 border-2 border-[#3b82f6] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm text-[#8c8c8c]">Loading curriculum...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || topics.length === 0) {
+    return (
+      <div className="h-[calc(100vh-50px)] bg-[#0f0f0f] flex items-center justify-center">
+        <div className="text-center space-y-3 max-w-sm px-4">
+          <p className="text-sm text-[#8c8c8c]">
+            {error ? `Error: ${error}` : 'No curriculum data available.'}
+          </p>
+          <p className="text-xs text-[#5c5c5c]">
+            Connect to Supabase and run the latest migrations to load curriculum units.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-[calc(100vh-50px)] bg-[#0f0f0f] relative overflow-hidden select-none">
@@ -266,7 +348,7 @@ export default function Roadmap() {
           </svg>
 
           {/* Topic Nodes */}
-          {grammarTopics.map((topic) => {
+          {topics.map((topic) => {
             const status = topicStatus.get(topic.id) ?? 'current';
             const isCurrent = status === 'current';
             const isCompleted = status === 'completed';

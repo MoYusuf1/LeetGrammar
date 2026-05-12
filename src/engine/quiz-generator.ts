@@ -52,6 +52,15 @@ function distractorsFromPool(correct: string, pool: string[], count = 3): string
   return shuffle([...picked, correct]);
 }
 
+function formatLabel(label: string): string {
+  return label
+    .replace(/^(concept|example|word|morpheme|rule|lesson|textbook):/, '')
+    .replace(/[-_]/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
 /* ─── Question Generators ─── */
 
 function generateFillBlank(
@@ -75,7 +84,7 @@ function generateFillBlank(
     .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
     .map((m) => {
       const node = engine.getNode(m.nodeId);
-      const label = node?.labels.default ?? m.nodeId;
+      const label = formatLabel(node?.labels.default ?? m.nodeId);
       if (m.nodeId === targetMember.nodeId) {
         return '_____';
       }
@@ -86,23 +95,24 @@ function generateFillBlank(
   const otherLabels = nonSlotMembers
     .filter((m) => m.nodeId !== targetMember.nodeId)
     .map((m) => engine.getNode(m.nodeId)?.labels.default)
-    .filter((l): l is string => !!l);
+    .filter((l): l is string => !!l)
+    .map(formatLabel);
 
   const allNodes = engine.getAllNodes();
   const nodePool = allNodes
     .filter((n) => n.type === 'MORPHEME' || n.type === 'WORD')
-    .map((n) => n.labels.default);
+    .map((n) => formatLabel(n.labels.default));
 
   const pool = otherLabels.length >= 3 ? otherLabels : [...otherLabels, ...nodePool];
-  const options = distractorsFromPool(targetNode.labels.default, pool, 3);
+  const options = distractorsFromPool(formatLabel(targetNode.labels.default), pool, 3);
 
   return {
     id: `fb:${construction.id}:${targetMember.nodeId}`,
     type: 'FILL_BLANK',
     question: `Complete the construction: ${templateParts.join(' ')}`,
     options,
-    correctAnswer: targetNode.labels.default,
-    explanation: `In the "${construction.name}" construction, **${targetNode.labels.default}** serves as the ${targetMember.role}.`,
+    correctAnswer: formatLabel(targetNode.labels.default),
+    explanation: `In the "${construction.name}" construction, **${formatLabel(targetNode.labels.default)}** serves as the ${targetMember.role}.`,
     conceptId,
     difficulty: construction.members.length > 3 ? 'medium' : 'easy',
   };
@@ -117,18 +127,19 @@ function generateMultipleChoiceFromExample(
   const concept = engine.getNode(conceptId);
   if (!concept) return null;
 
-  const question = `In the sentence "${exampleNode.labels.default}", what is the function of **${concept.labels.default}**?`;
+  const question = `In the sentence "${formatLabel(exampleNode.labels.default)}", what is the function of **${formatLabel(concept.labels.default)}**?`;
 
   // Generate options from concept's relationships
   const isAEdges = engine.getEdgesFrom(conceptId).filter((e) => e.type === 'IS_A');
   const parentConcepts = isAEdges
     .map((e) => engine.getNode(e.to)?.labels.default)
-    .filter((l): l is string => !!l);
+    .filter((l): l is string => !!l)
+    .map(formatLabel);
 
   const allConcepts = engine.getAllNodes().filter((n) => n.type === 'CONCEPT');
-  const pool = parentConcepts.length >= 3 ? parentConcepts : allConcepts.map((n) => n.labels.default);
+  const pool = parentConcepts.length >= 3 ? parentConcepts : allConcepts.map((n) => formatLabel(n.labels.default));
 
-  const correct = parentConcepts[0] ?? concept.labels.english ?? concept.labels.default;
+  const correct = formatLabel(parentConcepts[0] ?? concept.labels.english ?? concept.labels.default);
   const options = distractorsFromPool(correct, pool, 3);
 
   return {
@@ -137,7 +148,7 @@ function generateMultipleChoiceFromExample(
     question,
     options,
     correctAnswer: correct,
-    explanation: `${concept.labels.default} is ${parentConcepts.length > 0 ? `a type of ${parentConcepts[0]}` : 'a grammatical concept in Somali'}.`,
+    explanation: `${formatLabel(concept.labels.default)} is ${parentConcepts.length > 0 ? `a type of ${parentConcepts[0]}` : 'a grammatical concept in Somali'}.`,
     conceptId,
     difficulty: 'medium',
   };
@@ -158,20 +169,20 @@ function generateMultipleChoiceFromDefinition(
   const exampleNode = engine.getNode(exampleEdge.from);
   if (!exampleNode) return null;
 
-  const question = `Which concept is illustrated by: "${exampleNode.labels.default}"?`;
+  const question = `Which concept is illustrated by: "${formatLabel(exampleNode.labels.default)}"?`;
 
   // Distractors: other concepts that have examples
   const allConcepts = engine.getAllNodes().filter((n) => n.type === 'CONCEPT' && n.id !== conceptId);
-  const pool = allConcepts.map((n) => n.labels.default);
-  const options = distractorsFromPool(concept.labels.default, pool, 3);
+  const pool = allConcepts.map((n) => formatLabel(n.labels.default));
+  const options = distractorsFromPool(formatLabel(concept.labels.default), pool, 3);
 
   return {
     id: `mc:def:${conceptId}`,
     type: 'MULTIPLE_CHOICE',
     question,
     options,
-    correctAnswer: concept.labels.default,
-    explanation: `This sentence exemplifies the **${concept.labels.default}** concept.`,
+    correctAnswer: formatLabel(concept.labels.default),
+    explanation: `This sentence exemplifies the **${formatLabel(concept.labels.default)}** concept.`,
     conceptId,
     difficulty: 'easy',
   };
@@ -196,15 +207,15 @@ function generateTrueFalse(
   let explanation: string;
 
   if (isTrue) {
-    statement = `The ${concept.labels.default} ${key.replace(/_/g, ' ')} is "${String(value)}".`;
+    statement = `The ${formatLabel(concept.labels.default)} ${key.replace(/_/g, ' ')} is "${String(value)}".`;
     correctAnswer = 'True';
-    explanation = `Correct. According to the grammar sources, ${concept.labels.default} has the property **${key} = ${String(value)}**.`;
+    explanation = `Correct. According to the grammar sources, ${formatLabel(concept.labels.default)} has the property **${key} = ${String(value)}**.`;
   } else {
     // Flip the value for a false statement
     const falseValue = typeof value === 'boolean' ? String(!value) : `not ${String(value)}`;
-    statement = `The ${concept.labels.default} ${key.replace(/_/g, ' ')} is "${falseValue}".`;
+    statement = `The ${formatLabel(concept.labels.default)} ${key.replace(/_/g, ' ')} is "${falseValue}".`;
     correctAnswer = 'False';
-    explanation = `Incorrect. The actual ${key} of ${concept.labels.default} is **${String(value)}**.`;
+    explanation = `Incorrect. The actual ${key} of ${formatLabel(concept.labels.default)} is **${String(value)}**.`;
   }
 
   return {
@@ -239,7 +250,7 @@ function generateMatching(
   if (relatedNodes.length < 3) return null;
 
   const pairs = pickRandom(relatedNodes, 4).map((n) => ({
-    somali: n.labels.default,
+    somali: formatLabel(n.labels.default),
     english: n.labels.english!,
   }));
 
@@ -266,7 +277,7 @@ export function generateQuiz(
   maxQuestions = 8
 ): QuizSet {
   const concept = engine.getNode(conceptId);
-  const title = concept?.labels.default ?? 'Quiz';
+  const title = concept ? formatLabel(concept.labels.default) : 'Quiz';
 
   const questions: QuizQuestion[] = [];
   const usedIds = new Set<string>();

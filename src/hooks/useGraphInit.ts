@@ -1,26 +1,16 @@
 /**
  * Initializes the knowledge graph on first load.
  *
- * Strategy (priority order):
- * 1. Supabase RPC — fetch canonical graph from cloud (one round-trip)
- * 2. Local SQLite — cached graph from previous session
- * 3. Static seeds — fallback for offline / no-config scenarios
- * 4. Ingest Textbook B on top of whatever loaded
- * 5. Persist to SQLite cache for next time
+ * Database-first architecture:
+ * 1. Supabase RPC — canonical graph from cloud (single source of truth)
+ * 2. Local SQLite cache — offline performance only
+ * 3. If both empty, the app waits for data (no static fallbacks)
+ * 4. Persist successful loads to SQLite cache
  */
 
 import { useEffect, useRef } from 'react';
 import { useGraphStore } from '@/stores/graph-store';
 import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
-import { seedNodes, seedEdges, seedConstructions, seedChunks } from '@/data/graph-seed';
-import {
-  textbookBNodes,
-  textbookBEdges,
-  textbookBConstructions,
-  textbookBChunks,
-  textbookBId,
-} from '@/data/textbook-b-seed';
-import { ingestTextbook } from '@/engine/ingestion';
 import type { GraphSnapshot } from '@/engine/types';
 
 let globalBootstrapStarted = false;
@@ -118,7 +108,7 @@ export function useGraphInit() {
       };
 
       try {
-        // ─── Step 1: Try Supabase (canonical cloud graph) ─────────────────────
+        // ─── Step 1: Supabase RPC (canonical cloud graph) ─────────────────────
         if (isSupabaseConfigured) {
           try {
             const rpcResult = await withTimeout(
@@ -141,11 +131,11 @@ export function useGraphInit() {
               }
             }
           } catch {
-            // Supabase RPC failed — fall through to SQLite / seeds
+            // Supabase RPC failed — fall through to SQLite
           }
         }
 
-        // ─── Step 2: Try local SQLite cache ───────────────────────────────────
+        // ─── Step 2: Local SQLite cache ───────────────────────────────────────
         if (engine.stats.nodes === 0) {
           try {
             await withTimeout(persistence.init(), 5000, 'SQLite init');
@@ -154,40 +144,21 @@ export function useGraphInit() {
               await withTimeout(useGraphStore.getState().loadFromSQLite(), 5000, 'SQLite load');
             }
           } catch {
-            // SQLite not available or empty — proceed to seeds
+            // SQLite not available or empty — graph stays empty
           }
         }
 
-        // ─── Step 3: Static seeds (last resort) ───────────────────────────────
-        if (engine.stats.nodes === 0) {
-          chunks.fromArray(seedChunks);
-          for (const node of seedNodes) {
-            if (!engine.hasNode(node.id)) {
-              try { engine.addNode(node); } catch { /* ignore */ }
-            }
-          }
-          for (const edge of seedEdges) {
-            try { engine.addEdge(edge); } catch { /* ignore */ }
-            }
-          for (const c of seedConstructions) {
-            try { engine.addConstruction(c); } catch { /* ignore */ }
-          }
-        }
+        // ─── Step 3: No static seeds ──────────────────────────────────────────
+        // Database-first: if Supabase and SQLite are both empty, the app
+        // shows a loading / connect state. No silent fallbacks to hardcoded data.
 
-        // ─── Step 4: Ingest Textbook B ────────────────────────────────────────
-        ingestTextbook(engine, chunks, {
-          textbookId: textbookBId,
-          chunks: textbookBChunks,
-          nodes: textbookBNodes,
-          edges: textbookBEdges,
-          constructions: textbookBConstructions,
-        });
-
-        // ─── Step 5: Persist to SQLite cache ──────────────────────────────────
-        try {
-          await withTimeout(useGraphStore.getState().saveToSQLite(), 5000, 'SQLite save');
-        } catch {
-          // Persistence failed, but graph is still usable in memory
+        // ─── Step 4: Persist to SQLite cache ──────────────────────────────────
+        if (engine.stats.nodes > 0) {
+          try {
+            await withTimeout(useGraphStore.getState().saveToSQLite(), 5000, 'SQLite save');
+          } catch {
+            // Persistence failed, but graph is still usable in memory
+          }
         }
       } finally {
         done();
