@@ -1,9 +1,11 @@
 /**
- * Learn Page — Composite Design (Duolingo + Babbel + Memrise + NeetCode)
+ * Learn Page — Composite Design (Textbook-First)
  *
  * Tabs:
  *   · Today  — single primary CTA, streak, quick actions, stats
- *   · Path   — vertical curriculum path with locked/available/complete nodes
+ *   · Path   — textbook lessons with locked/available/complete nodes
+ *
+ * Problem sets are legacy and will be overhauled later to match textbooks.
  */
 
 import { useState, useMemo } from 'react';
@@ -20,12 +22,12 @@ import {
   Check,
   Sparkles,
   AlertTriangle,
+  Clock,
 } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { useGraphSrs } from '@/hooks/useGraphSrs';
-import { useLearnData, type CurriculumUnit, type UnitProblem } from '@/hooks/useLearnData';
+import { useLearnData, type TextbookSection, type LessonNode } from '@/hooks/useLearnData';
 import { useGraphInit } from '@/hooks/useGraphInit';
-import { difficultyConfig } from '@/data/problems';
 
 function getToday(): string {
   return new Date().toISOString().split('T')[0];
@@ -91,13 +93,13 @@ export default function Learn() {
 function TodayTab() {
   const navigate = useNavigate();
   const progress = useProgressStore();
-  const { nextAction, dueReviewCount, difficultConceptCount, units, currentUnitIndex } = useLearnData();
+  const { nextAction, dueReviewCount, difficultConceptCount, sections } = useLearnData();
   const { learningFrontier } = useGraphSrs();
 
   const hasStudiedToday = progress.lastStudyDate === getToday();
   const streakAtRisk = !hasStudiedToday && progress.streak > 0;
 
-  const currentUnit = currentUnitIndex >= 0 ? units[currentUnitIndex] : null;
+  const currentSection = sections.find((s) => s.lessons.some((n) => n.isCurrent));
 
   const handleStart = () => {
     if (!nextAction?.targetPath) return;
@@ -148,18 +150,17 @@ function TodayTab() {
         <div
           className="relative rounded-2xl border overflow-hidden cursor-pointer transition-transform hover:scale-[1.01] active:scale-[0.99]"
           style={{
-            background: currentUnit
-              ? `linear-gradient(135deg, ${currentUnit.color}12 0%, #141414 60%)`
+            background: currentSection
+              ? `linear-gradient(135deg, ${currentSection.color}12 0%, #141414 60%)`
               : '#141414',
-            borderColor: currentUnit ? `${currentUnit.color}40` : '#ffffff10',
+            borderColor: currentSection ? `${currentSection.color}40` : '#ffffff10',
           }}
           onClick={handleStart}
         >
-          {/* Glow effect for available/current nodes */}
           {nextAction.type !== 'celebration' && (
             <div
               className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none"
-              style={{ backgroundColor: currentUnit?.color ?? '#ffa116' }}
+              style={{ backgroundColor: currentSection?.color ?? '#ffa116' }}
             />
           )}
 
@@ -168,7 +169,7 @@ function TodayTab() {
               <div className="flex-1">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-[#8c8c8c] mb-1.5">
                   {nextAction.type === 'review' && 'Due for Review'}
-                  {nextAction.type === 'problem' && 'Continue Learning'}
+                  {nextAction.type === 'lesson' && 'Continue Learning'}
                   {nextAction.type === 'concept' && 'Ready to Learn'}
                   {nextAction.type === 'celebration' && 'All Caught Up'}
                 </p>
@@ -180,30 +181,30 @@ function TodayTab() {
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                 style={{
-                  backgroundColor: currentUnit ? `${currentUnit.color}18` : '#1a1a1a',
-                  border: `1px solid ${currentUnit ? `${currentUnit.color}30` : '#ffffff10'}`,
+                  backgroundColor: currentSection ? `${currentSection.color}18` : '#1a1a1a',
+                  border: `1px solid ${currentSection ? `${currentSection.color}30` : '#ffffff10'}`,
                 }}
               >
                 {nextAction.type === 'review' && <RotateCcw size={20} className="text-[#ef4444]" />}
-                {nextAction.type === 'problem' && <BookOpen size={20} style={{ color: currentUnit?.color }} />}
+                {nextAction.type === 'lesson' && <BookOpen size={20} style={{ color: currentSection?.color }} />}
                 {nextAction.type === 'concept' && <Sparkles size={20} className="text-[#3b82f6]" />}
                 {nextAction.type === 'celebration' && <Check size={20} className="text-[#22c55e]" />}
               </div>
             </div>
 
-            {/* Progress bar for problem CTAs */}
-            {nextAction.type === 'problem' && currentUnit && (
+            {/* Progress bar for lesson CTAs */}
+            {nextAction.type === 'lesson' && currentSection && (
               <div className="mt-4">
                 <div className="flex justify-between text-[10px] text-[#8c8c8c] mb-1">
-                  <span>Unit progress</span>
-                  <span>{currentUnit.completionPct}%</span>
+                  <span>{currentSection.label}</span>
+                  <span>{currentSection.completionPct}%</span>
                 </div>
                 <div className="h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all"
                     style={{
-                      width: `${currentUnit.completionPct}%`,
-                      backgroundColor: currentUnit.color,
+                      width: `${currentSection.completionPct}%`,
+                      backgroundColor: currentSection.color,
                     }}
                   />
                 </div>
@@ -224,13 +225,13 @@ function TodayTab() {
             <button
               className="mt-4 w-full py-2.5 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
               style={{
-                backgroundColor: currentUnit?.color ?? '#ffa116',
+                backgroundColor: currentSection?.color ?? '#ffa116',
                 color: '#0f0f0f',
               }}
               onClick={handleStart}
             >
               {nextAction.type === 'review' && 'Start Review Session'}
-              {nextAction.type === 'problem' && 'Continue'}
+              {nextAction.type === 'lesson' && 'Continue'}
               {nextAction.type === 'concept' && 'Start Learning'}
               {nextAction.type === 'celebration' && 'Explore Concepts'}
             </button>
@@ -260,7 +261,7 @@ function TodayTab() {
         />
         <QuickActionCard
           icon={<Pencil size={18} className="text-[#3b82f6]" />}
-          label="Practice"
+          label="Problem Set"
           onClick={() => navigate('/problems')}
         />
       </div>
@@ -355,17 +356,17 @@ function WeeklyActivity() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
-/*  PATH TAB                                                                 */
+/*  PATH TAB — Textbook Lessons                                               */
 /* ═══════════════════════════════════════════════════════════════════════════ */
 
 function PathTab() {
-  const { units, loading, error } = useLearnData();
+  const { sections, loading, error } = useLearnData();
 
   if (loading) {
     return (
       <div className="text-center py-12">
         <div className="w-8 h-8 border-2 border-[#3b82f6] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-        <p className="text-sm text-[#8c8c8c]">Loading curriculum...</p>
+        <p className="text-sm text-[#8c8c8c]">Loading textbook lessons...</p>
       </div>
     );
   }
@@ -378,44 +379,51 @@ function PathTab() {
     );
   }
 
+  if (sections.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <BookOpen size={40} className="text-[#3e3e3e] mx-auto mb-3" />
+        <p className="text-sm text-[#8c8c8c]">No textbook lessons loaded.</p>
+        <p className="text-xs text-[#5c5c5c] mt-1">
+          Connect to Supabase and run migrations to load lesson data.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
-      {units.map((unit, index) => (
-        <UnitSection key={unit.id} unit={unit} isLast={index === units.length - 1} />
+      {sections.map((section, index) => (
+        <TextbookSection key={section.textbookId} section={section} isLast={index === sections.length - 1} />
       ))}
     </div>
   );
 }
 
-function UnitSection({ unit, isLast }: { unit: CurriculumUnit; isLast: boolean }) {
+function TextbookSection({ section, isLast }: { section: TextbookSection; isLast: boolean }) {
   return (
-    <div className={`relative ${unit.isLocked ? 'opacity-50' : ''}`}>
-      {/* Unit Header */}
+    <div className={`relative ${section.lessons.every((n) => n.isLocked) ? 'opacity-60' : ''}`}>
+      {/* Section Header */}
       <div className="flex items-center gap-3 mb-3">
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
           style={{
-            backgroundColor: `${unit.color}15`,
-            border: `1px solid ${unit.color}30`,
+            backgroundColor: `${section.color}15`,
+            border: `1px solid ${section.color}30`,
           }}
         >
-          {unit.isLocked ? (
-            <Lock size={16} style={{ color: unit.color }} />
-          ) : unit.isComplete ? (
-            <Check size={16} style={{ color: unit.color }} />
+          {section.completionPct === 100 ? (
+            <Check size={16} style={{ color: section.color }} />
           ) : (
-            <BookOpen size={16} style={{ color: unit.color }} />
+            <BookOpen size={16} style={{ color: section.color }} />
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-bold text-[#eff1f6]">{unit.title}</h3>
-          <p className="text-[11px] text-[#8c8c8c] truncate">{unit.description}</p>
+          <h3 className="text-sm font-bold text-[#eff1f6]">{section.label}</h3>
+          <p className="text-[11px] text-[#8c8c8c]">{section.lessons.length} lessons</p>
         </div>
         <div className="text-right">
-          <p className="text-xs font-bold text-[#eff1f6]">{unit.completionPct}%</p>
-          <p className="text-[9px] text-[#5c5c5c]">
-            {unit.problems.filter((p) => p.isComplete).length}/{unit.problems.length}
-          </p>
+          <p className="text-xs font-bold text-[#eff1f6]">{section.completionPct}%</p>
         </div>
       </div>
 
@@ -423,23 +431,23 @@ function UnitSection({ unit, isLast }: { unit: CurriculumUnit; isLast: boolean }
       <div className="h-1 bg-[#1a1a1a] rounded-full overflow-hidden mb-4">
         <div
           className="h-full rounded-full transition-all"
-          style={{ width: `${unit.completionPct}%`, backgroundColor: unit.color }}
+          style={{ width: `${section.completionPct}%`, backgroundColor: section.color }}
         />
       </div>
 
-      {/* Problem Nodes */}
+      {/* Lesson Nodes */}
       <div className="relative pl-5">
         {/* Vertical connector line */}
         {!isLast && (
           <div
             className="absolute left-[22px] top-8 bottom-[-32px] w-0.5"
-            style={{ backgroundColor: `${unit.color}20` }}
+            style={{ backgroundColor: `${section.color}20` }}
           />
         )}
 
         <div className="space-y-2">
-          {unit.problems.map((problem, pi) => (
-            <PathNode key={problem.id} problem={problem} index={pi} />
+          {section.lessons.map((node) => (
+            <LessonNode key={node.lesson.id} node={node} />
           ))}
         </div>
       </div>
@@ -447,29 +455,30 @@ function UnitSection({ unit, isLast }: { unit: CurriculumUnit; isLast: boolean }
   );
 }
 
-function PathNode({
-  problem,
-  index,
+function LessonNode({
+  node,
 }: {
-  problem: UnitProblem;
-  index: number;
+  node: LessonNode;
 }) {
   const navigate = useNavigate();
-  const diff = difficultyConfig[problem.difficulty];
+  const { lesson, isComplete, isLocked, isCurrent } = node;
 
   const handleClick = () => {
-    if (problem.isLocked) return;
-    navigate(`/problem/${problem.id}`);
+    if (isLocked) return;
+    navigate(`/lesson/${lesson.id}`);
   };
+
+  const diffLabel = lesson.difficulty <= 0.25 ? 'Beginner' : lesson.difficulty <= 0.5 ? 'Intermediate' : 'Advanced';
+  const diffColor = lesson.difficulty <= 0.25 ? '#00b8a3' : lesson.difficulty <= 0.5 ? '#ffc01e' : '#ff375f';
 
   return (
     <button
       onClick={handleClick}
-      disabled={problem.isLocked}
+      disabled={isLocked}
       className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
-        problem.isLocked
+        isLocked
           ? 'bg-[#0f0f0f] border border-[#ffffff05] cursor-not-allowed'
-          : problem.isComplete
+          : isComplete
           ? 'bg-[#141414] border border-[#ffffff08] hover:bg-[#1a1a1a] cursor-pointer'
           : 'bg-[#141414] border border-[#ffffff10] hover:border-[#ffffff18] hover:bg-[#1a1a1a] cursor-pointer'
       }`}
@@ -478,33 +487,49 @@ function PathNode({
       <div className="relative flex-shrink-0">
         <div
           className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-            problem.isLocked
+            isLocked
               ? 'bg-[#1a1a1a] border border-[#ffffff08] text-[#5c5c5c]'
-              : problem.isComplete
+              : isComplete
               ? 'bg-[#22c55e15] border border-[#22c55e40] text-[#22c55e]'
+              : isCurrent
+              ? 'bg-[#ffffff08] border border-[#ffa11660] text-[#ffa116]'
               : 'bg-[#ffffff08] border border-[#ffffff15] text-[#eff1f6]'
           }`}
         >
-          {problem.isComplete ? <Check size={14} /> : problem.isLocked ? <Lock size={12} /> : index + 1}
+          {isComplete ? <Check size={14} /> : isLocked ? <Lock size={12} /> : lesson.chapter}
         </div>
+        {isCurrent && (
+          <div className="absolute inset-0 rounded-full border-2 border-[#ffa11640] animate-ping pointer-events-none" />
+        )}
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium truncate ${problem.isLocked ? 'text-[#5c5c5c]' : 'text-[#eff1f6]'}`}>
-          {problem.title}
+        <p className={`text-sm font-medium truncate ${isLocked ? 'text-[#5c5c5c]' : 'text-[#eff1f6]'}`}>
+          {lesson.title}
         </p>
+        <div className="flex items-center gap-2 mt-0.5">
+          {lesson.estimated_minutes > 0 && (
+            <span className="flex items-center gap-1 text-[9px] text-[#5c5c5c]">
+              <Clock size={9} />
+              {lesson.estimated_minutes} min
+            </span>
+          )}
+          {lesson.page_range && (
+            <span className="text-[9px] text-[#5c5c5c]">pp. {lesson.page_range}</span>
+          )}
+        </div>
       </div>
 
       {/* Difficulty badge */}
       <span
         className="text-[9px] font-semibold px-1.5 py-0.5 rounded flex-shrink-0"
-        style={{ color: diff.color, backgroundColor: diff.bg }}
+        style={{ color: diffColor, backgroundColor: `${diffColor}15` }}
       >
-        {diff.label}
+        {diffLabel}
       </span>
 
-      <ChevronRight size={14} className={`flex-shrink-0 ${problem.isLocked ? 'text-[#3e3e3e]' : 'text-[#5c5c5c]'}`} />
+      <ChevronRight size={14} className={`flex-shrink-0 ${isLocked ? 'text-[#3e3e3e]' : 'text-[#5c5c5c]'}`} />
     </button>
   );
 }
