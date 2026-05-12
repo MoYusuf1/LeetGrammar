@@ -27,7 +27,7 @@ import { useGraphInit } from '@/hooks/useGraphInit';
 import { useGraphSrs } from '@/hooks/useGraphSrs';
 import SourceFilter from '@/components/SourceFilter';
 import type { NodeType } from '@/engine/types';
-import { MockB_BabbelGrid } from '@/components/learn-mocks';
+import LessonGrid from '@/components/LessonGrid';
 
 const TYPE_ICONS: Record<NodeType, typeof BookOpen> = {
   CONCEPT: BookOpen,
@@ -101,7 +101,7 @@ export default function Learn() {
       {/* Tab content */}
       <div className="px-4 py-5">
         <div className="max-w-[900px] mx-auto">
-          {activeTab === 'lessons' && <MockB_BabbelGrid />}
+          {activeTab === 'lessons' && <LessonGrid />}
           {activeTab === 'concepts' && <ConceptsTab />}
           {activeTab === 'review' && <ReviewTab />}
         </div>

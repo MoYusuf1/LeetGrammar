@@ -14,7 +14,7 @@ async function getSQL() {
   if (SQL) return SQL;
   const sqlModule = await import('sql.js');
   SQL = await sqlModule.default({
-    locateFile: (file) => `/sql.js/${file}`,
+    locateFile: (file) => `/${file}`,
   });
   return SQL;
 }

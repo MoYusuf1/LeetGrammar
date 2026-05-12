@@ -122,9 +122,6 @@ export async function pullProgress(userId: string): Promise<RemoteProgress | nul
     .single();
 
   if (error || !data) {
-    if ((error as { code?: string })?.code !== 'PGRST116') {
-      console.error('Sync pull error:', error);
-    }
     return null;
   }
 
@@ -156,7 +153,6 @@ export async function pushProgress(userId: string, progress: UserProgress): Prom
     .upsert(payload, { onConflict: 'user_id' });
 
   if (error) {
-    console.error('Sync push error:', error);
     return false;
   }
 
@@ -195,7 +191,6 @@ export async function fetchProfile(userId: string) {
     .maybeSingle();
 
   if (error) {
-    console.error('Fetch profile error:', error);
     return null;
   }
 
@@ -214,7 +209,6 @@ export async function updateProfile(userId: string, updates: { username?: string
     .eq('id', userId);
 
   if (error) {
-    console.error('Update profile error:', error);
     return false;
   }
 
@@ -236,7 +230,6 @@ export async function uploadAvatar(userId: string, file: File): Promise<string |
     .upload(path, file, { upsert: true, contentType: file.type });
 
   if (uploadError) {
-    console.error('Avatar upload error:', uploadError);
     return null;
   }
 
@@ -256,7 +249,6 @@ export async function fetchAllProfiles() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Fetch all profiles error:', error);
     return [];
   }
 
@@ -275,7 +267,6 @@ export async function setAdminStatus(userId: string, isAdmin: boolean): Promise<
     .eq('id', userId);
 
   if (error) {
-    console.error('Set admin status error:', error);
     return false;
   }
 
@@ -305,7 +296,6 @@ export async function fetchWorkbookAttempts(userId: string, levelId: number): Pr
     .order('drill_id', { ascending: true });
 
   if (error) {
-    console.error('Fetch workbook attempts error:', error);
     return [];
   }
 
@@ -339,7 +329,6 @@ export async function saveWorkbookAttempt(
     );
 
   if (error) {
-    console.error('Save workbook attempt error:', error);
     return false;
   }
 
@@ -370,7 +359,6 @@ export async function saveWorkbookAttemptsBatch(
     .upsert(rows, { onConflict: 'user_id, level_id, drill_id' });
 
   if (error) {
-    console.error('Save workbook attempts batch error:', error);
     return false;
   }
 

@@ -1,9 +1,0 @@
-{
-  "syntheticNodes": 3,
-  "newEdges": 308,
-  "fromProblemDag": 53,
-  "fromClosure": 255,
-  "conceptsWithRequires": 315,
-  "totalConcepts": 387,
-  "coveragePct": 81
-}

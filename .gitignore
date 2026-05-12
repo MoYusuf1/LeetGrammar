@@ -10,7 +10,17 @@ dist
 # Large binaries and intermediate extraction artifacts
 docs/**/*.pdf
 docs/**/*.png
+docs/**/*.txt
 docs/**/extracted_text.json
 docs/**/content_buffer.txt
 docs/**/kg_chapters/
+docs/**/lessons/
+docs/**/ocr_temp/
+docs/**/supabase-seed/
 docs/**/plan.md
+docs/**/plan_digitize.md
+docs/**/plan_sql_seed.md
+docs/**/AUDIT_REPORT.md
+docs/**/somali_knowledge_graph.json
+scripts/output/
+public/graph.db

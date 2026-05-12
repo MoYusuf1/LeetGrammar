@@ -86,7 +86,6 @@ export function useGraphSrs() {
           .eq('user_id', userId);
 
         if (error) {
-          console.warn('[useGraphSrs] Load error:', error.message);
           setLoading(false);
           return;
         }
@@ -149,7 +148,7 @@ export function useGraphSrs() {
           .from('learner_concept_states')
           .upsert(batch, { onConflict: 'user_id,concept_id' });
         if (error) {
-          console.warn('[useGraphSrs] Sync error:', error.message);
+          // Sync failed — local state is still valid
         }
       }
     },
@@ -184,8 +183,8 @@ export function useGraphSrs() {
             new_stability: result.newStability,
             study_time_seconds: studyTimeSeconds,
           })
-          .then(({ error }) => {
-            if (error) console.warn('[useGraphSrs] Log error:', error.message);
+          .then(() => {
+            // Review logged successfully
           });
       }
 

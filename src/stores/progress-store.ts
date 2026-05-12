@@ -11,6 +11,7 @@ const STORAGE_KEY = 'leet-somali-progress-v7';
 
 export interface UserProgress {
   completedLessons: number[];
+  completedGraphLessons: string[];
   streak: number;
   lastStudyDate: string;
   xp: number;
@@ -25,6 +26,7 @@ export interface UserProgress {
 
 const defaultProgress: UserProgress = {
   completedLessons: [],
+  completedGraphLessons: [],
   streak: 0,
   lastStudyDate: '',
   xp: 0,
@@ -71,6 +73,10 @@ interface ProgressState extends UserProgress {
   getTopicProgress: (lessonIds: number[]) => { completed: number; total: number };
   arePrerequisitesMet: (prereqLessonIds: number[]) => boolean;
   completionPercentage: number;
+
+  // Graph lessons
+  completeGraphLesson: (lessonId: string) => void;
+  isGraphLessonCompleted: (lessonId: string) => boolean;
 
   // Workbook
   completeWorkbookLevel: (levelId: number, score: number) => void;
@@ -164,6 +170,27 @@ export const useProgressStore = create<ProgressState>()(
         return Math.round((get().completedLessons.length / 50) * 100);
       },
 
+      // Graph lesson progress
+      completeGraphLesson: (lessonId: string) => {
+        set((state) => {
+          if (state.completedGraphLessons.includes(lessonId)) {
+            return addActivity({ ...state, lastStudyDate: getToday() });
+          }
+          const newStreak = computeStreak(state.lastStudyDate, state.streak);
+          return addActivity({
+            ...state,
+            completedGraphLessons: [...state.completedGraphLessons, lessonId],
+            streak: newStreak,
+            lastStudyDate: getToday(),
+            xp: state.xp + 15,
+          });
+        });
+      },
+
+      isGraphLessonCompleted: (lessonId: string) => {
+        return get().completedGraphLessons.includes(lessonId);
+      },
+
       // Workbook progress
       completeWorkbookLevel: (levelId: number, score: number) => {
         set((state) => {
@@ -235,6 +262,7 @@ export const useProgressStore = create<ProgressState>()(
       name: STORAGE_KEY,
       partialize: (state) => ({
         completedLessons: state.completedLessons,
+        completedGraphLessons: state.completedGraphLessons,
         streak: state.streak,
         lastStudyDate: state.lastStudyDate,
         xp: state.xp,

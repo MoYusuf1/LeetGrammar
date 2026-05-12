@@ -140,9 +140,8 @@ export function useGraphInit() {
                 // Cache failure is non-fatal
               }
             }
-          } catch (err) {
-            // eslint-disable-next-line no-console
-            console.warn('[useGraphInit] Supabase RPC failed:', err);
+          } catch {
+            // Supabase RPC failed — fall through to SQLite / seeds
           }
         }
 
