@@ -160,7 +160,7 @@ export default function Lesson() {
         <div className="flex items-center justify-between pt-4 border-t border-[#ffffff08]">
           {lesson.previous_lesson ? (
             <button
-              onClick={() => navigate(`/lesson/${encodeURIComponent(lesson.previous_lesson)}`)}
+              onClick={() => navigate(`/lesson/${encodeURIComponent(lesson.previous_lesson!)}`)}
               className="flex items-center gap-2 text-sm text-[#8c8c8c] hover:text-[#eff1f6] transition-colors"
             >
               <ArrowLeft size={14} />
@@ -171,7 +171,7 @@ export default function Lesson() {
           )}
           {lesson.next_lesson ? (
             <button
-              onClick={() => navigate(`/lesson/${encodeURIComponent(lesson.next_lesson)}`)}
+              onClick={() => navigate(`/lesson/${encodeURIComponent(lesson.next_lesson!)}`)}
               className="flex items-center gap-2 text-sm text-[#8c8c8c] hover:text-[#eff1f6] transition-colors"
             >
               Next

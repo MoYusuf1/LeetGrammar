@@ -18,6 +18,8 @@ import type {
   LearnerConceptState,
   MasteryStats,
   UnitProgress,
+  ContentEdgeType,
+  ConceptEdgeType,
 } from "./lesson-types";
 
 function supabase() {
@@ -152,7 +154,7 @@ export async function getConceptDetail(conceptId: string): Promise<ConceptDetail
   return {
     concept: concept as GraphNode,
     lessons: (lessons ?? []) as GraphLesson[],
-    chunks,
+    chunks: chunks as (GraphChunk & { edge_type: ContentEdgeType; edge_weight: number })[],
     exercises: (exercises ?? []).map((e: any) => e.exercise) as (GraphExercise & {
       items: ExerciseItem[];
     })[],
@@ -166,8 +168,8 @@ export async function getConceptDetail(conceptId: string): Promise<ConceptDetail
     })) as (GraphNode & { edge_weight: number })[],
     related: (related ?? []).map((r: any) => ({
       ...r.to,
-      edge_type: r.type,
-    })) as (GraphNode & { edge_type: string })[],
+      edge_type: r.type as ConceptEdgeType,
+    })) as (GraphNode & { edge_type: ConceptEdgeType })[],
   };
 }
 

@@ -324,7 +324,7 @@ function ExercisePromptChunk({ payload, title }: { payload: string; title: strin
   );
 }
 
-function MemoChunk({ payload, title }: { payload: string; title: string | null }) {
+function MemoChunk({ payload }: { payload: string; title: string | null }) {
   return (
     <div className="rounded-lg bg-[#1a1a1a] border border-[#ffffff06] p-3">
       <MarkdownContent text={payload} className="text-xs text-[#5c5c5c]" />

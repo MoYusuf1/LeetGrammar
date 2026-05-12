@@ -33,6 +33,7 @@ export function useAuthInit() {
           const merged = mergeProgress(
             {
               completedLessons: progress.completedLessons,
+              completedGraphLessons: progress.completedGraphLessons,
               practiceScores: progress.practiceScores,
               srsCards: progress.srsCards,
               xp: progress.xp,
@@ -47,6 +48,7 @@ export function useAuthInit() {
 
           useProgressStore.setState({
             completedLessons: merged.completedLessons,
+            completedGraphLessons: merged.completedGraphLessons,
             practiceScores: merged.practiceScores,
             srsCards: merged.srsCards,
             xp: merged.xp,
@@ -61,6 +63,7 @@ export function useAuthInit() {
         // Push local progress to cloud (in case local is newer)
         const success = await pushProgress(user.id, {
           completedLessons: progress.completedLessons,
+          completedGraphLessons: progress.completedGraphLessons,
           practiceScores: progress.practiceScores,
           srsCards: progress.srsCards,
           xp: progress.xp,
@@ -93,6 +96,7 @@ export function useAuthInit() {
       setSyncStatus('syncing');
       const success = await pushProgress(user.id, {
         completedLessons: progress.completedLessons,
+        completedGraphLessons: progress.completedGraphLessons,
         practiceScores: progress.practiceScores,
         srsCards: progress.srsCards,
         xp: progress.xp,

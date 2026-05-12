@@ -11,6 +11,7 @@ import type { SrsCard } from './srs';
 
 export interface RemoteProgress {
   completed_lessons: number[];
+  completed_graph_lessons: string[];
   practice_scores: Record<number, number>;
   srs_cards: Record<string, SrsCard>;
   xp: number;
@@ -25,6 +26,7 @@ export interface RemoteProgress {
 function normalizeRemote(data: Record<string, unknown>): RemoteProgress {
   return {
     completed_lessons: Array.isArray(data.completed_lessons) ? data.completed_lessons as number[] : [],
+    completed_graph_lessons: Array.isArray(data.completed_graph_lessons) ? data.completed_graph_lessons as string[] : [],
     practice_scores: typeof data.practice_scores === 'object' && data.practice_scores !== null
       ? (data.practice_scores as Record<number, number>) : {},
     srs_cards: typeof data.srs_cards === 'object' && data.srs_cards !== null
@@ -96,8 +98,12 @@ export function mergeProgress(local: UserProgress, remote: RemoteProgress): User
     workbookScores[id] = Math.max(workbookScores[id] ?? 0, value);
   }
 
+  // Graph lessons
+  const graphLessonsSet = new Set([...local.completedGraphLessons, ...(remote.completed_graph_lessons ?? [])]);
+
   return {
     completedLessons: Array.from(completedSet),
+    completedGraphLessons: Array.from(graphLessonsSet),
     practiceScores: scores,
     srsCards: srs,
     xp,
