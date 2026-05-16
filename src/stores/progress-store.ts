@@ -23,6 +23,9 @@ export interface UserProgress {
   // Workbook progress
   completedWorkbookLevels: number[];
   workbookLevelScores: Record<number, number>;
+
+  // Lesson card positions (resume where you left off)
+  lessonCardPositions: Record<number, number>;
 }
 
 const defaultProgress: UserProgress = {
@@ -37,6 +40,7 @@ const defaultProgress: UserProgress = {
   dailyGoal: 30,
   completedWorkbookLevels: [],
   workbookLevelScores: {},
+  lessonCardPositions: {},
 };
 
 function getToday(): string {
@@ -91,6 +95,11 @@ interface ProgressState extends UserProgress {
   reviewConcept: (conceptId: string, quality: number) => void;
   getSrsCard: (conceptId: string) => SrsCard | undefined;
   initSrsCard: (conceptId: string) => void;
+
+  // Lesson card positions (resume where you left off)
+  setLessonCardPosition: (lessonId: number, cardIndex: number) => void;
+  getLessonCardPosition: (lessonId: number) => number;
+  clearLessonCardPosition: (lessonId: number) => void;
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -259,6 +268,26 @@ export const useProgressStore = create<ProgressState>()(
           };
         });
       },
+
+      // Lesson card positions — resume where you left off
+      setLessonCardPosition: (lessonId: number, cardIndex: number) => {
+        set((state) => ({
+          ...state,
+          lessonCardPositions: { ...state.lessonCardPositions, [lessonId]: cardIndex },
+        }));
+      },
+
+      getLessonCardPosition: (lessonId: number) => {
+        return get().lessonCardPositions[lessonId] ?? 0;
+      },
+
+      clearLessonCardPosition: (lessonId: number) => {
+        set((state) => {
+          const updated = { ...state.lessonCardPositions };
+          delete updated[lessonId];
+          return { ...state, lessonCardPositions: updated };
+        });
+      },
     }),
     {
       name: STORAGE_KEY,
@@ -274,6 +303,7 @@ export const useProgressStore = create<ProgressState>()(
         completedWorkbookLevels: state.completedWorkbookLevels,
         workbookLevelScores: state.workbookLevelScores,
         dailyGoal: state.dailyGoal,
+        lessonCardPositions: state.lessonCardPositions,
       }),
     }
   )

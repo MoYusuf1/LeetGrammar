@@ -1,0 +1,25 @@
+{
+  "name": "LeetGrammar - Learn Somali Grammar",
+  "short_name": "LeetGrammar",
+  "description": "Master Somali grammar through interactive card-based lessons",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/leetgram-icon-small.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/leetgram-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
