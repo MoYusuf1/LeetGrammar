@@ -1,0 +1,1 @@
+async function n(e){return null}async function a(e,t){return!1}async function r(e,t){return null}async function u(){return[]}async function c(e,t){return!1}async function f(e,t){return[]}async function l(e,t,s){return!1}export{u as a,c as b,n as c,r as d,f,l as s,a as u};

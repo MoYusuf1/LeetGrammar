@@ -1,0 +1,252 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* LeetCode Dark Theme */
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #282828;
+    --bg-hover: #ffffff0d;
+    --bg-card: #282828;
+    --bg-input: #3e3e3e;
+    --bg-tooltip: #3e3e3e;
+    
+    --text-primary: #eff1f6;
+    --text-secondary: #8c8c8c;
+    --text-tertiary: #5c5c5c;
+    --text-link: #ffa116;
+    
+    --accent: #ffa116;
+    --accent-light: #ffa11620;
+    --accent-dark: #e69115;
+    
+    --success: #00b8a3;
+    --success-light: #00b8a320;
+    --error: #ff375f;
+    --error-light: #ff375f20;
+    --warning: #ffc01e;
+    --warning-light: #ffc01e20;
+    
+    --easy: #00b8a3;
+    --medium: #ffc01e;
+    --hard: #ff375f;
+    
+    --ios-border: #3e3e3e;
+    --border-light: #ffffff1a;
+    --border-focus: #ffa116;
+    
+    --path-gold: #ffc01e;
+    --path-current: #ffa116;
+    --path-locked: #5c5c5c;
+
+    /* shadcn compatibility */
+    --background: 0 0% 10%;
+    --foreground: 220 13% 95%;
+    --card: 0 0% 16%;
+    --card-foreground: 220 13% 95%;
+    --popover: 0 0% 16%;
+    --popover-foreground: 220 13% 95%;
+    --primary: 35 100% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 220 13% 95%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 55%;
+    --destructive: 348 100% 62%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 24%;
+    --input: 0 0% 24%;
+    --ring: 35 100% 55%;
+    --radius: 0.5rem;
+  }
+
+  html {
+    min-height: -webkit-fill-available;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    line-height: 1.5;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Selection color */
+  ::selection {
+    background-color: rgba(255, 161, 22, 0.3);
+    color: #eff1f6;
+  }
+
+  * {
+    @apply border-[#3e3e3e];
+  }
+
+  button, a, input, select, textarea {
+    min-height: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Prevent pull-to-refresh in lesson pages */
+  .lesson-container {
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Confetti */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: confetti-fall 3s ease-in forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Path step entrance */
+.path-step-enter {
+  animation: slide-up 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Current step pulse */
+.current-ring {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 161, 22, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(255, 161, 22, 0);
+  }
+}
+
+/* Page transition */
+.page-transition {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Option shake for wrong answer */
+.option-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+/* Word chip animation */
+.word-chip {
+  transition: all 0.2s ease;
+}
+.word-chip:active {
+  transform: scale(0.95);
+}
+
+/* Tap feedback */
+.tap-scale {
+  transition: transform 0.1s ease-out;
+}
+.tap-scale:active {
+  transform: scale(0.95);
+}
+
+/* CTA button shadow */
+.cta-button {
+  box-shadow: 0 4px 12px rgba(255, 161, 22, 0.3);
+  transition: all 0.15s ease-out;
+}
+.cta-button:active {
+  transform: scale(0.97);
+  background-color: var(--accent-dark);
+}
+
+/* Completion ring animation */
+@keyframes ring-fill {
+  from { stroke-dashoffset: 283; }
+  to { stroke-dashoffset: var(--ring-offset, 0); }
+}
+
+.ring-animate {
+  animation: ring-fill 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* LeetCode-style table row hover */
+.lc-row:hover {
+  background-color: var(--bg-hover);
+}
+
+/* NeetCode node glow */
+.node-glow {
+  box-shadow: 0 0 20px rgba(255, 161, 22, 0.15);
+}
