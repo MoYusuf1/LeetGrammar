@@ -113,6 +113,7 @@ export function mergeProgress(local: UserProgress, remote: RemoteProgress): User
     completedWorkbookLevels: Array.from(workbookLevelsSet),
     workbookLevelScores: workbookScores,
     dailyGoal: local.dailyGoal,
+    lessonCardPositions: local.lessonCardPositions,
   };
 }
 

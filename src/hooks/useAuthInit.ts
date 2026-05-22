@@ -43,6 +43,7 @@ export function useAuthInit() {
               completedWorkbookLevels: progress.completedWorkbookLevels,
               workbookLevelScores: progress.workbookLevelScores,
               dailyGoal: progress.dailyGoal,
+              lessonCardPositions: progress.lessonCardPositions,
             },
             remote
           );
@@ -74,6 +75,7 @@ export function useAuthInit() {
           completedWorkbookLevels: progress.completedWorkbookLevels,
           workbookLevelScores: progress.workbookLevelScores,
           dailyGoal: progress.dailyGoal,
+          lessonCardPositions: progress.lessonCardPositions,
         });
 
         setSyncStatus(success ? 'synced' : 'error');
@@ -108,6 +110,7 @@ export function useAuthInit() {
         completedWorkbookLevels: progress.completedWorkbookLevels,
         workbookLevelScores: progress.workbookLevelScores,
         dailyGoal: progress.dailyGoal,
+        lessonCardPositions: progress.lessonCardPositions,
       });
       setSyncStatus(success ? 'synced' : 'error');
       setLastSyncedAt(new Date().toISOString());

@@ -21,6 +21,7 @@ export interface PracticeExercise {
 
 export interface TeachingCard {
   type: 'intro' | 'teach' | 'practice' | 'summary';
+  title?: string;
   conceptBadge?: string;
   somaliText?: string;
   englishText?: string;
@@ -115,7 +116,7 @@ const lessons: Record<number, LessonContent> = {
         somaliText: 'q',
         englishText: 'voiceless uvular stop /q/',
         explanation:
-          "The letter q is a voiceless uvular stop — like a "k" but produced further back in the throat, at the uvula. It's the same sound as in Arabic ق (qaf).",
+          'The letter q is a voiceless uvular stop — like a "k" but produced further back in the throat, at the uvula. It\'s the same sound as in Arabic ق (qaf).',
         pronunciation: 'like "k" but further back in the throat, at the uvula',
         examples: [
           { somali: 'qof', english: 'person' },

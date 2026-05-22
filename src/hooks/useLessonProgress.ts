@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/auth-store';
 
 const STORAGE_KEY = 'lesson-card-positions';
@@ -40,7 +40,7 @@ export function useLessonProgress() {
     if (!user) return;
 
     const fetchProgress = async () => {
-      const { data } = await supabase
+      const { data } = await getSupabase()
         .from('lesson_progress')
         .select('lesson_id, current_card')
         .eq('user_id', user.id);
@@ -79,7 +79,7 @@ export function useLessonProgress() {
       /* Sync to Supabase */
       if (user) {
         setSyncing(true);
-        await supabase.from('lesson_progress').upsert(
+        await getSupabase().from('lesson_progress').upsert(
           {
             user_id: user.id,
             lesson_id: lessonId,
@@ -103,7 +103,7 @@ export function useLessonProgress() {
       saveLocal(updated);
 
       if (user) {
-        await supabase
+        await getSupabase()
           .from('lesson_progress')
           .delete()
           .eq('user_id', user.id)

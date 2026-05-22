@@ -13,7 +13,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, Volume2 } from 'lucide-react';
+import { X, Volume2, Check } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent, type TeachingCard, type PracticeExercise } from '@/data/teaching-content';
 import CardProgressDots from './CardProgressDots';
@@ -35,7 +35,7 @@ const cardVariants = {
   center: {
     x: 0,
     opacity: 1,
-  }),
+  },
   exit: (direction: number) => ({
     x: direction < 0 ? 300 : -300,
     opacity: 0,
@@ -47,7 +47,7 @@ const contentStagger = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.08, duration: 0.35, ease: 'easeOut' },
+    transition: { delay: i * 0.08, duration: 0.35, ease: 'easeOut' as const },
   }),
 };
 

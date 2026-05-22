@@ -4,7 +4,6 @@
  */
 
 import { Check } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 interface CardProgressDotsProps {
   total: number;
@@ -19,7 +18,6 @@ export default function CardProgressDots({ total, current, completed, onDotClick
       {Array.from({ length: total }, (_, i) => {
         const isCompleted = completed.has(i);
         const isCurrent = i === current;
-        const isUpcoming = i > current && !isCompleted;
 
         return (
           <button
