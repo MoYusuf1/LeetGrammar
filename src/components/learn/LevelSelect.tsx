@@ -22,7 +22,7 @@ const LISTENING_UNLOCKS: Record<number, string> = {
   7: 'You can produce any Somali sentence from scratch',
 };
 
-export default function LevelMap({ onSelectLevel }: LevelMapProps) {
+export default function LevelSelect({ onSelectLevel }: LevelMapProps) {
   const { completedLevelIds, getLevelStatus } = useLevelStore();
 
   return (
