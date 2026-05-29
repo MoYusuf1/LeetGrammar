@@ -1,8 +1,8 @@
 /**
- * Problems.tsx — Minimalist problem list.
+ * Problems.tsx — Ultra-minimalist problem list.
  *
- * One accent color. No unnecessary details.
- * Clean, focused, uncluttered.
+ * Just: # · Name · Difficulty (right)
+ * Nothing else.
  */
 
 import { useState, useMemo } from 'react';
@@ -64,7 +64,7 @@ export default function Problems() {
           />
         </div>
 
-        {/* Filters — minimal pills */}
+        {/* Filters */}
         <div className="flex flex-wrap items-center gap-1.5">
           {['Beginner', 'Intermediate', 'Advanced'].map((d) => (
             <button
@@ -105,54 +105,9 @@ export default function Problems() {
         </div>
       </div>
 
-      {/* Problems — card layout on mobile, table on desktop */}
+      {/* Problems list */}
       <div className="px-4 pb-20 sm:pb-8">
-        {/* Desktop table */}
-        <div className="hidden sm:block">
-          <div className="border border-[#ffffff08] rounded-xl overflow-hidden">
-            <div className="grid grid-cols-[48px_56px_1fr_100px_100px] gap-2 px-4 py-3 bg-[#1a1a1a] border-b border-[#ffffff08] text-[10px] font-semibold text-[#5c5c5c] uppercase tracking-wider">
-              <div className="text-center">✓</div>
-              <div>#</div>
-              <div>Title</div>
-              <div className="text-right">Accept</div>
-              <div className="text-right">Level</div>
-            </div>
-
-            <div>
-              {filteredProblems.map((problem) => {
-                const status = getLessonStatus(problem.id);
-                const isCompleted = status === 'completed';
-
-                return (
-                  <button
-                    key={problem.id}
-                    onClick={() => navigate(`/problem/${problem.id}`)}
-                    className="w-full grid grid-cols-[48px_56px_1fr_100px_100px] gap-2 px-4 py-3 border-b border-[#ffffff06] last:border-b-0 hover:bg-[#ffffff06] items-center transition-colors text-left"
-                  >
-                    <div className="flex items-center justify-center">
-                      {isCompleted ? (
-                        <Check size={14} className="text-[#22c55e]" strokeWidth={2.5} />
-                      ) : (
-                        <Circle size={14} className="text-[#3c3c3c]" />
-                      )}
-                    </div>
-                    <span className="text-xs text-[#5c5c5c] font-mono">{problem.id}</span>
-                    <span className="text-xs text-[#eff1f6]">{problem.title}</span>
-                    <span className="text-xs text-[#5c5c5c] text-right">
-                      {problem.acceptance > 0 ? `${problem.acceptance}%` : '—'}
-                    </span>
-                    <span className="text-xs text-[#5c5c5c] text-right">
-                      {displayDifficulty(problem.difficulty)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile cards */}
-        <div className="sm:hidden space-y-2">
+        <div className="space-y-1">
           {filteredProblems.map((problem) => {
             const status = getLessonStatus(problem.id);
             const isCompleted = status === 'completed';
@@ -161,36 +116,29 @@ export default function Problems() {
               <button
                 key={problem.id}
                 onClick={() => navigate(`/problem/${problem.id}`)}
-                className="w-full p-3 rounded-lg bg-[#1a1a1a] border border-[#ffffff08] text-left transition-colors hover:bg-[#252525] active:scale-[0.98]"
+                className="w-full px-3 py-2.5 rounded-lg bg-[#1a1a1a] border border-[#ffffff08] hover:bg-[#252525] active:scale-[0.98] transition-all text-left flex items-center justify-between"
               >
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-0.5">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <div className="flex-shrink-0">
                     {isCompleted ? (
-                      <Check size={16} className="text-[#22c55e]" strokeWidth={2.5} />
+                      <Check size={14} className="text-[#22c55e]" strokeWidth={2.5} />
                     ) : (
-                      <Circle size={16} className="text-[#3c3c3c]" />
+                      <Circle size={14} className="text-[#3c3c3c]" />
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[9px] font-mono text-[#5c5c5c]">#{problem.id}</span>
-                      <span className="text-[9px] font-semibold text-[#5c5c5c] uppercase">
-                        {displayDifficulty(problem.difficulty)}
-                      </span>
-                    </div>
-                    <p className="text-xs font-semibold text-[#eff1f6]">{problem.title}</p>
-                    {problem.acceptance > 0 && (
-                      <p className="text-[9px] text-[#5c5c5c] mt-0.5">{problem.acceptance}%</p>
-                    )}
-                  </div>
+                  <span className="text-xs font-mono text-[#5c5c5c]">#{problem.id}</span>
+                  <span className="text-xs font-semibold text-[#eff1f6] truncate">{problem.title}</span>
                 </div>
+                <span className="text-[10px] text-[#5c5c5c] ml-2 flex-shrink-0">
+                  {displayDifficulty(problem.difficulty)}
+                </span>
               </button>
             );
           })}
         </div>
 
         {filteredProblems.length === 0 && (
-          <div className="text-center py-12">
+          <div className="text-center py-8">
             <p className="text-xs text-[#5c5c5c]">No problems found</p>
           </div>
         )}
