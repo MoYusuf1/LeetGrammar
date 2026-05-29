@@ -1,8 +1,8 @@
 /**
- * Problems.tsx — Mobile-first card-based layout.
+ * Problems.tsx — Minimalist problem list.
  *
- * No table on mobile. Each problem is a full-width card.
- * Clean, readable, touch-friendly.
+ * One accent color. No unnecessary details.
+ * Clean, focused, uncluttered.
  */
 
 import { useState, useMemo } from 'react';
@@ -21,32 +21,19 @@ export default function Problems() {
 
   const filteredProblems = useMemo(() => {
     return allProblems.filter((p) => {
-      const matchesSearch =
-        search === '' ||
-        p.title.toLowerCase().includes(search.toLowerCase());
-
+      const matchesSearch = search === '' || p.title.toLowerCase().includes(search.toLowerCase());
       const matchesDifficulty = difficultyFilter === 'all' || p.difficulty === difficultyFilter;
-
       const status = getLessonStatus(p.id);
       const matchesStatus =
         statusFilter === 'all' ||
         (statusFilter === 'solved' && status === 'completed') ||
         (statusFilter === 'unsolved' && status !== 'completed');
-
       return matchesSearch && matchesDifficulty && matchesStatus;
     });
   }, [search, difficultyFilter, statusFilter]);
 
   const solvedCount = allProblems.filter((p) => getLessonStatus(p.id) === 'completed').length;
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Beginner': return '#00b8a3';
-      case 'Intermediate': return '#ffc01e';
-      case 'Advanced': return '#ff375f';
-      default: return '#8c8c8c';
-    }
-  };
+  const hasFilters = search || difficultyFilter !== 'all' || statusFilter !== 'all';
 
   const clearFilters = () => {
     setSearch('');
@@ -54,14 +41,12 @@ export default function Problems() {
     setStatusFilter('all');
   };
 
-  const hasFilters = search || difficultyFilter !== 'all' || statusFilter !== 'all';
-
   return (
     <div className="min-h-screen bg-[#0f0f0f]">
       {/* Header */}
       <div className="px-4 pt-4 pb-3">
         <div className="flex items-center justify-between mb-3">
-          <h1 className="text-lg font-bold text-[#eff1f6]">Problem List</h1>
+          <h1 className="text-lg font-bold text-[#eff1f6]">Problems</h1>
           <span className="text-xs text-[#8c8c8c]">
             <span className="text-[#eff1f6] font-bold">{solvedCount}</span> / {allProblems.length}
           </span>
@@ -69,7 +54,7 @@ export default function Problems() {
 
         {/* Search */}
         <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5c5c5c]" size={13} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#3c3c3c]" size={13} />
           <input
             type="text"
             placeholder="Search..."
@@ -79,50 +64,42 @@ export default function Problems() {
           />
         </div>
 
-        {/* Filters */}
+        {/* Filters — minimal pills */}
         <div className="flex flex-wrap items-center gap-1.5">
-          {[
-            { key: 'Beginner', label: 'Easy' },
-            { key: 'Intermediate', label: 'Medium' },
-            { key: 'Advanced', label: 'Hard' },
-          ].map((d) => (
+          {['Beginner', 'Intermediate', 'Advanced'].map((d) => (
             <button
-              key={d.key}
-              onClick={() => setDifficultyFilter((prev) => prev === d.key ? 'all' : d.key)}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors ${
-                difficultyFilter === d.key
-                  ? 'bg-[#ffffff15] text-[#eff1f6]'
+              key={d}
+              onClick={() => setDifficultyFilter((prev) => prev === d ? 'all' : d)}
+              className={`px-2 py-1 rounded-lg text-[9px] font-semibold uppercase tracking-wider transition-colors ${
+                difficultyFilter === d
+                  ? 'bg-[#ffa116] text-[#0f0f0f]'
                   : 'bg-[#1a1a1a] text-[#5c5c5c] border border-[#ffffff08]'
               }`}
             >
-              {d.label}
+              {d === 'Beginner' ? 'Easy' : d === 'Intermediate' ? 'Med' : 'Hard'}
             </button>
           ))}
 
-          {[
-            { key: 'solved', label: 'Solved' },
-            { key: 'unsolved', label: 'Unsolved' },
-          ].map((s) => (
+          {['solved', 'unsolved'].map((s) => (
             <button
-              key={s.key}
-              onClick={() => setStatusFilter((prev) => prev === s.key ? 'all' : s.key)}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors ${
-                statusFilter === s.key
-                  ? 'bg-[#ffffff15] text-[#eff1f6]'
+              key={s}
+              onClick={() => setStatusFilter((prev) => prev === s ? 'all' : s)}
+              className={`px-2 py-1 rounded-lg text-[9px] font-semibold uppercase tracking-wider transition-colors ${
+                statusFilter === s
+                  ? 'bg-[#ffa116] text-[#0f0f0f]'
                   : 'bg-[#1a1a1a] text-[#5c5c5c] border border-[#ffffff08]'
               }`}
             >
-              {s.label}
+              {s === 'solved' ? 'Done' : 'Open'}
             </button>
           ))}
 
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] text-[#3c3c3c] hover:text-[#ef4444] transition-colors"
+              className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg text-[9px] text-[#3c3c3c] hover:text-[#ef4444] transition-colors"
             >
-              <RotateCcw size={10} />
-              Reset
+              <RotateCcw size={9} />
             </button>
           )}
         </div>
@@ -132,104 +109,78 @@ export default function Problems() {
       <div className="px-4 pb-20 sm:pb-8">
         {/* Desktop table */}
         <div className="hidden sm:block">
-          <div className="border border-[#ffffff10] rounded-xl overflow-hidden">
-            {/* Header */}
-            <div className="grid grid-cols-[48px_56px_1fr_100px_100px] gap-2 px-5 py-3 bg-[#1a1a1a] border-b border-[#ffffff10] text-[11px] font-semibold text-[#8c8c8c] uppercase tracking-wider">
-              <div className="text-center">Status</div>
+          <div className="border border-[#ffffff08] rounded-xl overflow-hidden">
+            <div className="grid grid-cols-[48px_56px_1fr_100px_100px] gap-2 px-4 py-3 bg-[#1a1a1a] border-b border-[#ffffff08] text-[10px] font-semibold text-[#5c5c5c] uppercase tracking-wider">
+              <div className="text-center">✓</div>
               <div>#</div>
               <div>Title</div>
-              <div className="text-right">Acceptance</div>
-              <div className="text-right">Difficulty</div>
+              <div className="text-right">Accept</div>
+              <div className="text-right">Level</div>
             </div>
 
-            {/* Rows */}
             <div>
               {filteredProblems.map((problem) => {
                 const status = getLessonStatus(problem.id);
                 const isCompleted = status === 'completed';
-                const diffColor = getDifficultyColor(problem.difficulty);
 
                 return (
-                  <div
+                  <button
                     key={problem.id}
-                    className="grid grid-cols-[48px_56px_1fr_100px_100px] gap-2 px-5 py-3 border-b border-[#ffffff06] last:border-b-0 hover:bg-[#ffffff06] items-center transition-colors"
+                    onClick={() => navigate(`/problem/${problem.id}`)}
+                    className="w-full grid grid-cols-[48px_56px_1fr_100px_100px] gap-2 px-4 py-3 border-b border-[#ffffff06] last:border-b-0 hover:bg-[#ffffff06] items-center transition-colors text-left"
                   >
                     <div className="flex items-center justify-center">
                       {isCompleted ? (
-                        <div className="w-[18px] h-[18px] rounded-full bg-[#00b8a3] flex items-center justify-center">
-                          <Check size={11} className="text-[#0f0f0f]" strokeWidth={3} />
-                        </div>
+                        <Check size={14} className="text-[#22c55e]" strokeWidth={2.5} />
                       ) : (
-                        <Circle size={15} className="text-[#3e3e3e]" />
+                        <Circle size={14} className="text-[#3c3c3c]" />
                       )}
                     </div>
-                    <span className="text-sm text-[#5c5c5c] font-mono">{problem.id}</span>
-                    <button
-                      onClick={() => navigate(`/problem/${problem.id}`)}
-                      className="text-sm text-[#eff1f6] hover:text-[#ffa116] transition-colors text-left"
-                    >
-                      {problem.title}
-                    </button>
-                    <span className="text-sm text-[#8c8c8c] text-right">
+                    <span className="text-xs text-[#5c5c5c] font-mono">{problem.id}</span>
+                    <span className="text-xs text-[#eff1f6]">{problem.title}</span>
+                    <span className="text-xs text-[#5c5c5c] text-right">
                       {problem.acceptance > 0 ? `${problem.acceptance}%` : '—'}
                     </span>
-                    <span className="text-sm font-medium text-right" style={{ color: diffColor }}>
+                    <span className="text-xs text-[#5c5c5c] text-right">
                       {displayDifficulty(problem.difficulty)}
                     </span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
           </div>
         </div>
 
-        {/* Mobile card layout */}
+        {/* Mobile cards */}
         <div className="sm:hidden space-y-2">
           {filteredProblems.map((problem) => {
             const status = getLessonStatus(problem.id);
             const isCompleted = status === 'completed';
-            const diffColor = getDifficultyColor(problem.difficulty);
 
             return (
               <button
                 key={problem.id}
                 onClick={() => navigate(`/problem/${problem.id}`)}
-                className="w-full p-3 rounded-xl bg-[#1a1a1a] border border-[#ffffff08] text-left transition-colors hover:bg-[#252525] active:scale-[0.98]"
+                className="w-full p-3 rounded-lg bg-[#1a1a1a] border border-[#ffffff08] text-left transition-colors hover:bg-[#252525] active:scale-[0.98]"
               >
                 <div className="flex items-start gap-3">
-                  {/* Status circle */}
-                  <div className="flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="flex-shrink-0 mt-0.5">
                     {isCompleted ? (
-                      <div className="w-5 h-5 rounded-full bg-[#00b8a3] flex items-center justify-center">
-                        <Check size={12} className="text-[#0f0f0f]" strokeWidth={3} />
-                      </div>
+                      <Check size={16} className="text-[#22c55e]" strokeWidth={2.5} />
                     ) : (
-                      <Circle size={18} className="text-[#3e3e3e]" />
+                      <Circle size={16} className="text-[#3c3c3c]" />
                     )}
                   </div>
-
-                  {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-mono text-[#5c5c5c]">#{problem.id}</span>
-                      <span
-                        className="text-[10px] font-bold uppercase tracking-wider"
-                        style={{ color: diffColor }}
-                      >
+                      <span className="text-[9px] font-mono text-[#5c5c5c]">#{problem.id}</span>
+                      <span className="text-[9px] font-semibold text-[#5c5c5c] uppercase">
                         {displayDifficulty(problem.difficulty)}
                       </span>
                     </div>
-                    <p className="text-sm font-semibold text-[#eff1f6] leading-snug">{problem.title}</p>
-                    {problem.isPremium && (
-                      <div className="flex items-center gap-1 text-[10px] text-[#ffc01e] mt-1">
-                        <Lock size={10} />
-                        <span>Premium</span>
-                      </div>
-                    )}
+                    <p className="text-xs font-semibold text-[#eff1f6]">{problem.title}</p>
                     {problem.acceptance > 0 && (
-                      <p className="text-[10px] text-[#5c5c5c] mt-1">
-                        {problem.acceptance}% acceptance
-                      </p>
+                      <p className="text-[9px] text-[#5c5c5c] mt-0.5">{problem.acceptance}%</p>
                     )}
                   </div>
                 </div>
@@ -240,7 +191,7 @@ export default function Problems() {
 
         {filteredProblems.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-sm text-[#5c5c5c]">No problems found</p>
+            <p className="text-xs text-[#5c5c5c]">No problems found</p>
           </div>
         )}
       </div>
