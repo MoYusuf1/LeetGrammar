@@ -17,7 +17,7 @@ import { X, Volume2, Check } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent, type TeachingCard, type PracticeExercise } from '@/data/teaching-content';
 import CardProgressDots from './CardProgressDots';
-import { useSwipeable } from 'react-swipeable';
+
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -136,14 +136,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
 
   /* ─── Swipe handlers ───────────────────────────────────────────────────── */
 
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => goNext(),
-    onSwipedRight: () => goBack(),
-    trackMouse: true,
-    swipeDuration: 500,
-    delta: 60,
-  });
-
   /* ─── Practice handlers ────────────────────────────────────────────────── */
 
   const handlePracticeSelect = (answer: string) => {
@@ -173,7 +165,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   /* ─── Render ───────────────────────────────────────────────────────────── */
 
   return (
-    <div className="h-full flex flex-col bg-[#0f0f0f]" {...swipeHandlers}>
+    <div className="h-full flex flex-col bg-[#0f0f0f]">
       {/* Top Bar */}
       <div className="flex-shrink-0 px-4 pt-3 pb-2">
         <div className="max-w-[600px] mx-auto flex items-center gap-3">
