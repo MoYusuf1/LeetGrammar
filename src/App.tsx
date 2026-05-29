@@ -64,7 +64,7 @@ export default function App() {
     <ErrorBoundary>
       <div className="h-screen flex flex-col bg-[#0f0f0f] overflow-hidden">
         <TopNav />
-        <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <div className="flex-1 overflow-y-auto scrollbar-hide pb-16 sm:pb-0">
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Landing />} />
