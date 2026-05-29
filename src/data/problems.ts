@@ -299,6 +299,73 @@ export const allProblems: ProblemMeta[] = [
     description: 'Write a short story (6–8 sentences) in Somali about your day. Must use: 2 tenses, 1 focus marker, 1 preposition+directional, 1 connector, 1 relative clause.',
     acceptance: 18, isPremium: false,
   },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // NEW: Learn Workbook Problems
+  // ═══════════════════════════════════════════════════════════════════
+  {
+    id: 31, title: 'Marker Identifier', slug: 'marker-identifier', difficulty: 'Beginner',
+    section: 'Sentence Core', sectionId: 2,
+    tags: ['markers', 'waa', 'baa', 'waxa', 'ma'], prerequisites: [8],
+    description: 'Identify the marker in 10 Somali sentences and classify it as STATEMENT (waa), FOCUS (baa), SPOTLIGHT (waxa), or QUESTION (ma).',
+    acceptance: 75, isPremium: false,
+  },
+  {
+    id: 32, title: 'waa vs baa vs waxa', slug: 'marker-distinction', difficulty: 'Intermediate',
+    section: 'Sentence Core', sectionId: 2,
+    tags: ['markers', 'emphasis', 'production'], prerequisites: [31],
+    description: 'Given English sentences, choose the correct Somali marker to express the intended emphasis: action focus (waa), subject focus (baa), or object/result focus (waxa).',
+    acceptance: 58, isPremium: false,
+  },
+  {
+    id: 33, title: 'Contraction Decoder', slug: 'contraction-decoder', difficulty: 'Intermediate',
+    section: 'Sentence Core', sectionId: 2,
+    tags: ['contractions', 'pronouns', 'markers'], prerequisites: [9, 31],
+    description: 'Split 12 fused marker+pronoun forms (waan, bay, wuu, waxay, buu, etc.) into their component parts and identify the marker and pronoun.',
+    acceptance: 62, isPremium: false,
+  },
+  {
+    id: 34, title: 'Word Order Enforcer', slug: 'word-order-enforcer', difficulty: 'Beginner',
+    section: 'Sentence Core', sectionId: 2,
+    tags: ['word-order', 'SOV'], prerequisites: [8],
+    description: 'Fix 8 English-influenced sentences with incorrect Somali word order. Rearrange to proper SOV: Subject → Marker → Object → Verb.',
+    acceptance: 68, isPremium: false,
+  },
+  {
+    id: 35, title: 'Preposition Placement', slug: 'preposition-placement', difficulty: 'Intermediate',
+    section: 'Space & Modifiers', sectionId: 5,
+    tags: ['prepositions', 'u', 'ku', 'ka', 'la', 'word-order'], prerequisites: [21, 34],
+    description: 'Fix sentences where prepositions are in the wrong place. Prepositions must stack before the verb, in correct order with directionals (soo/sii).',
+    acceptance: 54, isPremium: false,
+  },
+  {
+    id: 36, title: 'Connector Chain', slug: 'connector-chain', difficulty: 'Intermediate',
+    section: 'Complex Grammar', sectionId: 6,
+    tags: ['connectors', 'iyo', '-na', '-se', 'oo', 'compound'], prerequisites: [25],
+    description: 'Combine 6 Somali sentences using the correct connectors (iyo, -na, -se, oo) in sequence. Some need noun-joining, some need clause-joining.',
+    acceptance: 51, isPremium: false,
+  },
+  {
+    id: 37, title: 'Full Sentence Builder', slug: 'full-sentence-builder', difficulty: 'Advanced',
+    section: 'Sentence Core', sectionId: 2,
+    tags: ['markers', 'prepositions', 'word-order', 'production'], prerequisites: [31, 33, 34, 35],
+    description: 'Build 4 complete Somali sentences from English prompts. Each requires: correct marker choice, subject pronoun, preposition+direction, and SOV word order.',
+    acceptance: 35, isPremium: false,
+  },
+  {
+    id: 38, title: 'Listen & Classify', slug: 'listen-classify', difficulty: 'Intermediate',
+    section: 'Sentence Core', sectionId: 2,
+    tags: ['listening', 'markers', 'recognition'], prerequisites: [31],
+    description: 'Listen to 8 fast Somali sentences and classify each by its marker type. Focuses on recognizing markers in natural speech rhythm.',
+    acceptance: 47, isPremium: false,
+  },
+  {
+    id: 39, title: 'Listening Decoder', slug: 'listening-decoder', difficulty: 'Intermediate',
+    section: 'Sentence Core', sectionId: 2,
+    tags: ['listening', 'markers', 'contractions', 'comprehension'], prerequisites: [31, 33],
+    description: 'Listen to 6 sentences with contractions (wuu, bay, waxay) and transcribe the full split form (waa + uu, baa + ay, waxa + ay).',
+    acceptance: 52, isPremium: false,
+  },
 ].map((p) => ({ ...p, unit: p.section, unitId: p.sectionId })) as ProblemMeta[];
 
 // Helper lookups
