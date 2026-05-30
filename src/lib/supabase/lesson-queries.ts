@@ -399,3 +399,130 @@ export async function getExerciseItems(exerciseId: string): Promise<ExerciseItem
   if (error) throw error;
   return (data ?? []) as ExerciseItem[];
 }
+
+// ─── Concept Priorities (PageRank-based) ─────────────────────────────
+
+export async function getConceptPriorities(limit = 50): Promise<(GraphNode & { pagerank: number })[]> {
+  const { data, error } = await supabase().rpc("get_concept_priorities", {
+    p_limit: limit,
+  });
+  if (error) throw error;
+  return (data ?? []) as (GraphNode & { pagerank: number })[];
+}
+
+// ─── Full Graph Snapshot ─────────────────────────────────────────────
+
+export interface GraphSnapshot {
+  meta: { node_count: number; edge_count: number };
+  nodes: any[];
+  edges: any[];
+  constructions: any[];
+  chunks: any[];
+}
+
+export async function getFullGraph(): Promise<GraphSnapshot> {
+  const { data, error } = await supabase().rpc("get_full_graph");
+  if (error) throw error;
+  return (data ?? { meta: { node_count: 0, edge_count: 0 }, nodes: [], edges: [], constructions: [], chunks: [] }) as GraphSnapshot;
+}
+
+// ─── Learner Concept States (SRS) ────────────────────────────────────
+
+export async function getConceptStates(userId: string): Promise<LearnerConceptState[]> {
+  const { data, error } = await supabase()
+    .from("learner_concept_states")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) throw error;
+  return (data ?? []) as LearnerConceptState[];
+}
+
+export async function upsertConceptStates(
+  userId: string,
+  rows: Omit<LearnerConceptState, "user_id" | "updated_at">[]
+): Promise<void> {
+  const rowsWithUser = rows.map((row) => ({
+    ...row,
+    user_id: userId,
+    updated_at: new Date().toISOString(),
+  }));
+
+  const { error } = await supabase()
+    .from("learner_concept_states")
+    .upsert(rowsWithUser, { onConflict: "user_id,concept_id" });
+  if (error) throw error;
+}
+
+export async function insertReviewLog(params: {
+  userId: string;
+  conceptId: string;
+  rating: number;
+  oldMastery: number;
+  newMastery: number;
+  oldStability: number;
+  newStability: number;
+  studyTimeSeconds: number;
+}): Promise<void> {
+  const { error } = await supabase()
+    .from("review_logs")
+    .insert({
+      user_id: params.userId,
+      concept_id: params.conceptId,
+      rating: params.rating,
+      old_mastery: params.oldMastery,
+      new_mastery: params.newMastery,
+      old_stability: params.oldStability,
+      new_stability: params.newStability,
+      study_time_seconds: params.studyTimeSeconds,
+    });
+  if (error) throw error;
+}
+
+// ─── Lesson Progress ─────────────────────────────────────────────────
+
+export interface LessonProgressRow {
+  user_id: string;
+  lesson_id: number;
+  current_card: number;
+}
+
+export async function getLessonProgress(userId: string): Promise<LessonProgressRow[]> {
+  const { data, error } = await supabase()
+    .from("lesson_progress")
+    .select("lesson_id, current_card")
+    .eq("user_id", userId);
+  if (error) throw error;
+  return (data ?? []).map((row: any) => ({
+    user_id: userId,
+    lesson_id: row.lesson_id,
+    current_card: row.current_card,
+  }));
+}
+
+export async function upsertLessonProgress(
+  userId: string,
+  lessonId: number,
+  cardIndex: number
+): Promise<void> {
+  const { error } = await supabase()
+    .from("lesson_progress")
+    .upsert(
+      {
+        user_id: userId,
+        lesson_id: lessonId,
+        current_card: cardIndex,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id,lesson_id" }
+    );
+  if (error) throw error;
+}
+
+export async function deleteLessonProgress(userId: string, lessonId: number): Promise<void> {
+  const { error } = await supabase()
+    .from("lesson_progress")
+    .delete()
+    .eq("user_id", userId)
+    .eq("lesson_id", lessonId);
+  if (error) throw error;
+}

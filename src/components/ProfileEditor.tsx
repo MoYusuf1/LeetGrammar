@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Camera, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
-import { fetchProfile, updateProfile, uploadAvatar } from '@/engine/sync';
+import { fetchProfile, updateProfile, uploadAvatar } from '@/services/profile-service';
 
 interface ProfileEditorProps {
   /** If true, renders in compact sidebar style (Profile page). Otherwise full card style (Settings). */

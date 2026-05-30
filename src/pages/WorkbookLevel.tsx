@@ -7,7 +7,7 @@ import {
 import { getLevelById, getNextLevelId, type WorkbookDrill } from '@/data/workbook';
 import { useProgress } from '@/hooks/useProgress';
 import { useAuthStore } from '@/stores/auth-store';
-import { fetchWorkbookAttempts, saveWorkbookAttemptsBatch } from '@/engine/sync';
+import { fetchWorkbookAttempts, saveWorkbookAttemptsBatch } from '@/services/workbook-service';
 import VocabBank from '@/components/VocabBank';
 
 const LOCAL_STORAGE_KEY = (levelId: number) => `workbook-level-${levelId}-answers`;

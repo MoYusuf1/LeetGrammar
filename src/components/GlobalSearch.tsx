@@ -14,36 +14,13 @@ import {
 } from '@/components/ui/dialog';
 import { useGraphStore } from '@/stores/graph-store';
 import type { Node, NodeType } from '@/engine/types';
+import { TYPE_COLORS, TYPE_ICONS } from '@/constants/node-display';
 
 interface SearchResult {
   node: Node;
   matchedLabel: string;
   matchType: 'label' | 'english' | 'somali' | 'chunk';
 }
-
-const TYPE_ICONS: Record<NodeType, typeof BookOpen> = {
-  CONCEPT: BookOpen,
-  MORPHEME: Hash,
-  WORD: Hash,
-  EXAMPLE: MessageSquare,
-  RULE: Wrench,
-  LESSON: BookOpen,
-  TEXTBOOK: BookOpen,
-  CONSTRUCTION: Wrench,
-  LEXICAL_ENTRY: Hash,
-};
-
-const TYPE_COLORS: Record<NodeType, string> = {
-  CONCEPT: '#3b82f6',
-  MORPHEME: '#f97316',
-  WORD: '#22c55e',
-  EXAMPLE: '#a855f7',
-  RULE: '#eab308',
-  LESSON: '#06b6d4',
-  TEXTBOOK: '#ef4444',
-  CONSTRUCTION: '#ec4899',
-  LEXICAL_ENTRY: '#14b8a6',
-};
 
 const TYPE_ORDER: NodeType[] = [
   'CONCEPT', 'MORPHEME', 'WORD', 'EXAMPLE', 'RULE', 'CONSTRUCTION', 'LESSON', 'TEXTBOOK', 'LEXICAL_ENTRY',

@@ -16,8 +16,8 @@ import {
   Clock,
 } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
-import { useGraphInit } from '@/hooks/useGraphInit';
 import { useProgressStore } from '@/stores/progress-store';
+import { TYPE_COLORS } from '@/constants/node-display';
 import { generateQuiz } from '@/engine/quiz-generator';
 import { WikiMarkdown } from '@/pages/Wiki';
 import SourceBadge from '@/components/SourceBadge';
@@ -31,7 +31,6 @@ const TABS = [
 type TabId = (typeof TABS)[number]['id'];
 
 export default function StudyHub() {
-  useGraphInit();
   const { conceptId } = useParams<{ conceptId: string }>();
   const navigate = useNavigate();
   const { engine, chunks } = useGraphStore();
@@ -439,13 +438,3 @@ function ReviewTab({
     </div>
   );
 }
-
-const TYPE_COLORS: Record<string, string> = {
-  CONCEPT: '#3b82f6',
-  MORPHEME: '#a855f7',
-  WORD: '#22c55e',
-  EXAMPLE: '#eab308',
-  RULE: '#f97316',
-  LESSON: '#ec4899',
-  TEXTBOOK: '#6366f1',
-};

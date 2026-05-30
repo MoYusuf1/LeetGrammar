@@ -16,13 +16,11 @@ import {
   Target,
 } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
-import { useGraphInit } from '@/hooks/useGraphInit';
 import { generateQuiz, type QuizQuestion } from '@/engine/quiz-generator';
 import { useHybridProgress } from '@/hooks/useHybridProgress';
 import { useProgressStore } from '@/stores/progress-store';
 
 export default function Quiz() {
-  useGraphInit();
   const { conceptId } = useParams<{ conceptId: string }>();
   const navigate = useNavigate();
   const { engine, chunks } = useGraphStore();

@@ -21,7 +21,6 @@ import {
   Eye,
 } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
-import { useGraphInit } from '@/hooks/useGraphInit';
 import { parseSwarmOutput, mergePayloads, type ParsedPayload, type ValidationError } from '@/engine/swarm-loader';
 import { generateDiffReport } from '@/engine/ingestion';
 import type { TextbookPayload } from '@/engine/ingestion';
@@ -34,7 +33,6 @@ interface LoadedFile {
 }
 
 export default function Ingest() {
-  useGraphInit();
   const { engine, stats, ingestPayload, saveToSQLite } = useGraphStore();
   const [files, setFiles] = useState<LoadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);

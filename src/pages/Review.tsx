@@ -22,7 +22,6 @@ import {
   ArrowUp,
 } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
-import { useGraphInit } from '@/hooks/useGraphInit';
 import { useGraphSrs } from '@/hooks/useGraphSrs';
 import type { ReviewRating, ReviewResult } from '@/engine/graph-srs';
 
@@ -34,7 +33,6 @@ const RATING_INFO: Record<ReviewRating, { label: string; color: string; desc: st
 };
 
 export default function Review() {
-  useGraphInit();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { engine, chunks } = useGraphStore();

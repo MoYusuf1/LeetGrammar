@@ -8,6 +8,7 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/sql-wasm.wasm',
 ];
 
 // Install — cache static assets

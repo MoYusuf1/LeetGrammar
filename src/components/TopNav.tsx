@@ -8,7 +8,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { Map, List, BookOpen, Code2, LogIn, Search, Menu } from 'lucide-react';
-import { useProgress } from '@/hooks/useProgress';
 import { useAuthStore } from '@/stores/auth-store';
 import AuthModal from './AuthModal';
 import GlobalSearch from './GlobalSearch';
@@ -22,7 +21,6 @@ const navLinks = [
 export default function TopNav() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { progress } = useProgress();
   const { user, signOut } = useAuthStore();
   const [authOpen, setAuthOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);

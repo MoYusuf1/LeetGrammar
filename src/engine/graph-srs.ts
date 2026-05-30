@@ -191,7 +191,7 @@ function computeImplicitUpdates(
     const dependents = engine.getEdgesFrom(conceptId, { type: 'REQUIRES' });
     for (const edge of dependents) {
       const dependentId = edge.to;
-      const weight = (edge as { weight?: number }).weight ?? 1.0;
+      const weight = edge.weight ?? 1.0;
       const depState = states.get(dependentId);
       if (!depState) continue;
 
@@ -218,7 +218,7 @@ function computeImplicitUpdates(
     const prerequisites = engine.getEdgesTo(conceptId, { type: 'REQUIRES' });
     for (const edge of prerequisites) {
       const prereqId = edge.from;
-      const weight = (edge as { weight?: number }).weight ?? 1.0;
+      const weight = edge.weight ?? 1.0;
       const prereqState = states.get(prereqId);
 
       // Time discount: more credit if prereq was almost due
@@ -364,7 +364,7 @@ export function getLearningFrontier(
     if (state && state.mastery >= 0.7) continue;
 
     // Check prerequisites
-    const hardPrereqs = prereqEdges.filter(e => ((e as { weight?: number }).weight ?? 1.0) > 0.7);
+    const hardPrereqs = prereqEdges.filter(e => (e.weight ?? 1.0) > 0.7);
     const allReady = hardPrereqs.every(e => {
       const ps = states.get(e.from);
       return ps && ps.mastery >= 0.5;

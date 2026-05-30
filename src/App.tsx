@@ -1,18 +1,16 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router';
-import { Shield } from 'lucide-react';
+import { Routes, Route, Navigate } from 'react-router';
 import { useAuthInit } from '@/hooks/useAuthInit';
+import { useGraphInit } from '@/hooks/useGraphInit';
 import TopNav from '@/components/TopNav';
 import ErrorBoundary from '@/components/ErrorBoundary';
-import { useAdmin } from '@/hooks/useAdmin';
+import AdminGuard from '@/components/AdminGuard';
 
-/* ─── Core routes (eager) ─── */
-import Problems from '@/pages/Problems';
-import Roadmap from '@/pages/Roadmap';
-import Learn from '@/pages/Learn';
-import Landing from '@/pages/Landing';
-
-/* ─── Heavy routes (lazy-loaded) ─── */
+/* ─── All routes (lazy-loaded) ─── */
+const Landing = lazy(() => import('@/pages/Landing'));
+const Problems = lazy(() => import('@/pages/Problems'));
+const Roadmap = lazy(() => import('@/pages/Roadmap'));
+const Learn = lazy(() => import('@/pages/Learn'));
 const Problem = lazy(() => import('@/pages/Problem'));
 const WorkbookLevel = lazy(() => import('@/pages/WorkbookLevel'));
 const Lesson = lazy(() => import('@/pages/Lesson'));
@@ -26,29 +24,6 @@ const Review = lazy(() => import('@/pages/Review'));
 const StudyHub = lazy(() => import('@/pages/StudyHub'));
 const Settings = lazy(() => import('@/pages/Settings'));
 
-function AdminIngest() {
-  const isAdmin = useAdmin();
-  const navigate = useNavigate();
-  if (!isAdmin) {
-    return (
-      <div className="min-h-full bg-[#0f0f0f] flex items-center justify-center px-4">
-        <div className="text-center">
-          <Shield size={40} className="text-[#ef4444] mx-auto mb-3" />
-          <h1 className="text-lg font-bold text-[#eff1f6]">Access Denied</h1>
-          <p className="text-sm text-[#8c8c8c] mt-1">Admin only.</p>
-          <button
-            onClick={() => navigate('/profile')}
-            className="mt-4 px-4 py-2 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-sm font-semibold"
-          >
-            Go to Profile
-          </button>
-        </div>
-      </div>
-    );
-  }
-  return <Ingest />;
-}
-
 function PageLoader() {
   return (
     <div className="flex-1 flex items-center justify-center bg-[#0f0f0f]">
@@ -59,6 +34,7 @@ function PageLoader() {
 
 export default function App() {
   useAuthInit();
+  useGraphInit();
 
   return (
     <ErrorBoundary>
@@ -76,7 +52,14 @@ export default function App() {
               <Route path="/wiki/:conceptId" element={<Wiki />} />
               <Route path="/concepts" element={<Concepts />} />
               <Route path="/curriculum" element={<Curriculum />} />
-              <Route path="/ingest" element={<AdminIngest />} />
+              <Route
+                path="/ingest"
+                element={
+                  <AdminGuard>
+                    <Ingest />
+                  </AdminGuard>
+                }
+              />
               <Route path="/quiz/:conceptId" element={<Quiz />} />
               <Route path="/review" element={<Review />} />
               <Route path="/study/:conceptId" element={<StudyHub />} />

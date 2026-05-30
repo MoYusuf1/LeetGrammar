@@ -6,7 +6,8 @@
 import { useEffect, useRef } from 'react';
 import { useAuthStore } from '@/stores/auth-store';
 import { useProgressStore } from '@/stores/progress-store';
-import { pullProgress, pushProgress, mergeProgress, ensureProfile } from '@/engine/sync';
+import { pullProgress, pushProgress, mergeProgress } from '@/services/cloud-sync';
+import { ensureProfile } from '@/services/profile-service';
 import { isSupabaseConfigured } from '@/lib/supabase';
 
 export function useAuthInit() {

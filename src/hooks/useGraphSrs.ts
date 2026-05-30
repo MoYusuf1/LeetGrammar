@@ -8,7 +8,12 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useGraphStore } from '@/stores/graph-store';
 import { useAuthStore } from '@/stores/auth-store';
-import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
+import {
+  getConceptStates,
+  upsertConceptStates,
+  insertReviewLog,
+} from '@/lib/supabase/lesson-queries';
 import {
   processReview,
   getDueConcepts,
@@ -80,15 +85,7 @@ export function useGraphSrs() {
     async function load() {
       setLoading(true);
       try {
-        const { data, error } = await getSupabase()
-          .from('learner_concept_states')
-          .select('*')
-          .eq('user_id', userId);
-
-        if (error) {
-          setLoading(false);
-          return;
-        }
+        const data = await getConceptStates(userId);
 
         if (data && data.length > 0) {
           const loaded = new Map(states);
@@ -122,11 +119,9 @@ export function useGraphSrs() {
     async (updatedStates: Map<string, ConceptState>) => {
       if (!user || !isSupabaseConfigured) return;
 
-      const supabase = getSupabase();
       const rows = [];
       for (const state of updatedStates.values()) {
         rows.push({
-          user_id: user.id,
           concept_id: state.conceptId,
           mastery: state.mastery,
           stability: state.stability,
@@ -137,17 +132,15 @@ export function useGraphSrs() {
           review_count: state.reviewCount,
           lapse_count: state.lapseCount,
           total_study_time_seconds: state.totalStudyTimeSeconds,
-          updated_at: new Date().toISOString(),
         });
       }
 
       // Upsert in batches of 100
       for (let i = 0; i < rows.length; i += 100) {
         const batch = rows.slice(i, i + 100);
-        const { error } = await supabase
-          .from('learner_concept_states')
-          .upsert(batch, { onConflict: 'user_id,concept_id' });
-        if (error) {
+        try {
+          await upsertConceptStates(user.id, batch as any);
+        } catch {
           // Sync failed — local state is still valid
         }
       }
@@ -171,21 +164,18 @@ export function useGraphSrs() {
 
       // Also log the review
       if (user && isSupabaseConfigured) {
-        getSupabase()
-          .from('review_logs')
-          .insert({
-            user_id: user.id,
-            concept_id: result.conceptId,
-            rating: result.rating,
-            old_mastery: result.oldMastery,
-            new_mastery: result.newMastery,
-            old_stability: result.oldStability,
-            new_stability: result.newStability,
-            study_time_seconds: studyTimeSeconds,
-          })
-          .then(() => {
-            // Review logged successfully
-          });
+        insertReviewLog({
+          userId: user.id,
+          conceptId: result.conceptId,
+          rating: result.rating,
+          oldMastery: result.oldMastery,
+          newMastery: result.newMastery,
+          oldStability: result.oldStability,
+          newStability: result.newStability,
+          studyTimeSeconds: studyTimeSeconds,
+        }).catch(() => {
+          // Review logging failed, but review is still local
+        });
       }
 
       return result;

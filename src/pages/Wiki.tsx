@@ -30,55 +30,14 @@ import { useGraphStore } from '@/stores/graph-store';
 import ConceptGraph from '@/components/ConceptGraph';
 import SourceBadge from '@/components/SourceBadge';
 import SourceFilter from '@/components/SourceFilter';
-import { useGraphInit } from '@/hooks/useGraphInit';
 import { useWikiLayout, type WikiLayout } from '@/hooks/useWikiLayout';
 import type { Edge, EdgeType, Node, NodeType } from '@/engine/types';
 import type { GraphEngine } from '@/engine/graph-engine';
-
-
-const EDGE_TYPE_LABELS: Record<EdgeType, string> = {
-  REQUIRES: 'Prerequisites',
-  CONTRADICTS: 'Contrasts With',
-  DERIVES_FROM: 'Derived From',
-  EXEMPLIFIES: 'Examples',
-  CITES: 'Cited In',
-  IS_A: 'Is A',
-  PART_OF: 'Part Of',
-  VARIES_BY: 'Varies By',
-  SHARED_FORM: 'Shared Form',
-  AGREES_WITH: 'Agreement',
-  INFLECTION_OF: 'Inflection',
-  HOMONYM_OF: 'Homonym',
-};
-
-const TYPE_COLORS: Record<NodeType, string> = {
-  CONCEPT: '#3b82f6',
-  MORPHEME: '#f97316',
-  WORD: '#22c55e',
-  EXAMPLE: '#a855f7',
-  RULE: '#eab308',
-  LESSON: '#06b6d4',
-  TEXTBOOK: '#ef4444',
-  CONSTRUCTION: '#ec4899',
-  LEXICAL_ENTRY: '#14b8a6',
-};
-
-const TYPE_ICONS: Record<NodeType, typeof BookOpen> = {
-  CONCEPT: BookOpen,
-  MORPHEME: Hash,
-  WORD: Hash,
-  EXAMPLE: MessageSquareQuote,
-  RULE: Wrench,
-  LESSON: ScrollText,
-  TEXTBOOK: BookOpen,
-  CONSTRUCTION: Construction,
-  LEXICAL_ENTRY: Hash,
-};
+import { TYPE_COLORS, TYPE_ICONS, EDGE_TYPE_LABELS } from '@/constants/node-display';
 
 /* ─────────────────────────────────────────────────────────────────────── */
 
 export default function Wiki() {
-  useGraphInit();
   const { conceptId } = useParams<{ conceptId: string }>();
   const navigate = useNavigate();
   const [activeSources, setActiveSources] = useState<string[]>([]);

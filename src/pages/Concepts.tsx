@@ -7,33 +7,9 @@ import { useNavigate } from 'react-router';
 import { useMemo, useState, useCallback } from 'react';
 import { Search, BookOpen, Hash, MessageSquare, Wrench, Network, Shuffle } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
-import { useGraphInit } from '@/hooks/useGraphInit';
 import SourceFilter from '@/components/SourceFilter';
 import type { Node, NodeType } from '@/engine/types';
-
-const TYPE_ICONS: Record<NodeType, typeof BookOpen> = {
-  CONCEPT: BookOpen,
-  MORPHEME: Hash,
-  WORD: Hash,
-  EXAMPLE: MessageSquare,
-  RULE: Wrench,
-  LESSON: BookOpen,
-  TEXTBOOK: BookOpen,
-  CONSTRUCTION: Wrench,
-  LEXICAL_ENTRY: Hash,
-};
-
-const TYPE_COLORS: Record<NodeType, string> = {
-  CONCEPT: '#3b82f6',
-  MORPHEME: '#f97316',
-  WORD: '#22c55e',
-  EXAMPLE: '#a855f7',
-  RULE: '#eab308',
-  LESSON: '#06b6d4',
-  TEXTBOOK: '#ef4444',
-  CONSTRUCTION: '#ec4899',
-  LEXICAL_ENTRY: '#14b8a6',
-};
+import { TYPE_COLORS, TYPE_ICONS } from '@/constants/node-display';
 
 const CATEGORY_COLORS: Record<string, string> = {
   phonology: '#a855f7',
@@ -62,7 +38,6 @@ function getInitial(node: Node): string {
 }
 
 export default function Concepts() {
-  useGraphInit();
   const navigate = useNavigate();
   const { engine } = useGraphStore();
   const [query, setQuery] = useState('');

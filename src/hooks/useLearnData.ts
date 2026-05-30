@@ -9,7 +9,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useProgressStore } from '@/stores/progress-store';
 import { useGraphSrs } from '@/hooks/useGraphSrs';
-import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
+import { getAllLessons } from '@/lib/supabase/lesson-queries';
 import type { GraphLesson } from '@/lib/supabase/lesson-types';
 
 const TEXTBOOK_LABELS: Record<string, string> = {
@@ -61,18 +61,6 @@ export interface LearnData {
   refetch: () => void;
 }
 
-async function fetchLessons(): Promise<GraphLesson[]> {
-  if (!isSupabaseConfigured) {
-    return [];
-  }
-  const { data, error } = await getSupabase()
-    .from('graph_lessons')
-    .select('*')
-    .order('sort_key', { ascending: true });
-  if (error) throw new Error(error.message);
-  return (data ?? []) as GraphLesson[];
-}
-
 export function useLearnData(): LearnData {
   const [lessons, setLessons] = useState<GraphLesson[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +73,7 @@ export function useLearnData(): LearnData {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchLessons();
+      const data = await getAllLessons();
       setLessons(data);
     } catch (e: any) {
       setError(e.message ?? 'Failed to load lessons');

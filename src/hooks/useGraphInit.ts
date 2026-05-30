@@ -10,7 +10,8 @@
 
 import { useEffect, useRef } from 'react';
 import { useGraphStore } from '@/stores/graph-store';
-import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
+import { getFullGraph } from '@/lib/supabase/lesson-queries';
 import type { GraphSnapshot } from '@/engine/types';
 
 let globalBootstrapStarted = false;
@@ -111,17 +112,17 @@ export function useGraphInit() {
         // ─── Step 1: Supabase RPC (canonical cloud graph) ─────────────────────
         if (isSupabaseConfigured) {
           try {
-            const rpcResult = await withTimeout(
-              getSupabase().rpc('get_full_graph'),
+            const snapshot = await withTimeout(
+              getFullGraph(),
               8000,
               'Supabase RPC'
             );
-            if (rpcResult !== 'timeout' && rpcResult.data && rpcResult.data.meta?.node_count > 0) {
+            if (snapshot !== 'timeout' && snapshot.meta?.node_count > 0) {
               hydrateFromSnapshot(engine, chunks, {
-                nodes: rpcResult.data.nodes,
-                edges: rpcResult.data.edges,
-                constructions: rpcResult.data.constructions,
-                chunks: rpcResult.data.chunks,
+                nodes: snapshot.nodes,
+                edges: snapshot.edges,
+                constructions: snapshot.constructions,
+                chunks: snapshot.chunks,
               });
               // Persist to SQLite cache for faster next load
               try {

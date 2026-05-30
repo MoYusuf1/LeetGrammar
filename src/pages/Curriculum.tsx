@@ -16,12 +16,10 @@ import {
   Save,
 } from 'lucide-react';
 import { useGraphStore } from '@/stores/graph-store';
-import { useGraphInit } from '@/hooks/useGraphInit';
 import { generateLearningPath, validateCurriculum, shortestPath } from '@/engine/curriculum';
 import { readJSONFile, importFromJSON, readBinaryFile } from '@/engine/export-import';
 
 export default function Curriculum() {
-  useGraphInit();
   const navigate = useNavigate();
   const { engine, isPersisted, isLoading, exportToJSON, exportToSQLite, importFromJSON: importGraphJSON, saveToSQLite, loadFromSQLite } = useGraphStore();
 

@@ -6,7 +6,11 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { getSupabase } from '@/lib/supabase';
+import {
+  getLessonProgress,
+  upsertLessonProgress as upsertLessonProgressToDb,
+  deleteLessonProgress as deleteLessonProgressFromDb,
+} from '@/lib/supabase/lesson-queries';
 import { useAuthStore } from '@/stores/auth-store';
 
 const STORAGE_KEY = 'lesson-card-positions';
@@ -40,10 +44,7 @@ export function useLessonProgress() {
     if (!user) return;
 
     const fetchProgress = async () => {
-      const { data } = await getSupabase()
-        .from('lesson_progress')
-        .select('lesson_id, current_card')
-        .eq('user_id', user.id);
+      const data = await getLessonProgress(user.id);
 
       if (data && data.length > 0) {
         const merged = { ...loadLocal() };
@@ -79,16 +80,11 @@ export function useLessonProgress() {
       /* Sync to Supabase */
       if (user) {
         setSyncing(true);
-        await getSupabase().from('lesson_progress').upsert(
-          {
-            user_id: user.id,
-            lesson_id: lessonId,
-            current_card: cardIndex,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: 'user_id,lesson_id' }
-        );
-        setSyncing(false);
+        try {
+          await upsertLessonProgressToDb(user.id, lessonId, cardIndex);
+        } finally {
+          setSyncing(false);
+        }
       }
     },
     [positions, user]
@@ -103,11 +99,7 @@ export function useLessonProgress() {
       saveLocal(updated);
 
       if (user) {
-        await getSupabase()
-          .from('lesson_progress')
-          .delete()
-          .eq('user_id', user.id)
-          .eq('lesson_id', lessonId);
+        await deleteLessonProgressFromDb(user.id, lessonId);
       }
     },
     [positions, user]

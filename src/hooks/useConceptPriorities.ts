@@ -6,7 +6,8 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
+import { getConceptPriorities as fetchConceptPriorities } from '@/lib/supabase/lesson-queries';
 import type { GraphNode } from '@/lib/supabase/lesson-types';
 
 interface ConceptPriority extends Omit<GraphNode, 'labels' | 'attributes'> {
@@ -37,19 +38,8 @@ export function useConceptPriorities(limit = 50): UseConceptPrioritiesResult {
       }
 
       try {
-        const { data, error: rpcError } = await getSupabase().rpc('get_concept_priorities', {
-          p_limit: limit,
-        });
-
-        if (rpcError) {
-          setError(rpcError.message);
-          setLoading(false);
-          return;
-        }
-
-        if (data && Array.isArray(data)) {
-          setConcepts(data as ConceptPriority[]);
-        }
+        const data = await fetchConceptPriorities(limit);
+        setConcepts(data as ConceptPriority[]);
       } catch (e: any) {
         setError(e.message ?? 'Failed to load concept priorities');
       } finally {

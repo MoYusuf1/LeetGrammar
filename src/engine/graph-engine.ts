@@ -16,8 +16,6 @@ import type {
   GraphSnapshot,
 } from './types';
 
-export type { GraphSnapshot };
-
 export class GraphEngine {
   private nodes = new Map<string, Node>();
   private edges = new Map<string, Edge>();

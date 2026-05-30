@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
 import { useAdmin } from '@/hooks/useAdmin';
-import { fetchAllProfiles, setAdminStatus } from '@/engine/sync';
+import { fetchAllProfiles, setAdminStatus } from '@/services/profile-service';
 import ProfileEditor from '@/components/ProfileEditor';
 import SyncStatusCard from '@/components/SyncStatusCard';
 import CloudSyncNotice from '@/components/CloudSyncNotice';

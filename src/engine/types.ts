@@ -13,8 +13,7 @@ export type Dialect =
   | 'southern'
   | 'benadiri'
   | 'maay-maay'
-  | 'digiil'
-  | string;
+  | 'digiil';
 
 export type Register = 'formal' | 'informal' | 'poetic' | 'religious';
 
@@ -82,6 +81,7 @@ export interface Edge {
   from: string;
   to: string;
   type: EdgeType;
+  weight?: number;
   qualifiers: Qualifiers;
 }
 
