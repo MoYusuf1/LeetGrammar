@@ -1,8 +1,9 @@
-// ============================================================================
-// PROBLEM SET — 30 Compound Somali Grammar Challenges
-// LeetCode-style: each problem is a boss fight combining multiple concepts.
-// Learn is DISCONNECTED. Study the grammar reference first, then tackle problems.
-// ============================================================================
+/**
+ * Problems — Somali Grammar Workbook 1 Focus
+ *
+ * 10 problems organized into 5 categories aligned with Learn progression.
+ * All content from Workbook 1: markers, contractions, word order, prepositions, connectors.
+ */
 
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -18,353 +19,188 @@ export interface ProblemMeta {
   description: string;
   acceptance: number;
   isPremium: boolean;
-  /** @deprecated backward-compat alias for section */
-  unit: string;
-  /** @deprecated backward-compat alias for sectionId */
-  unitId: number;
+  unit?: string;
+  unitId?: number;
 }
 
 export interface ProblemSection {
   id: number;
   name: string;
   description: string;
-  color: string;
 }
 
 export function displayDifficulty(d: string): string {
   switch (d) {
     case 'Beginner': return 'Easy';
-    case 'Intermediate': return 'Medium';
+    case 'Intermediate': return 'Med';
     case 'Advanced': return 'Hard';
     default: return d;
   }
 }
 
 export const difficultyConfig = {
-  Beginner: { label: 'Easy', color: '#00b8a3', bg: 'rgba(0,184,163,0.12)', border: 'rgba(0,184,163,0.25)' },
-  Intermediate: { label: 'Medium', color: '#ffc01e', bg: 'rgba(255,192,30,0.12)', border: 'rgba(255,192,30,0.25)' },
-  Advanced: { label: 'Hard', color: '#ff375f', bg: 'rgba(255,55,95,0.12)', border: 'rgba(255,55,95,0.25)' },
-} as const;
+  Beginner: { color: '#00b8a3', bg: '#00b8a318' },
+  Intermediate: { color: '#ffc01e', bg: '#ffc01e18' },
+  Advanced: { color: '#ff375f', bg: '#ff375f18' },
+};
 
 export const problemSections: ProblemSection[] = [
-  { id: 0, name: 'Foundations', description: 'Alphabet, sounds, and greetings', color: '#3b82f6' },
-  { id: 1, name: 'Noun System', description: 'Gender, articles, plurals, and case', color: '#22c55e' },
-  { id: 2, name: 'Sentence Core', description: 'Clitics, SOV order, and the copula', color: '#a855f7' },
-  { id: 3, name: 'Focus & Questions', description: 'waa, baa, waxa, and question markers', color: '#f97316' },
-  { id: 4, name: 'Verb & Tense', description: 'Classes, tenses, negation, and aspect', color: '#eab308' },
-  { id: 5, name: 'Space & Modifiers', description: 'Prepositions, directionals, adjectives, and numbers', color: '#06b6d4' },
-  { id: 6, name: 'Complex Grammar', description: 'Connectors, relatives, and conditionals', color: '#ec4899' },
-  { id: 7, name: 'Mastery', description: 'Passive, causative, and free production', color: '#ef4444' },
+  { id: 0, name: 'Marker System', description: 'Identifying and distinguishing waa, baa, waxa, and ma' },
+  { id: 1, name: 'Contractions & Pronouns', description: 'Unfusing marker+pronoun forms in fast speech' },
+  { id: 2, name: 'Word Order & SOV', description: 'Subject-Object-Verb ordering and sentence structure' },
+  { id: 3, name: 'Prepositions & Direction', description: 'u, ku, ka, la with soo and sii' },
+  { id: 4, name: 'Connectors & Composition', description: 'iyo, -na, -se, oo and building complete sentences' },
 ];
 
 export const allProblems: ProblemMeta[] = [
   // ═══════════════════════════════════════════════════════════════════
-  // SECTION 0: Foundations
+  // SECTION 0: Marker System
   // ═══════════════════════════════════════════════════════════════════
   {
-    id: 1, title: 'Sound Decoder', slug: 'sound-decoder', difficulty: 'Beginner',
-    section: 'Foundations', sectionId: 0,
-    tags: ['phonology', 'transcription'], prerequisites: [],
-    description: 'Given a set of Somali words, correctly identify the phonetic value of each special consonant (c, x, kh, q) and transcribe them using IPA.',
-    acceptance: 72, isPremium: false,
+    id: 1,
+    title: 'Marker Classifier',
+    slug: 'marker-classifier',
+    difficulty: 'Beginner',
+    section: 'Marker System',
+    sectionId: 0,
+    tags: ['markers', 'waa', 'baa', 'waxa', 'ma'],
+    prerequisites: [],
+    description: 'Given 10 Somali sentences, identify the marker and classify it as STATEMENT (waa), FOCUS (baa), SPOTLIGHT (waxa), or QUESTION (ma).',
+    acceptance: 76,
+    isPremium: false,
   },
   {
-    id: 2, title: 'Greeting Builder', slug: 'greeting-builder', difficulty: 'Beginner',
-    section: 'Foundations', sectionId: 0,
-    tags: ['clitics', 'social'], prerequisites: [1],
-    description: 'Construct appropriate greetings for 5 different social contexts using correct clitic pronouns (waan, waad, wuu, way).',
-    acceptance: 65, isPremium: false,
-  },
-  {
-    id: 3, title: 'Audio Transcription', slug: 'audio-transcription', difficulty: 'Intermediate',
-    section: 'Foundations', sectionId: 0,
-    tags: ['phonology', 'listening'], prerequisites: [1, 2],
-    description: 'Transcribe a short spoken Somali passage into standard orthography. Pay attention to vowel length, tone, and consonant clusters.',
-    acceptance: 48, isPremium: false,
+    id: 2,
+    title: 'Marker Distinction',
+    slug: 'marker-distinction',
+    difficulty: 'Intermediate',
+    section: 'Marker System',
+    sectionId: 0,
+    tags: ['markers', 'emphasis', 'production'],
+    prerequisites: [1],
+    description: 'Given English sentences with emphasis cues (e.g., "ALI ate" vs "Ali ATE" vs "What Ali ate was..."), choose the correct Somali marker.',
+    acceptance: 61,
+    isPremium: false,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // SECTION 1: Noun System
+  // SECTION 1: Contractions & Pronouns
   // ═══════════════════════════════════════════════════════════════════
   {
-    id: 4, title: 'Article Application', slug: 'article-application', difficulty: 'Beginner',
-    section: 'Noun System', sectionId: 1,
-    tags: ['nouns', 'articles', 'gender'], prerequisites: [1],
-    description: 'Given 10 bare nouns, apply the correct definite article (-ka/-ga/-ha or -ta/-da) with proper voicing assimilation.',
-    acceptance: 68, isPremium: false,
+    id: 3,
+    title: 'Contraction Splitter',
+    slug: 'contraction-splitter',
+    difficulty: 'Beginner',
+    section: 'Contractions & Pronouns',
+    sectionId: 1,
+    tags: ['contractions', 'pronouns', 'markers'],
+    prerequisites: [1],
+    description: 'Split 12 fused marker+pronoun forms (wuu, bay, waxay, buu, waan, etc.) into their component marker and pronoun.',
+    acceptance: 68,
+    isPremium: false,
   },
   {
-    id: 5, title: 'Plural Factory', slug: 'plural-factory', difficulty: 'Beginner',
-    section: 'Noun System', sectionId: 1,
-    tags: ['nouns', 'plurals', 'gender'], prerequisites: [4],
-    description: 'Convert 8 singular nouns to their plural forms. Some require suffix changes, others stem changes. Watch for gender polarity.',
-    acceptance: 58, isPremium: false,
-  },
-  {
-    id: 6, title: 'Case Marker Challenge', slug: 'case-marker-challenge', difficulty: 'Intermediate',
-    section: 'Noun System', sectionId: 1,
-    tags: ['nouns', 'case', 'definiteness'], prerequisites: [4, 5],
-    description: 'Given sentences with missing case markers, fill in the correct form. Combines definite articles, plural suffixes, and case endings.',
-    acceptance: 45, isPremium: false,
-  },
-  {
-    id: 7, title: 'Noun Phrase Architect', slug: 'noun-phrase-architect', difficulty: 'Advanced',
-    section: 'Noun System', sectionId: 1,
-    tags: ['nouns', 'case', 'plurals', 'gender'], prerequisites: [4, 5, 6],
-    description: 'Build complex noun phrases from English prompts: definite plural nouns with possessors and case markers. No scaffolding provided.',
-    acceptance: 32, isPremium: false,
+    id: 4,
+    title: 'Fast Speech Recognition',
+    slug: 'fast-speech-recognition',
+    difficulty: 'Intermediate',
+    section: 'Contractions & Pronouns',
+    sectionId: 1,
+    tags: ['listening', 'contractions', 'speech-rhythm'],
+    prerequisites: [3],
+    description: 'Listen to 8 fast Somali sentences with contractions and transcribe the full split form (e.g., "wuu" as "waa + uu"). Focus on hearing contractions in natural rhythm.',
+    acceptance: 54,
+    isPremium: false,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // SECTION 2: Sentence Core
+  // SECTION 2: Word Order & SOV
   // ═══════════════════════════════════════════════════════════════════
   {
-    id: 8, title: 'SOV Assembler', slug: 'sov-assembler', difficulty: 'Beginner',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['word-order', 'SOV'], prerequisites: [1, 2],
-    description: 'Rearrange scrambled Somali words into correct SOV order. Each sentence includes a subject clitic, object, and verb.',
-    acceptance: 70, isPremium: false,
+    id: 5,
+    title: 'SOV Word Order',
+    slug: 'sov-word-order',
+    difficulty: 'Beginner',
+    section: 'Word Order & SOV',
+    sectionId: 2,
+    tags: ['word-order', 'SOV'],
+    prerequisites: [1],
+    description: 'Fix 8 sentences with English SVO word order. Rearrange each to correct Somali SOV: Subject → Marker → Object → Verb.',
+    acceptance: 72,
+    isPremium: false,
   },
   {
-    id: 9, title: 'Clitic Selector', slug: 'clitic-selector', difficulty: 'Beginner',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['clitics', 'pronouns'], prerequisites: [2, 8],
-    description: 'Choose the correct subject clitic (waan, waad, wuu, way, waannu, waynu) for 10 sentences based on subject person and number.',
-    acceptance: 62, isPremium: false,
-  },
-  {
-    id: 10, title: 'Copula vs Verbless', slug: 'copula-vs-verbless', difficulty: 'Intermediate',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['copula', 'equational'], prerequisites: [8, 9],
-    description: 'Given 12 English sentences, determine whether each requires the copula (yahay/ahay/tahay) or a verbless equational construction (waa + noun).',
-    acceptance: 51, isPremium: false,
-  },
-  {
-    id: 11, title: 'Sentence Constructor', slug: 'sentence-constructor', difficulty: 'Advanced',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['SOV', 'clitics', 'copula', 'word-order'], prerequisites: [8, 9, 10],
-    description: 'Translate 5 English sentences into Somali from scratch. Each requires correct clitic selection, SOV ordering, and copula/verbless choice. No word bank.',
-    acceptance: 28, isPremium: false,
+    id: 6,
+    title: 'Sentence Builder Basics',
+    slug: 'sentence-builder-basics',
+    difficulty: 'Intermediate',
+    section: 'Word Order & SOV',
+    sectionId: 2,
+    tags: ['word-order', 'markers', 'production'],
+    prerequisites: [5],
+    description: 'Build 5 complete Somali sentences from English prompts. Each requires: correct marker, subject, object, and SOV word order. Word bank provided.',
+    acceptance: 58,
+    isPremium: false,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // SECTION 3: Focus & Questions
+  // SECTION 3: Prepositions & Direction
   // ═══════════════════════════════════════════════════════════════════
   {
-    id: 12, title: 'Marker Identifier', slug: 'marker-identifier', difficulty: 'Beginner',
-    section: 'Focus & Questions', sectionId: 3,
-    tags: ['focus', 'markers', 'recognition'], prerequisites: [8, 9],
-    description: 'Analyze 12 Somali sentences. For each, identify the marker type (statement waa, focus baa, spotlight waxa, question ma) and name its function.',
-    acceptance: 74, isPremium: false,
+    id: 7,
+    title: 'Preposition Picker',
+    slug: 'preposition-picker',
+    difficulty: 'Beginner',
+    section: 'Prepositions & Direction',
+    sectionId: 3,
+    tags: ['prepositions', 'u', 'ku', 'ka', 'la'],
+    prerequisites: [5],
+    description: 'Choose the correct preposition (u=to/for, ku=in/at, ka=from, la=with) for 10 sentences based on English meaning.',
+    acceptance: 70,
+    isPremium: false,
   },
   {
-    id: 13, title: 'Focus Chooser', slug: 'focus-chooser', difficulty: 'Beginner',
-    section: 'Focus & Questions', sectionId: 3,
-    tags: ['focus', 'waa', 'baa', 'waxa'], prerequisites: [12],
-    description: 'Given 8 English sentences with emphasis hints, select the correct Somali marker (waa, baa, or waxa) and construct the sentence.',
-    acceptance: 61, isPremium: false,
-  },
-  {
-    id: 14, title: 'Contraction Decomposer', slug: 'contraction-decomposer', difficulty: 'Intermediate',
-    section: 'Focus & Questions', sectionId: 3,
-    tags: ['clitics', 'contractions', 'pronouns'], prerequisites: [9, 12, 13],
-    description: 'Break down 15 contracted forms (waan, wuu, way, bay, waxaan, waxaad, buu, etc.) into their marker + pronoun components.',
-    acceptance: 53, isPremium: false,
-  },
-  {
-    id: 15, title: 'Question Crafter', slug: 'question-crafter', difficulty: 'Intermediate',
-    section: 'Focus & Questions', sectionId: 3,
-    tags: ['questions', 'ma', 'miyaa'], prerequisites: [12, 13],
-    description: 'Convert 8 Somali statements into yes/no questions using the correct question marker (ma, miyaa, miyuu, miyay).',
-    acceptance: 47, isPremium: false,
-  },
-  {
-    id: 16, title: 'Focus Mastery', slug: 'focus-mastery', difficulty: 'Advanced',
-    section: 'Focus & Questions', sectionId: 3,
-    tags: ['focus', 'translation', 'production'], prerequisites: [12, 13, 14, 15],
-    description: 'Translate a short English paragraph into Somali with correct focus marking throughout. You must choose the right emphasis for each sentence. No hints.',
-    acceptance: 24, isPremium: false,
+    id: 8,
+    title: 'Direction Stacking',
+    slug: 'direction-stacking',
+    difficulty: 'Intermediate',
+    section: 'Prepositions & Direction',
+    sectionId: 3,
+    tags: ['prepositions', 'directionals', 'soo', 'sii'],
+    prerequisites: [7],
+    description: '8 sentences require both a preposition and a directional (soo=toward speaker, sii=away). Stack them in correct order before the verb.',
+    acceptance: 56,
+    isPremium: false,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // SECTION 4: Verb & Tense
+  // SECTION 4: Connectors & Composition
   // ═══════════════════════════════════════════════════════════════════
   {
-    id: 17, title: 'Verb Conjugator', slug: 'verb-conjugator', difficulty: 'Beginner',
-    section: 'Verb & Tense', sectionId: 4,
-    tags: ['verbs', 'conjugation', 'present'], prerequisites: [9],
-    description: 'Conjugate 6 regular verbs across all persons in the present habitual tense. Watch for stem changes and consonant clusters.',
-    acceptance: 63, isPremium: false,
+    id: 9,
+    title: 'Connector Selector',
+    slug: 'connector-selector',
+    difficulty: 'Beginner',
+    section: 'Connectors & Composition',
+    sectionId: 4,
+    tags: ['connectors', 'iyo', '-na', '-se', 'oo'],
+    prerequisites: [6],
+    description: 'Choose the correct connector (iyo=and nouns, -na=and also, -se=but, oo=which/that) for 10 pairs of clauses or nouns.',
+    acceptance: 67,
+    isPremium: false,
   },
   {
-    id: 18, title: 'Tense Shifter', slug: 'tense-shifter', difficulty: 'Intermediate',
-    section: 'Verb & Tense', sectionId: 4,
-    tags: ['verbs', 'tense', 'past', 'future'], prerequisites: [17],
-    description: 'Given 8 sentences in the present habitual, rewrite them in past tense, then future tense. Maintain correct subject clitics throughout.',
-    acceptance: 49, isPremium: false,
-  },
-  {
-    id: 19, title: 'Negation Transformer', slug: 'negation-transformer', difficulty: 'Intermediate',
-    section: 'Verb & Tense', sectionId: 4,
-    tags: ['verbs', 'negation', 'tense'], prerequisites: [17, 18],
-    description: 'Negate 10 affirmative sentences. Each spans different tenses and verb classes. Pay attention to where ma appears in the sentence.',
-    acceptance: 44, isPremium: false,
-  },
-  {
-    id: 20, title: 'Narrative Builder', slug: 'narrative-builder', difficulty: 'Advanced',
-    section: 'Verb & Tense', sectionId: 4,
-    tags: ['verbs', 'tense', 'narrative', 'production'], prerequisites: [17, 18, 19],
-    description: 'Write a 5-sentence narrative in Somali describing a sequence of events. Use at least 3 different tenses and 2 negations correctly.',
-    acceptance: 22, isPremium: false,
-  },
-
-  // ═══════════════════════════════════════════════════════════════════
-  // SECTION 5: Space & Modifiers
-  // ═══════════════════════════════════════════════════════════════════
-  {
-    id: 21, title: 'Preposition Picker', slug: 'preposition-picker', difficulty: 'Beginner',
-    section: 'Space & Modifiers', sectionId: 5,
-    tags: ['prepositions', 'u', 'ku', 'ka', 'la'], prerequisites: [8, 11],
-    description: 'Select the correct preposition (u, ku, ka, la) for 12 sentences based on English meaning: to/for, in/at, from, with.',
-    acceptance: 66, isPremium: false,
-  },
-  {
-    id: 22, title: 'Direction Stacker', slug: 'direction-stacker', difficulty: 'Intermediate',
-    section: 'Space & Modifiers', sectionId: 5,
-    tags: ['prepositions', 'directionals', 'soo', 'sii'], prerequisites: [21],
-    description: 'Stack prepositions with directionals (soo/sii) in the correct order. 10 sentences require both a preposition and a directional before the verb.',
-    acceptance: 50, isPremium: false,
-  },
-  {
-    id: 23, title: 'Adjective-As-Verb', slug: 'adjective-as-verb', difficulty: 'Intermediate',
-    section: 'Space & Modifiers', sectionId: 5,
-    tags: ['adjectives', 'stative-verbs'], prerequisites: [10, 17],
-    description: 'Given English descriptions, form correct Somali sentences using adjectives-as-verbs with the copula (weyn yahay, fiican tahay, etc.).',
-    acceptance: 46, isPremium: false,
-  },
-  {
-    id: 24, title: 'Scene Descriptor', slug: 'scene-descriptor', difficulty: 'Advanced',
-    section: 'Space & Modifiers', sectionId: 5,
-    tags: ['prepositions', 'adjectives', 'numbers', 'production'], prerequisites: [21, 22, 23],
-    description: 'Describe a complex scene in Somali: 3 objects with locations, 2 moving subjects with direction, and comparative adjectives. Free production.',
-    acceptance: 26, isPremium: false,
-  },
-
-  // ═══════════════════════════════════════════════════════════════════
-  // SECTION 6: Complex Grammar
-  // ═══════════════════════════════════════════════════════════════════
-  {
-    id: 25, title: 'Connector Selector', slug: 'connector-selector', difficulty: 'Beginner',
-    section: 'Complex Grammar', sectionId: 6,
-    tags: ['connectors', 'iyo', '-na', '-se', 'oo'], prerequisites: [11, 15],
-    description: 'Choose the correct connector (iyo, -na, -se, oo) for 10 pairs of clauses or nouns. Distinguish noun-joining from clause-joining.',
-    acceptance: 64, isPremium: false,
-  },
-  {
-    id: 26, title: 'Clause Combiner', slug: 'clause-combiner', difficulty: 'Intermediate',
-    section: 'Complex Grammar', sectionId: 6,
-    tags: ['connectors', 'compound'], prerequisites: [25],
-    description: 'Combine 8 pairs of simple Somali sentences into compound or complex sentences using the correct connector and word order.',
-    acceptance: 48, isPremium: false,
-  },
-  {
-    id: 27, title: 'Relative Clause Builder', slug: 'relative-clause-builder', difficulty: 'Intermediate',
-    section: 'Complex Grammar', sectionId: 6,
-    tags: ['relative-clauses', 'oo'], prerequisites: [25, 26],
-    description: 'Transform 6 simple sentences into relative clauses using oo. Maintain correct focus markers and word order within the embedded clause.',
-    acceptance: 41, isPremium: false,
-  },
-  {
-    id: 28, title: 'Complex Translator', slug: 'complex-translator', difficulty: 'Advanced',
-    section: 'Complex Grammar', sectionId: 6,
-    tags: ['connectors', 'relatives', 'conditionals', 'production'], prerequisites: [25, 26, 27],
-    description: 'Translate a complex English paragraph into Somali. Contains compound sentences, relative clauses, and a conditional. No scaffolding.',
-    acceptance: 21, isPremium: false,
-  },
-
-  // ═══════════════════════════════════════════════════════════════════
-  // SECTION 7: Mastery
-  // ═══════════════════════════════════════════════════════════════════
-  {
-    id: 29, title: 'Voice Transformer', slug: 'voice-transformer', difficulty: 'Intermediate',
-    section: 'Mastery', sectionId: 7,
-    tags: ['passive', 'causative', 'transform'], prerequisites: [20, 24],
-    description: 'Transform 8 active sentences into passive (la-) or causative (-si-) forms. Maintain correct tense and subject reference.',
-    acceptance: 43, isPremium: false,
-  },
-  {
-    id: 30, title: 'Free Composition', slug: 'free-composition', difficulty: 'Advanced',
-    section: 'Mastery', sectionId: 7,
-    tags: ['production', 'mastery', 'writing'], prerequisites: [16, 20, 24, 28, 29],
-    description: 'Write a short story (6–8 sentences) in Somali about your day. Must use: 2 tenses, 1 focus marker, 1 preposition+directional, 1 connector, 1 relative clause.',
-    acceptance: 18, isPremium: false,
-  },
-
-  // ═══════════════════════════════════════════════════════════════════
-  // NEW: Learn Workbook Problems
-  // ═══════════════════════════════════════════════════════════════════
-  {
-    id: 31, title: 'Marker Identifier', slug: 'marker-identifier', difficulty: 'Beginner',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['markers', 'waa', 'baa', 'waxa', 'ma'], prerequisites: [8],
-    description: 'Identify the marker in 10 Somali sentences and classify it as STATEMENT (waa), FOCUS (baa), SPOTLIGHT (waxa), or QUESTION (ma).',
-    acceptance: 75, isPremium: false,
-  },
-  {
-    id: 32, title: 'waa vs baa vs waxa', slug: 'marker-distinction', difficulty: 'Intermediate',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['markers', 'emphasis', 'production'], prerequisites: [31],
-    description: 'Given English sentences, choose the correct Somali marker to express the intended emphasis: action focus (waa), subject focus (baa), or object/result focus (waxa).',
-    acceptance: 58, isPremium: false,
-  },
-  {
-    id: 33, title: 'Contraction Decoder', slug: 'contraction-decoder', difficulty: 'Intermediate',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['contractions', 'pronouns', 'markers'], prerequisites: [9, 31],
-    description: 'Split 12 fused marker+pronoun forms (waan, bay, wuu, waxay, buu, etc.) into their component parts and identify the marker and pronoun.',
-    acceptance: 62, isPremium: false,
-  },
-  {
-    id: 34, title: 'Word Order Enforcer', slug: 'word-order-enforcer', difficulty: 'Beginner',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['word-order', 'SOV'], prerequisites: [8],
-    description: 'Fix 8 English-influenced sentences with incorrect Somali word order. Rearrange to proper SOV: Subject → Marker → Object → Verb.',
-    acceptance: 68, isPremium: false,
-  },
-  {
-    id: 35, title: 'Preposition Placement', slug: 'preposition-placement', difficulty: 'Intermediate',
-    section: 'Space & Modifiers', sectionId: 5,
-    tags: ['prepositions', 'u', 'ku', 'ka', 'la', 'word-order'], prerequisites: [21, 34],
-    description: 'Fix sentences where prepositions are in the wrong place. Prepositions must stack before the verb, in correct order with directionals (soo/sii).',
-    acceptance: 54, isPremium: false,
-  },
-  {
-    id: 36, title: 'Connector Chain', slug: 'connector-chain', difficulty: 'Intermediate',
-    section: 'Complex Grammar', sectionId: 6,
-    tags: ['connectors', 'iyo', '-na', '-se', 'oo', 'compound'], prerequisites: [25],
-    description: 'Combine 6 Somali sentences using the correct connectors (iyo, -na, -se, oo) in sequence. Some need noun-joining, some need clause-joining.',
-    acceptance: 51, isPremium: false,
-  },
-  {
-    id: 37, title: 'Full Sentence Builder', slug: 'full-sentence-builder', difficulty: 'Advanced',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['markers', 'prepositions', 'word-order', 'production'], prerequisites: [31, 33, 34, 35],
-    description: 'Build 4 complete Somali sentences from English prompts. Each requires: correct marker choice, subject pronoun, preposition+direction, and SOV word order.',
-    acceptance: 35, isPremium: false,
-  },
-  {
-    id: 38, title: 'Listen & Classify', slug: 'listen-classify', difficulty: 'Intermediate',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['listening', 'markers', 'recognition'], prerequisites: [31],
-    description: 'Listen to 8 fast Somali sentences and classify each by its marker type. Focuses on recognizing markers in natural speech rhythm.',
-    acceptance: 47, isPremium: false,
-  },
-  {
-    id: 39, title: 'Listening Decoder', slug: 'listening-decoder', difficulty: 'Intermediate',
-    section: 'Sentence Core', sectionId: 2,
-    tags: ['listening', 'markers', 'contractions', 'comprehension'], prerequisites: [31, 33],
-    description: 'Listen to 6 sentences with contractions (wuu, bay, waxay) and transcribe the full split form (waa + uu, baa + ay, waxa + ay).',
-    acceptance: 52, isPremium: false,
+    id: 10,
+    title: 'Full Composition',
+    slug: 'full-composition',
+    difficulty: 'Advanced',
+    section: 'Connectors & Composition',
+    sectionId: 4,
+    tags: ['production', 'markers', 'connectors', 'mastery'],
+    prerequisites: [2, 4, 6, 8, 9],
+    description: 'Write 3 multi-sentence Somali paragraphs from English prompts. Must use: markers, contractions, SOV order, prepositions, and connectors. No word bank.',
+    acceptance: 38,
+    isPremium: false,
   },
 ].map((p) => ({ ...p, unit: p.section, unitId: p.sectionId })) as ProblemMeta[];
 

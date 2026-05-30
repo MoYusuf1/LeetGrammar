@@ -1,23 +1,33 @@
 /**
- * Problems.tsx — Ultra-minimalist problem list.
+ * Problems.tsx — Problem list with roadmap section filtering.
  *
- * Just: # · Name · Difficulty (right)
- * Nothing else.
+ * Shows all problems by default.
+ * When accessed from Roadmap, filters by section automatically.
  */
 
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router';
-import { Search, Check, Circle, Lock, RotateCcw } from 'lucide-react';
-import { allProblems, displayDifficulty } from '@/data/problems';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router';
+import { Search, Check, Circle, RotateCcw } from 'lucide-react';
+import { allProblems, displayDifficulty, problemSections } from '@/data/problems';
 import { useProgress } from '@/hooks/useProgress';
 
 export default function Problems() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { getLessonStatus } = useProgress();
 
   const [search, setSearch] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [sectionFilter, setSectionFilter] = useState<number | null>(null);
+
+  // Load section filter from URL
+  useEffect(() => {
+    const section = searchParams.get('section');
+    if (section) {
+      setSectionFilter(parseInt(section, 10));
+    }
+  }, [searchParams]);
 
   const filteredProblems = useMemo(() => {
     return allProblems.filter((p) => {
@@ -28,9 +38,11 @@ export default function Problems() {
         statusFilter === 'all' ||
         (statusFilter === 'solved' && status === 'completed') ||
         (statusFilter === 'unsolved' && status !== 'completed');
-      return matchesSearch && matchesDifficulty && matchesStatus;
+      const matchesSection = sectionFilter === null || p.sectionId === sectionFilter;
+
+      return matchesSearch && matchesDifficulty && matchesStatus && matchesSection;
     });
-  }, [search, difficultyFilter, statusFilter]);
+  }, [search, difficultyFilter, statusFilter, sectionFilter]);
 
   const solvedCount = allProblems.filter((p) => getLessonStatus(p.id) === 'completed').length;
   const hasFilters = search || difficultyFilter !== 'all' || statusFilter !== 'all';
@@ -41,12 +53,17 @@ export default function Problems() {
     setStatusFilter('all');
   };
 
+  const currentSection = sectionFilter !== null ? problemSections.find((s) => s.id === sectionFilter) : null;
+
   return (
     <div className="min-h-screen bg-[#0f0f0f]">
       {/* Header */}
       <div className="px-4 pt-4 pb-3">
         <div className="flex items-center justify-between mb-3">
-          <h1 className="text-lg font-bold text-[#eff1f6]">Problems</h1>
+          <div>
+            <h1 className="text-lg font-bold text-[#eff1f6]">Problems</h1>
+            {currentSection && <p className="text-[10px] text-[#8c8c8c] mt-0.5">{currentSection.name}</p>}
+          </div>
           <span className="text-xs text-[#8c8c8c]">
             <span className="text-[#eff1f6] font-bold">{solvedCount}</span> / {allProblems.length}
           </span>
@@ -69,7 +86,7 @@ export default function Problems() {
           {['Beginner', 'Intermediate', 'Advanced'].map((d) => (
             <button
               key={d}
-              onClick={() => setDifficultyFilter((prev) => prev === d ? 'all' : d)}
+              onClick={() => setDifficultyFilter((prev) => (prev === d ? 'all' : d))}
               className={`px-2 py-1 rounded-lg text-[9px] font-semibold uppercase tracking-wider transition-colors ${
                 difficultyFilter === d
                   ? 'bg-[#ffa116] text-[#0f0f0f]'
@@ -83,7 +100,7 @@ export default function Problems() {
           {['solved', 'unsolved'].map((s) => (
             <button
               key={s}
-              onClick={() => setStatusFilter((prev) => prev === s ? 'all' : s)}
+              onClick={() => setStatusFilter((prev) => (prev === s ? 'all' : s))}
               className={`px-2 py-1 rounded-lg text-[9px] font-semibold uppercase tracking-wider transition-colors ${
                 statusFilter === s
                   ? 'bg-[#ffa116] text-[#0f0f0f]'

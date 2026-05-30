@@ -1,21 +1,17 @@
 /**
- * ExplainCard — Mobile-first teaching view.
+ * ExplainCard — Clean, readable teaching content.
  *
- * Optimized for small screens: vertical stacking, readable text, no horizontal scroll.
+ * Interlinear gloss rendered naturally: word (tag) = meaning
+ * No vertical stacking. Readable at a glance.
  */
 
 import { ArrowRight, Ear, Table2 } from 'lucide-react';
 
-interface GlossWord {
+interface GlossExample {
   somali: string;
-  tag: string;
   english: string;
-}
-
-interface GlossLine {
-  parts: GlossWord[];
-  translation: string;
-  note?: string;
+  breakdown: string; // "word1 (tag) word2 (tag)" format
+  note: string;
 }
 
 interface RefRow {
@@ -27,12 +23,10 @@ interface RefRow {
 
 interface LevelExplain {
   id: number;
-  color: string;
   title: string;
   rule: string;
   ruleDetail: string;
-  glossTitle: string;
-  gloss: GlossLine[];
+  examples: GlossExample[];
   refTitle: string;
   refHeaders: string[];
   refRows: RefRow[];
@@ -42,194 +36,148 @@ interface LevelExplain {
 const EXPLAINS: Record<number, LevelExplain> = {
   1: {
     id: 1,
-    color: '#3b82f6',
     title: 'Marker Identification',
     rule: 'Every Somali sentence has exactly one marker. Find it.',
     ruleDetail: 'The marker is a small word near the front. It tells you what TYPE of sentence you are in. There are four types. Your job is to see any sentence and instantly name which one it is.',
-    glossTitle: 'Four markers, four sentence types:',
-    gloss: [
+    examples: [
       {
-        parts: [
-          { somali: 'Cali', tag: 'name', english: 'Ali' },
-          { somali: 'wuu', tag: 'waa+uu', english: '(declares)' },
-          { somali: 'tegay.', tag: 'verb', english: 'went' },
-        ],
-        translation: 'Ali went.',
-        note: 'STATEMENT — wuu focuses on action',
+        somali: 'Cali wuu tegay.',
+        english: 'Ali went.',
+        breakdown: 'Cali (subject) wuu (STATEMENT marker + he) tegay (went)',
+        note: 'STATEMENT — wuu focuses on the action',
       },
       {
-        parts: [
-          { somali: 'Hooyada', tag: 'noun', english: 'mother' },
-          { somali: 'bay', tag: 'baa+ay', english: '(focus)' },
-          { somali: 'cuntay.', tag: 'verb', english: 'ate' },
-        ],
-        translation: 'It was MOTHER who ate.',
-        note: 'FOCUS — bay highlights the noun',
+        somali: 'Hooyada bay cuntay.',
+        english: 'It was MOTHER who ate.',
+        breakdown: 'Hooyada (mother) bay (FOCUS marker + she) cuntay (ate)',
+        note: 'FOCUS — bay highlights the noun before it',
       },
       {
-        parts: [
-          { somali: 'Ma', tag: 'question', english: '(asking)' },
-          { somali: 'cunaysaa?', tag: 'verb+you', english: 'eating?' },
-        ],
-        translation: 'Are you eating?',
+        somali: 'Ma cunaysaa?',
+        english: 'Are you eating?',
+        breakdown: 'Ma (QUESTION marker) cunaysaa (eating + you)',
         note: 'QUESTION — ma turns any statement into yes/no',
       },
       {
-        parts: [
-          { somali: 'Waxaan', tag: 'waxa+aan', english: '(spotlight)' },
-          { somali: 'akhriyay', tag: 'verb', english: 'read' },
-          { somali: 'buug.', tag: 'noun', english: 'a book' },
-        ],
-        translation: 'What I read was a book.',
+        somali: 'Waxaan akhriyay buug.',
+        english: 'What I read was a book.',
+        breakdown: 'Waxaan (SPOTLIGHT marker + I) akhriyay (read) buug (a book)',
         note: 'SPOTLIGHT — waxa zooms in on one element',
       },
     ],
     refTitle: 'The four marker types',
-    refHeaders: ['Marker', 'Type', 'Focus'],
+    refHeaders: ['Marker', 'Type', 'Focus is on'],
     refRows: [
-      { col1: 'waa / wuu / way', col2: 'STATEMENT', col3: 'the action', bold1: true },
-      { col1: 'ma / miyaa', col2: 'QUESTION', col3: 'yes/no answer' },
-      { col1: 'baa / ayaa', col2: 'FOCUS', col3: 'the noun', bold1: true },
-      { col1: 'waxa / waxaan', col2: 'SPOTLIGHT', col3: '"what was..."', bold1: true },
+      { col1: 'waa / wuu / way / waan', col2: 'STATEMENT', col3: 'the action (verb)', bold1: true },
+      { col1: 'ma / miyaa / miyuu', col2: 'QUESTION', col3: 'yes/no answer', bold1: true },
+      { col1: 'baa / ayaa / buu / bay', col2: 'FOCUS', col3: 'the noun before it', bold1: true },
+      { col1: 'waxa / waxaan / wuxuu', col2: 'SPOTLIGHT', col3: '"what ___ was..."', bold1: true },
     ],
-    listeningNote: 'In a Somali movie, a sentence flies by in under 2 seconds. Your ear needs to catch the marker in the first half-second. Recognition before meaning.',
+    listeningNote:
+      'In a Somali movie, a sentence flies by in under 2 seconds. Your ear needs to catch the marker in the first half-second. Recognition before meaning.',
   },
 
   2: {
     id: 2,
-    color: '#8b5cf6',
     title: 'waa vs baa vs waxa',
     rule: 'Same words. Different marker. Completely different meaning.',
     ruleDetail: 'The marker decides where the weight lands. waa focuses on the ACTION. baa focuses on the NOUN. waxa spotlights one part. One sentence, three ways to say it.',
-    glossTitle: 'Same sentence, three ways:',
-    gloss: [
+    examples: [
       {
-        parts: [
-          { somali: 'Cali', tag: 'name', english: 'Ali' },
-          { somali: 'wuu', tag: 'statement', english: '(declares)' },
-          { somali: 'cunay.', tag: 'verb', english: 'ate' },
-        ],
-        translation: 'Ali ate.',
-        note: 'STATEMENT — neutral action focus',
+        somali: 'Cali wuu cunay.',
+        english: 'Ali ate.',
+        breakdown: 'Cali (subject) wuu (STATEMENT) cunay (ate)',
+        note: 'Neutral — the eating is the point',
       },
       {
-        parts: [
-          { somali: 'Cali', tag: 'name', english: 'Ali' },
-          { somali: 'baa', tag: 'focus', english: '(ALI is focus)' },
-          { somali: 'cunay.', tag: 'verb', english: 'ate' },
-        ],
-        translation: 'It was ALI who ate.',
-        note: 'FOCUS — spotlight on the noun',
+        somali: 'Cali baa cunay.',
+        english: 'It was ALI who ate.',
+        breakdown: 'Cali (subject) baa (FOCUS) cunay (ate)',
+        note: 'Spotlight is on ALI, not someone else',
       },
       {
-        parts: [
-          { somali: 'Waxuu', tag: 'spotlight', english: '(what he...)' },
-          { somali: 'cunay', tag: 'verb', english: 'ate' },
-          { somali: 'waa', tag: 'copula', english: 'was' },
-          { somali: 'hilib.', tag: 'noun', english: 'meat' },
-        ],
-        translation: 'What he ate was meat.',
-        note: 'SPOTLIGHT — zoom in on object',
+        somali: 'Waxuu cunay waa hilib.',
+        english: 'What he ate was meat.',
+        breakdown: 'Waxuu (SPOTLIGHT + he) cunay (ate) waa (is) hilib (meat)',
+        note: 'Zoom in on the object — MEAT, not rice',
       },
     ],
     refTitle: 'The three-way distinction',
     refHeaders: ['Marker', 'Answers', 'Example'],
     refRows: [
-      { col1: 'waa', col2: 'What happened?', col3: 'Cali wuu cunay', bold1: true },
-      { col1: 'baa / ayaa', col2: 'Who did it?', col3: 'Cali baa cunay', bold1: true },
-      { col1: 'waxa', col2: 'What was it?', col3: 'Waxuu cunay...', bold1: true },
+      { col1: 'waa', col2: 'What happened?', col3: 'Cali wuu cunay = Ali ATE', bold1: true },
+      { col1: 'baa / ayaa', col2: 'Who did it?', col3: 'Cali baa cunay = ALI ate', bold1: true },
+      { col1: 'waxa', col2: 'What was it?', col3: 'Waxuu cunay... = ...was MEAT', bold1: true },
     ],
     listeningNote: 'When you hear baa or ayaa, the speaker is emphasizing a noun. When you hear waxa, they are zooming in. Train your ear to catch these distinctions every time.',
   },
 
   3: {
     id: 3,
-    color: '#06b6d4',
     title: 'Subject Pronoun Contractions',
     rule: 'Somali fuses marker + pronoun into one word. You must split them apart instantly.',
-    ruleDetail: 'In fast speech, waa + uu becomes wuu. baa + ay becomes bay. waxa + aan becomes waxaan. This is how Somali actually sounds. Fast speech will blur without this skill.',
-    glossTitle: 'The fusion in action:',
-    gloss: [
+    ruleDetail:
+      'In fast speech, waa + uu becomes wuu. baa + ay becomes bay. waxa + aan becomes waxaan. This is how Somali actually sounds. Fast speech will blur without this skill.',
+    examples: [
       {
-        parts: [
-          { somali: 'Wuu', tag: 'waa+uu', english: 'statement+he' },
-          { somali: 'tegay.', tag: 'verb', english: 'went' },
-        ],
-        translation: 'He went.',
-        note: 'wuu = statement marker + he',
+        somali: 'Wuu tegay.',
+        english: 'He went.',
+        breakdown: 'Wuu (waa + uu = STATEMENT + he) tegay (went)',
+        note: 'The fusion is automatic in native speech',
       },
       {
-        parts: [
-          { somali: 'Bay', tag: 'baa+ay', english: 'focus+she' },
-          { somali: 'cuntay.', tag: 'verb', english: 'ate' },
-        ],
-        translation: 'It was SHE who ate.',
-        note: 'bay = focus marker + she/they',
+        somali: 'Bay cuntay.',
+        english: 'It was SHE who ate.',
+        breakdown: 'Bay (baa + ay = FOCUS + she) cuntay (ate)',
+        note: 'Native speakers never say "baa ay" — always "bay"',
       },
       {
-        parts: [
-          { somali: 'Waxaan', tag: 'waxa+aan', english: 'spotlight+I' },
-          { somali: 'rabaa', tag: 'verb', english: 'want' },
-          { somali: 'biyo.', tag: 'noun', english: 'water' },
-        ],
-        translation: 'What I want is water.',
-        note: 'waxaan = spotlight + I',
+        somali: 'Waxaan rabaa biyo.',
+        english: 'What I want is water.',
+        breakdown: 'Waxaan (waxa + aan = SPOTLIGHT + I) rabaa (want) biyo (water)',
+        note: 'Three-part fusion: all happens in one word',
       },
     ],
     refTitle: 'The contraction table',
-    refHeaders: ['Fused', 'Splits into', 'Means'],
+    refHeaders: ['Fused', 'Splits into', 'Meaning'],
     refRows: [
-      { col1: 'waan', col2: 'waa + aan', col3: 'statement—I' },
-      { col1: 'wuu', col2: 'waa + uu', col3: 'statement—he', bold1: true },
-      { col1: 'way', col2: 'waa + ay', col3: 'statement—she/they', bold1: true },
-      { col1: 'buu', col2: 'baa + uu', col3: 'focus—he', bold1: true },
-      { col1: 'bay', col2: 'baa + ay', col3: 'focus—she/they', bold1: true },
-      { col1: 'waxaan', col2: 'waxa + aan', col3: 'spotlight—I', bold1: true },
-      { col1: 'wuxuu', col2: 'waxa + uu', col3: 'spotlight—he', bold1: true },
-      { col1: 'waxay', col2: 'waxa + ay', col3: 'spotlight—she/they', bold1: true },
+      { col1: 'waan', col2: 'waa + aan', col3: 'statement — I' },
+      { col1: 'wuu', col2: 'waa + uu', col3: 'statement — he', bold1: true },
+      { col1: 'way', col2: 'waa + ay', col3: 'statement — she/they', bold1: true },
+      { col1: 'buu', col2: 'baa + uu', col3: 'focus — he', bold1: true },
+      { col1: 'bay', col2: 'baa + ay', col3: 'focus — she/they', bold1: true },
+      { col1: 'waxaan', col2: 'waxa + aan', col3: 'spotlight — I', bold1: true },
+      { col1: 'wuxuu', col2: 'waxa + uu', col3: 'spotlight — he', bold1: true },
     ],
     listeningNote: 'A native speaker never says "waa uu cunay." They say "wuu cunay." Fast Somali depends on hearing these fused forms and instantly decomposing them.',
   },
 
   4: {
     id: 4,
-    color: '#22c55e',
     title: 'SOV Word Order',
     rule: 'The verb comes last. Every time.',
     ruleDetail: 'English is SVO: "Ali ate meat." Somali is SOV: "Ali meat ate." Once this locks in, you stop reaching for the verb too early.',
-    glossTitle: 'Subject-Object-VERB:',
-    gloss: [
+    examples: [
       {
-        parts: [
-          { somali: 'Cali', tag: 'subject', english: 'Ali' },
-          { somali: 'wuu', tag: 'marker', english: '(declares)' },
-          { somali: 'hilib', tag: 'object', english: 'meat' },
-          { somali: 'cunay.', tag: 'VERB.LAST', english: 'ate' },
-        ],
-        translation: 'Ali ate meat.',
+        somali: 'Cali wuu hilib cunay.',
+        english: 'Ali ate meat.',
+        breakdown: 'Cali (subject) wuu (marker) hilib (object) cunay (VERB.LAST)',
         note: 'Subject → Marker → Object → VERB (always last)',
       },
       {
-        parts: [
-          { somali: 'Cali', tag: 'subject', english: 'Ali' },
-          { somali: 'baa', tag: 'focus', english: '(ALI focus)' },
-          { somali: 'cuntada', tag: 'object', english: 'the food' },
-          { somali: 'cunay.', tag: 'VERB', english: 'ate' },
-        ],
-        translation: 'It was ALI who ate the food.',
-        note: 'Focus type — verb still last',
+        somali: 'Cali baa cuntada cunay.',
+        english: 'It was ALI who ate the food.',
+        breakdown: 'Cali (subject) baa (focus) cuntada (object) cunay (VERB)',
+        note: 'Focus type — verb still lands at the end',
       },
       {
-        parts: [
-          { somali: 'Waxaan', tag: 'spotlight', english: '(what I...)' },
-          { somali: 'biyo', tag: 'object', english: 'water' },
-          { somali: 'cabay.', tag: 'VERB', english: 'drank' },
-        ],
-        translation: 'What I drank was water.',
-        note: 'Spotlight type — verb still last',
+        somali: 'Waxaan biyo cabay.',
+        english: 'What I drank was water.',
+        breakdown: 'Waxaan (spotlight) biyo (object) cabay (VERB)',
+        note: 'Even with spotlight, the verb closes the sentence',
       },
     ],
-    refTitle: 'Word order by type',
+    refTitle: 'Word order by sentence type',
     refHeaders: ['Type', 'Order'],
     refRows: [
       { col1: 'Statement', col2: 'Subject → waa → Object → VERB', bold1: true },
@@ -242,41 +190,27 @@ const EXPLAINS: Record<number, LevelExplain> = {
 
   5: {
     id: 5,
-    color: '#f59e0b',
     title: 'Prepositions + Direction',
     rule: 'Four prepositions and two direction words carry the spatial logic.',
     ruleDetail: 'u, ku, ka, la tell you the relationship. soo and sii add direction. These tiny words are fast in speech but they carry the whole picture.',
-    glossTitle: 'How they stack before the verb:',
-    gloss: [
+    examples: [
       {
-        parts: [
-          { somali: 'Wuu', tag: 'statement', english: '(he)' },
-          { somali: 'u', tag: 'prep:to/for', english: 'to/for' },
-          { somali: 'soo', tag: 'direction:→here', english: 'toward' },
-          { somali: 'keenay.', tag: 'VERB', english: 'brought' },
-        ],
-        translation: 'He brought it over (to me).',
-        note: 'u + soo = "for + toward here"',
+        somali: 'Wuu u soo keenay.',
+        english: 'He brought it over (to me).',
+        breakdown: 'Wuu (he declares) u (to/for) soo (toward here) keenay (brought)',
+        note: 'u + soo stack together: "for + toward here"',
       },
       {
-        parts: [
-          { somali: 'Waan', tag: 'statement.I', english: '(I)' },
-          { somali: 'ku', tag: 'prep:in/at', english: 'in/at' },
-          { somali: 'joogaa', tag: 'VERB', english: 'am staying' },
-          { somali: 'guriga.', tag: 'location', english: 'the house' },
-        ],
-        translation: 'I am in the house.',
-        note: 'ku = "in/at + staying = staying in"',
+        somali: 'Waan ku joogaa guriga.',
+        english: 'I am in the house.',
+        breakdown: 'Waan (I declare) ku (in/at) joogaa (am staying) guriga (the house)',
+        note: 'ku before the verb, then the location after',
       },
       {
-        parts: [
-          { somali: 'Way', tag: 'statement', english: '(she)' },
-          { somali: 'ka', tag: 'prep:from', english: 'from' },
-          { somali: 'soo', tag: 'direction', english: '→here' },
-          { somali: 'noqotay.', tag: 'VERB', english: 'returned' },
-        ],
-        translation: 'She came back.',
-        note: 'ka + soo = "from + toward = came back"',
+        somali: 'Way ka soo noqotay.',
+        english: 'She came back.',
+        breakdown: 'Way (she declares) ka (from) soo (toward here) noqotay (returned)',
+        note: 'ka + soo = "from + toward here" = came back',
       },
     ],
     refTitle: 'Prepositions and directions',
@@ -289,56 +223,32 @@ const EXPLAINS: Record<number, LevelExplain> = {
       { col1: 'soo', col2: '← toward speaker' },
       { col1: 'sii', col2: '→ away from speaker' },
     ],
-    listeningNote: 'These words blur into the verb phrase in fast speech. But they carry the whole spatial picture. Train your ear to catch them.',
+    listeningNote: 'These words blur into the verb phrase in fast speech. But they carry the whole spatial picture. Train your ear to catch them before the verb.',
   },
 
   6: {
     id: 6,
-    color: '#ef4444',
     title: 'Connectors',
     rule: 'Four connectors join ideas. Each encodes a different relationship.',
     ruleDetail: 'iyo links nouns. -na continues. -se contrasts. oo links relative clauses. Without them, you hear isolated sentences. With them, you hear the full thought.',
-    glossTitle: 'Connectors in action:',
-    gloss: [
+    examples: [
       {
-        parts: [
-          { somali: 'Cali', tag: 'name', english: 'Ali' },
-          { somali: 'iyo', tag: 'connector', english: 'and' },
-          { somali: 'Sahra', tag: 'name', english: 'Sahra' },
-          { somali: 'way', tag: 'statement', english: '(they)' },
-          { somali: 'tegeen.', tag: 'VERB', english: 'went' },
-        ],
-        translation: 'Ali and Sahra went.',
-        note: 'iyo — links two nouns',
+        somali: 'Cali iyo Sahra way tegeen.',
+        english: 'Ali and Sahra went.',
+        breakdown: 'Cali (Ali) iyo (and) Sahra (Sahra) way (they declare) tegeen (went)',
+        note: 'iyo — links two nouns into one subject',
       },
       {
-        parts: [
-          { somali: 'Wuu', tag: 'statement', english: '(he)' },
-          { somali: 'cunay,', tag: 'VERB', english: 'ate,' },
-          { somali: 'waadna', tag: 'waa+aad+-na', english: 'and you' },
-          { somali: 'cuntay.', tag: 'VERB', english: 'ate' },
-        ],
-        translation: 'He ate, and you also ate.',
-        note: '-na — attaches to next clause, means "and also"',
+        somali: 'Wuu cunay, waadna cuntay.',
+        english: 'He ate, and you also ate.',
+        breakdown: 'Wuu (he) cunay (ate), waadna (and you also = waa+aad+-na) cuntay (ate)',
+        note: '-na attaches to the next clause, means "and also"',
       },
       {
-        parts: [
-          { somali: 'Wuu', tag: 'statement', english: '(he)' },
-          { somali: 'tegay,', tag: 'VERB', english: 'went,' },
-          { somali: 'naagtase', tag: 'naagta+-se', english: 'but woman' },
-          { somali: 'joogtay.', tag: 'VERB', english: 'stayed' },
-        ],
-        translation: 'He went, but the woman stayed.',
-        note: '-se — contrast, attaches to first word',
-      },
-      {
-        parts: [
-          { somali: 'Buug', tag: 'noun', english: 'book' },
-          { somali: 'oo', tag: 'connector', english: 'which' },
-          { somali: 'weyn', tag: 'adj', english: 'big' },
-        ],
-        translation: 'A book which was big',
-        note: 'oo — relative clause connector',
+        somali: 'Wuu tegay, naagtase way joogtay.',
+        english: 'He went, but the woman stayed.',
+        breakdown: 'Wuu (he) tegay (went), naagtase (but the woman = naagta+-se) way (she) joogtay (stayed)',
+        note: '-se introduces contrast, attaches to first word',
       },
     ],
     refTitle: 'Connector types',
@@ -347,43 +257,28 @@ const EXPLAINS: Record<number, LevelExplain> = {
       { col1: 'iyo', col2: 'and (nouns)', bold1: true },
       { col1: '-na', col2: 'and also (sentences)', bold1: true },
       { col1: '-se', col2: 'but / however', bold1: true },
-      { col1: 'oo', col2: 'which / that', bold1: true },
+      { col1: 'oo', col2: 'which / that (relative)', bold1: true },
     ],
-    listeningNote: 'Somali chains ideas fast. Missing iyo means you lose who you are talking about. Missing -se means you think both things happened when one was a contrast.',
+    listeningNote: 'Somali chains ideas fast. Missing iyo means you lose who you are talking about. Missing -se means you miss the contrast. Hearing connectors correctly is how you follow stories.',
   },
 
   7: {
     id: 7,
-    color: '#ffa116',
     title: 'Full Sentence Construction',
     rule: 'You have all the pieces. Build any Somali sentence from scratch.',
     ruleDetail: 'This level closes the loop. If you can build it, you will hear it. Production and comprehension reinforce each other.',
-    glossTitle: 'A complete sentence assembled:',
-    gloss: [
+    examples: [
       {
-        parts: [
-          { somali: 'Hooyada', tag: 'subject', english: 'Mother' },
-          { somali: 'way', tag: 'statement', english: '(declares)' },
-          { somali: 'ka', tag: 'prep:from', english: 'from' },
-          { somali: 'soo', tag: 'direction', english: 'toward' },
-          { somali: 'keentay', tag: 'VERB', english: 'brought' },
-          { somali: 'cunto', tag: 'object', english: 'food' },
-          { somali: 'suuqa.', tag: 'location', english: 'market' },
-        ],
-        translation: 'Mother brought food from the market.',
-        note: 'Subject + marker + prep + direction + VERB + object + location',
+        somali: 'Hooyada way ka soo keentay cunto suuqa.',
+        english: 'Mother brought food from the market.',
+        breakdown: 'Hooyada (mother) way (she declares) ka (from) soo (toward) keentay (brought) cunto (food) suuqa (market)',
+        note: 'Subject + marker + prepositions + verb + objects',
       },
       {
-        parts: [
-          { somali: 'Cali', tag: 'name', english: 'Ali' },
-          { somali: 'iyo', tag: 'connector', english: 'and' },
-          { somali: 'Sahra', tag: 'name', english: 'Sahra' },
-          { somali: 'waxay', tag: 'spotlight', english: '(what they...)' },
-          { somali: 'la', tag: 'prep:with', english: 'with' },
-          { somali: 'shaqeeyeen.', tag: 'VERB', english: 'worked' },
-        ],
-        translation: 'Ali and Sahra worked together.',
-        note: 'iyo + spotlight + preposition + VERB = full stack',
+        somali: 'Cali iyo Sahra waxay la shaqeeyeen macallinka.',
+        english: 'Ali and Sahra worked with the teacher.',
+        breakdown: 'Cali iyo Sahra (Ali and Sahra) waxay (they spotlight) la (with) shaqeeyeen (worked) macallinka (teacher)',
+        note: 'Connector + marker + preposition + verb = full stack',
       },
     ],
     refTitle: 'The full skeleton',
@@ -393,30 +288,12 @@ const EXPLAINS: Record<number, LevelExplain> = {
       { col1: '2. Marker', col2: 'waa/baa/waxa + pronoun', bold1: true },
       { col1: '3. Preposition', col2: 'u / ku / ka / la' },
       { col1: '4. Direction', col2: 'soo / sii' },
-      { col1: '5. Object', col2: 'Noun' },
-      { col1: '6. VERB', col2: '← ALWAYS LAST', bold1: true },
+      { col1: '5. Verb', col2: '← ALWAYS LAST', bold1: true },
+      { col1: '6. Object', col2: 'Noun' },
     ],
     listeningNote: 'You now have the full grammar skeleton. Go back to your Listening Guide. Open a Somali video. Pause every 15 seconds. Decode one sentence using the 6-step decoder. You are parsing, not guessing.',
   },
 };
-
-function InterlinearGloss({ parts, color }: { parts: GlossWord[]; color: string }) {
-  return (
-    <div className="space-y-1">
-      {parts.map((w, i) => (
-        <div key={i} className="flex items-start gap-2">
-          <span className="text-xs font-bold text-[#eff1f6] font-mono min-w-fit">
-            {w.somali}
-          </span>
-          <span className="text-[9px] font-bold text-center min-w-fit" style={{ color: `${color}88` }}>
-            {w.tag}
-          </span>
-          <span className="text-[9px] text-[#5c5c5c] italic">{w.english}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 interface ExplainCardProps {
   levelId: number;
@@ -426,7 +303,6 @@ interface ExplainCardProps {
 export default function ExplainCard({ levelId, onStart }: ExplainCardProps) {
   const data = EXPLAINS[levelId];
   if (!data) return null;
-  const { color } = data;
 
   return (
     <div className="space-y-4 pb-2">
@@ -436,23 +312,25 @@ export default function ExplainCard({ levelId, onStart }: ExplainCardProps) {
         <p className="text-xs text-[#8c8c8c] leading-relaxed">{data.ruleDetail}</p>
       </div>
 
-      {/* Anatomy */}
+      {/* Examples */}
       <div className="space-y-2">
-        <p className="text-[9px] font-bold text-[#5c5c5c] uppercase tracking-wider px-1">
-          {data.glossTitle}
-        </p>
-        {data.gloss.map((line, i) => (
+        <p className="text-[9px] font-bold text-[#5c5c5c] uppercase tracking-wider px-1">Examples</p>
+        {data.examples.map((ex, i) => (
           <div key={i} className="rounded-xl bg-[#1a1a1a] border border-[#ffffff06] p-3 space-y-2">
-            <InterlinearGloss parts={line.parts} color={color} />
+            {/* Natural layout */}
+            <div>
+              <p className="text-xs font-bold text-[#eff1f6] leading-relaxed">{ex.somali}</p>
+              <p className="text-[10px] text-[#5c5c5c] mt-1">{ex.breakdown}</p>
+            </div>
+
+            {/* Translation */}
             <div className="flex items-start gap-2 pt-1 border-t border-[#ffffff06]">
-              <ArrowRight size={10} className="flex-shrink-0 mt-0.5" style={{ color }} />
+              <ArrowRight size={10} className="flex-shrink-0 mt-0.5" style={{ color: '#ffa116' }} />
               <div>
-                <p className="text-xs font-semibold" style={{ color }}>
-                  {line.translation}
+                <p className="text-xs font-semibold" style={{ color: '#ffa116' }}>
+                  {ex.english}
                 </p>
-                {line.note && (
-                  <p className="text-[9px] text-[#4a4a4a] mt-0.5">— {line.note}</p>
-                )}
+                <p className="text-[9px] text-[#4a4a4a] mt-0.5">— {ex.note}</p>
               </div>
             </div>
           </div>
@@ -470,12 +348,21 @@ export default function ExplainCard({ levelId, onStart }: ExplainCardProps) {
         <div className="rounded-xl border border-[#ffffff08] overflow-hidden text-[10px]">
           <div className="grid px-2.5 py-1.5 bg-[#1f1f1f] gap-2" style={{ gridTemplateColumns: data.refHeaders.length === 3 ? '1fr 1fr 1fr' : '1fr 1fr' }}>
             {data.refHeaders.map((h, i) => (
-              <span key={i} className="font-bold text-[#5c5c5c]">{h}</span>
+              <span key={i} className="font-bold text-[#5c5c5c]">
+                {h}
+              </span>
             ))}
           </div>
           {data.refRows.map((row, i) => (
-            <div key={i} className="grid px-2.5 py-1.5 border-t border-[#ffffff05] gap-2" style={{ gridTemplateColumns: data.refHeaders.length === 3 ? '1fr 1fr 1fr' : '1fr 1fr', backgroundColor: i % 2 === 0 ? '#141414' : '#171717' }}>
-              <span className={row.bold1 ? 'font-bold text-[#eff1f6] font-mono' : 'text-[#8c8c8c] font-mono'} style={{ color: row.bold1 ? color : undefined }}>
+            <div
+              key={i}
+              className="grid px-2.5 py-1.5 border-t border-[#ffffff05] gap-2"
+              style={{
+                gridTemplateColumns: data.refHeaders.length === 3 ? '1fr 1fr 1fr' : '1fr 1fr',
+                backgroundColor: i % 2 === 0 ? '#141414' : '#171717',
+              }}
+            >
+              <span className={row.bold1 ? 'font-bold text-[#eff1f6] font-mono' : 'text-[#8c8c8c] font-mono'} style={{ color: row.bold1 ? '#ffa116' : undefined }}>
                 {row.col1}
               </span>
               <span className="text-[#8c8c8c]">{row.col2}</span>
@@ -490,20 +377,14 @@ export default function ExplainCard({ levelId, onStart }: ExplainCardProps) {
         <div className="flex items-start gap-2">
           <Ear size={11} className="text-[#22c55e] flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-[9px] font-bold text-[#22c55e] uppercase tracking-wider mb-0.5">
-              For listening
-            </p>
+            <p className="text-[9px] font-bold text-[#22c55e] uppercase tracking-wider mb-0.5">For listening</p>
             <p className="text-[9px] text-[#4a7a4a] leading-relaxed">{data.listeningNote}</p>
           </div>
         </div>
       </div>
 
       {/* CTA */}
-      <button
-        onClick={onStart}
-        className="w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-[0.98] hover:opacity-90"
-        style={{ backgroundColor: color, color: '#0f0f0f' }}
-      >
+      <button onClick={onStart} className="w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-[0.98] hover:opacity-90" style={{ backgroundColor: '#ffa116', color: '#0f0f0f' }}>
         Start Drills
       </button>
     </div>
