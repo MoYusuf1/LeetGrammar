@@ -58,7 +58,7 @@ export default function Problems() {
   return (
     <div className="min-h-screen bg-[#0f0f0f]">
       {/* Header */}
-      <div className="px-4 pt-4 pb-3">
+      <div className="px-4 pt-4 pb-3 sm:max-w-5xl sm:mx-auto sm:w-full">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h1 className="text-lg font-bold text-[#eff1f6]">Problems</h1>
@@ -123,8 +123,8 @@ export default function Problems() {
       </div>
 
       {/* Problems list */}
-      <div className="px-4 pb-20 sm:pb-8">
-        <div className="space-y-1">
+      <div className="px-4 pb-20 sm:pb-8 sm:max-w-5xl sm:mx-auto">
+        <div className="space-y-1 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
           {filteredProblems.map((problem) => {
             const status = getLessonStatus(problem.id);
             const isCompleted = status === 'completed';
@@ -133,9 +133,9 @@ export default function Problems() {
               <button
                 key={problem.id}
                 onClick={() => navigate(`/problem/${problem.id}`)}
-                className="w-full px-3 py-2.5 rounded-lg bg-[#1a1a1a] border border-[#ffffff08] hover:bg-[#252525] active:scale-[0.98] transition-all text-left flex items-center justify-between"
+                className="w-full px-3 py-2.5 rounded-lg bg-[#1a1a1a] border border-[#ffffff08] hover:bg-[#252525] hover:border-[#ffffff14] active:scale-[0.98] transition-all text-left flex items-center justify-between sm:flex-col sm:items-start sm:justify-start sm:p-4 sm:h-full sm:gap-3"
               >
-                <div className="flex items-center gap-2 flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-1 min-w-0 sm:w-full sm:flex-initial">
                   <div className="flex-shrink-0">
                     {isCompleted ? (
                       <Check size={14} className="text-[#22c55e]" strokeWidth={2.5} />
@@ -144,9 +144,9 @@ export default function Problems() {
                     )}
                   </div>
                   <span className="text-xs font-mono text-[#5c5c5c]">#{problem.id}</span>
-                  <span className="text-xs font-semibold text-[#eff1f6] truncate">{problem.title}</span>
+                  <span className="text-xs font-semibold text-[#eff1f6] truncate sm:text-sm sm:whitespace-normal sm:leading-snug">{problem.title}</span>
                 </div>
-                <span className="text-[10px] text-[#5c5c5c] ml-2 flex-shrink-0">
+                <span className="text-[10px] font-semibold text-[#ffa116] ml-2 flex-shrink-0 sm:ml-0 sm:mt-auto">
                   {displayDifficulty(problem.difficulty)}
                 </span>
               </button>

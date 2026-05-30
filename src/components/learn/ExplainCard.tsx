@@ -5,7 +5,7 @@
  * No vertical stacking. Readable at a glance.
  */
 
-import { ArrowRight, Ear, Table2 } from 'lucide-react';
+import { Ear, Table2 } from 'lucide-react';
 
 interface GlossExample {
   somali: string;
@@ -300,93 +300,142 @@ interface ExplainCardProps {
   onStart: () => void;
 }
 
+/** Parse "word (gloss) word (gloss)" into interlinear token pairs. */
+function parseGloss(breakdown: string): { word: string; gloss: string }[] {
+  const tokens: { word: string; gloss: string }[] = [];
+  const re = /([^()]+?)\s*\(([^)]+)\)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(breakdown)) !== null) {
+    tokens.push({ word: m[1].trim(), gloss: m[2].trim() });
+  }
+  return tokens;
+}
+
 export default function ExplainCard({ levelId, onStart }: ExplainCardProps) {
   const data = EXPLAINS[levelId];
   if (!data) return null;
 
+  const titleCase = (s: string) =>
+    s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+
   return (
-    <div className="space-y-4 pb-2">
-      {/* Rule */}
-      <div className="rounded-xl bg-[#1a1a1a] border border-[#ffffff08] p-4 space-y-2">
-        <p className="text-base font-bold text-[#eff1f6] leading-snug">{data.rule}</p>
-        <p className="text-xs text-[#8c8c8c] leading-relaxed">{data.ruleDetail}</p>
-      </div>
+    <div className="pb-4">
+      {/* Header */}
+      <header className="space-y-4 mb-12">
+        <p className="text-xs font-semibold text-[#ffa116]">Level {data.id}</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#f5f6f8] tracking-tight leading-[1.1]">
+          {data.title}
+        </h1>
+        <p className="text-lg text-[#c8cad0] leading-relaxed max-w-2xl font-light">
+          {data.rule}
+        </p>
+        <p className="text-[15px] text-[#8c8c8c] leading-relaxed max-w-2xl">
+          {data.ruleDetail}
+        </p>
+      </header>
 
       {/* Examples */}
-      <div className="space-y-2">
-        <p className="text-[9px] font-bold text-[#5c5c5c] uppercase tracking-wider px-1">Examples</p>
-        {data.examples.map((ex, i) => (
-          <div key={i} className="rounded-xl bg-[#1a1a1a] border border-[#ffffff06] p-3 space-y-2">
-            {/* Natural layout */}
-            <div>
-              <p className="text-xs font-bold text-[#eff1f6] leading-relaxed">{ex.somali}</p>
-              <p className="text-[10px] text-[#5c5c5c] mt-1">{ex.breakdown}</p>
-            </div>
-
-            {/* Translation */}
-            <div className="flex items-start gap-2 pt-1 border-t border-[#ffffff06]">
-              <ArrowRight size={10} className="flex-shrink-0 mt-0.5" style={{ color: '#ffa116' }} />
-              <div>
-                <p className="text-xs font-semibold" style={{ color: '#ffa116' }}>
-                  {ex.english}
+      <section className="mb-12">
+        <h2 className="text-xs font-semibold text-[#6c6c6c] uppercase tracking-wider mb-5">
+          Examples
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {data.examples.map((ex, i) => {
+            const rawLabel = ex.note.split(' — ')[0] || '';
+            const noteText = ex.note.split(' — ')[1] || ex.note;
+            return (
+              <div key={i} className="rounded-2xl bg-[#161616] p-5 flex flex-col">
+                {/* Type */}
+                <p className="text-xs font-semibold text-[#ffa116] mb-4">
+                  {titleCase(rawLabel)}
                 </p>
-                <p className="text-[9px] text-[#4a4a4a] mt-0.5">— {ex.note}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
 
-      {/* Reference */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-1.5 px-1">
-          <Table2 size={10} color="#5c5c5c" />
-          <p className="text-[9px] font-bold text-[#5c5c5c] uppercase tracking-wider">
-            {data.refTitle}
-          </p>
+                {/* Somali */}
+                <p className="text-xl font-semibold text-[#f5f6f8] leading-snug">
+                  {ex.somali}
+                </p>
+
+                {/* Interlinear gloss */}
+                <div className="flex flex-wrap gap-x-4 gap-y-2 mt-3">
+                  {parseGloss(ex.breakdown).map((tok, ti) => (
+                    <div key={ti} className="flex flex-col">
+                      <span className="text-sm font-medium text-[#c8cad0] leading-tight">
+                        {tok.word}
+                      </span>
+                      <span className="text-[11px] text-[#6c6c6c] leading-tight mt-0.5">
+                        {tok.gloss}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Translation */}
+                <div className="mt-auto pt-5">
+                  <p className="text-[15px] text-[#c8cad0] leading-relaxed">{ex.english}</p>
+                  <p className="text-[13px] text-[#6c6c6c] mt-1.5 leading-relaxed">{noteText}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
-        <div className="rounded-xl border border-[#ffffff08] overflow-hidden text-[10px]">
-          <div className="grid px-2.5 py-1.5 bg-[#1f1f1f] gap-2" style={{ gridTemplateColumns: data.refHeaders.length === 3 ? '1fr 1fr 1fr' : '1fr 1fr' }}>
-            {data.refHeaders.map((h, i) => (
-              <span key={i} className="font-bold text-[#5c5c5c]">
-                {h}
-              </span>
+      </section>
+
+      {/* Reference + Listening */}
+      <div className="grid gap-10 md:grid-cols-2 mb-12">
+        {/* Reference table */}
+        <section>
+          <div className="flex items-center gap-2 mb-5">
+            <Table2 size={13} className="text-[#6c6c6c]" />
+            <h2 className="text-xs font-semibold text-[#6c6c6c] uppercase tracking-wider">
+              {data.refTitle}
+            </h2>
+          </div>
+          <div className="rounded-2xl bg-[#161616] divide-y divide-[#ffffff08]">
+            {data.refRows.map((row, i) => (
+              <div key={i} className="flex items-baseline gap-4 px-5 py-3.5">
+                <span
+                  className="font-mono text-sm font-semibold whitespace-nowrap min-w-[6rem]"
+                  style={{ color: row.bold1 ? '#ffa116' : '#c8cad0' }}
+                >
+                  {row.col1}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm text-[#c8cad0]">{row.col2}</span>
+                  {row.col3 && (
+                    <span className="block text-[13px] text-[#6c6c6c] mt-0.5 leading-snug">
+                      {row.col3}
+                    </span>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
-          {data.refRows.map((row, i) => (
-            <div
-              key={i}
-              className="grid px-2.5 py-1.5 border-t border-[#ffffff05] gap-2"
-              style={{
-                gridTemplateColumns: data.refHeaders.length === 3 ? '1fr 1fr 1fr' : '1fr 1fr',
-                backgroundColor: i % 2 === 0 ? '#141414' : '#171717',
-              }}
-            >
-              <span className={row.bold1 ? 'font-bold text-[#eff1f6] font-mono' : 'text-[#8c8c8c] font-mono'} style={{ color: row.bold1 ? '#ffa116' : undefined }}>
-                {row.col1}
-              </span>
-              <span className="text-[#8c8c8c]">{row.col2}</span>
-              {row.col3 && <span className="text-[#5c5c5c] italic">{row.col3}</span>}
-            </div>
-          ))}
-        </div>
-      </div>
+        </section>
 
-      {/* Listening note */}
-      <div className="rounded-xl bg-[#0d1a0d] border border-[#22c55e15] p-3">
-        <div className="flex items-start gap-2">
-          <Ear size={11} className="text-[#22c55e] flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="text-[9px] font-bold text-[#22c55e] uppercase tracking-wider mb-0.5">For listening</p>
-            <p className="text-[9px] text-[#4a7a4a] leading-relaxed">{data.listeningNote}</p>
+        {/* Listening note */}
+        <section>
+          <div className="flex items-center gap-2 mb-5">
+            <Ear size={13} className="text-[#22c55e]" />
+            <h2 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wider">
+              For listening
+            </h2>
           </div>
-        </div>
+          <div className="rounded-2xl bg-[#161616] p-5 h-[calc(100%-2.25rem)]">
+            <p className="text-[15px] text-[#9ca99c] leading-relaxed">{data.listeningNote}</p>
+          </div>
+        </section>
       </div>
 
       {/* CTA */}
-      <button onClick={onStart} className="w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-[0.98] hover:opacity-90" style={{ backgroundColor: '#ffa116', color: '#0f0f0f' }}>
-        Start Drills
-      </button>
+      <div className="flex justify-center">
+        <button
+          onClick={onStart}
+          className="w-full sm:w-auto px-16 py-3.5 rounded-xl font-bold text-base transition-all active:scale-[0.98] hover:brightness-110"
+          style={{ backgroundColor: '#ffa116', color: '#0f0f0f' }}
+        >
+          Start Drills
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,16 +1,19 @@
 /**
- * Learn.tsx — Mobile-first, minimalist.
+ * Learn.tsx — Mobile-first minimalist with desktop sidebar.
  *
- * Philosophy:
- *   - Full screen width on mobile
- *   - One thing at a time
- *   - No decorative UI
- *   - Large touch targets
- *   - Whitespace > clutter
+ * Mobile:
+ *   - Full screen width, one thing at a time
+ *   - Top bar with back button when in drill
+ *   - LevelSelect full-width cards
+ *
+ * Desktop (sm:):
+ *   - Split layout: sidebar (25%) + content (75%)
+ *   - Sidebar shows LevelSelect always visible
+ *   - Content area shows current phase
  */
 
 import { useState, useCallback } from 'react';
-import { ChevronLeft, Zap } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { useLevelStore } from '@/stores/level-store';
 import { getLevelById, getNextLevelId, LEVELS } from '@/data/drill-content';
 import LevelSelect from '@/components/learn/LevelSelect';
@@ -68,10 +71,10 @@ export default function Learn() {
   /* ─── Render ───────────────────────────────────────────────────────────── */
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] flex flex-col">
-      {/* Top bar — minimal, mobile-optimized */}
+    <div className="min-h-screen bg-[#0f0f0f] flex flex-col sm:flex-row">
+      {/* ─── MOBILE TOP BAR (sm:hidden) ─────────────────────────────────────── */}
       {phase !== 'select' && (
-        <div className="sticky top-0 z-50 bg-[#0f0f0f] border-b border-[#ffffff08] px-4 py-3">
+        <div className="sm:hidden sticky top-0 z-50 bg-[#0f0f0f] border-b border-[#ffffff08] px-4 py-3">
           <div className="flex items-center gap-3">
             <button
               onClick={handleBackToSelect}
@@ -92,10 +95,32 @@ export default function Learn() {
         </div>
       )}
 
-      {/* Content — full height, single column */}
-      <div className="flex-1 overflow-y-auto px-4 py-5 pb-20">
-        <div className="w-full max-w-lg">
-          {phase === 'select' && <LevelSelect onSelectLevel={handleSelectLevel} />}
+      {/* ─── DESKTOP SIDEBAR (hidden sm:flex) ───────────────────────────────── */}
+      <aside className="hidden sm:flex sm:w-64 lg:w-72 sm:flex-shrink-0 sm:flex-col bg-[#0f0f0f] border-r border-[#ffffff08] overflow-y-auto sticky top-0 h-screen">
+        <div className="p-5">
+          <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-4">Levels</p>
+          <LevelSelect onSelectLevel={handleSelectLevel} />
+        </div>
+      </aside>
+
+      {/* ─── MAIN CONTENT ───────────────────────────────────────────────────── */}
+      <div className="flex-1 overflow-y-auto px-4 py-6 pb-20 sm:px-8 sm:py-10 sm:pb-10 lg:px-12">
+        <div className={`w-full mx-auto ${phase === 'explain' ? 'max-w-5xl' : 'max-w-2xl'}`}>
+          {/* Mobile only: LevelSelect */}
+          {phase === 'select' && (
+            <div className="sm:hidden">
+              <LevelSelect onSelectLevel={handleSelectLevel} />
+            </div>
+          )}
+
+          {/* Content phases */}
+          {phase === 'select' && (
+            <div className="hidden sm:flex sm:items-center sm:justify-center sm:min-h-[60vh]">
+              <p className="text-sm text-[#5c5c5c] text-center">
+                Select a level from the sidebar to begin
+              </p>
+            </div>
+          )}
 
           {phase === 'explain' && currentLevel && (
             <ExplainCard levelId={currentLevel.id} onStart={handleExplainDone} />

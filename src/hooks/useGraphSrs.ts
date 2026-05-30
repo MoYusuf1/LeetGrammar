@@ -167,12 +167,8 @@ export function useGraphSrs() {
         insertReviewLog({
           userId: user.id,
           conceptId: result.conceptId,
-          rating: result.rating,
-          oldMastery: result.oldMastery,
-          newMastery: result.newMastery,
-          oldStability: result.oldStability,
-          newStability: result.newStability,
-          studyTimeSeconds: studyTimeSeconds,
+          quality: result.rating,
+          elapsedMs: Math.round(studyTimeSeconds * 1000),
         }).catch(() => {
           // Review logging failed, but review is still local
         });

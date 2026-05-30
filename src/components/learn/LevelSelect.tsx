@@ -21,8 +21,7 @@ export default function LevelSelect({ onSelectLevel }: LevelSelectProps) {
   const nextLevel = LEVELS.find(l => getLevelStatus(l.id) === 'available' || getLevelStatus(l.id) === 'in-progress');
 
   return (
-    <div className="space-y-3">
-      {/* All levels - next one has focus ring */}
+    <div className="space-y-1.5">
       {LEVELS.map((level) => {
         const status = getLevelStatus(level.id);
         const isLocked = status === 'locked';
@@ -34,41 +33,49 @@ export default function LevelSelect({ onSelectLevel }: LevelSelectProps) {
             key={level.id}
             onClick={() => !isLocked && onSelectLevel(level.id)}
             disabled={isLocked}
-            className={`w-full p-4 rounded-xl text-left transition-all active:scale-[0.98] ${
-              isNext
-                ? 'ring-2 ring-[#ffa116] bg-[#ffa11615] border-[#ffa11630]'
-                : isLocked
-                ? 'bg-[#0f0f0f] border-[#ffffff08] opacity-40 cursor-not-allowed'
-                : isPassed
-                ? 'bg-[#22c55e08] border-[#22c55e30]'
-                : 'bg-[#1a1a1a] border-[#ffffff08]'
-            } border`}
+            className={`group w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${
+              isLocked
+                ? 'cursor-not-allowed'
+                : isNext
+                ? 'bg-[#ffa11614]'
+                : 'hover:bg-[#ffffff08]'
+            }`}
           >
-            <div className="flex items-start gap-3">
-              {/* Status icon */}
-              <div className="flex-shrink-0 mt-0.5">
-                {isPassed ? (
-                  <div className="w-6 h-6 rounded-lg bg-[#22c55e] flex items-center justify-center">
-                    <Check size={13} className="text-[#0f0f0f]" strokeWidth={3} />
-                  </div>
-                ) : isLocked ? (
-                  <div className="w-6 h-6 rounded-lg bg-[#1a1a1a] border border-[#ffffff10] flex items-center justify-center">
-                    <Lock size={11} className="text-[#3c3c3c]" />
-                  </div>
-                ) : (
-                  <div className={`w-6 h-6 rounded-lg border-2 ${isNext ? 'border-[#ffa116] bg-[#ffa11610]' : 'border-[#ffffff20]'}`} />
-                )}
-              </div>
+            {/* Status indicator */}
+            <div className="flex-shrink-0">
+              {isPassed ? (
+                <div className="w-7 h-7 rounded-full bg-[#22c55e] flex items-center justify-center">
+                  <Check size={14} className="text-[#0f0f0f]" strokeWidth={3} />
+                </div>
+              ) : isLocked ? (
+                <div className="w-7 h-7 rounded-full bg-[#161616] flex items-center justify-center">
+                  <Lock size={12} className="text-[#3c3c3c]" />
+                </div>
+              ) : (
+                <div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                    isNext
+                      ? 'bg-[#ffa116] text-[#0f0f0f]'
+                      : 'bg-[#161616] text-[#8c8c8c]'
+                  }`}
+                >
+                  {level.id}
+                </div>
+              )}
+            </div>
 
-              {/* Content */}
-              <div className="flex-1">
-                <p className={`text-sm font-bold ${isLocked ? 'text-[#3c3c3c]' : 'text-[#eff1f6]'}`}>
-                  Level {level.id}: {level.title}
-                </p>
-                <p className={`text-xs mt-1 ${isLocked ? 'text-[#2c2c2c]' : 'text-[#5c5c5c]'}`}>
-                  {level.subtitle}
-                </p>
-              </div>
+            {/* Label */}
+            <div className="flex-1 min-w-0">
+              <p
+                className={`text-sm font-semibold truncate ${
+                  isLocked ? 'text-[#3c3c3c]' : isNext ? 'text-[#ffa116]' : 'text-[#e5e7eb]'
+                }`}
+              >
+                {level.title}
+              </p>
+              <p className={`text-xs truncate ${isLocked ? 'text-[#2c2c2c]' : 'text-[#5c5c5c]'}`}>
+                {level.subtitle}
+              </p>
             </div>
           </button>
         );
