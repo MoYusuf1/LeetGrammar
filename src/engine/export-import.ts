@@ -4,8 +4,7 @@
  * Uses a portable JSON format that can be shared, versioned, and re-imported.
  */
 
-import type { GraphSnapshot } from './graph-engine';
-import type { Chunk } from './types';
+import type { GraphSnapshot, Chunk } from './types';
 
 export interface PortableGraph {
   version: number;

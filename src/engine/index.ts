@@ -27,7 +27,6 @@ export type {
 
 // ─── Graph Engine ────────────────────────────────────────────────────────────
 export { GraphEngine } from './graph-engine';
-export type { TraversalResult } from './graph-engine';
 
 // ─── SRS Systems ─────────────────────────────────────────────────────────────
 export {
@@ -65,8 +64,11 @@ export {
 
 // ─── Export/Import ───────────────────────────────────────────────────────────
 export {
-  importGraphJSON,
+  exportToJSON,
+  importFromJSON,
+  downloadJSON,
   readJSONFile,
+  downloadSQLite,
   readBinaryFile,
-  type ExportFormat,
+  type PortableGraph,
 } from './export-import';

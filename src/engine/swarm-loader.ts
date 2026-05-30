@@ -6,7 +6,7 @@
  */
 
 import { ChunkStore } from './chunk-store';
-import type { Node, Edge, Construction, Chunk, NodeType, EdgeType, ConstructionRole, ContentType } from './types';
+import type { Node, Edge, Construction, Chunk, NodeType, EdgeType, ConstructionRole, ContentType, Dialect } from './types';
 import type { TextbookPayload } from './ingestion';
 
 export interface SwarmChapterOutput {
@@ -299,7 +299,7 @@ function parseEdges(
       }
 
       if (Array.isArray(q.dialects)) {
-        qualifiers.dialects = q.dialects.map((d) => String(d));
+        qualifiers.dialects = q.dialects.map((d) => String(d)) as Dialect[];
       }
       if (typeof q.register === 'string') qualifiers.register = q.register as Edge['qualifiers']['register'];
       if (typeof q.era === 'string') qualifiers.era = q.era;
@@ -397,7 +397,7 @@ function parseConstructions(
         if (typeof s.chapter === 'string') qualifiers.source.chapter = s.chapter;
       }
       if (typeof q.confidence === 'number') qualifiers.confidence = Math.max(0, Math.min(1, q.confidence));
-      if (Array.isArray(q.dialects)) qualifiers.dialects = q.dialects.map((d) => String(d));
+      if (Array.isArray(q.dialects)) qualifiers.dialects = q.dialects.map((d) => String(d)) as Dialect[];
     } else {
       errors.push({ path: `${path}.qualifiers`, message: 'Missing qualifiers, using defaults' });
     }
