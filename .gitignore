@@ -24,3 +24,4 @@ docs/**/AUDIT_REPORT.md
 docs/**/somali_knowledge_graph.json
 scripts/output/
 public/graph.db
+graphify-out/
