@@ -27,7 +27,7 @@ const path = require('path');
 const REPO = path.resolve(__dirname, '..');
 const SRC_MD =
   process.env.COURSE_MD ||
-  path.resolve(REPO, '../somali-grammar-course/COURSE.md');
+  path.resolve(REPO, 'COURSE.md');
 const OUT_TEACHING = path.resolve(REPO, 'src/data/teaching-content.ts');
 const OUT_LEVELS = path.resolve(REPO, 'src/data/generated-levels.ts');
 
