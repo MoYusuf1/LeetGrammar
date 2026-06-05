@@ -10,6 +10,7 @@ import { useParams, useNavigate } from 'react-router';
 import { Suspense, lazy } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { MAX_LESSON_ID } from '@/data/teaching-content';
 
 const LessonCards = lazy(() => import('@/components/lesson/LessonCards'));
 
@@ -18,7 +19,7 @@ export default function LessonPage() {
   const lessonId = parseInt(id ?? '1', 10);
 
   /* Validate lesson ID */
-  if (isNaN(lessonId) || lessonId < 1 || lessonId > 30) {
+  if (isNaN(lessonId) || lessonId < 1 || lessonId > MAX_LESSON_ID) {
     return (
       <div className="h-full flex flex-col items-center justify-center px-4 bg-[#0f0f0f]">
         <p className="text-[#8c8c8c] text-sm">Lesson not found.</p>

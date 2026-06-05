@@ -14,6 +14,7 @@ const Learn = lazy(() => import('@/pages/Learn'));
 const Problem = lazy(() => import('@/pages/Problem'));
 const WorkbookLevel = lazy(() => import('@/pages/WorkbookLevel'));
 const Lesson = lazy(() => import('@/pages/Lesson'));
+const Lessons = lazy(() => import('@/pages/Lessons'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Wiki = lazy(() => import('@/pages/Wiki'));
 const Concepts = lazy(() => import('@/pages/Concepts'));
@@ -69,6 +70,7 @@ export default function App() {
               <Route path="/path" element={<Navigate to="/roadmap" replace />} />
               <Route path="/practice" element={<Navigate to="/problems" replace />} />
               <Route path="/workbook/level/:id" element={<WorkbookLevel />} />
+              <Route path="/lessons" element={<Lessons />} />
               <Route path="/lesson/:id" element={<Lesson />} />
             </Routes>
           </Suspense>

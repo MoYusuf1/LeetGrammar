@@ -11,9 +11,18 @@ export default defineConfig({
     port: 3000,
   },
   resolve: {
+    // Force a single copy of React. With pnpm, Vite's dep optimizer can
+    // otherwise pre-bundle a second React instance (e.g. via react-router),
+    // which breaks hooks at runtime: "Invalid hook call" / "Cannot read
+    // properties of null (reading 'useContext')".
+    dedupe: ['react', 'react-dom'],
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  optimizeDeps: {
+    // Pre-bundle React and its consumers together so they share one instance.
+    include: ['react', 'react-dom', 'react-dom/client', 'react-router'],
   },
   build: {
     rollupOptions: {

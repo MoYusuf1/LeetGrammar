@@ -11,7 +11,13 @@
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:watch": "vitest",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "graphify": ".venv/bin/graphify . --no-viz",
+    "graphify:update": ".venv/bin/graphify update . --no-cluster",
+    "graphify:report": ".venv/bin/graphify cluster-only . --no-label --no-viz",
+    "graphify:query": ".venv/bin/graphify query",
+    "graphify:path": ".venv/bin/graphify path",
+    "graphify:explain": ".venv/bin/graphify explain"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

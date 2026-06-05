@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { Map, List, BookOpen, Code2, LogIn, Search, Menu } from 'lucide-react';
+import { Map, List, BookOpen, GraduationCap, Code2, LogIn, Search, Menu } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import AuthModal from './AuthModal';
 import GlobalSearch from './GlobalSearch';
@@ -15,6 +15,7 @@ import GlobalSearch from './GlobalSearch';
 const navLinks = [
   { path: '/roadmap', label: 'Roadmap', icon: Map },
   { path: '/problems', label: 'Problems', icon: List },
+  { path: '/lessons', label: 'Lessons', icon: GraduationCap },
   { path: '/learn', label: 'Learn', icon: BookOpen },
 ];
 

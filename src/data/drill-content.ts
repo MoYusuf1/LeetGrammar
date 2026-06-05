@@ -1,7 +1,13 @@
 /**
- * Drill Content — Complete exercise data for the 7-level Somali grammar drill system.
- * Each level isolates one grammar skill from the workbook.
+ * Drill Content — Drill levels + reference tables for the Somali grammar drills.
+ *
+ * The active LEVELS array is generated from the course (../somali-grammar-course/
+ * COURSE.md) via scripts/course-to-app.cjs and imported as GENERATED_LEVELS below.
+ * The legacy hand-authored level1..level7 consts are retained for reference and
+ * for their specialised exercise types, but are no longer wired into LEVELS.
  */
+
+import { GENERATED_LEVELS } from './generated-levels';
 
 // ─── Exercise Types ─────────────────────────────────────────────────────────
 
@@ -713,7 +719,11 @@ const level7: LevelData = {
 // EXPORT
 // ═════════════════════════════════════════════════════════════════════════════
 
-export const LEVELS: LevelData[] = [level1, level2, level3, level4, level5, level6, level7];
+// Active levels come from the generated course content (26 modules).
+// Legacy hand-authored levels are kept above for reference; reference them here
+// so they are not flagged as unused while remaining out of the live curriculum.
+void [level1, level2, level3, level4, level5, level6, level7];
+export const LEVELS: LevelData[] = GENERATED_LEVELS;
 
 // Helper: get level by id
 export function getLevelById(id: number): LevelData | undefined {

@@ -1,0 +1,3050 @@
+{
+  "nodes": [
+    {
+      "id": "integration_guide_document",
+      "label": "LeetGrammar \u2014 Teaching Mode Integration Guide",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_card_based_teaching",
+      "label": "Card-Based Teaching Experience",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_intro_card",
+      "label": "Intro Card",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_teaching_card",
+      "label": "Teaching Card",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_practice_card",
+      "label": "Practice Card",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_summary_card",
+      "label": "Summary Card",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_resume_tracking",
+      "label": "Resume Tracking",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_pwa_support",
+      "label": "PWA Support",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_progress_tracking",
+      "label": "Progress Tracking",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_teaching_content_ts",
+      "label": "src/data/teaching-content.ts",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_lessoncards_tsx",
+      "label": "src/components/lesson/LessonCards.tsx",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_cardprogressdots_tsx",
+      "label": "src/components/lesson/CardProgressDots.tsx",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_uselessonprogress_ts",
+      "label": "src/hooks/useLessonProgress.ts",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_lesson_page_tsx",
+      "label": "src/pages/Lesson.tsx",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_lesson_progress_sql",
+      "label": "supabase/migrations/20250517000001_lesson_progress.sql",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_manifest_json",
+      "label": "public/manifest.json",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_sw_js",
+      "label": "public/sw.js",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_progress_store_ts",
+      "label": "src/stores/progress-store.ts",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_index_html",
+      "label": "index.html",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_main_tsx",
+      "label": "src/main.tsx",
+      "file_type": "document",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_react_swipeable",
+      "label": "react-swipeable",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_supabase",
+      "label": "Supabase",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_localstorage",
+      "label": "localStorage",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_service_worker",
+      "label": "Service Worker",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "integration_guide_lesson_progress_table",
+      "label": "lesson_progress table",
+      "file_type": "concept",
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_document",
+      "label": "Kimi Swarm Prompt: Textbook \u2192 Knowledge Graph",
+      "file_type": "document",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_knowledge_graph",
+      "label": "Knowledge Graph",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_somali_grammar",
+      "label": "Somali Grammar Extraction",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_nodes",
+      "label": "Nodes",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_edges",
+      "label": "Edges",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_constructions",
+      "label": "Constructions",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_chunks",
+      "label": "Chunks",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_qualifiers",
+      "label": "Qualifiers",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_concept_type",
+      "label": "CONCEPT node type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_morpheme_type",
+      "label": "MORPHEME node type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_word_type",
+      "label": "WORD node type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_example_type",
+      "label": "EXAMPLE node type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_rule_type",
+      "label": "RULE node type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_lesson_type",
+      "label": "LESSON node type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_is_a",
+      "label": "IS_A edge type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_requires",
+      "label": "REQUIRES edge type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_contradicts",
+      "label": "CONTRADICTS edge type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_exemplifies",
+      "label": "EXEMPLIFIES edge type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_part_of",
+      "label": "PART_OF edge type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_varies_by",
+      "label": "VARIES_BY edge type",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_focus_prominent",
+      "label": "Focus-Prominent Language",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_focus_markers",
+      "label": "Focus Markers",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_cliticization",
+      "label": "Cliticization",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_grammatical_gender",
+      "label": "Grammatical Gender",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_definite_article",
+      "label": "Definite Article",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_plural_formation",
+      "label": "Plural Formation",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "swarm_prompt_dialect_variation",
+      "label": "Dialect Variation",
+      "file_type": "concept",
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_document",
+      "label": "Supabase Setup Guide",
+      "file_type": "document",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_supabase",
+      "label": "Supabase",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_authentication",
+      "label": "Authentication",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_profiles_table",
+      "label": "profiles table",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_user_progress_table",
+      "label": "user_progress table",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_row_level_security",
+      "label": "Row Level Security",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_google_oauth",
+      "label": "Google OAuth",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_github_oauth",
+      "label": "GitHub OAuth",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_guest_mode",
+      "label": "Guest Mode",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_localstorage",
+      "label": "localStorage",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_handle_new_user",
+      "label": "handle_new_user function",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "supabase_setup_auth_trigger",
+      "label": "on_auth_user_created trigger",
+      "file_type": "concept",
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_document",
+      "label": "Somali Grammar v2 \u2014 Clean Relational Schema + Seed",
+      "file_type": "document",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_schema_sql",
+      "label": "schema.sql",
+      "file_type": "document",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_seed_sql",
+      "label": "seed.sql",
+      "file_type": "document",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_rpc_sql",
+      "label": "rpc_functions.sql",
+      "file_type": "document",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_types_ts",
+      "label": "types.ts",
+      "file_type": "document",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_queries_ts",
+      "label": "queries.ts",
+      "file_type": "document",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_graph_lessons",
+      "label": "graph_lessons table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_graph_nodes",
+      "label": "graph_nodes table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_graph_chunks",
+      "label": "graph_chunks table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_lesson_chunks",
+      "label": "lesson_chunks table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_concept_edges",
+      "label": "concept_edges table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_content_edges",
+      "label": "content_edges table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_graph_exercises",
+      "label": "graph_exercises table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_exercise_items",
+      "label": "exercise_items table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_exercise_concepts",
+      "label": "exercise_concepts table",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_getlesson",
+      "label": "getLesson query",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_getconceptdetail",
+      "label": "getConceptDetail query",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_getlearningfrontier",
+      "label": "getLearningFrontier query",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_submitreview",
+      "label": "submitReview query",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_focus_info",
+      "label": "Focus & Information Structure",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_tense_aspect",
+      "label": "Tense & Aspect",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_noun_system",
+      "label": "Noun System",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_syntax",
+      "label": "Syntax",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "data_v2_readme_colloquial_units",
+      "label": "Colloquial Somali Units",
+      "file_type": "concept",
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_document",
+      "label": "LeetSomali Documentation",
+      "file_type": "document",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_architecture_md",
+      "label": "ARCHITECTURE.md",
+      "file_type": "document",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_tech_stack_md",
+      "label": "TECH_STACK.md",
+      "file_type": "document",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_roadmap_md",
+      "label": "ROADMAP.md",
+      "file_type": "document",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_data_model_md",
+      "label": "DATA_MODEL.md",
+      "file_type": "document",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_glossary_md",
+      "label": "GLOSSARY.md",
+      "file_type": "document",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_language_design_md",
+      "label": "LANGUAGE_DESIGN.md",
+      "file_type": "document",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_adr_001",
+      "label": "ADR-001: Hypergraph over Relational Model",
+      "file_type": "rationale",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_adr_002",
+      "label": "ADR-002: Client-First Architecture with Offline Sync",
+      "file_type": "rationale",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_adr_003",
+      "label": "ADR-003: Content-Addressed Storage with Merkle-CIDs",
+      "file_type": "rationale",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_adr_004",
+      "label": "ADR-004: Unified Hybrid Index for Search",
+      "file_type": "rationale",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_rfc_001",
+      "label": "RFC-001: Hypergraph Schema v1",
+      "file_type": "document",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_knowledge_hypergraph",
+      "label": "Knowledge Hypergraph",
+      "file_type": "concept",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_sheaf_logic",
+      "label": "Sheaf Logic",
+      "file_type": "concept",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_readme_hypergraph_schema",
+      "label": "Hypergraph Schema",
+      "file_type": "concept",
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_document",
+      "label": "React + TypeScript + Vite",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_react",
+      "label": "React",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_typescript",
+      "label": "TypeScript",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_vite",
+      "label": "Vite",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_babel",
+      "label": "Babel",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_swc",
+      "label": "SWC",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_eslint",
+      "label": "ESLint",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_tseslint",
+      "label": "TypeScript ESLint",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_react_compiler",
+      "label": "React Compiler",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_card_based_teaching",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_intro_card",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_teaching_card",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_practice_card",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_summary_card",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_resume_tracking",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_pwa_support",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_progress_tracking",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_teaching_content_ts",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_lessoncards_tsx",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_cardprogressdots_tsx",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_uselessonprogress_ts",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_lesson_page_tsx",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_lesson_progress_sql",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_manifest_json",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_sw_js",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_progress_store_ts",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_index_html",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_main_tsx",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_react_swipeable",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_supabase",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_localstorage",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_service_worker",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_document",
+      "target": "integration_guide_lesson_progress_table",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_card_based_teaching",
+      "target": "integration_guide_intro_card",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_card_based_teaching",
+      "target": "integration_guide_teaching_card",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_card_based_teaching",
+      "target": "integration_guide_practice_card",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_card_based_teaching",
+      "target": "integration_guide_summary_card",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_uselessonprogress_ts",
+      "target": "integration_guide_supabase",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_uselessonprogress_ts",
+      "target": "integration_guide_localstorage",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_manifest_json",
+      "target": "integration_guide_pwa_support",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_sw_js",
+      "target": "integration_guide_service_worker",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_main_tsx",
+      "target": "integration_guide_sw_js",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_progress_store_ts",
+      "target": "integration_guide_localstorage",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_lesson_progress_table",
+      "target": "integration_guide_supabase",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_knowledge_graph",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_somali_grammar",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_nodes",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_edges",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_constructions",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_chunks",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_qualifiers",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_knowledge_graph",
+      "target": "swarm_prompt_nodes",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_knowledge_graph",
+      "target": "swarm_prompt_edges",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_knowledge_graph",
+      "target": "swarm_prompt_constructions",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_knowledge_graph",
+      "target": "swarm_prompt_chunks",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_nodes",
+      "target": "swarm_prompt_concept_type",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_nodes",
+      "target": "swarm_prompt_morpheme_type",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_nodes",
+      "target": "swarm_prompt_word_type",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_nodes",
+      "target": "swarm_prompt_example_type",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_nodes",
+      "target": "swarm_prompt_rule_type",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_nodes",
+      "target": "swarm_prompt_lesson_type",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_edges",
+      "target": "swarm_prompt_is_a",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_edges",
+      "target": "swarm_prompt_requires",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_edges",
+      "target": "swarm_prompt_contradicts",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_edges",
+      "target": "swarm_prompt_exemplifies",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_edges",
+      "target": "swarm_prompt_part_of",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_edges",
+      "target": "swarm_prompt_varies_by",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_focus_prominent",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_focus_markers",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_cliticization",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_grammatical_gender",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_definite_article",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_plural_formation",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_document",
+      "target": "swarm_prompt_dialect_variation",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_supabase",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_authentication",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_profiles_table",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_user_progress_table",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_row_level_security",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_google_oauth",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_github_oauth",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_guest_mode",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_localstorage",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_handle_new_user",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_document",
+      "target": "supabase_setup_auth_trigger",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_profiles_table",
+      "target": "supabase_setup_row_level_security",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_user_progress_table",
+      "target": "supabase_setup_row_level_security",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_guest_mode",
+      "target": "supabase_setup_localstorage",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_google_oauth",
+      "target": "supabase_setup_authentication",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "supabase_setup_github_oauth",
+      "target": "supabase_setup_authentication",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/SUPABASE_SETUP.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_schema_sql",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_seed_sql",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_rpc_sql",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_types_ts",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_queries_ts",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_graph_lessons",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_graph_nodes",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_graph_chunks",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_lesson_chunks",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_concept_edges",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_content_edges",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_graph_exercises",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_exercise_items",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_exercise_concepts",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_getlesson",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_getconceptdetail",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_getlearningfrontier",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_submitreview",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_focus_info",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_tense_aspect",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_noun_system",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_syntax",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_document",
+      "target": "data_v2_readme_colloquial_units",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_schema_sql",
+      "target": "data_v2_readme_graph_nodes",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_schema_sql",
+      "target": "data_v2_readme_graph_chunks",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_schema_sql",
+      "target": "data_v2_readme_concept_edges",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_schema_sql",
+      "target": "data_v2_readme_content_edges",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_queries_ts",
+      "target": "data_v2_readme_getlesson",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_queries_ts",
+      "target": "data_v2_readme_getconceptdetail",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_queries_ts",
+      "target": "data_v2_readme_getlearningfrontier",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_queries_ts",
+      "target": "data_v2_readme_submitreview",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_rpc_sql",
+      "target": "data_v2_readme_getlearningfrontier",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "data_v2_readme_rpc_sql",
+      "target": "data_v2_readme_submitreview",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/data/v2/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_architecture_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_tech_stack_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_roadmap_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_data_model_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_glossary_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_language_design_md",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_adr_001",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_adr_002",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_adr_003",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_adr_004",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_rfc_001",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_document",
+      "target": "docs_readme_knowledge_hypergraph",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_architecture_md",
+      "target": "docs_readme_knowledge_hypergraph",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_architecture_md",
+      "target": "docs_readme_sheaf_logic",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_data_model_md",
+      "target": "docs_readme_hypergraph_schema",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_adr_001",
+      "target": "docs_readme_knowledge_hypergraph",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_rfc_001",
+      "target": "docs_readme_hypergraph_schema",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_document",
+      "target": "readme_react",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_document",
+      "target": "readme_typescript",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_document",
+      "target": "readme_vite",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_document",
+      "target": "readme_babel",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_document",
+      "target": "readme_swc",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_document",
+      "target": "readme_eslint",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_document",
+      "target": "readme_tseslint",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_document",
+      "target": "readme_react_compiler",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_react",
+      "target": "readme_vite",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_vite",
+      "target": "readme_babel",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_vite",
+      "target": "readme_swc",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_supabase",
+      "target": "supabase_setup_supabase",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_localstorage",
+      "target": "supabase_setup_localstorage",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "integration_guide_lesson_progress_table",
+      "target": "supabase_setup_user_progress_table",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "INTEGRATION_GUIDE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_knowledge_graph",
+      "target": "data_v2_readme_graph_nodes",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_nodes",
+      "target": "data_v2_readme_graph_nodes",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_edges",
+      "target": "data_v2_readme_concept_edges",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_edges",
+      "target": "data_v2_readme_content_edges",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_chunks",
+      "target": "data_v2_readme_graph_chunks",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_focus_markers",
+      "target": "data_v2_readme_focus_info",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "swarm_prompt_somali_grammar",
+      "target": "data_v2_readme_focus_info",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/SWARM_PROMPT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_data_model_md",
+      "target": "swarm_prompt_knowledge_graph",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_data_model_md",
+      "target": "data_v2_readme_schema_sql",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme_hypergraph_schema",
+      "target": "swarm_prompt_knowledge_graph",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_react",
+      "target": "integration_guide_lessoncards_tsx",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_typescript",
+      "target": "data_v2_readme_types_ts",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "ig_card_flow",
+      "label": "Card-Based Teaching Flow",
+      "nodes": [
+        "integration_guide_intro_card",
+        "integration_guide_teaching_card",
+        "integration_guide_practice_card",
+        "integration_guide_summary_card"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md"
+    },
+    {
+      "id": "ig_new_files",
+      "label": "Teaching Mode New Files",
+      "nodes": [
+        "integration_guide_teaching_content_ts",
+        "integration_guide_lessoncards_tsx",
+        "integration_guide_cardprogressdots_tsx",
+        "integration_guide_uselessonprogress_ts",
+        "integration_guide_lesson_page_tsx",
+        "integration_guide_lesson_progress_sql",
+        "integration_guide_manifest_json",
+        "integration_guide_sw_js"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "INTEGRATION_GUIDE.md"
+    },
+    {
+      "id": "ig_pwa_stack",
+      "label": "PWA Implementation Stack",
+      "nodes": [
+        "integration_guide_manifest_json",
+        "integration_guide_sw_js",
+        "integration_guide_service_worker",
+        "integration_guide_pwa_support"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "INTEGRATION_GUIDE.md"
+    },
+    {
+      "id": "sw_output_schema",
+      "label": "Knowledge Graph Output Schema",
+      "nodes": [
+        "swarm_prompt_nodes",
+        "swarm_prompt_edges",
+        "swarm_prompt_constructions",
+        "swarm_prompt_chunks"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md"
+    },
+    {
+      "id": "sw_node_types",
+      "label": "Node Type Taxonomy",
+      "nodes": [
+        "swarm_prompt_concept_type",
+        "swarm_prompt_morpheme_type",
+        "swarm_prompt_word_type",
+        "swarm_prompt_example_type",
+        "swarm_prompt_rule_type",
+        "swarm_prompt_lesson_type"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md"
+    },
+    {
+      "id": "sw_edge_types",
+      "label": "Edge Type Taxonomy",
+      "nodes": [
+        "swarm_prompt_is_a",
+        "swarm_prompt_requires",
+        "swarm_prompt_contradicts",
+        "swarm_prompt_exemplifies",
+        "swarm_prompt_part_of",
+        "swarm_prompt_varies_by"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md"
+    },
+    {
+      "id": "sw_somali_rules",
+      "label": "Somali-Specific Extraction Rules",
+      "nodes": [
+        "swarm_prompt_focus_prominent",
+        "swarm_prompt_cliticization",
+        "swarm_prompt_grammatical_gender",
+        "swarm_prompt_definite_article",
+        "swarm_prompt_plural_formation",
+        "swarm_prompt_dialect_variation"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SWARM_PROMPT.md"
+    },
+    {
+      "id": "v2_tables",
+      "label": "v2 Database Schema Tables",
+      "nodes": [
+        "data_v2_readme_graph_lessons",
+        "data_v2_readme_graph_nodes",
+        "data_v2_readme_graph_chunks",
+        "data_v2_readme_lesson_chunks",
+        "data_v2_readme_concept_edges",
+        "data_v2_readme_content_edges",
+        "data_v2_readme_graph_exercises",
+        "data_v2_readme_exercise_items",
+        "data_v2_readme_exercise_concepts"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md"
+    },
+    {
+      "id": "v2_queries",
+      "label": "v2 Query Helpers",
+      "nodes": [
+        "data_v2_readme_getlesson",
+        "data_v2_readme_getconceptdetail",
+        "data_v2_readme_getlearningfrontier",
+        "data_v2_readme_submitreview"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md"
+    },
+    {
+      "id": "v2_golden_path",
+      "label": "Golden Path Coverage",
+      "nodes": [
+        "data_v2_readme_focus_info",
+        "data_v2_readme_tense_aspect",
+        "data_v2_readme_noun_system",
+        "data_v2_readme_syntax",
+        "data_v2_readme_colloquial_units"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/data/v2/README.md"
+    },
+    {
+      "id": "dr_navigation",
+      "label": "Documentation Navigation",
+      "nodes": [
+        "docs_readme_architecture_md",
+        "docs_readme_tech_stack_md",
+        "docs_readme_roadmap_md",
+        "docs_readme_data_model_md",
+        "docs_readme_glossary_md",
+        "docs_readme_language_design_md"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md"
+    },
+    {
+      "id": "dr_adrs",
+      "label": "Architecture Decision Records",
+      "nodes": [
+        "docs_readme_adr_001",
+        "docs_readme_adr_002",
+        "docs_readme_adr_003",
+        "docs_readme_adr_004"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md"
+    },
+    {
+      "id": "sb_rls",
+      "label": "RLS-Protected Tables",
+      "nodes": [
+        "supabase_setup_profiles_table",
+        "supabase_setup_user_progress_table",
+        "supabase_setup_row_level_security"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/SUPABASE_SETUP.md"
+    },
+    {
+      "id": "sb_oauth",
+      "label": "OAuth Providers",
+      "nodes": [
+        "supabase_setup_google_oauth",
+        "supabase_setup_github_oauth"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/SUPABASE_SETUP.md"
+    },
+    {
+      "id": "sw_to_v2",
+      "label": "Swarm Schema to v2 Database Mapping",
+      "nodes": [
+        "swarm_prompt_knowledge_graph",
+        "data_v2_readme_graph_nodes",
+        "data_v2_readme_concept_edges",
+        "data_v2_readme_content_edges"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/data/v2/README.md"
+    },
+    {
+      "id": "rm_core_stack",
+      "label": "Core Tech Stack",
+      "nodes": [
+        "readme_react",
+        "readme_typescript",
+        "readme_vite"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
