@@ -4,9 +4,14 @@ import { defineConfig } from "vite"
 import { inspectAttr } from 'plugin-inspect-react-code'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   base: './',
-  plugins: [inspectAttr(), react()],
+  plugins: [
+    // inspectAttr plugin only in dev (adds code-path attributes to JSX).
+    // Excluded from production builds to avoid Babel dependency issues on Vercel.
+    ...(command === 'serve' ? [inspectAttr()] : []),
+    react(),
+  ],
   server: {
     port: 3000,
   },
@@ -46,4 +51,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
