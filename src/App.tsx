@@ -10,7 +10,7 @@ import AdminGuard from '@/components/AdminGuard';
 const Landing = lazy(() => import('@/pages/Landing'));
 const Problems = lazy(() => import('@/pages/Problems'));
 const Roadmap = lazy(() => import('@/pages/Roadmap'));
-const Learn = lazy(() => import('@/pages/Learn'));
+// const Learn = lazy(() => import('@/pages/Learn')); // replaced by Lessons page
 const Problem = lazy(() => import('@/pages/Problem'));
 const WorkbookLevel = lazy(() => import('@/pages/WorkbookLevel'));
 const Lesson = lazy(() => import('@/pages/Lesson'));
@@ -49,7 +49,7 @@ export default function App() {
               <Route path="/problem/:id" element={<Problem />} />
               <Route path="/roadmap" element={<Roadmap />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/learn" element={<Learn />} />
+              <Route path="/learn" element={<Lessons />} />
               <Route path="/wiki/:conceptId" element={<Wiki />} />
               <Route path="/concepts" element={<Concepts />} />
               <Route path="/curriculum" element={<Curriculum />} />
@@ -70,7 +70,6 @@ export default function App() {
               <Route path="/path" element={<Navigate to="/roadmap" replace />} />
               <Route path="/practice" element={<Navigate to="/problems" replace />} />
               <Route path="/workbook/level/:id" element={<WorkbookLevel />} />
-              <Route path="/lessons" element={<Lessons />} />
               <Route path="/lesson/:id" element={<Lesson />} />
             </Routes>
           </Suspense>

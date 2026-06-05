@@ -14,17 +14,15 @@ import { useProgressStore } from '@/stores/progress-store';
 
 interface Phase {
   name: string;
-  blurb: string;
-  color: string;
   min: number;
   max: number;
 }
 
 const PHASES: Phase[] = [
-  { name: 'Foundations & Phonetics', blurb: 'Sounds, nouns, articles, pronouns, adjectives', color: '#3b82f6', min: 1, max: 7 },
-  { name: 'Core Verb System', blurb: 'Roots, tense, aspect, mood, voice, irregulars', color: '#8b5cf6', min: 8, max: 12 },
-  { name: 'Sentence Structure & Grammar', blurb: 'Word order, clauses, negation, questions, morphology', color: '#06b6d4', min: 13, max: 21 },
-  { name: 'Application & Integration', blurb: 'Vocabulary, communication, texts, register, review', color: '#22c55e', min: 22, max: 26 },
+  { name: 'Foundations & Phonetics', min: 1, max: 7 },
+  { name: 'Core Verb System', min: 8, max: 12 },
+  { name: 'Sentence Structure & Grammar', min: 13, max: 21 },
+  { name: 'Application & Integration', min: 22, max: 26 },
 ];
 
 export default function LessonsPage() {
@@ -69,20 +67,15 @@ export default function LessonsPage() {
 
         {/* Phase groups */}
         <div className="space-y-7">
-          {grouped.map(({ phase, lessons }) => (
+          {grouped.map(({ phase, lessons }, phaseIdx) => (
             <section key={phase.name}>
-              <div className="flex items-center gap-2 mb-2.5">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: phase.color }} />
-                <h2 className="text-sm font-semibold text-[#eff1f6]">{phase.name}</h2>
-              </div>
-              <p className="text-[11px] text-[#5c5c5c] mb-3 ml-[18px]">{phase.blurb}</p>
+              <h2 className="text-sm font-semibold text-[#eff1f6] mb-3">{phaseIdx + 1}. {phase.name}</h2>
 
               <div className="space-y-2">
                 {lessons.map((lesson) => (
                   <LessonRow
                     key={lesson.lessonId}
                     lesson={lesson}
-                    color={phase.color}
                     completed={isCompleted(lesson.lessonId)}
                     resumeAt={resumeCard(lesson.lessonId)}
                     onClick={() => navigate(`/lesson/${lesson.lessonId}`)}
@@ -99,13 +92,11 @@ export default function LessonsPage() {
 
 function LessonRow({
   lesson,
-  color,
   completed,
   resumeAt,
   onClick,
 }: {
   lesson: LessonSummary;
-  color: string;
   completed: boolean;
   resumeAt: number;
   onClick: () => void;
@@ -118,11 +109,8 @@ function LessonRow({
     >
       <div className="flex-shrink-0">
         {completed ? (
-          <span
-            className="w-7 h-7 rounded-full flex items-center justify-center"
-            style={{ background: `${color}22`, border: `1px solid ${color}55` }}
-          >
-            <Check className="w-4 h-4" style={{ color }} />
+          <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#ffa11622] border border-[#ffa11644]">
+            <Check className="w-4 h-4 text-[#ffa116]" />
           </span>
         ) : inProgress ? (
           <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#ffa11618] border border-[#ffa11644]">
