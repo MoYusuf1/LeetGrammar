@@ -6,10 +6,8 @@
  * one card at a time, with intro → teach → practice → summary flow.
  */
 
-import { useParams, useNavigate } from 'react-router';
+import { useParams } from 'react-router';
 import { Suspense, lazy } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { MAX_LESSON_ID } from '@/data/teaching-content';
 
 const LessonCards = lazy(() => import('@/components/lesson/LessonCards'));
@@ -34,7 +32,7 @@ export default function LessonPage() {
           <LessonSkeleton />
         }
       >
-        <LessonCards lessonId={lessonId} />
+        <LessonCards key={lessonId} lessonId={lessonId} />
       </Suspense>
     </div>
   );

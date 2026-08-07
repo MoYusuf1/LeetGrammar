@@ -1,30 +1,16 @@
 /**
- * Profile Page — LeetCode-inspired user profile.
+ * Profile Page — local-only stats + settings.
  *
- * Layout:
- *   Left sidebar (260px): Avatar, name, rank, community stats
- *   Main area: Problems solved, heatmap, knowledge graph, course progress
+ * No accounts, no cloud sync — everything here reads from progress-store.ts
+ * (persisted to localStorage). Folds in what used to be a separate
+ * Settings page (daily-goal picker, reset progress) since there's no
+ * account/admin surface left to justify a second page.
  */
 
-import { useMemo } from 'react';
-import { useNavigate } from 'react-router';
-import {
-  RotateCcw,
-  TrendingUp,
-  Trophy,
-  MapPin,
-  Calendar,
-  Target,
-  Route,
-  ChevronRight,
-} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { RotateCcw, Trophy, Calendar, Target, BookOpen } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
-import { allProblems } from '@/data/problems';
-import { useAuthStore } from '@/stores/auth-store';
-import { useGraphStore } from '@/stores/graph-store';
-import ProfileEditor, { useProfileData } from '@/components/ProfileEditor';
-import SyncStatusCard from '@/components/SyncStatusCard';
-import CloudSyncNotice from '@/components/CloudSyncNotice';
+import { LESSON_LIST } from '@/data/teaching-content';
 
 const RANK_COLORS = [
   { max: 100, label: 'Novice', color: '#5c5c5c', bg: '#1a1a1a' },
@@ -35,6 +21,8 @@ const RANK_COLORS = [
   { max: Infinity, label: 'Grandmaster', color: '#ef4444', bg: '#ef444515' },
 ];
 
+const DAILY_GOALS = [15, 30, 50];
+
 function getRank(xp: number) {
   return RANK_COLORS.find((r) => xp < r.max) ?? RANK_COLORS[RANK_COLORS.length - 1];
 }
@@ -42,27 +30,11 @@ function getRank(xp: number) {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 export default function Profile() {
-  const navigate = useNavigate();
   const { progress, completionPercentage, resetProgress } = useProgress();
-  const { user } = useAuthStore();
-  const { stats } = useGraphStore();
-
-  const { fullName, initials, avatarUrl } = useProfileData();
+  const [dailyGoal, setDailyGoal] = useState(30);
 
   const rank = getRank(progress.xp);
-
-  // Problems by difficulty
-  const problemsByDifficulty = useMemo(() => ({
-    Beginner: allProblems.filter((p) => p.difficulty === 'Beginner'),
-    Intermediate: allProblems.filter((p) => p.difficulty === 'Intermediate'),
-    Advanced: allProblems.filter((p) => p.difficulty === 'Advanced'),
-  }), []);
-
-  const solvedByDiff = useMemo(() => ({
-    Beginner: problemsByDifficulty.Beginner.filter((p) => progress.completedLessons.includes(p.id)).length,
-    Intermediate: problemsByDifficulty.Intermediate.filter((p) => progress.completedLessons.includes(p.id)).length,
-    Advanced: problemsByDifficulty.Advanced.filter((p) => progress.completedLessons.includes(p.id)).length,
-  }), [progress.completedLessons, problemsByDifficulty]);
+  const totalLessons = LESSON_LIST.length;
 
   // Real activity heatmap from activityLog
   const heatmap = useMemo(() => {
@@ -111,30 +83,13 @@ export default function Profile() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* ── LEFT SIDEBAR ── */}
           <aside className="w-full lg:w-[260px] flex-shrink-0 space-y-4">
-            {/* Avatar Card */}
+            {/* Stats card */}
             <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5 text-center">
-              <div className="relative inline-block">
-                {avatarUrl ? (
-                  <img
-                    src={avatarUrl}
-                    alt="Profile"
-                    className="w-20 h-20 rounded-full object-cover border-4 border-[#0f0f0f]"
-                  />
-                ) : (
-                  <div className="w-20 h-20 rounded-full bg-[#3b82f6] flex items-center justify-center text-white text-2xl font-bold mx-auto border-4 border-[#0f0f0f]">
-                    {initials}
-                  </div>
-                )}
+              <div className="w-20 h-20 rounded-full bg-[#ffa116] flex items-center justify-center text-[#0f0f0f] text-2xl font-bold mx-auto">
+                <BookOpen size={32} />
               </div>
 
-              <h2 className="text-base font-bold text-[#eff1f6] mt-3">{fullName}</h2>
-              {/* Username is rendered inside ProfileEditor, not needed here */}
-              {user && (
-                <p className="text-xs text-[#5c5c5c] mt-1 flex items-center justify-center gap-1">
-                  <MapPin size={10} />
-                  {user.email}
-                </p>
-              )}
+              <h2 className="text-base font-bold text-[#eff1f6] mt-3">Your Progress</h2>
 
               {/* Rank badge */}
               <div
@@ -144,7 +99,7 @@ export default function Profile() {
                 {rank.label}
               </div>
 
-              {/* Community stats */}
+              {/* Stats */}
               <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-[#ffffff08]">
                 <div className="text-center">
                   <p className="text-sm font-bold text-[#eff1f6]">{progress.xp}</p>
@@ -156,37 +111,35 @@ export default function Profile() {
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-bold text-[#eff1f6]">{progress.completedLessons.length}</p>
-                  <p className="text-[9px] text-[#5c5c5c] uppercase tracking-wider mt-0.5">Solved</p>
+                  <p className="text-[9px] text-[#5c5c5c] uppercase tracking-wider mt-0.5">Lessons</p>
                 </div>
               </div>
             </div>
 
-            {/* Edit profile */}
-            <ProfileEditor compact />
-
-            {/* Sync status */}
-            <SyncStatusCard compact />
-
-            {/* Journey */}
-            <button
-              onClick={() => navigate('/curriculum')}
-              className="w-full rounded-xl bg-[#141414] border border-[#ffffff08] p-4 text-left hover:bg-[#1a1a1a] transition-colors group"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Route size={14} className="text-[#ffa116]" />
-                <span className="text-xs font-bold text-[#eff1f6]">Your Journey</span>
-                <ChevronRight size={12} className="text-[#5c5c5c] ml-auto group-hover:text-[#8c8c8c] transition-colors" />
+            {/* Daily goal */}
+            <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-4">
+              <p className="text-xs font-bold text-[#eff1f6] mb-3">Daily Goal</p>
+              <div className="grid grid-cols-3 gap-2">
+                {DAILY_GOALS.map((goal) => (
+                  <button
+                    key={goal}
+                    onClick={() => setDailyGoal(goal)}
+                    className={`h-9 rounded-lg text-xs font-semibold transition-colors ${
+                      dailyGoal === goal
+                        ? 'bg-[#ffa116] text-[#0f0f0f]'
+                        : 'bg-[#0f0f0f] border border-[#ffffff08] text-[#8c8c8c] hover:text-[#eff1f6]'
+                    }`}
+                  >
+                    {goal} XP
+                  </button>
+                ))}
               </div>
-              <div className="h-1.5 bg-[#0f0f0f] rounded-full overflow-hidden mb-1.5">
-                <div className="h-full bg-[#ffa116] rounded-full transition-all" style={{ width: `${completionPercentage}%` }} />
-              </div>
-              <p className="text-[10px] text-[#5c5c5c]">{progress.completedLessons.length} of {allProblems.length} completed</p>
-            </button>
+            </div>
 
             {/* Actions */}
             <div className="space-y-2">
               <button
-                onClick={() => { if (window.confirm('Reset all progress?')) resetProgress(); }}
+                onClick={() => { if (window.confirm('Reset all progress? This cannot be undone.')) resetProgress(); }}
                 className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:bg-[#1a1a1a] transition-colors text-left"
               >
                 <RotateCcw size={16} className="text-[#ef4444]" />
@@ -197,76 +150,6 @@ export default function Profile() {
 
           {/* ── MAIN AREA ── */}
           <main className="flex-1 min-w-0 space-y-5">
-            {/* Problems Solved — LeetCode style */}
-            <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Target size={16} className="text-[#8c8c8c]" />
-                <h3 className="text-sm font-bold text-[#eff1f6]">Problems Solved</h3>
-                <span className="text-xs text-[#5c5c5c] ml-auto">
-                  {progress.completedLessons.length} / {allProblems.length}
-                </span>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-6">
-                {/* Donut chart */}
-                <div className="relative w-28 h-28 flex-shrink-0">
-                  <svg width="112" height="112" viewBox="0 0 112 112">
-                    <circle cx="56" cy="56" r="48" fill="none" stroke="#1a1a1a" strokeWidth="10" />
-                    <circle
-                      cx="56" cy="56" r="48" fill="none" stroke="#00b8a3" strokeWidth="10"
-                      strokeDasharray={`${2 * Math.PI * 48 * (solvedByDiff.Beginner / allProblems.length)} ${2 * Math.PI * 48}`}
-                      strokeDashoffset={0}
-                      strokeLinecap="round"
-                      transform="rotate(-90 56 56)"
-                    />
-                    <circle
-                      cx="56" cy="56" r="48" fill="none" stroke="#ffc01e" strokeWidth="10"
-                      strokeDasharray={`${2 * Math.PI * 48 * (solvedByDiff.Intermediate / allProblems.length)} ${2 * Math.PI * 48}`}
-                      strokeDashoffset={`${-2 * Math.PI * 48 * (solvedByDiff.Beginner / allProblems.length)}`}
-                      strokeLinecap="round"
-                      transform="rotate(-90 56 56)"
-                    />
-                    <circle
-                      cx="56" cy="56" r="48" fill="none" stroke="#ff375f" strokeWidth="10"
-                      strokeDasharray={`${2 * Math.PI * 48 * (solvedByDiff.Advanced / allProblems.length)} ${2 * Math.PI * 48}`}
-                      strokeDashoffset={`${-2 * Math.PI * 48 * ((solvedByDiff.Beginner + solvedByDiff.Intermediate) / allProblems.length)}`}
-                      strokeLinecap="round"
-                      transform="rotate(-90 56 56)"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-xl font-bold text-[#eff1f6]">{progress.completedLessons.length}</span>
-                    <span className="text-[9px] text-[#5c5c5c]">solved</span>
-                  </div>
-                </div>
-
-                {/* Difficulty breakdown */}
-                <div className="flex-1 w-full space-y-3">
-                  {[
-                    { key: 'Beginner' as const, label: 'Easy', color: '#00b8a3', solved: solvedByDiff.Beginner, total: problemsByDifficulty.Beginner.length },
-                    { key: 'Intermediate' as const, label: 'Medium', color: '#ffc01e', solved: solvedByDiff.Intermediate, total: problemsByDifficulty.Intermediate.length },
-                    { key: 'Advanced' as const, label: 'Hard', color: '#ff375f', solved: solvedByDiff.Advanced, total: problemsByDifficulty.Advanced.length },
-                  ].map((d) => {
-                    const pct = d.total > 0 ? Math.round((d.solved / d.total) * 100) : 0;
-                    return (
-                      <div key={d.key} className="flex items-center gap-3">
-                        <div className="w-24">
-                          <p className="text-xs text-[#8c8c8c]">{d.label}</p>
-                        </div>
-                        <div className="flex-1 h-2 bg-[#0f0f0f] rounded-full overflow-hidden">
-                          <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: d.color }} />
-                        </div>
-                        <div className="w-12 text-right">
-                          <span className="text-xs text-[#eff1f6]">{d.solved}</span>
-                          <span className="text-xs text-[#5c5c5c]">/{d.total}</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
             {/* Activity Heatmap */}
             <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
               <div className="flex items-center gap-2 mb-4">
@@ -298,10 +181,7 @@ export default function Profile() {
                       <div
                         key={di}
                         className="w-3 h-3 rounded-sm flex-shrink-0"
-                        style={{
-                          backgroundColor: cell.intensity > 0 ? '#ffa116' : '#1a1a1a',
-                          opacity: cell.intensity > 0 ? 1 : 1,
-                        }}
+                        style={{ backgroundColor: cell.intensity > 0 ? '#ffa116' : '#1a1a1a' }}
                         title={cell.date}
                       />
                     ))}
@@ -319,28 +199,6 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* Knowledge Graph */}
-            <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <TrendingUp size={16} className="text-[#8c8c8c]" />
-                <h3 className="text-sm font-bold text-[#eff1f6]">Knowledge Graph</h3>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-3 rounded-lg bg-[#0f0f0f]">
-                  <p className="text-lg font-bold text-[#eff1f6]">{stats.nodes}</p>
-                  <p className="text-[10px] text-[#5c5c5c] mt-0.5">Nodes</p>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-[#0f0f0f]">
-                  <p className="text-lg font-bold text-[#eff1f6]">{stats.edges}</p>
-                  <p className="text-[10px] text-[#5c5c5c] mt-0.5">Edges</p>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-[#0f0f0f]">
-                  <p className="text-lg font-bold text-[#eff1f6]">{stats.constructions}</p>
-                  <p className="text-[10px] text-[#5c5c5c] mt-0.5">Constructions</p>
-                </div>
-              </div>
-            </div>
-
             {/* Course Progress */}
             <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
               <div className="flex items-center gap-2 mb-4">
@@ -351,15 +209,40 @@ export default function Profile() {
               <div className="h-2.5 bg-[#0f0f0f] rounded-full overflow-hidden">
                 <div className="h-full bg-[#ffa116] rounded-full transition-all" style={{ width: `${completionPercentage}%` }} />
               </div>
-              <p className="text-xs text-[#5c5c5c] mt-2">{progress.completedLessons.length} of {allProblems.length} problems completed</p>
+              <p className="text-xs text-[#5c5c5c] mt-2">{progress.completedLessons.length} of {totalLessons} lessons completed</p>
+            </div>
+
+            {/* Practice scores */}
+            <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Target size={16} className="text-[#8c8c8c]" />
+                <h3 className="text-sm font-bold text-[#eff1f6]">Practice Scores</h3>
+              </div>
+              {Object.keys(progress.practiceScores).length === 0 ? (
+                <p className="text-xs text-[#5c5c5c]">Complete a lesson's practice cards to see scores here.</p>
+              ) : (
+                <div className="space-y-2">
+                  {LESSON_LIST.filter((l) => progress.practiceScores[l.lessonId] !== undefined).map((lesson) => {
+                    const score = progress.practiceScores[lesson.lessonId];
+                    return (
+                      <div key={lesson.lessonId} className="flex items-center gap-3">
+                        <div className="w-40 truncate">
+                          <p className="text-xs text-[#8c8c8c] truncate">{lesson.title}</p>
+                        </div>
+                        <div className="flex-1 h-2 bg-[#0f0f0f] rounded-full overflow-hidden">
+                          <div className="h-full rounded-full bg-[#ffa116] transition-all" style={{ width: `${score}%` }} />
+                        </div>
+                        <div className="w-10 text-right">
+                          <span className="text-xs text-[#eff1f6]">{score}%</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </main>
         </div>
-      </div>
-
-      {/* Unconfigured notice */}
-      <div className="max-w-[1000px] mx-auto px-4 pb-6">
-        <CloudSyncNotice />
       </div>
     </div>
   );

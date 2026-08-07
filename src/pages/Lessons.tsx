@@ -8,7 +8,7 @@
 
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { BookOpen, Check, Circle, PlayCircle } from 'lucide-react';
+import { BookOpen, Check, Circle, PlayCircle, FileText } from 'lucide-react';
 import { LESSON_LIST, type LessonSummary } from '@/data/teaching-content';
 import { useProgressStore } from '@/stores/progress-store';
 
@@ -79,6 +79,7 @@ export default function LessonsPage() {
                     completed={isCompleted(lesson.lessonId)}
                     resumeAt={resumeCard(lesson.lessonId)}
                     onClick={() => navigate(`/lesson/${lesson.lessonId}`)}
+                    onWorksheet={() => navigate(`/worksheet/${lesson.lessonId}`)}
                   />
                 ))}
               </div>
@@ -95,43 +96,56 @@ function LessonRow({
   completed,
   resumeAt,
   onClick,
+  onWorksheet,
 }: {
   lesson: LessonSummary;
   completed: boolean;
   resumeAt: number;
   onClick: () => void;
+  onWorksheet: () => void;
 }) {
   const inProgress = !completed && resumeAt > 0;
   return (
-    <button
-      onClick={onClick}
-      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:border-[#ffffff18] hover:bg-[#181818] transition-colors text-left"
-    >
-      <div className="flex-shrink-0">
-        {completed ? (
-          <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#ffa11622] border border-[#ffa11644]">
-            <Check className="w-4 h-4 text-[#ffa116]" />
-          </span>
-        ) : inProgress ? (
-          <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#ffa11618] border border-[#ffa11644]">
-            <PlayCircle className="w-4 h-4 text-[#ffa116]" />
-          </span>
-        ) : (
-          <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#1f1f1f] border border-[#ffffff10]">
-            <Circle className="w-3.5 h-3.5 text-[#5c5c5c]" />
-          </span>
-        )}
-      </div>
+    <div className="w-full flex items-center gap-2">
+      <button
+        onClick={onClick}
+        className="flex-1 min-w-0 flex items-center gap-3 px-4 py-3 rounded-xl bg-[#141414] border border-[#ffffff08] hover:border-[#ffffff18] hover:bg-[#181818] transition-colors text-left"
+      >
+        <div className="flex-shrink-0">
+          {completed ? (
+            <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#ffa11622] border border-[#ffa11644]">
+              <Check className="w-4 h-4 text-[#ffa116]" />
+            </span>
+          ) : inProgress ? (
+            <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#ffa11618] border border-[#ffa11644]">
+              <PlayCircle className="w-4 h-4 text-[#ffa116]" />
+            </span>
+          ) : (
+            <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#1f1f1f] border border-[#ffffff10]">
+              <Circle className="w-3.5 h-3.5 text-[#5c5c5c]" />
+            </span>
+          )}
+        </div>
 
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#eff1f6] truncate">
-          <span className="text-[#5c5c5c] mr-1.5">{lesson.lessonId}.</span>
-          {lesson.title}
-        </p>
-        <p className="text-[11px] text-[#5c5c5c]">
-          {lesson.cardCount} cards{inProgress ? ` · resume at card ${resumeAt + 1}` : ''}
-        </p>
-      </div>
-    </button>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-[#eff1f6] truncate">
+            <span className="text-[#5c5c5c] mr-1.5">{lesson.lessonId}.</span>
+            {lesson.title}
+          </p>
+          <p className="text-[11px] text-[#5c5c5c]">
+            {lesson.cardCount} cards{inProgress ? ` · resume at card ${resumeAt + 1}` : ''}
+          </p>
+        </div>
+      </button>
+
+      <button
+        onClick={onWorksheet}
+        title="Open worksheet"
+        aria-label={`Worksheet for lesson ${lesson.lessonId}`}
+        className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#141414] border border-[#ffffff08] flex items-center justify-center text-[#8c8c8c] hover:text-[#ffa116] hover:border-[#ffffff18] transition-colors"
+      >
+        <FileText className="w-4 h-4" />
+      </button>
+    </div>
   );
 }

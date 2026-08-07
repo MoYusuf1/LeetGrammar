@@ -4,14 +4,14 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { SrsCard } from '@/engine/srs';
-import { createCard, reviewCard } from '@/engine/srs';
+import type { SrsCard } from '@/lib/srs';
+import { createCard, reviewCard } from '@/lib/srs';
+import { MAX_LESSON_ID } from '@/data/teaching-content';
 
 const STORAGE_KEY = 'leet-somali-progress-v7';
 
 export interface UserProgress {
   completedLessons: number[];
-  completedGraphLessons: string[];
   streak: number;
   lastStudyDate: string;
   xp: number;
@@ -20,17 +20,12 @@ export interface UserProgress {
   activityLog: string[]; // Array of YYYY-MM-DD strings
   dailyGoal: number; // XP target per day (15, 30, or 50)
 
-  // Workbook progress
-  completedWorkbookLevels: number[];
-  workbookLevelScores: Record<number, number>;
-
   // Lesson card positions (resume where you left off)
   lessonCardPositions: Record<number, number>;
 }
 
 const defaultProgress: UserProgress = {
   completedLessons: [],
-  completedGraphLessons: [],
   streak: 0,
   lastStudyDate: '',
   xp: 0,
@@ -38,8 +33,6 @@ const defaultProgress: UserProgress = {
   srsCards: {},
   activityLog: [],
   dailyGoal: 30,
-  completedWorkbookLevels: [],
-  workbookLevelScores: {},
   lessonCardPositions: {},
 };
 
@@ -79,17 +72,6 @@ interface ProgressState extends UserProgress {
   getTopicProgress: (lessonIds: number[]) => { completed: number; total: number };
   arePrerequisitesMet: (prereqLessonIds: number[]) => boolean;
   completionPercentage: number;
-
-  // Graph lessons
-  completeGraphLesson: (lessonId: string) => void;
-  isGraphLessonCompleted: (lessonId: string) => boolean;
-
-  // Workbook
-  completeWorkbookLevel: (levelId: number, score: number) => void;
-  isWorkbookLevelCompleted: (levelId: number) => boolean;
-  getWorkbookLevelStatus: (levelId: number) => 'available' | 'completed';
-  getWorkbookLevelScore: (levelId: number) => number;
-  workbookCompletionPercentage: number;
 
   // SRS
   reviewConcept: (conceptId: string, quality: number) => void;
@@ -178,68 +160,8 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       get completionPercentage() {
-        return Math.round((get().completedLessons.length / 50) * 100);
+        return Math.round((get().completedLessons.length / MAX_LESSON_ID) * 100);
       },
-
-      // Graph lesson progress
-      completeGraphLesson: (lessonId: string) => {
-        set((state) => {
-          if (state.completedGraphLessons.includes(lessonId)) {
-            return addActivity({ ...state, lastStudyDate: getToday() });
-          }
-          const newStreak = computeStreak(state.lastStudyDate, state.streak);
-          return addActivity({
-            ...state,
-            completedGraphLessons: [...state.completedGraphLessons, lessonId],
-            streak: newStreak,
-            lastStudyDate: getToday(),
-            xp: state.xp + 15,
-          });
-        });
-      },
-
-      isGraphLessonCompleted: (lessonId: string) => {
-        return get().completedGraphLessons.includes(lessonId);
-      },
-
-      // Workbook progress
-      completeWorkbookLevel: (levelId: number, score: number) => {
-        set((state) => {
-          const alreadyCompleted = state.completedWorkbookLevels.includes(levelId);
-          const newStreak = computeStreak(state.lastStudyDate, state.streak);
-          const bestScore = Math.max(score, state.workbookLevelScores[levelId] || 0);
-          const bonus = alreadyCompleted ? 0 : 25;
-          return addActivity({
-            ...state,
-            completedWorkbookLevels: alreadyCompleted
-              ? state.completedWorkbookLevels
-              : [...state.completedWorkbookLevels, levelId],
-            workbookLevelScores: { ...state.workbookLevelScores, [levelId]: bestScore },
-            streak: newStreak,
-            lastStudyDate: getToday(),
-            xp: state.xp + bonus,
-          });
-        });
-      },
-
-      isWorkbookLevelCompleted: (levelId: number) => {
-        return get().completedWorkbookLevels.includes(levelId);
-      },
-
-      getWorkbookLevelStatus: (levelId: number): 'available' | 'completed' => {
-        const state = get();
-        if (state.completedWorkbookLevels.includes(levelId)) return 'completed';
-        return 'available';
-      },
-
-      getWorkbookLevelScore: (levelId: number) => {
-        return get().workbookLevelScores[levelId] || 0;
-      },
-
-      get workbookCompletionPercentage() {
-        return Math.round((get().completedWorkbookLevels.length / 7) * 100);
-      },
-
 
       // SRS
       reviewConcept: (conceptId: string, quality: number) => {
@@ -293,15 +215,12 @@ export const useProgressStore = create<ProgressState>()(
       name: STORAGE_KEY,
       partialize: (state) => ({
         completedLessons: state.completedLessons,
-        completedGraphLessons: state.completedGraphLessons,
         streak: state.streak,
         lastStudyDate: state.lastStudyDate,
         xp: state.xp,
         practiceScores: state.practiceScores,
         srsCards: state.srsCards,
         activityLog: state.activityLog,
-        completedWorkbookLevels: state.completedWorkbookLevels,
-        workbookLevelScores: state.workbookLevelScores,
         dailyGoal: state.dailyGoal,
         lessonCardPositions: state.lessonCardPositions,
       }),

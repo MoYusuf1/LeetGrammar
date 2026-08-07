@@ -33,11 +33,7 @@ export default defineConfig(({ command }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          'data-drills': ['./src/data/drill-content.ts'],
           'data-teaching': ['./src/data/teaching-content.ts'],
-          'data-workbook': ['./src/data/workbook.ts'],
-          'data-problems': ['./src/data/problem-drills.ts'],
-          'vendor-supabase': ['@supabase/supabase-js'],
           'vendor-radix': [
             '@radix-ui/react-dialog',
             '@radix-ui/react-dropdown-menu',

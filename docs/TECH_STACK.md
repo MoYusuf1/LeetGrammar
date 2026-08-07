@@ -1,16 +1,17 @@
 # Technology Stack
 
-> **Status:** `accepted` (Tier 2)  
-> **Last Updated:** 2026-05-10  
-> **Version:** 1.0
+> **Status:** local-only, no backend
+> **Last Updated:** 2026-08-07
 
 ## Philosophy
 
-Add technology reluctantly. Each dependency must earn its place in bundle size and maintenance. We write custom code only where off-the-shelf tools fail our specific needs.
+Add technology reluctantly. Each dependency must earn its place in bundle size and
+maintenance. The app is a static Somali lesson course — it doesn't need a backend,
+accounts, or a graph engine to do that.
 
 ---
 
-## Current Stack (Preserved)
+## Current Stack
 
 | Layer | Technology | Version | Purpose |
 |-------|-----------|---------|---------|
@@ -18,97 +19,38 @@ Add technology reluctantly. Each dependency must earn its place in bundle size a
 | Language | TypeScript | 5.9 | Type safety |
 | Build Tool | Vite | 7.2 | Bundling |
 | Router | React Router | 7.6 | SPA navigation |
+| State | Zustand | 5.0 | Progress store, persisted to `localStorage` |
 | Styling | Tailwind CSS | 3.4 | CSS |
 | Components | shadcn/ui + Radix | latest | UI primitives |
 | Animation | Framer Motion | 12.38 | Transitions |
-| Validation | Zod | 4.3 | Schema validation |
+| Forms/validation | react-hook-form + Zod | latest | Forms |
+| Testing | Vitest | 4.1 | Unit tests |
 | Icons | Lucide React | 0.562 | Icons |
 
----
+## Data model
 
-## Additions for Tier 2
+All lesson content is static TypeScript data, generated from `COURSE.md` by
+`scripts/course-to-app.cjs` into `src/data/teaching-content.ts`, plus hand-curated
+`src/data/vocabulary.ts`. There is no database and no network call in the learning
+flow. Progress (completed lessons, streak, XP, SRS cards, card position) lives in
+one Zustand store (`src/stores/progress-store.ts`) persisted to `localStorage`.
 
-### Phase 0: Foundation (Now)
+## Removed (formerly "Tier 2 Pragmatic Hypergraph")
 
-| Tech | Purpose | Cost | Notes |
-|------|---------|------|-------|
-| **Zustand** | Global graph + UI state | ~1KB | No provider hell; devtools available |
-| **Vitest** | Unit testing | Dev-only | Mandatory for graph engine |
-| **Prettier** | Code formatting | Dev-only | Long overdue |
-| **nanoid** | ID generation | ~100B | Collision-free node/edge IDs |
+An earlier plan added a Supabase-backed knowledge-graph engine (`src/engine/`),
+content-addressed chunk storage (`hash-wasm`), a SQLite-WASM persistence layer
+(`sql.js`), and account-based cloud sync (`@supabase/supabase-js`). None of it
+was part of the actual learning flow, and the Supabase sync layer had drifted out
+of sync with the real schema (querying tables that didn't exist in the tracked
+migration). All of it — the engine, the graph pages, Supabase, and those three
+dependencies — was removed. See `docs/PONYTAIL_DEBT.md` for the removal log.
 
-### Phase 1: Graph Engine (Weeks 2-6)
-
-| Tech | Purpose | Cost | Notes |
-|------|---------|------|-------|
-| **Custom engine** (`src/engine/`) | Property graph + construction hypergraph | Our code | ~500-1000 lines of TypeScript |
-| **hash-wasm** | SHA-256 for chunk CIDs | ~5KB | Sync hashing without `crypto.subtle` async |
-| **Comlink** | Web Worker RPC | ~2KB | Offload graph queries from main thread |
-
-**Why custom engine?**
-- Browser graph DBs (Graphology, Cytoscape.js) handle binary graphs well but lack hyperedge support
-- Our hybrid model is too specific for off-the-shelf tools
-- 1000 lines of TypeScript is less complexity than fighting an ORM
-
-### Phase 2: Multi-Textbook + Persistence (Weeks 6-12)
-
-| Tech | Purpose | Cost | Notes |
-|------|---------|------|-------|
-| **SQLite WASM** (`sql.js`) | Client-side persistence | ~1MB lazy | SQL for graph queries; recursive CTEs for traversals |
-| **absurd-sql** | IndexedDB-backed SQLite | Same | Better persistence across sessions |
-
-**Why SQLite over IndexedDB?**
-- SQL is expressive for graph traversals (`WITH RECURSIVE`)
-- Can store embeddings as `FLOAT[]` and do vector math
-- Migration path to PostgreSQL if we ever add a backend
-
-### Phase 3: Search (Weeks 12-18)
-
-| Tech | Purpose | Cost | Notes |
-|------|---------|------|-------|
-| **transformers.js** | Local embeddings | ~25MB lazy | `all-MiniLM-L6-v2` quantized; runs entirely client-side |
-| **hnswlib** or custom HNSW | Vector index | ~200KB | ANN search over concept embeddings |
-
-**Why not call OpenAI?**
-- Offline requirement
-- Privacy (user search queries stay local)
-- Cost (zero ongoing API fees)
-
-### Phase 4: Polish (Future)
-
-| Tech | Purpose | When |
-|------|---------|------|
-| **Capacitor** | Mobile app wrapper | After web is solid |
-| **Playwright** | E2E tests | Add now if possible |
-
----
-
-## Rejected for Tier 2
+## Explicitly rejected
 
 | Tech | Why Rejected |
 |------|-------------|
-| **Merkle-CRDT libraries** | No sync requirement yet; add when multi-user editing arrives |
-| **Sheaf/topology libraries** | Mathematical overhead exceeds practical value at this scale |
-| **Neo4j (server)** | Violates offline-first; adds hosting cost |
-| **RxDB / PouchDB** | Document model fights our graph structure |
-| **GraphQL** | No server to query; our traversals are internal |
-| **Redux Toolkit** | Zustand is sufficient |
-| **Next.js** | No SSR needed; adds complexity |
-
----
-
-## Bundle Budget (Tier 2)
-
-| Phase | Initial Bundle | Lazy Chunks | 3G Load Target |
-|-------|---------------|-------------|----------------|
-| Phase 0 | 400KB | — | <2s |
-| Phase 1 | 500KB | — | <2s |
-| Phase 2 | 600KB | SQLite: 1MB | <3s |
-| Phase 3 | 700KB | Embeddings: 25MB | <3s + on-demand |
-
----
-
-## Related
-
-- [ADR-005: Pragmatic Hypergraph](./adr/005-pragmatic-hypergraph.md)
-- [ROADMAP.md](./ROADMAP.md)
+| Any backend/database | Content is static; progress is local. Nothing here needs a server. |
+| Neo4j / graph DBs | No graph left to store. |
+| GraphQL | No server to query. |
+| Redux Toolkit | Zustand is sufficient. |
+| Next.js | No SSR needed; adds complexity. |

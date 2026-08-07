@@ -2,18 +2,15 @@
  * course-to-app.cjs
  *
  * Converts the authored Somali grammar course (COURSE.md, 26 modules of slides)
- * into the app's data files:
+ * into the app's data file:
  *
  *   - src/data/teaching-content.ts   (26 card lessons: intro/teach/practice/summary)
- *   - src/data/generated-levels.ts   (26 drill levels consumed by drill-content.ts)
  *
- * Mapping (1 module = 1 lesson = 1 drill level):
+ * Mapping (1 module = 1 lesson):
  *   Title + Learning Objectives slide  -> intro card (bullets + culturalNote)
  *   Content / dialogue slides          -> teach cards (somaliText/examples/explanation/tip)
  *   "Exercise N" + "Exercise N Answers"-> practice card (multiple_choice, options + correct)
  *   Summary slide                      -> summary card (takeaways)
- *
- * The same practice exercises feed the drill levels as `fill-blank` drills.
  *
  * Re-run after editing COURSE.md:  node scripts/course-to-app.cjs
  * Fails loudly if any module yields zero cards.
@@ -29,7 +26,6 @@ const SRC_MD =
   process.env.COURSE_MD ||
   path.resolve(REPO, 'COURSE.md');
 const OUT_TEACHING = path.resolve(REPO, 'src/data/teaching-content.ts');
-const OUT_LEVELS = path.resolve(REPO, 'src/data/generated-levels.ts');
 
 /* ─── Phase metadata (by module number) ──────────────────────────────────── */
 
@@ -654,26 +650,6 @@ export function getCard(lessonId: number, cardIndex: number): TeachingCard | und
 `;
 }
 
-function emitLevels(levels) {
-  const body = levels.map((l) => JSON.stringify(l, null, 2).replace(/\n/g, '\n  ')).join(',\n  ');
-  return `/**
- * Generated drill levels — one LevelData per course module.
- *
- * AUTO-GENERATED from ../somali-grammar-course/COURSE.md by scripts/course-to-app.cjs.
- * Consumed by src/data/drill-content.ts (which re-exports as LEVELS).
- */
-
-import type { Exercise, LevelData } from './drill-content';
-
-export const GENERATED_LEVELS: LevelData[] = [
-  ${body},
-];
-
-// Silence "unused import" if Exercise type is only referenced structurally.
-export type _DrillExercise = Exercise;
-`;
-}
-
 /* ─── Main ───────────────────────────────────────────────────────────────── */
 
 function main() {
@@ -700,21 +676,19 @@ function main() {
     }
   }
 
-  // Pass 2: build lessons + levels.
+  // Pass 2: build lessons.
   const lessons = [];
-  const levels = [];
   const report = [];
   let failed = false;
 
   for (const mod of mods) {
-    const { lesson, level, practiceCount } = buildLesson(mod, uniq(globalPool));
+    const { lesson, practiceCount } = buildLesson(mod, uniq(globalPool));
     const teachCount = lesson.cards.filter((c) => c.type === 'teach').length;
     if (lesson.cards.length <= 2) {
       console.error(`✖ Module ${mod.num} (${mod.title}) produced too few cards.`);
       failed = true;
     }
     lessons.push(lesson);
-    levels.push(level);
     report.push(
       `  M${String(mod.num).padStart(2)} ${mod.title.slice(0, 38).padEnd(38)} ` +
         `cards=${String(lesson.cards.length).padStart(2)} teach=${String(teachCount).padStart(2)} practice=${String(practiceCount).padStart(2)}`
@@ -727,14 +701,10 @@ function main() {
   }
 
   fs.writeFileSync(OUT_TEACHING, emitTeaching(lessons), 'utf8');
-  fs.writeFileSync(OUT_LEVELS, emitLevels(levels), 'utf8');
 
   console.log('Somali course → app conversion complete.\n');
   console.log(report.join('\n'));
-  console.log(
-    `\n✔ ${lessons.length} lessons → ${path.relative(REPO, OUT_TEACHING)}` +
-      `\n✔ ${levels.length} levels  → ${path.relative(REPO, OUT_LEVELS)}`
-  );
+  console.log(`\n✔ ${lessons.length} lessons → ${path.relative(REPO, OUT_TEACHING)}`);
 }
 
 main();

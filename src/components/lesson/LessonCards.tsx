@@ -10,12 +10,13 @@
  *   - XP and streak updates
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Volume2, Check } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent, type TeachingCard, type PracticeExercise } from '@/data/teaching-content';
+import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import CardProgressDots from './CardProgressDots';
 
 
@@ -24,6 +25,14 @@ import CardProgressDots from './CardProgressDots';
 interface LessonCardsProps {
   lessonId: number;
 }
+
+/** A vocab deck injected into the lesson flow (not part of the authored cards). */
+interface VocabFlowCard {
+  type: 'vocab';
+  words: VocabWord[];
+}
+
+type FlowCard = TeachingCard | VocabFlowCard;
 
 /* ─── Card Animation Variants ────────────────────────────────────────────── */
 
@@ -58,46 +67,35 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const progress = useProgressStore();
   const content = getLessonContent(lessonId);
 
-  /* Local state */
-  const [cardIndex, setCardIndex] = useState(0);
+  /* Local state. Resume position is read once from the store on mount; Lesson.tsx
+     keys this component by lessonId, so switching lessons remounts and re-reads. */
+  const [cardIndex, setCardIndex] = useState(
+    () => useProgressStore.getState().getLessonCardPosition(lessonId),
+  );
   const [direction, setDirection] = useState(1);
-  const [completedCards, setCompletedCards] = useState<Set<number>>(new Set());
+  const [completedCards, setCompletedCards] = useState<Set<number>>(() => {
+    const pos = useProgressStore.getState().getLessonCardPosition(lessonId);
+    return new Set(Array.from({ length: pos }, (_, i) => i));
+  });
   const [practiceAnswer, setPracticeAnswer] = useState<string | null>(null);
   const [practiceChecked, setPracticeChecked] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
-  /* Load saved position from localStorage */
+  /* Persist position to the progress store. */
   useEffect(() => {
-    const key = `lesson-card-pos-${lessonId}`;
-    const saved = localStorage.getItem(key);
-    if (saved) {
-      try {
-        const pos = parseInt(saved, 10);
-        if (pos > 0) {
-          setCardIndex(pos);
-          const completed = new Set<number>();
-          for (let i = 0; i < pos; i++) completed.add(i);
-          setCompletedCards(completed);
-        }
-      } catch { /* ignore */ }
-    }
-  }, [lessonId]);
-
-  /* Save position */
-  useEffect(() => {
-    const key = `lesson-card-pos-${lessonId}`;
-    localStorage.setItem(key, String(cardIndex));
+    useProgressStore.getState().setLessonCardPosition(lessonId, cardIndex);
   }, [cardIndex, lessonId]);
 
-  if (!content) {
-    return (
-      <div className="min-h-full bg-[#0f0f0f] flex items-center justify-center px-4">
-        <p className="text-[#8c8c8c] text-sm">Lesson content not found.</p>
-      </div>
-    );
-  }
+  /* Card flow = authored cards + an injected vocab deck placed right after the intro. */
+  const cards: FlowCard[] = useMemo(() => {
+    const base: FlowCard[] = content?.cards ?? [];
+    const words = getVocabForLesson(lessonId);
+    if (!content || words.length === 0) return base;
+    const vocabCard: VocabFlowCard = { type: 'vocab', words };
+    const insertAt = base[0]?.type === 'intro' ? 1 : 0;
+    return [...base.slice(0, insertAt), vocabCard, ...base.slice(insertAt)];
+  }, [content, lessonId]);
 
-  const cards = content.cards;
   const currentCard = cards[cardIndex];
   const isLastCard = cardIndex === cards.length - 1;
 
@@ -107,7 +105,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     if (isLastCard) {
       /* Complete the lesson */
       progress.completeLesson(lessonId);
-      localStorage.removeItem(`lesson-card-pos-${lessonId}`);
+      progress.clearLessonCardPosition(lessonId);
       navigate('/learn');
       return;
     }
@@ -118,14 +116,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     setPracticeChecked(false);
   }, [isLastCard, cardIndex, lessonId, navigate, progress]);
 
-  const goBack = useCallback(() => {
-    if (cardIndex === 0) return;
-    setDirection(-1);
-    setCardIndex((i) => i - 1);
-    setPracticeAnswer(null);
-    setPracticeChecked(false);
-  }, [cardIndex]);
-
   const goToCard = useCallback((index: number) => {
     if (index >= cardIndex) return;
     setDirection(index < cardIndex ? -1 : 1);
@@ -133,6 +123,15 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     setPracticeAnswer(null);
     setPracticeChecked(false);
   }, [cardIndex]);
+
+  /* All hooks are declared above — safe to bail out for a missing lesson now. */
+  if (!content) {
+    return (
+      <div className="min-h-full bg-[#0f0f0f] flex items-center justify-center px-4">
+        <p className="text-[#8c8c8c] text-sm">Lesson content not found.</p>
+      </div>
+    );
+  }
 
   /* ─── Swipe handlers ───────────────────────────────────────────────────── */
 
@@ -210,8 +209,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
                 practiceAnswer={practiceAnswer}
                 practiceChecked={practiceChecked}
                 onPracticeSelect={handlePracticeSelect}
-                onPracticeCheck={handlePracticeCheck}
-                onPracticeContinue={handlePracticeContinue}
               />
             </motion.div>
           </AnimatePresence>
@@ -274,20 +271,18 @@ function RenderCard({
   practiceAnswer,
   practiceChecked,
   onPracticeSelect,
-  onPracticeCheck,
-  onPracticeContinue,
 }: {
-  card: TeachingCard;
+  card: FlowCard;
   lessonTitle: string;
   practiceAnswer: string | null;
   practiceChecked: boolean;
   onPracticeSelect: (a: string) => void;
-  onPracticeCheck: () => void;
-  onPracticeContinue: () => void;
 }) {
   switch (card.type) {
     case 'intro':
       return <IntroCard card={card} lessonTitle={lessonTitle} />;
+    case 'vocab':
+      return <VocabCard words={card.words} />;
     case 'teach':
       return <TeachCard card={card} />;
     case 'practice':
@@ -297,8 +292,6 @@ function RenderCard({
           answer={practiceAnswer}
           checked={practiceChecked}
           onSelect={onPracticeSelect}
-          onCheck={onPracticeCheck}
-          onContinue={onPracticeContinue}
         />
       );
     case 'summary':
@@ -344,6 +337,41 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
           <p className="text-sm text-[#c8c8c8] leading-relaxed">{card.culturalNote}</p>
         </motion.div>
       )}
+    </div>
+  );
+}
+
+/* ─── Vocab Card ─────────────────────────────────────────────────────────── */
+
+function VocabCard({ words }: { words: VocabWord[] }) {
+  return (
+    <div className="space-y-5 pt-4">
+      <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
+        <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#00b8a315] border border-[#00b8a330] text-xs font-semibold text-[#00b8a3]">
+          Vocabulary · {words.length} words
+        </span>
+        <p className="text-sm text-[#8c8c8c] mt-3 leading-relaxed">
+          Key high-frequency words for this lesson. You&apos;ll meet these again in the practice and worksheet.
+        </p>
+      </motion.div>
+
+      <motion.div
+        custom={1}
+        variants={contentStagger}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+      >
+        {words.map((w) => (
+          <div key={w.rank} className="bg-[#141414] border border-[#ffffff08] rounded-xl p-3.5">
+            <div className="flex items-baseline justify-between gap-2">
+              <p className="text-base font-semibold text-[#eff1f6] font-mono">{w.somali}</p>
+              <span className="text-[9px] uppercase tracking-wider text-[#5c5c5c] flex-shrink-0">{w.pos}</span>
+            </div>
+            <p className="text-sm text-[#8c8c8c] mt-0.5">{w.english}</p>
+          </div>
+        ))}
+      </motion.div>
     </div>
   );
 }
@@ -443,19 +471,12 @@ function PracticeCard({
   answer,
   checked,
   onSelect,
-  onCheck,
-  onContinue,
 }: {
   exercise: PracticeExercise;
   answer: string | null;
   checked: boolean;
   onSelect: (a: string) => void;
-  onCheck: () => void;
-  onContinue: () => void;
 }) {
-  const isCorrect = checked && answer === exercise.correctAnswer;
-  const isWrong = checked && answer !== exercise.correctAnswer;
-
   return (
     <div className="space-y-5 pt-4">
       {/* Question */}
@@ -464,52 +485,23 @@ function PracticeCard({
           Practice
         </span>
         <p className="text-lg font-medium text-[#eff1f6] leading-relaxed">{exercise.question}</p>
+        {exercise.somali && (
+          <div className="bg-[#141414] border border-[#ffffff08] rounded-xl p-4 mt-3">
+            <p className="text-xl font-semibold text-[#eff1f6] font-mono">{exercise.somali}</p>
+          </div>
+        )}
       </motion.div>
 
-      {/* Options */}
-      <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-2.5">
-        {exercise.options.map((option, i) => {
-          const isSelected = answer === option;
-          const isCorrectOption = checked && option === exercise.correctAnswer;
-          const isWrongOption = checked && isSelected && !isCorrect;
-
-          let borderColor = 'border-[#ffffff08]';
-          let bgColor = 'bg-[#141414]';
-          if (isCorrectOption) { borderColor = 'border-[#22c55e]'; bgColor = 'bg-[#22c55e15]'; }
-          else if (isWrongOption) { borderColor = 'border-[#ef4444]'; bgColor = 'bg-[#ef444415]'; }
-          else if (isSelected && !checked) { borderColor = 'border-[#ffa116]'; bgColor = 'bg-[#ffa11610]'; }
-
-          return (
-            <button
-              key={i}
-              onClick={() => onSelect(option)}
-              disabled={checked}
-              className={`w-full p-4 rounded-xl border ${borderColor} ${bgColor} text-left transition-all duration-200 ${
-                checked ? 'cursor-default' : 'cursor-pointer hover:border-[#ffffff15] active:scale-[0.98]'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <span className={`w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                  isCorrectOption
-                    ? 'border-[#22c55e] bg-[#22c55e] text-[#0f0f0f]'
-                    : isWrongOption
-                    ? 'border-[#ef4444] bg-[#ef4444] text-[#0f0f0f]'
-                    : isSelected
-                    ? 'border-[#ffa116] text-[#ffa116]'
-                    : 'border-[#ffffff15] text-[#5c5c5c]'
-                }`}>
-                  {isCorrectOption ? '✓' : isWrongOption ? '✕' : String.fromCharCode(65 + i)}
-                </span>
-                <span className={`text-sm font-medium ${
-                  isCorrectOption ? 'text-[#22c55e]' : isWrongOption ? 'text-[#ef4444]' : 'text-[#eff1f6]'
-                }`}>
-                  {option}
-                </span>
-              </div>
-            </button>
-          );
-        })}
-      </motion.div>
+      {/* Answer input — varies by exercise type */}
+      {(exercise.type === 'multiple_choice' || exercise.type === 'fill_blank' || exercise.type === 'matching') && (
+        <ChoiceExercise exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
+      )}
+      {exercise.type === 'unscramble' && (
+        <UnscrambleExercise exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
+      )}
+      {(exercise.type === 'translate' || exercise.type === 'marker_identification') && (
+        <FreeResponseExercise exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
+      )}
 
       {/* Hint (always visible) */}
       <motion.div
@@ -524,25 +516,227 @@ function PracticeCard({
       </motion.div>
 
       {/* Feedback (after check) */}
-      {checked && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`rounded-xl border p-4 ${
-            isCorrect
-              ? 'bg-[#22c55e10] border-[#22c55e30]'
-              : 'bg-[#ef444410] border-[#ef444430]'
-          }`}
-        >
-          <p className={`text-sm font-bold mb-1 ${isCorrect ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
-            {isCorrect ? 'Correct! Great job!' : `Not quite! The answer is: ${exercise.correctAnswer}`}
-          </p>
-          <p className="text-sm text-[#c8c8c8] leading-relaxed">{exercise.explanation}</p>
-        </motion.div>
-      )}
-
-      {/* Check / Continue button area — rendered by bottom action bar */}
+      {checked && <PracticeFeedback exercise={exercise} answer={answer} />}
     </div>
+  );
+}
+
+/** Correctness check shared across exercise types that have a single canonical answer. */
+/** Lowercase, trim, collapse whitespace, and drop trailing sentence punctuation —
+ * so e.g. an unscramble built by tapping word chips ("Cali wuu cunay") matches an
+ * authored answer with a trailing period ("Cali wuu cunay."). */
+function normalizeAnswer(s: string): string {
+  return s.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.?!]+$/, '');
+}
+
+function isAnswerCorrect(exercise: PracticeExercise, answer: string | null): boolean {
+  if (answer === null) return false;
+  if (exercise.type === 'multiple_choice' || exercise.type === 'fill_blank' || exercise.type === 'matching') {
+    return answer === exercise.correctAnswer;
+  }
+  const target = Array.isArray(exercise.answer) ? exercise.answer[0] : exercise.answer;
+  if (!target) return false;
+  return normalizeAnswer(answer) === normalizeAnswer(target);
+}
+
+function displayAnswer(exercise: PracticeExercise): string {
+  if (exercise.correctAnswer) return exercise.correctAnswer;
+  if (Array.isArray(exercise.answer)) return exercise.answer.join(' · ');
+  return exercise.answer ?? '';
+}
+
+function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; answer: string | null }) {
+  const isCorrect = isAnswerCorrect(exercise, answer);
+  const isSelfGraded = exercise.type === 'translate' || exercise.type === 'marker_identification';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`rounded-xl border p-4 ${
+        isCorrect || isSelfGraded
+          ? 'bg-[#22c55e10] border-[#22c55e30]'
+          : 'bg-[#ef444410] border-[#ef444430]'
+      }`}
+    >
+      <p className={`text-sm font-bold mb-1 ${isCorrect || isSelfGraded ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
+        {isSelfGraded
+          ? `Answer: ${displayAnswer(exercise)}`
+          : isCorrect
+          ? 'Correct! Great job!'
+          : `Not quite! The answer is: ${displayAnswer(exercise)}`}
+      </p>
+      <p className="text-sm text-[#c8c8c8] leading-relaxed">{exercise.explanation}</p>
+    </motion.div>
+  );
+}
+
+/* ─── Choice Exercise (multiple_choice / fill_blank / matching) ─────────────── */
+
+function ChoiceExercise({
+  exercise,
+  answer,
+  checked,
+  onSelect,
+}: {
+  exercise: PracticeExercise;
+  answer: string | null;
+  checked: boolean;
+  onSelect: (a: string) => void;
+}) {
+  const isCorrect = checked && answer === exercise.correctAnswer;
+  return (
+    <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-2.5">
+      {(exercise.options ?? []).map((option, i) => {
+        const isSelected = answer === option;
+        const isCorrectOption = checked && option === exercise.correctAnswer;
+        const isWrongOption = checked && isSelected && !isCorrect;
+
+        let borderColor = 'border-[#ffffff08]';
+        let bgColor = 'bg-[#141414]';
+        if (isCorrectOption) { borderColor = 'border-[#22c55e]'; bgColor = 'bg-[#22c55e15]'; }
+        else if (isWrongOption) { borderColor = 'border-[#ef4444]'; bgColor = 'bg-[#ef444415]'; }
+        else if (isSelected && !checked) { borderColor = 'border-[#ffa116]'; bgColor = 'bg-[#ffa11610]'; }
+
+        return (
+          <button
+            key={i}
+            onClick={() => onSelect(option)}
+            disabled={checked}
+            className={`w-full p-4 rounded-xl border ${borderColor} ${bgColor} text-left transition-all duration-200 ${
+              checked ? 'cursor-default' : 'cursor-pointer hover:border-[#ffffff15] active:scale-[0.98]'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <span className={`w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                isCorrectOption
+                  ? 'border-[#22c55e] bg-[#22c55e] text-[#0f0f0f]'
+                  : isWrongOption
+                  ? 'border-[#ef4444] bg-[#ef4444] text-[#0f0f0f]'
+                  : isSelected
+                  ? 'border-[#ffa116] text-[#ffa116]'
+                  : 'border-[#ffffff15] text-[#5c5c5c]'
+              }`}>
+                {isCorrectOption ? '✓' : isWrongOption ? '✕' : String.fromCharCode(65 + i)}
+              </span>
+              <span className={`text-sm font-medium ${
+                isCorrectOption ? 'text-[#22c55e]' : isWrongOption ? 'text-[#ef4444]' : 'text-[#eff1f6]'
+              }`}>
+                {option}
+              </span>
+            </div>
+          </button>
+        );
+      })}
+    </motion.div>
+  );
+}
+
+/* ─── Unscramble Exercise ────────────────────────────────────────────────── */
+
+function UnscrambleExercise({
+  exercise,
+  checked,
+  onSelect,
+}: {
+  exercise: PracticeExercise;
+  answer: string | null;
+  checked: boolean;
+  onSelect: (a: string) => void;
+}) {
+  const bank = exercise.words ?? [];
+  const [placed, setPlaced] = useState<string[]>([]);
+  const [used, setUsed] = useState<boolean[]>(() => bank.map(() => false));
+
+  // Functional updates (not the closed-over `placed`/`used` values) so rapid
+  // consecutive taps can't be dropped via stale closures; onSelect syncs from
+  // the resulting state via effect rather than being computed in the handler.
+  useEffect(() => {
+    onSelect(placed.join(' '));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [placed]);
+
+  const tap = (word: string, i: number) => {
+    if (checked) return;
+    setUsed((prev) => (prev[i] ? prev : prev.map((u, idx) => (idx === i ? true : u))));
+    setPlaced((prev) => (used[i] ? prev : [...prev, word]));
+  };
+
+  const reset = () => {
+    if (checked) return;
+    setPlaced([]);
+    setUsed(bank.map(() => false));
+  };
+
+  return (
+    <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-3">
+      {/* Assembled sentence */}
+      <div className="min-h-[52px] rounded-xl bg-[#141414] border border-[#ffffff08] p-3 flex flex-wrap gap-2 items-center">
+        {placed.length === 0 ? (
+          <span className="text-sm text-[#5c5c5c]">Tap words below in order…</span>
+        ) : (
+          placed.map((w, i) => (
+            <span key={i} className="px-2.5 py-1 rounded-lg bg-[#ffa11615] border border-[#ffa11630] text-sm font-medium text-[#eff1f6]">
+              {w}
+            </span>
+          ))
+        )}
+      </div>
+
+      {/* Word bank */}
+      <div className="flex flex-wrap gap-2">
+        {bank.map((word, i) => (
+          <button
+            key={i}
+            onClick={() => tap(word, i)}
+            disabled={checked || used[i]}
+            className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+              used[i]
+                ? 'opacity-30 border-[#ffffff08] bg-[#0f0f0f] text-[#5c5c5c] cursor-not-allowed'
+                : 'border-[#ffffff15] bg-[#1a1a1a] text-[#eff1f6] hover:border-[#ffffff25] active:scale-[0.95]'
+            }`}
+          >
+            {word}
+          </button>
+        ))}
+      </div>
+
+      {!checked && placed.length > 0 && (
+        <button onClick={reset} className="text-xs text-[#5c5c5c] hover:text-[#8c8c8c] transition-colors">
+          Reset
+        </button>
+      )}
+    </motion.div>
+  );
+}
+
+/* ─── Free Response Exercise (translate / marker_identification) ────────────── */
+
+function FreeResponseExercise({
+  exercise,
+  answer,
+  checked,
+  onSelect,
+}: {
+  exercise: PracticeExercise;
+  answer: string | null;
+  checked: boolean;
+  onSelect: (a: string) => void;
+}) {
+  return (
+    <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
+      <input
+        type="text"
+        value={answer ?? ''}
+        disabled={checked}
+        onChange={(e) => onSelect(e.target.value)}
+        placeholder={exercise.type === 'marker_identification' ? 'Type the marker…' : 'Type your answer in Somali…'}
+        className="w-full p-4 rounded-xl bg-[#141414] border border-[#ffffff08] text-[#eff1f6] text-sm placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa11640]"
+      />
+      <p className="text-[10px] text-[#5c5c5c] mt-2">
+        Type your best answer, then check — you grade yourself against the explanation below.
+      </p>
+    </motion.div>
   );
 }
 
@@ -585,7 +779,7 @@ function BottomAction({
   onCheck,
   onContinue,
 }: {
-  card: TeachingCard;
+  card: FlowCard;
   isLastCard: boolean;
   practiceAnswer: string | null;
   practiceChecked: boolean;
@@ -593,8 +787,8 @@ function BottomAction({
   onCheck: () => void;
   onContinue: () => void;
 }) {
-  /* Intro / Teach / Summary cards: "Got it!" / "Continue" */
-  if (card.type === 'intro' || card.type === 'teach' || card.type === 'summary') {
+  /* Intro / Vocab / Teach / Summary cards: "Got it!" / "Continue" */
+  if (card.type === 'intro' || card.type === 'vocab' || card.type === 'teach' || card.type === 'summary') {
     const label =
       card.type === 'intro' ? 'Start Learning' : isLastCard ? 'Complete Lesson' : 'Got it!';
     const bgColor = isLastCard ? 'bg-[#22c55e] hover:bg-[#22c55ed0]' : 'bg-[#ffa116] hover:bg-[#ffa116d0]';

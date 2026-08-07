@@ -1,47 +1,36 @@
 /**
- * Global Search — Command+K palette for the knowledge graph.
+ * Global Search — Command+K palette.
  *
- * Searches across nodes, chunks, and examples.
- * Grouped by type with keyboard navigation.
+ * Searches lessons and vocabulary (in-memory, static data — no store needed).
  */
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, X, BookOpen, Hash, MessageSquare, Wrench, ArrowRight, Clock, Sparkles, Dumbbell } from 'lucide-react';
+import { Search, X, BookOpen, Languages, ArrowRight, Sparkles } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
 } from '@/components/ui/dialog';
-import { useGraphStore } from '@/stores/graph-store';
-import type { Node, NodeType } from '@/engine/types';
-import { TYPE_COLORS, TYPE_ICONS } from '@/constants/node-display';
+import { LESSON_LIST } from '@/data/teaching-content';
+import { TOP_500_WORDS } from '@/data/vocabulary';
 
-interface SearchResult {
-  node: Node;
-  matchedLabel: string;
-  matchType: 'label' | 'english' | 'somali' | 'chunk';
+interface LessonResult {
+  kind: 'lesson';
+  lessonId: number;
+  title: string;
 }
 
-const TYPE_ORDER: NodeType[] = [
-  'CONCEPT', 'MORPHEME', 'WORD', 'EXAMPLE', 'RULE', 'CONSTRUCTION', 'LESSON', 'TEXTBOOK', 'LEXICAL_ENTRY',
-];
-
-const RECENT_KEY = 'leet-somali-search-recent';
-const MAX_RECENT = 6;
-
-function getRecent(): string[] {
-  try {
-    const raw = localStorage.getItem(RECENT_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+interface VocabResult {
+  kind: 'vocab';
+  lessonId: number;
+  somali: string;
+  english: string;
 }
 
-function addRecent(nodeId: string) {
-  const recent = getRecent().filter((id) => id !== nodeId);
-  recent.unshift(nodeId);
-  localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)));
+type SearchResult = LessonResult | VocabResult;
+
+function resultKey(r: SearchResult): string {
+  return r.kind === 'lesson' ? `lesson-${r.lessonId}` : `vocab-${r.somali}-${r.lessonId}`;
 }
 
 interface GlobalSearchProps {
@@ -51,129 +40,60 @@ interface GlobalSearchProps {
 
 export default function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
   const navigate = useNavigate();
-  const { engine, chunks } = useGraphStore();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const recentIds = useMemo(() => getRecent(), [open]);
+  // Reset selection when the query changes — derived during render (not an
+  // effect) per https://react.dev/learn/you-might-not-need-an-effect
+  const [prevQuery, setPrevQuery] = useState(query);
+  if (query !== prevQuery) {
+    setPrevQuery(query);
+    setSelectedIndex(0);
+  }
 
   const results = useMemo<SearchResult[]>(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
-    const allNodes = engine.getAllNodes();
-    const scored: Array<SearchResult & { score: number }> = [];
+    const scored: Array<{ result: SearchResult; score: number }> = [];
 
-    for (const node of allNodes) {
+    for (const lesson of LESSON_LIST) {
+      const title = lesson.title.toLowerCase();
       let score = 0;
-      let matchType: SearchResult['matchType'] = 'label';
-
-      // Exact label match = highest score
-      if (node.labels.default.toLowerCase() === q) {
-        score = 100;
-        matchType = 'label';
-      } else if (node.labels.default.toLowerCase().startsWith(q)) {
-        score = 80;
-        matchType = 'label';
-      } else if (node.labels.default.toLowerCase().includes(q)) {
-        score = 60;
-        matchType = 'label';
+      if (title === q) score = 100;
+      else if (title.startsWith(q)) score = 80;
+      else if (title.includes(q)) score = 60;
+      if (score > 0) {
+        scored.push({ result: { kind: 'lesson', lessonId: lesson.lessonId, title: lesson.title }, score });
       }
+    }
 
-      // English label match
-      if (node.labels.english?.toLowerCase().includes(q)) {
-        score = Math.max(score, 50);
-        matchType = 'english';
-      }
-
-      // Somali label match
-      if (node.labels.somali?.toLowerCase().includes(q)) {
-        score = Math.max(score, 70);
-        matchType = 'somali';
-      }
-
-      // Chunk content match (lower score)
-      if (score < 40) {
-        for (const cid of node.definitionCids) {
-          const chunk = chunks.get(cid);
-          if (chunk?.payload.toLowerCase().includes(q)) {
-            score = Math.max(score, 30);
-            matchType = 'chunk';
-            break;
-          }
-        }
-      }
-
+    for (const word of TOP_500_WORDS) {
+      const somali = word.somali.toLowerCase();
+      const english = word.english.toLowerCase();
+      let score = 0;
+      if (somali === q || english === q) score = 90;
+      else if (somali.startsWith(q) || english.startsWith(q)) score = 70;
+      else if (somali.includes(q) || english.includes(q)) score = 50;
       if (score > 0) {
         scored.push({
-          node,
-          matchedLabel: node.labels.default,
-          matchType,
+          result: { kind: 'vocab', lessonId: word.lessonId, somali: word.somali, english: word.english },
           score,
         });
       }
     }
 
-    // Sort by score descending, then by label
-    scored.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return a.node.labels.default.localeCompare(b.node.labels.default);
-    });
-
-    return scored.slice(0, 20);
-  }, [query, engine, chunks]);
-
-  const grouped = useMemo(() => {
-    const map = new Map<NodeType, SearchResult[]>();
-    for (const r of results) {
-      const list = map.get(r.node.type) ?? [];
-      list.push(r);
-      map.set(r.node.type, list);
-    }
-    // Sort by TYPE_ORDER
-    const sorted = new Map<NodeType, SearchResult[]>();
-    for (const type of TYPE_ORDER) {
-      if (map.has(type)) {
-        sorted.set(type, map.get(type)!);
-      }
-    }
-    return sorted;
-  }, [results]);
-
-  const flatResults = useMemo(() => {
-    const flat: SearchResult[] = [];
-    for (const list of grouped.values()) {
-      flat.push(...list);
-    }
-    return flat;
-  }, [grouped]);
-
-  const recentNodes = useMemo(() => {
-    if (query.trim()) return [];
-    return recentIds
-      .map((id) => engine.getNode(id))
-      .filter((n): n is Node => !!n);
-  }, [recentIds, query, engine]);
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 20).map((s) => s.result);
+  }, [query]);
 
   const handleSelect = useCallback(
-    (nodeId: string) => {
-      addRecent(nodeId);
+    (lessonId: number) => {
       onOpenChange(false);
       setQuery('');
-      navigate(`/wiki/${nodeId}`);
-    },
-    [navigate, onOpenChange]
-  );
-
-  const handleQuiz = useCallback(
-    (e: React.MouseEvent, nodeId: string) => {
-      e.stopPropagation();
-      addRecent(nodeId);
-      onOpenChange(false);
-      setQuery('');
-      navigate(`/quiz/${nodeId}`);
+      navigate(`/lesson/${lessonId}`);
     },
     [navigate, onOpenChange]
   );
@@ -185,16 +105,14 @@ export default function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setSelectedIndex((i) => Math.min(i + 1, flatResults.length - 1));
+        setSelectedIndex((i) => Math.min(i + 1, results.length - 1));
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         setSelectedIndex((i) => Math.max(i - 1, 0));
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        const selected = flatResults[selectedIndex];
-        if (selected) {
-          handleSelect(selected.node.id);
-        }
+        const selected = results[selectedIndex];
+        if (selected) handleSelect(selected.lessonId);
       } else if (e.key === 'Escape') {
         onOpenChange(false);
       }
@@ -202,12 +120,7 @@ export default function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) 
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, flatResults, selectedIndex, handleSelect, onOpenChange]);
-
-  // Reset selection when query changes
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
+  }, [open, results, selectedIndex, handleSelect, onOpenChange]);
 
   // Focus input when opened
   useEffect(() => {
@@ -224,8 +137,7 @@ export default function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) 
     }
   }, [selectedIndex]);
 
-  const showRecent = !query.trim() && recentNodes.length > 0;
-  const showEmpty = query.trim() && flatResults.length === 0;
+  const showEmpty = query.trim() && results.length === 0;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -236,7 +148,7 @@ export default function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) 
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search concepts, words, examples..."
+            placeholder="Search lessons and vocabulary..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="flex-1 bg-transparent text-sm text-[#eff1f6] placeholder:text-[#5c5c5c] focus:outline-none"
@@ -256,99 +168,48 @@ export default function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) 
 
         {/* Results */}
         <div ref={listRef} className="max-h-[400px] overflow-y-auto">
-          {/* Recent */}
-          {showRecent && (
+          {results.length > 0 && (
             <div className="px-3 py-2">
-              <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1.5 px-2">
-                <Clock size={10} className="inline mr-1" />
-                Recent
-              </p>
-              {recentNodes.map((node) => {
-                const Icon = TYPE_ICONS[node.type];
-                const color = TYPE_COLORS[node.type];
+              {results.map((result, index) => {
+                const isSelected = index === selectedIndex;
+                const Icon = result.kind === 'lesson' ? BookOpen : Languages;
+                const color = result.kind === 'lesson' ? '#3b82f6' : '#22c55e';
+                const label = result.kind === 'lesson' ? result.title : result.somali;
+                const sublabel =
+                  result.kind === 'lesson'
+                    ? `Lesson ${result.lessonId}`
+                    : `${result.english} · Lesson ${result.lessonId}`;
                 return (
                   <button
-                    key={node.id}
-                    onClick={() => handleSelect(node.id)}
-                    className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#ffffff06] transition-colors text-left group"
+                    key={resultKey(result)}
+                    data-index={index}
+                    onClick={() => handleSelect(result.lessonId)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                    className={`w-full flex items-center gap-3 px-2 py-2 rounded-lg transition-colors text-left group ${
+                      isSelected ? 'bg-[#ffffff08]' : 'hover:bg-[#ffffff04]'
+                    }`}
                   >
                     <div
                       className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: `${color}15`, border: `1px solid ${color}25` }}
+                      style={{
+                        backgroundColor: `${color}15`,
+                        border: `1px solid ${isSelected ? color + '50' : color + '25'}`,
+                      }}
                     >
                       <Icon size={13} style={{ color }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-[#c8c8c8] group-hover:text-[#eff1f6] truncate">
-                        {node.labels.default}
+                      <p className={`text-xs truncate ${isSelected ? 'text-[#eff1f6]' : 'text-[#c8c8c8] group-hover:text-[#eff1f6]'}`}>
+                        {label}
                       </p>
-                      <p className="text-[9px] text-[#5c5c5c]">{node.type}</p>
+                      <p className="text-[9px] text-[#5c5c5c]">{sublabel}</p>
                     </div>
-                    <ArrowRight size={12} className="text-[#3e3e3e] group-hover:text-[#8c8c8c] flex-shrink-0" />
+                    <ArrowRight size={12} className={`transition-colors flex-shrink-0 ${isSelected ? 'text-[#8c8c8c]' : 'text-[#3e3e3e]'}`} />
                   </button>
                 );
               })}
             </div>
           )}
-
-          {/* Grouped results */}
-          {Array.from(grouped.entries()).map(([type, items]) => {
-            const Icon = TYPE_ICONS[type];
-            const color = TYPE_COLORS[type];
-            return (
-              <div key={type} className="px-3 py-2">
-                <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-1.5 px-2">
-                  {type} ({items.length})
-                </p>
-                {items.map((result) => {
-                  const globalIndex = flatResults.indexOf(result);
-                  const isSelected = globalIndex === selectedIndex;
-                  return (
-                    <button
-                      key={result.node.id}
-                      data-index={globalIndex}
-                      onClick={() => handleSelect(result.node.id)}
-                      onMouseEnter={() => setSelectedIndex(globalIndex)}
-                      className={`w-full flex items-center gap-3 px-2 py-2 rounded-lg transition-colors text-left group ${
-                        isSelected ? 'bg-[#ffffff08]' : 'hover:bg-[#ffffff04]'
-                      }`}
-                    >
-                      <div
-                        className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
-                        style={{
-                          backgroundColor: `${color}15`,
-                          border: `1px solid ${isSelected ? color + '50' : color + '25'}`,
-                        }}
-                      >
-                        <Icon size={13} style={{ color }} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-xs truncate ${isSelected ? 'text-[#eff1f6]' : 'text-[#c8c8c8] group-hover:text-[#eff1f6]'}`}>
-                          {result.node.labels.default}
-                        </p>
-                        <p className="text-[9px] text-[#5c5c5c]">
-                          {result.node.labels.english}
-                          {result.matchType === 'chunk' && ' · found in content'}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        {result.node.type === 'CONCEPT' && (
-                          <button
-                            onClick={(e) => handleQuiz(e, result.node.id)}
-                            className="p-1 rounded hover:bg-[#ffffff10] text-[#3e3e3e] hover:text-[#ffa116] opacity-0 group-hover:opacity-100 transition-opacity"
-                            title="Quiz"
-                          >
-                            <Dumbbell size={12} />
-                          </button>
-                        )}
-                        <ArrowRight size={12} className={`transition-colors ${isSelected ? 'text-[#8c8c8c]' : 'text-[#3e3e3e]'}`} />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            );
-          })}
 
           {/* Empty state */}
           {showEmpty && (
@@ -356,18 +217,18 @@ export default function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) 
               <Search size={24} className="text-[#3e3e3e] mx-auto mb-2" />
               <p className="text-sm text-[#8c8c8c]">No results for "{query}"</p>
               <p className="text-xs text-[#5c5c5c] mt-1">
-                Try searching for a Somali word, concept, or example sentence
+                Try searching for a Somali word, its English meaning, or a lesson title
               </p>
             </div>
           )}
 
           {/* Initial state */}
-          {!query.trim() && recentNodes.length === 0 && (
+          {!query.trim() && (
             <div className="px-4 py-8 text-center">
               <Sparkles size={24} className="text-[#3e3e3e] mx-auto mb-2" />
-              <p className="text-sm text-[#8c8c8c]">Type to search the knowledge graph</p>
+              <p className="text-sm text-[#8c8c8c]">Type to search lessons and vocabulary</p>
               <div className="flex flex-wrap justify-center gap-1.5 mt-3">
-                {['waa', 'focus', 'gender', 'articles', 'clitics'].map((term) => (
+                {['waa', 'nouns', 'pronouns', 'nabad', 'articles'].map((term) => (
                   <button
                     key={term}
                     onClick={() => setQuery(term)}
@@ -393,7 +254,7 @@ export default function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) 
               Open
             </span>
           </div>
-          <span>{engine.stats.nodes} nodes indexed</span>
+          <span>{LESSON_LIST.length} lessons indexed</span>
         </div>
       </DialogContent>
     </Dialog>

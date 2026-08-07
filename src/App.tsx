@@ -1,29 +1,14 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router';
-import { useAuthInit } from '@/hooks/useAuthInit';
-import { useGraphInit } from '@/hooks/useGraphInit';
 import TopNav from '@/components/TopNav';
 import ErrorBoundary from '@/components/ErrorBoundary';
-import AdminGuard from '@/components/AdminGuard';
 
 /* ─── All routes (lazy-loaded) ─── */
 const Landing = lazy(() => import('@/pages/Landing'));
-const Problems = lazy(() => import('@/pages/Problems'));
-const Roadmap = lazy(() => import('@/pages/Roadmap'));
-// const Learn = lazy(() => import('@/pages/Learn')); // replaced by Lessons page
-const Problem = lazy(() => import('@/pages/Problem'));
-const WorkbookLevel = lazy(() => import('@/pages/WorkbookLevel'));
 const Lesson = lazy(() => import('@/pages/Lesson'));
+const Worksheet = lazy(() => import('@/pages/Worksheet'));
 const Lessons = lazy(() => import('@/pages/Lessons'));
 const Profile = lazy(() => import('@/pages/Profile'));
-const Wiki = lazy(() => import('@/pages/Wiki'));
-const Concepts = lazy(() => import('@/pages/Concepts'));
-const Curriculum = lazy(() => import('@/pages/Curriculum'));
-const Ingest = lazy(() => import('@/pages/Ingest'));
-const Quiz = lazy(() => import('@/pages/Quiz'));
-const Review = lazy(() => import('@/pages/Review'));
-const StudyHub = lazy(() => import('@/pages/StudyHub'));
-const Settings = lazy(() => import('@/pages/Settings'));
 
 function PageLoader() {
   return (
@@ -34,9 +19,6 @@ function PageLoader() {
 }
 
 export default function App() {
-  useAuthInit();
-  useGraphInit();
-
   return (
     <ErrorBoundary>
       <div className="h-screen flex flex-col bg-[#0f0f0f] overflow-hidden">
@@ -45,32 +27,18 @@ export default function App() {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route path="/problems" element={<Problems />} />
-              <Route path="/problem/:id" element={<Problem />} />
-              <Route path="/roadmap" element={<Roadmap />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/learn" element={<Lessons />} />
-              <Route path="/wiki/:conceptId" element={<Wiki />} />
-              <Route path="/concepts" element={<Concepts />} />
-              <Route path="/curriculum" element={<Curriculum />} />
-              <Route
-                path="/ingest"
-                element={
-                  <AdminGuard>
-                    <Ingest />
-                  </AdminGuard>
-                }
-              />
-              <Route path="/quiz/:conceptId" element={<Quiz />} />
-              <Route path="/review" element={<Review />} />
-              <Route path="/study/:conceptId" element={<StudyHub />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/admin" element={<Navigate to="/settings" replace />} />
-              {/* Redirects for old routes */}
-              <Route path="/path" element={<Navigate to="/roadmap" replace />} />
-              <Route path="/practice" element={<Navigate to="/problems" replace />} />
-              <Route path="/workbook/level/:id" element={<WorkbookLevel />} />
               <Route path="/lesson/:id" element={<Lesson />} />
+              <Route path="/worksheet/:id" element={<Worksheet />} />
+              {/* Redirects for retired routes */}
+              <Route path="/path" element={<Navigate to="/learn" replace />} />
+              <Route path="/practice" element={<Navigate to="/learn" replace />} />
+              <Route path="/problems" element={<Navigate to="/learn" replace />} />
+              <Route path="/problem/:id" element={<Navigate to="/learn" replace />} />
+              <Route path="/roadmap" element={<Navigate to="/learn" replace />} />
+              <Route path="/workbook/level/:id" element={<Navigate to="/learn" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
         </div>

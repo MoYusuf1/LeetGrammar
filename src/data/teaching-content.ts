@@ -12,11 +12,27 @@ export interface TeachExample {
   english: string;
 }
 
+export type PracticeExerciseType =
+  | 'multiple_choice'
+  | 'fill_blank'
+  | 'matching'
+  | 'unscramble'
+  | 'translate'
+  | 'marker_identification';
+
 export interface PracticeExercise {
-  type: 'multiple_choice' | 'fill_blank' | 'matching';
+  type: PracticeExerciseType;
   question: string;
-  options: string[];
-  correctAnswer: string;
+  /** multiple_choice / fill_blank / matching */
+  options?: string[];
+  correctAnswer?: string;
+  /** unscramble: the scrambled word bank */
+  words?: string[];
+  /** unscramble: target sentence. translate: accepted Somali translation.
+   *  marker_identification: [marker, type, meaning]. */
+  answer?: string | string[];
+  /** unscramble / marker_identification: the reference Somali sentence. */
+  somali?: string;
   hint: string;
   explanation: string;
 }
@@ -1815,6 +1831,64 @@ const lessons: Record<number, LessonContent> = {
           "correctAnswer": "ku guriga",
           "hint": "Look back at the examples taught in this lesson.",
           "explanation": "Correct answer: ku guriga (in the house)."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Insert the correct preposition (u, ku, ka, la).",
+          "somali": "Wuu _____ tegay suuqa.",
+          "options": ["u", "ku", "ka", "la"],
+          "correctAnswer": "u",
+          "hint": "He went TO the market.",
+          "explanation": "u = to/for. Movement toward a destination."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Insert the correct preposition (u, ku, ka, la).",
+          "somali": "Waan _____ joogaa guriga.",
+          "options": ["u", "ku", "ka", "la"],
+          "correctAnswer": "ku",
+          "hint": "I am staying IN the house.",
+          "explanation": "ku = in/at. Location."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Insert the correct preposition (u, ku, ka, la).",
+          "somali": "Wuu _____ yimid dugsiga.",
+          "options": ["u", "ku", "ka", "la"],
+          "correctAnswer": "ka",
+          "hint": "He came FROM school.",
+          "explanation": "ka = from. Origin/source."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Insert the correct preposition (u, ku, ka, la).",
+          "somali": "Way _____ shaqeysay Cali.",
+          "options": ["u", "ku", "ka", "la"],
+          "correctAnswer": "la",
+          "hint": "She worked WITH Ali.",
+          "explanation": "la = with. Accompaniment."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "translate",
+          "question": "Translate to Somali using preposition + direction together.",
+          "hint": "He brought (it) to me (toward speaker)",
+          "answer": "Wuu u soo keenay.",
+          "explanation": "Marker + u (for) + soo (toward) + verb."
         }
       },
       {
@@ -3952,6 +4026,61 @@ const lessons: Record<number, LessonContent> = {
         }
       },
       {
+        "type": "practice",
+        "exercise": {
+          "type": "unscramble",
+          "question": "Unscramble into correct Somali word order.",
+          "words": ["cunay", "Cali", "wuu"],
+          "hint": "Ali ate.",
+          "answer": "Cali wuu cunay.",
+          "explanation": "Subject + Marker + Verb (no object)."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "unscramble",
+          "question": "Unscramble into correct Somali word order.",
+          "words": ["baa", "buugga", "akhriyay", "wiilka"],
+          "hint": "It was the boy who read the book.",
+          "answer": "Wiilka baa buugga akhriyay.",
+          "explanation": "Subject + Focus Marker + Object + Verb."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "unscramble",
+          "question": "Unscramble into correct Somali word order.",
+          "words": ["tegay", "way", "dugsiga", "gabadha"],
+          "hint": "The girl went to school.",
+          "answer": "Gabadha way tegay dugsiga.",
+          "explanation": "Subject + Statement Marker + Verb + Object."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "unscramble",
+          "question": "Unscramble into correct Somali word order.",
+          "words": ["waxay", "bariis", "hooyada", "dhigtay"],
+          "hint": "What mother cooked was rice.",
+          "answer": "Hooyada waxay dhigtay bariis.",
+          "explanation": "Subject + Spotlight + Verb + Object."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "unscramble",
+          "question": "Unscramble into correct Somali word order.",
+          "words": ["shaah", "bay", "cabay", "naagta"],
+          "hint": "The woman drank tea.",
+          "answer": "Naagta bay cabay shaah.",
+          "explanation": "Subject + Focus + Verb + Object."
+        }
+      },
+      {
         "type": "summary",
         "title": "You learned Word Order & Simple Sentences!",
         "takeaways": [
@@ -5145,6 +5274,66 @@ const lessons: Record<number, LessonContent> = {
         ]
       },
       {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Fill in the correct connector (iyo, -na, -se, oo).",
+          "somali": "Cali _____ Sahra way tegeen dugsiga.",
+          "options": ["iyo", "-na", "-se", "oo"],
+          "correctAnswer": "iyo",
+          "hint": "Ali AND Sahra went to school.",
+          "explanation": "iyo joins nouns (Cali and Sahra)."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Fill in the correct connector (iyo, -na, -se, oo).",
+          "somali": "Wuu cunay, waad_____ cuntay.",
+          "options": ["iyo", "-na", "-se", "oo"],
+          "correctAnswer": "-na",
+          "hint": "He ate, AND you ate too.",
+          "explanation": "-na joins sentences (waadna = waad + -na)."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Fill in the correct connector (iyo, -na, -se, oo).",
+          "somali": "Ninka wuu tegay, naagta_____ way joogtay.",
+          "options": ["iyo", "-na", "-se", "oo"],
+          "correctAnswer": "-se",
+          "hint": "The man went, BUT the woman stayed.",
+          "explanation": "-se attaches to the first word of the contrasting clause (naagtase)."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Fill in the correct connector (iyo, -na, -se, oo).",
+          "somali": "Buug _____ weyn baan akhriyay.",
+          "options": ["iyo", "-na", "-se", "oo"],
+          "correctAnswer": "oo",
+          "hint": "I read a book WHICH (was) big.",
+          "explanation": "oo links a relative clause (book which is big)."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Fill in the correct connector (iyo, -na, -se, oo).",
+          "somali": "Hooyo _____ aabo way shaqeeyeen.",
+          "options": ["iyo", "-na", "-se", "oo"],
+          "correctAnswer": "iyo",
+          "hint": "Mother AND father worked.",
+          "explanation": "iyo joins nouns."
+        }
+      },
+      {
         "type": "summary",
         "title": "You learned Conjunctions & Discourse!",
         "takeaways": [
@@ -5788,6 +5977,97 @@ const lessons: Record<number, LessonContent> = {
           "correctAnswer": "Technique: ____ Focus",
           "hint": "Look back at the examples taught in this lesson.",
           "explanation": "Each technique SHIFTS MEANING subtly!"
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "marker_identification",
+          "question": "Identify the marker, its type (STATEMENT / QUESTION / FOCUS / SPOTLIGHT), and what the sentence means.",
+          "somali": "Cali wuu tegay.",
+          "hint": "Look at the word right after the subject.",
+          "answer": ["wuu", "STATEMENT", "Ali went."],
+          "explanation": "wuu = waa + uu (statement + he). Plain declaration."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "marker_identification",
+          "question": "Identify the marker, its type, and what the sentence means.",
+          "somali": "Hooyada bay cuntay.",
+          "hint": "This marker highlights the noun, not the action.",
+          "answer": ["bay", "FOCUS", "It was mother who ate."],
+          "explanation": "bay = baa + ay (focus + she). Highlights the subject."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "marker_identification",
+          "question": "Identify the marker, its type, and what the sentence means.",
+          "somali": "Ma cunaysaa?",
+          "hint": "This one signals a yes/no question.",
+          "answer": ["Ma", "QUESTION", "Are you eating?"],
+          "explanation": "ma before a verb = yes/no question."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "marker_identification",
+          "question": "Identify the marker, its type, and what the sentence means.",
+          "somali": "Waxaan akhriyay buug.",
+          "hint": "This is a cleft/spotlight construction.",
+          "answer": ["Waxaan", "SPOTLIGHT", "What I read was a book."],
+          "explanation": "Waxaan = waxa + aan (spotlight + I). Cleft construction."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "marker_identification",
+          "question": "Identify the marker, its type, and what the sentence means.",
+          "somali": "Ninka baa lacag bixiyay.",
+          "hint": "The marker focuses on the noun right before it.",
+          "answer": ["baa", "FOCUS", "It was the man who paid money."],
+          "explanation": "baa focuses on the noun before it (ninka)."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Fill in the correct marker.",
+          "somali": "Cali _____ cunay.",
+          "options": ["wuu", "baa", "Waxuu"],
+          "correctAnswer": "wuu",
+          "hint": "Ali ate. (emphasis on the action of eating)",
+          "explanation": "wuu = statement, verb focus. Ali ATE."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Fill in the correct marker.",
+          "somali": "Cali _____ cuntada cunay.",
+          "options": ["wuu", "baa", "Waxuu"],
+          "correctAnswer": "baa",
+          "hint": "It was ALI who ate the food. (emphasis on Ali)",
+          "explanation": "baa = focus on the noun (Cali)."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "fill_blank",
+          "question": "Fill in the correct marker.",
+          "somali": "_____ Cali cunay waa hilib.",
+          "options": ["Waxuu", "bay", "wuu"],
+          "correctAnswer": "Waxuu",
+          "hint": "What Ali ate was meat. (spotlight construction)",
+          "explanation": "Waxuu = spotlight/cleft construction."
         }
       },
       {
@@ -6585,6 +6865,66 @@ const lessons: Record<number, LessonContent> = {
         "explanation": "What was your biggest learning? Keep asking questions, keep learning, keep speaking!"
       },
       {
+        "type": "practice",
+        "exercise": {
+          "type": "translate",
+          "question": "Translate to Somali.",
+          "hint": "I ate rice.",
+          "answer": "Waan cunay bariis.",
+          "explanation": "Statement (waan) + verb + object."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "translate",
+          "question": "Translate to Somali.",
+          "hint": "The teacher worked.",
+          "answer": "Macallinka wuu shaqeeyay.",
+          "explanation": "Subject + statement marker + verb."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "translate",
+          "question": "Translate to Somali.",
+          "hint": "It was the boy who drank water.",
+          "answer": "Wiilka baa biyo cabay.",
+          "explanation": "Subject + focus marker (baa) + object + verb."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "translate",
+          "question": "Translate to Somali.",
+          "hint": "What father brought was meat.",
+          "answer": "Waxuu aabo keenay waa hilib.",
+          "explanation": "Spotlight (waxuu) + subject + verb + copula + object."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "translate",
+          "question": "Translate to Somali (use everything).",
+          "hint": "Ali and Sahra went to school.",
+          "answer": "Cali iyo Sahra way tegeen dugsiga.",
+          "explanation": "iyo joins nouns; way = statement + they."
+        }
+      },
+      {
+        "type": "practice",
+        "exercise": {
+          "type": "translate",
+          "question": "Translate to Somali (use everything).",
+          "hint": "Mother brought food from the market (toward here).",
+          "answer": "Hooyada way ka soo keentay cunto suuqa.",
+          "explanation": "ka (from) + soo (toward speaker) stacked before verb."
+        }
+      },
+      {
         "type": "summary",
         "title": "You learned Comprehensive Review & Mastery!",
         "takeaways": [
@@ -6610,26 +6950,26 @@ export const LESSON_LIST: LessonSummary[] = [
   { lessonId: 4, title: "Pronouns — Comprehensive System", cardCount: 15 },
   { lessonId: 5, title: "Adjectives & Descriptors", cardCount: 14 },
   { lessonId: 6, title: "Numerals & Quantifiers", cardCount: 14 },
-  { lessonId: 7, title: "Prepositions & Spatial Relations", cardCount: 14 },
+  { lessonId: 7, title: "Prepositions & Spatial Relations", cardCount: 19 },
   { lessonId: 8, title: "Verbs — Introduction & Foundation", cardCount: 16 },
   { lessonId: 9, title: "Tense & Aspect System", cardCount: 20 },
   { lessonId: 10, title: "Mood & Modality", cardCount: 20 },
   { lessonId: 11, title: "Verb Extensions & Voice", cardCount: 20 },
   { lessonId: 12, title: "Complex Verb Forms & Irregularities", cardCount: 20 },
-  { lessonId: 13, title: "Word Order & Simple Sentences", cardCount: 20 },
+  { lessonId: 13, title: "Word Order & Simple Sentences", cardCount: 25 },
   { lessonId: 14, title: "Complex Sentences", cardCount: 18 },
   { lessonId: 15, title: "Negation", cardCount: 17 },
   { lessonId: 16, title: "Questions & Interrogatives", cardCount: 17 },
-  { lessonId: 17, title: "Conjunctions & Discourse", cardCount: 12 },
+  { lessonId: 17, title: "Conjunctions & Discourse", cardCount: 17 },
   { lessonId: 18, title: "Adverbs", cardCount: 14 },
   { lessonId: 19, title: "Copular & Existential", cardCount: 13 },
-  { lessonId: 20, title: "Special Topics (Advanced Agreement, Focus, Topicalization)", cardCount: 7 },
+  { lessonId: 20, title: "Special Topics (Advanced Agreement, Focus, Topicalization)", cardCount: 15 },
   { lessonId: 21, title: "Derivational Morphology", cardCount: 12 },
   { lessonId: 22, title: "Lexicon & Semantic Fields", cardCount: 8 },
   { lessonId: 23, title: "Practical Communication", cardCount: 9 },
   { lessonId: 24, title: "Texts & Discourse (Overview)", cardCount: 4 },
   { lessonId: 25, title: "Stylistic & Register", cardCount: 6 },
-  { lessonId: 26, title: "Comprehensive Review & Mastery", cardCount: 13 },
+  { lessonId: 26, title: "Comprehensive Review & Mastery", cardCount: 19 },
 ];
 
 export function getLessonContent(lessonId: number): LessonContent | undefined {

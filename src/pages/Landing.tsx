@@ -2,75 +2,71 @@
  * Landing Page — LeetCode-inspired dark landing for visitors.
  */
 
-import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   ArrowRight,
   Code2,
-  GitBranch,
-  Target,
-  Zap,
-  TrendingUp,
-  Globe,
+  BookOpen,
+  Layers,
+  Volume2,
+  Printer,
   CheckCircle2,
   Play,
   Star,
-  Network,
+  Save,
   ChevronRight,
 } from 'lucide-react';
-import AuthModal from '@/components/AuthModal';
+import { LESSON_LIST } from '@/data/teaching-content';
+import { VOCAB_COUNT } from '@/data/vocabulary';
 
 const STATS = [
-  { value: '3,685', label: 'Grammar Concepts' },
-  { value: '1,698', label: 'Relationships' },
-  { value: '50+', label: 'Lessons' },
+  { value: String(LESSON_LIST.length), label: 'Lessons' },
+  { value: `${VOCAB_COUNT}+`, label: 'Vocabulary Words' },
   { value: '100%', label: 'Free' },
+  { value: '0', label: 'Accounts Needed' },
 ];
 
 const FEATURES = [
   {
-    icon: GitBranch,
-    title: 'Prerequisite-Aware Paths',
-    desc: 'Just like code has dependencies, grammar has prerequisites. The graph ensures you master foundations before advancing.',
+    icon: Layers,
+    title: 'Bite-Sized Cards',
+    desc: 'Every lesson breaks down into intro, vocabulary, teaching, and practice cards — a few minutes at a time, not a wall of text.',
   },
   {
-    icon: Target,
-    title: 'Learning Frontier',
-    desc: 'Know exactly what you are ready to learn next. No guesswork, no skipping ahead, no gaps in knowledge.',
+    icon: BookOpen,
+    title: 'A Real Curriculum',
+    desc: '26 lessons covering Somali grammar from phonetics to advanced sentence construction, in a deliberate learning order.',
   },
   {
-    icon: Zap,
-    title: 'Spaced Repetition',
-    desc: 'Review concepts at the optimal time. The SRS engine schedules reviews based on your personal mastery curve.',
+    icon: Volume2,
+    title: 'Vocabulary Built In',
+    desc: `${VOCAB_COUNT}+ hand-curated high-frequency words, introduced exactly when you need them for each lesson.`,
   },
   {
-    icon: TrendingUp,
-    title: 'Mastery Tracking',
-    desc: 'Every concept has a [0,1] mastery score. Watch your knowledge graph light up as you progress.',
+    icon: Printer,
+    title: 'Printable Worksheets',
+    desc: 'Every lesson has a matching worksheet you can practice on screen or print for offline study, with an answer key.',
   },
   {
-    icon: Network,
-    title: 'Concept Explorer',
-    desc: 'Navigate the full grammar graph. See how topics connect, what they require, and where they lead.',
+    icon: CheckCircle2,
+    title: 'Practice That Sticks',
+    desc: 'Multiple choice, fill-in-the-blank, unscramble, translation, and marker-identification exercises — not just flashcards.',
   },
   {
-    icon: Globe,
-    title: 'Cultural Context',
-    desc: 'Learn not just the rules, but when and how Somali speakers actually use them in daily conversation.',
+    icon: Save,
+    title: 'Your Progress, Your Device',
+    desc: 'No account, no sign-up. Progress, streaks, and XP are saved right on this device.',
   },
 ];
 
 const STEPS = [
-  { num: '01', title: 'Explore the Roadmap', desc: 'Browse the full grammar curriculum as an interactive dependency graph.' },
-  { num: '02', title: 'Learn a Concept', desc: 'Work through bite-sized lessons with examples, audio, and exercises.' },
-  { num: '03', title: 'Practice & Review', desc: 'Reinforce with SRS-powered review sessions tailored to your weak spots.' },
+  { num: '01', title: 'Pick a Lesson', desc: 'Browse the 26-lesson course and start wherever you are.' },
+  { num: '02', title: 'Work Through the Cards', desc: 'Intro, vocabulary, teaching, and practice — one card at a time.' },
+  { num: '03', title: 'Practice & Print', desc: 'Check your answers, then print a worksheet to reinforce offline.' },
 ];
 
 export default function Landing() {
   const navigate = useNavigate();
-  const [authOpen, setAuthOpen] = useState(false);
-
-  // Landing page is now the homepage for all users — no redirect
 
   return (
     <div className="min-h-full bg-[#0f0f0f] overflow-y-auto">
@@ -85,39 +81,33 @@ export default function Landing() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffa116]10 border border-[#ffa116]20 text-[11px] font-bold text-[#ffa116] uppercase tracking-wider mb-6">
                 <Star size={12} />
-                Somali Grammar, Reimagined
+                Somali Grammar, One Lesson at a Time
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-[#eff1f6] leading-[1.1] tracking-tight">
-                Master Somali
+                Learn Somali
                 <br />
                 <span className="text-[#ffa116]">Grammar</span>
               </h1>
 
               <p className="text-[15px] text-[#8c8c8c] mt-5 max-w-[440px] leading-relaxed">
-                A graph-powered learning platform that understands prerequisites,
-                tracks mastery, and guides you through Somali grammar with
-                the precision of a dependency resolver.
+                A focused, card-based course through Somali grammar — vocabulary,
+                teaching, and practice bundled into 26 lessons you can work
+                through at your own pace.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 mt-8">
                 <button
-                  onClick={() => navigate('/problems')}
+                  onClick={() => navigate('/learn')}
                   className="h-12 px-7 rounded-xl bg-[#ffa116] text-[#0f0f0f] text-sm font-bold flex items-center gap-2 hover:bg-[#ffb800] transition-colors"
                 >
                   <Play size={16} fill="currentColor" />
                   Start Learning
                 </button>
-                <button
-                  onClick={() => setAuthOpen(true)}
-                  className="h-12 px-7 rounded-xl bg-[#141414] border border-[#ffffff10] text-[#eff1f6] text-sm font-semibold flex items-center gap-2 hover:bg-[#1a1a1a] transition-colors"
-                >
-                  Sign In
-                </button>
               </div>
 
               <p className="text-[11px] text-[#5c5c5c] mt-3">
-                No account required to start. Sign in to sync progress across devices.
+                Free, no account needed. Your progress is saved on this device.
               </p>
             </div>
 
@@ -129,55 +119,47 @@ export default function Landing() {
                   <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
                   <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
                   <div className="w-3 h-3 rounded-full bg-[#28c840]" />
-                  <span className="ml-3 text-[10px] text-[#5c5c5c] font-mono">somali-grammar.jsx</span>
+                  <span className="ml-3 text-[10px] text-[#5c5c5c] font-mono">lesson-01.somali</span>
                 </div>
 
-                {/* Code content */}
+                {/* Card preview content */}
                 <div className="p-5 font-mono text-[13px] leading-relaxed">
                   <div className="flex">
                     <span className="text-[#5c5c5c] select-none w-6 text-right mr-4">1</span>
-                    <span><span className="text-[#c586c0]">import</span> <span className="text-[#eff1f6]">{`{ Graph }`}</span> <span className="text-[#c586c0]">from</span> <span className="text-[#ce9178]">&apos;leet-grammar&apos;</span>;</span>
+                    <span className="text-[#ffa116]">Lesson 1 — Foundations &amp; Phonetics</span>
                   </div>
                   <div className="flex">
                     <span className="text-[#5c5c5c] select-none w-6 text-right mr-4">2</span>
                   </div>
                   <div className="flex">
                     <span className="text-[#5c5c5c] select-none w-6 text-right mr-4">3</span>
-                    <span><span className="text-[#569cd6]">const</span> <span className="text-[#4ec9b0]">myPath</span> <span className="text-[#eff1f6]">=</span> <span className="text-[#569cd6]">new</span> <span className="text-[#4ec9b0]">Graph</span><span className="text-[#eff1f6]">()</span></span>
+                    <span><span className="text-[#569cd6]">somali</span>: <span className="text-[#ce9178]">&quot;Nabad, magacaagu waa maxay?&quot;</span></span>
                   </div>
                   <div className="flex">
                     <span className="text-[#5c5c5c] select-none w-6 text-right mr-4">4</span>
-                    <span className="pl-4"><span className="text-[#dcdcaa]">.addConcept</span><span className="text-[#eff1f6]">(</span><span className="text-[#ce9178]">&apos;Word Order&apos;</span><span className="text-[#eff1f6]">)</span></span>
+                    <span><span className="text-[#569cd6]">english</span>: <span className="text-[#ce9178]">&quot;Hello, what is your name?&quot;</span></span>
                   </div>
                   <div className="flex">
                     <span className="text-[#5c5c5c] select-none w-6 text-right mr-4">5</span>
-                    <span className="pl-4"><span className="text-[#dcdcaa]">.addConcept</span><span className="text-[#eff1f6]">(</span><span className="text-[#ce9178]">&apos;Present Tense&apos;</span><span className="text-[#eff1f6]">)</span></span>
                   </div>
                   <div className="flex">
                     <span className="text-[#5c5c5c] select-none w-6 text-right mr-4">6</span>
-                    <span className="pl-4"><span className="text-[#dcdcaa]">.requires</span><span className="text-[#eff1f6]">(</span><span className="text-[#ce9178]">&apos;Future Tense&apos;</span><span className="text-[#eff1f6]">,</span> <span className="text-[#ce9178]">&apos;Infinitive&apos;</span><span className="text-[#eff1f6]">);</span></span>
-                  </div>
-                  <div className="flex">
-                    <span className="text-[#5c5c5c] select-none w-6 text-right mr-4">7</span>
-                  </div>
-                  <div className="flex">
-                    <span className="text-[#5c5c5c] select-none w-6 text-right mr-4">8</span>
-                    <span><span className="text-[#c586c0]">await</span> <span className="text-[#4ec9b0]">myPath</span><span className="text-[#dcdcaa]">.learn</span><span className="text-[#eff1f6]">();</span> <span className="text-[#6a9955]">// Begin your journey</span></span>
+                    <span><span className="text-[#dcdcaa]">practice</span><span className="text-[#eff1f6]">(</span><span className="text-[#ce9178]">&apos;fill_blank&apos;</span><span className="text-[#eff1f6]">)</span></span>
                   </div>
 
                   {/* Output */}
                   <div className="mt-4 pt-4 border-t border-[#ffffff08]">
                     <div className="flex items-center gap-2 text-[#22c55e]">
                       <CheckCircle2 size={14} />
-                      <span className="text-xs font-medium">3,685 concepts loaded</span>
+                      <span className="text-xs font-medium">{LESSON_LIST.length} lessons loaded</span>
                     </div>
                     <div className="flex items-center gap-2 text-[#22c55e] mt-1">
                       <CheckCircle2 size={14} />
-                      <span className="text-xs font-medium">1,698 relationships mapped</span>
+                      <span className="text-xs font-medium">{VOCAB_COUNT}+ vocabulary words</span>
                     </div>
                     <div className="flex items-center gap-2 text-[#ffa116] mt-1">
-                      <Zap size={14} />
-                      <span className="text-xs font-medium">Next: Present Habitual Tense</span>
+                      <BookOpen size={14} />
+                      <span className="text-xs font-medium">Next: Nouns — Gender &amp; Number</span>
                     </div>
                   </div>
                 </div>
@@ -187,7 +169,7 @@ export default function Landing() {
               <div className="absolute -bottom-4 -right-4 bg-[#1a1a1a] border border-[#ffffff10] rounded-xl px-4 py-3 shadow-xl">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-[#22c55e]20 flex items-center justify-center">
-                    <TrendingUp size={16} className="text-[#22c55e]" />
+                    <Save size={16} className="text-[#22c55e]" />
                   </div>
                   <div>
                     <p className="text-[11px] font-bold text-[#eff1f6]">Day 12 Streak</p>
@@ -269,92 +251,34 @@ export default function Landing() {
             <div>
               <p className="text-[11px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3">Curriculum</p>
               <h2 className="text-2xl sm:text-3xl font-bold text-[#eff1f6] mb-4">
-                A curriculum built on <span className="text-[#ffa116]">dependencies</span>
+                A course built in <span className="text-[#ffa116]">order</span>
               </h2>
               <p className="text-[15px] text-[#8c8c8c] leading-relaxed mb-6">
-                Traditional apps throw random lessons at you. LeetGrammar knows you need
-                <span className="text-[#eff1f6]"> Word Order </span>
-                before
-                <span className="text-[#eff1f6]"> Tense Conjugation</span>,
-                because the graph models real grammatical dependencies — not just a table of contents.
+                Each lesson builds on the last — sounds and phonetics first, then
+                nouns, pronouns, and verbs, working up to full sentence
+                construction and fluent conversation.
               </p>
               <button
-                onClick={() => navigate('/roadmap')}
+                onClick={() => navigate('/learn')}
                 className="text-sm text-[#ffa116] font-semibold flex items-center gap-1 hover:underline"
               >
-                Explore the full roadmap
+                Explore the full course
                 <ChevronRight size={14} />
               </button>
             </div>
 
             <div className="rounded-xl bg-[#141414] border border-[#ffffff08] p-6">
               <div className="space-y-3">
-                {[
-                  { label: 'Somali Alphabet & Sounds', done: true },
-                  { label: 'Greetings & Introductions', done: true },
-                  { label: 'Word Order (SOV)', done: true },
-                  { label: 'Personal Pronouns', done: true },
-                  { label: 'Present Habitual Tense', done: false, current: true },
-                  { label: 'Past Simple Tense', done: false },
-                  { label: 'Future Tense', done: false },
-                  { label: 'Focus Markers (baa, ayaa)', done: false },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-[#22c55e]15' : item.current ? 'bg-[#ffa116]15' : 'bg-[#1a1a1a] border border-[#ffffff08]'}`}>
-                      {item.done ? (
-                        <CheckCircle2 size={13} className="text-[#22c55e]" />
-                      ) : item.current ? (
-                        <Code2 size={13} className="text-[#ffa116]" />
-                      ) : (
-                        <span className="text-[9px] text-[#5c5c5c]">{i + 1}</span>
-                      )}
+                {LESSON_LIST.slice(0, 8).map((lesson, i) => (
+                  <div key={lesson.lessonId} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 bg-[#1a1a1a] border border-[#ffffff08]">
+                      <span className="text-[9px] text-[#5c5c5c]">{i + 1}</span>
                     </div>
-                    <p className={`text-[13px] ${item.done ? 'text-[#5c5c5c] line-through' : item.current ? 'text-[#eff1f6] font-medium' : 'text-[#8c8c8c]'}`}>
-                      {item.label}
-                    </p>
-                    {item.current && (
-                      <span className="text-[10px] text-[#ffa116] font-medium ml-auto px-2 py-0.5 rounded bg-[#ffa116]10">Next</span>
-                    )}
+                    <p className="text-[13px] text-[#8c8c8c] truncate">{lesson.title}</p>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── Graph tech explanation ─── */}
-      <div className="px-4 py-20 border-t border-[#ffffff08]">
-        <div className="max-w-[1100px] mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-[11px] font-bold text-[#5c5c5c] uppercase tracking-wider mb-3">Why Graphs?</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#eff1f6]">How graph technology facilitates learning</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[800px] mx-auto">
-            {[
-              {
-                title: 'Prerequisite Awareness',
-                desc: 'Learners see why a topic matters before studying it. The graph surfaces every dependency, so you always know what foundation a concept rests on.',
-              },
-              {
-                title: 'No Knowledge Gaps',
-                desc: 'Traditional linear curricula let learners skip around. The graph enforces prerequisites — you cannot learn the Future Tense without first mastering the Infinitive.',
-              },
-              {
-                title: 'Adaptive Paths',
-                desc: 'The graph reroutes around known material and reinforces weak nodes. Your path is unique to your knowledge state, not a one-size-fits-all playlist.',
-              },
-              {
-                title: 'Contextual Review',
-                desc: 'Spaced repetition tied to concept nodes — not isolated flashcards. When you review, credit travels down to prerequisites while penalties flag what needs work.',
-              },
-            ].map((item) => (
-              <div key={item.title} className="rounded-xl bg-[#141414] border border-[#ffffff08] p-5">
-                <h3 className="text-sm font-bold text-[#eff1f6] mb-2">{item.title}</h3>
-                <p className="text-xs text-[#8c8c8c] leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>
@@ -364,21 +288,15 @@ export default function Landing() {
         <div className="max-w-[1100px] mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-[#eff1f6]">Ready to start your journey?</h2>
           <p className="text-[15px] text-[#8c8c8c] mt-3 max-w-[440px] mx-auto">
-            Join thousands of learners mastering Somali grammar through the power of graph technology.
+            No account, no cost. Jump straight into Lesson 1.
           </p>
           <div className="flex items-center justify-center gap-3 mt-8">
             <button
-              onClick={() => navigate('/problems')}
+              onClick={() => navigate('/learn')}
               className="h-12 px-7 rounded-xl bg-[#ffa116] text-[#0f0f0f] text-sm font-bold flex items-center gap-2 hover:bg-[#ffb800] transition-colors"
             >
               Start Learning
               <ArrowRight size={16} />
-            </button>
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="h-12 px-7 rounded-xl bg-[#141414] border border-[#ffffff10] text-[#eff1f6] text-sm font-semibold flex items-center gap-2 hover:bg-[#1a1a1a] transition-colors"
-            >
-              Sign In
             </button>
           </div>
         </div>
@@ -400,8 +318,6 @@ export default function Landing() {
           </p>
         </div>
       </div>
-
-      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </div>
   );
 }

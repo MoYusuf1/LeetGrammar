@@ -7,6 +7,3 @@ export interface RoadmapTopic {
   lessonIds: number[];
   prerequisites: string[];
 }
-
-// Re-export pedagogical schema types
-export * from "@/lib/supabase/lesson-types";

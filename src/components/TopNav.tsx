@@ -7,24 +7,18 @@
 
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { Map, List, BookOpen, Code2, LogIn, Search, Menu } from 'lucide-react';
-import { useAuthStore } from '@/stores/auth-store';
-import AuthModal from './AuthModal';
+import { BookOpen, User, Code2, Search } from 'lucide-react';
 import GlobalSearch from './GlobalSearch';
 
 const navLinks = [
-  { path: '/roadmap', label: 'Roadmap', icon: Map },
-  { path: '/problems', label: 'Problems', icon: List },
   { path: '/learn', label: 'Learn', icon: BookOpen },
+  { path: '/profile', label: 'Profile', icon: User },
 ];
 
 export default function TopNav() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuthStore();
-  const [authOpen, setAuthOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Cmd+K shortcut (desktop only)
   useEffect(() => {
@@ -37,8 +31,6 @@ export default function TopNav() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  const userInitial = user?.email?.charAt(0).toUpperCase() ?? '?';
 
   return (
     <>
@@ -79,7 +71,7 @@ export default function TopNav() {
           })}
         </div>
 
-        {/* Search + User — right side */}
+        {/* Search — right side */}
         <div className="flex items-center gap-2 sm:absolute sm:right-4">
           <button
             onClick={() => setSearchOpen(true)}
@@ -88,24 +80,6 @@ export default function TopNav() {
             <Search size={12} />
             <span className="hidden sm:inline">Search</span>
           </button>
-
-          {user ? (
-            <button
-              onClick={() => signOut()}
-              className="h-8 w-8 rounded-lg bg-[#1a1a1a] border border-[#ffffff08] flex items-center justify-center text-xs font-bold text-[#ffa116] hover:bg-[#252525] transition-colors"
-              title={user.email}
-            >
-              {userInitial}
-            </button>
-          ) : (
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="h-8 px-2 rounded-lg bg-[#ffa116] text-[#0f0f0f] flex items-center gap-1 text-xs font-bold hover:opacity-90 transition-opacity"
-            >
-              <LogIn size={12} />
-              <span className="hidden sm:inline">Sign in</span>
-            </button>
-          )}
         </div>
       </nav>
 
@@ -141,7 +115,6 @@ export default function TopNav() {
       </nav>
 
       {/* Modals */}
-      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
       <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
     </>
   );

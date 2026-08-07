@@ -8,7 +8,7 @@ export default defineConfig({
     include: ['src/**/*.test.ts'],
     coverage: {
       reporter: ['text', 'json', 'html'],
-      include: ['src/engine/**/*.ts', 'src/stores/**/*.ts'],
+      include: ['src/stores/**/*.ts', 'src/lib/**/*.ts', 'src/data/**/*.ts'],
     },
   },
   resolve: {

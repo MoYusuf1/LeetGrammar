@@ -14,10 +14,8 @@ export interface UserProgress {
   lastStudyDate: string;
   xp: number;
   practiceScores: Record<number, number>;
-  srsCards: Record<string, import('@/engine/srs').SrsCard>;
+  srsCards: Record<string, import('@/lib/srs').SrsCard>;
   activityLog: string[];
-  completedWorkbookLevels: number[];
-  workbookLevelScores: Record<number, number>;
 }
 
 export function useProgress() {
@@ -54,10 +52,7 @@ export function useProgress() {
   );
 
   const getTopicStatus = useCallback(
-    (
-      lessonIds: number[],
-      _prerequisiteTopicIds: string[] = []
-    ): 'completed' | 'in-progress' | 'locked' =>
+    (lessonIds: number[]): 'completed' | 'in-progress' | 'locked' =>
       store.getTopicStatus(lessonIds),
     [store]
   );
@@ -80,31 +75,7 @@ export function useProgress() {
     practiceScores: store.practiceScores,
     srsCards: store.srsCards,
     activityLog: store.activityLog,
-    completedWorkbookLevels: store.completedWorkbookLevels,
-    workbookLevelScores: store.workbookLevelScores,
   };
-
-  // Workbook progress wrappers
-  const completeWorkbookLevel = useCallback(
-    (levelId: number, score: number) => store.completeWorkbookLevel(levelId, score),
-    [store]
-  );
-
-  const isWorkbookLevelCompleted = useCallback(
-    (levelId: number) => store.isWorkbookLevelCompleted(levelId),
-    [store]
-  );
-
-  const getWorkbookLevelStatus = useCallback(
-    (levelId: number): 'available' | 'completed' =>
-      store.getWorkbookLevelStatus(levelId),
-    [store]
-  );
-
-  const getWorkbookLevelScore = useCallback(
-    (levelId: number) => store.getWorkbookLevelScore(levelId),
-    [store]
-  );
 
   return {
     progress,
@@ -118,11 +89,5 @@ export function useProgress() {
     getTopicStatus,
     getTopicProgress,
     arePrerequisitesMet,
-    // Workbook
-    completeWorkbookLevel,
-    isWorkbookLevelCompleted,
-    getWorkbookLevelStatus,
-    getWorkbookLevelScore,
-    workbookCompletionPercentage: store.workbookCompletionPercentage,
   };
 }
