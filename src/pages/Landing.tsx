@@ -16,7 +16,7 @@ import {
   Save,
   ChevronRight,
 } from 'lucide-react';
-import { LESSON_LIST } from '@/data/teaching-content';
+import { LESSON_LIST } from '@/data/authored-lessons';
 import { VOCAB_COUNT } from '@/data/vocabulary';
 
 const STATS = [
@@ -35,7 +35,7 @@ const FEATURES = [
   {
     icon: BookOpen,
     title: 'A Real Curriculum',
-    desc: '26 lessons covering Somali grammar from phonetics to advanced sentence construction, in a deliberate learning order.',
+    desc: 'Somali grammar in a deliberate learning order, starting from sounds and building to full sentences.',
   },
   {
     icon: Volume2,
@@ -60,7 +60,7 @@ const FEATURES = [
 ];
 
 const STEPS = [
-  { num: '01', title: 'Pick a Lesson', desc: 'Browse the 26-lesson course and start wherever you are.' },
+  { num: '01', title: 'Pick a Lesson', desc: 'Browse the course and start wherever you are.' },
   { num: '02', title: 'Work Through the Cards', desc: 'Intro, vocabulary, teaching, and practice — one card at a time.' },
   { num: '03', title: 'Practice & Print', desc: 'Check your answers, then print a worksheet to reinforce offline.' },
 ];
@@ -92,8 +92,8 @@ export default function Landing() {
 
               <p className="text-[15px] text-[#8c8c8c] mt-5 max-w-[440px] leading-relaxed">
                 A focused, card-based course through Somali grammar — vocabulary,
-                teaching, and practice bundled into 26 lessons you can work
-                through at your own pace.
+                teaching, and practice bundled into {LESSON_LIST.length} lessons you can
+                work through at your own pace.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 mt-8">

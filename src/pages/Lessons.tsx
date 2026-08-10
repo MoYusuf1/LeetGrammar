@@ -1,15 +1,15 @@
 /**
- * Lessons Page — Grid of all course lessons (the 26-module Somali grammar course).
+ * Lessons Page — grid of the built course lessons.
  *
- * Lists every card-based teaching lesson grouped by course phase, linking to
- * /lesson/:id. Source of truth: src/data/teaching-content.ts (generated from
- * COURSE.md). Progress (completed + resume position) comes from the progress store.
+ * Lists every card-based teaching lesson grouped by unit, linking to /lesson/:id.
+ * Source of truth: src/data/authored-lessons.ts. Progress (completed + resume
+ * position) comes from the progress store.
  */
 
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { BookOpen, Check, Circle, PlayCircle, FileText } from 'lucide-react';
-import { LESSON_LIST, type LessonSummary } from '@/data/teaching-content';
+import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
 import { useProgressStore } from '@/stores/progress-store';
 
 interface Phase {
@@ -18,11 +18,10 @@ interface Phase {
   max: number;
 }
 
+/** Only phases whose lessons actually exist. Adding a phase here without
+ *  building its lessons puts empty sections in the UI — don't. */
 const PHASES: Phase[] = [
-  { name: 'Foundations & Phonetics', min: 1, max: 7 },
-  { name: 'Core Verb System', min: 8, max: 12 },
-  { name: 'Sentence Structure & Grammar', min: 13, max: 21 },
-  { name: 'Application & Integration', min: 22, max: 26 },
+  { name: 'Unit 1: Foundations', min: 1, max: 4 },
 ];
 
 export default function LessonsPage() {
@@ -54,7 +53,7 @@ export default function LessonsPage() {
             <h1 className="text-xl font-bold text-[#eff1f6]">Lessons</h1>
           </div>
           <p className="text-sm text-[#8c8c8c]">
-            The complete Somali grammar course — {totalLessons} lessons across 4 phases.
+            {totalLessons} lessons across {PHASES.length} {PHASES.length === 1 ? 'unit' : 'units'}.
           </p>
           <div className="mt-3 h-1.5 rounded-full bg-[#1a1a1a] overflow-hidden">
             <div

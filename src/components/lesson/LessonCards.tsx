@@ -13,9 +13,11 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Volume2, Check } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
-import { getLessonContent, type TeachingCard, type PracticeExercise } from '@/data/teaching-content';
+import { getLessonContent } from '@/data/authored-lessons';
+import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
+import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import CardProgressDots from './CardProgressDots';
 
@@ -33,6 +35,32 @@ interface VocabFlowCard {
 }
 
 type FlowCard = TeachingCard | VocabFlowCard;
+
+/* ─── Rich text ──────────────────────────────────────────────────────────── */
+
+/**
+ * Renders `**bold**` segments as <strong>, everything else as plain text.
+ *
+ * Authored lesson content uses `**` to mark the Somali form under discussion,
+ * which is the single most important thing on the card. Without this the
+ * learner reads literal asterisks. Deliberately not a full markdown parser —
+ * `**` is the only markup the content uses, and text is never dangerously set.
+ */
+function RichText({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
+        seg.startsWith('**') && seg.endsWith('**') && seg.length > 4 ? (
+          <strong key={i} className="font-semibold text-[#eff1f6]">
+            {seg.slice(2, -2)}
+          </strong>
+        ) : (
+          seg
+        ),
+      )}
+    </>
+  );
+}
 
 /* ─── Card Animation Variants ────────────────────────────────────────────── */
 
@@ -86,13 +114,14 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     useProgressStore.getState().setLessonCardPosition(lessonId, cardIndex);
   }, [cardIndex, lessonId]);
 
-  /* Card flow = authored cards + an injected vocab deck placed right after the intro. */
+  /* Card flow = authored cards + an injected vocab deck placed right after the blueprint/intro. */
   const cards: FlowCard[] = useMemo(() => {
     const base: FlowCard[] = content?.cards ?? [];
     const words = getVocabForLesson(lessonId);
     if (!content || words.length === 0) return base;
     const vocabCard: VocabFlowCard = { type: 'vocab', words };
-    const insertAt = base[0]?.type === 'intro' ? 1 : 0;
+    // Insert vocab card after the first card (blueprint in new structure, intro in old)
+    const insertAt = base.length > 0 ? 1 : 0;
     return [...base.slice(0, insertAt), vocabCard, ...base.slice(insertAt)];
   }, [content, lessonId]);
 
@@ -279,23 +308,41 @@ function RenderCard({
   onPracticeSelect: (a: string) => void;
 }) {
   switch (card.type) {
-    case 'intro':
+    // Intro-like cards
+    case 'blueprint':
+    case 'connect':
+    case 'promise':
+    case 'payoff':
       return <IntroCard card={card} lessonTitle={lessonTitle} />;
+
     case 'vocab':
-      return <VocabCard words={card.words} />;
+      return card.type === 'vocab' ? <VocabCard words={(card as VocabFlowCard).words} /> : null;
+
+    // Teach cards
     case 'teach':
+    case 'example':
       return <TeachCard card={card} />;
-    case 'practice':
-      return (
+
+    // Practice cards
+    case 'notice':
+    case 'complete':
+    case 'produce':
+      return card.exercise ? (
         <PracticeCard
-          exercise={card.exercise!}
+          exercise={card.exercise}
           answer={practiceAnswer}
           checked={practiceChecked}
           onSelect={onPracticeSelect}
         />
-      );
+      ) : null;
+
     case 'summary':
       return <SummaryCard card={card} />;
+
+    // Predict card (also shows content/prompt)
+    case 'predict':
+      return <IntroCard card={card} lessonTitle={lessonTitle} />;
+
     default:
       return null;
   }
@@ -309,34 +356,31 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
       {/* Title */}
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
         <h1 className="text-2xl font-bold text-[#eff1f6]">{lessonTitle}</h1>
-        <p className="text-sm text-[#8c8c8c] mt-1">In this lesson you will learn:</p>
+        <p className="text-sm text-[#8c8c8c] mt-1">
+          {card.type === 'promise'
+            ? 'By lesson end, you\'ll:'
+            : card.type === 'blueprint'
+              ? 'Learn about:'
+              : 'In this lesson you will learn:'}
+        </p>
       </motion.div>
 
-      {/* Bullet points */}
-      <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-2.5">
-        {card.bullets?.map((bullet, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <div className="w-5 h-5 rounded-full bg-[#ffa11615] border border-[#ffa11630] flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-[10px] font-bold text-[#ffa116]">{i + 1}</span>
-            </div>
-            <p className="text-sm text-[#c8c8c8] leading-relaxed">{bullet}</p>
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Cultural Note */}
-      {card.culturalNote && (
-        <motion.div
-          custom={2}
-          variants={contentStagger}
-          initial="hidden"
-          animate="visible"
-          className="rounded-xl bg-[#a855f710] border border-[#a855f730] p-4"
-        >
-          <p className="text-[10px] font-bold text-[#a855f7] uppercase tracking-wider mb-1.5">Cultural Note</p>
-          <p className="text-sm text-[#c8c8c8] leading-relaxed">{card.culturalNote}</p>
+      {/* Prompt/content (show as text) */}
+      {card.prompt && (
+        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
+          <p className="text-sm text-[#c8c8c8] leading-relaxed whitespace-pre-wrap"><RichText text={card.prompt} /></p>
         </motion.div>
       )}
+
+      {/* Content (for blueprint ASCII diagrams or longer text) */}
+      {card.content && (
+        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
+          <pre className="bg-[#141414] border border-[#ffffff08] rounded-xl p-4 text-xs text-[#c8c8c8] font-mono whitespace-pre-wrap overflow-auto">
+            {card.content}
+          </pre>
+        </motion.div>
+      )}
+
     </div>
   );
 }
@@ -381,85 +425,31 @@ function VocabCard({ words }: { words: VocabWord[] }) {
 function TeachCard({ card }: { card: TeachingCard }) {
   return (
     <div className="space-y-5 pt-4">
-      {/* Concept Badge */}
-      {card.conceptBadge && (
+      {/* Title / Badge */}
+      {card.title && (
         <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
           <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#ffa11615] border border-[#ffa11630] text-xs font-semibold text-[#ffa116]">
-            {card.conceptBadge}
+            {card.title}
           </span>
         </motion.div>
       )}
 
-      {/* Somali Text — large and prominent */}
-      {card.somaliText && (
-        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <div className="bg-[#141414] border border-[#ffffff08] rounded-2xl p-6 text-center">
-            <p className="text-3xl font-bold text-[#eff1f6] leading-relaxed tracking-wide">
-              {card.somaliText}
+      {/* Content — formatted text (markdown-style) */}
+      {card.content && (
+        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="text-sm text-[#c8c8c8] leading-relaxed whitespace-pre-wrap">
+          {card.content.split('\n\n').map((para, i) => (
+            <p key={i} className="mb-4">
+              {para.split('\n').map((line, j) => (
+                <span key={j}>
+                  <RichText text={line} />
+                  <br />
+                </span>
+              ))}
             </p>
-          </div>
-        </motion.div>
-      )}
-
-      {/* English Translation */}
-      {card.englishText && (
-        <motion.p custom={2} variants={contentStagger} initial="hidden" animate="visible" className="text-base text-[#8c8c8c] text-center">
-          {card.englishText}
-        </motion.p>
-      )}
-
-      {/* Explanation */}
-      {card.explanation && (
-        <motion.div custom={3} variants={contentStagger} initial="hidden" animate="visible">
-          <p className="text-sm text-[#c8c8c8] leading-relaxed">{card.explanation}</p>
-        </motion.div>
-      )}
-
-      {/* Pronunciation Guide */}
-      {card.pronunciation && (
-        <motion.div
-          custom={4}
-          variants={contentStagger}
-          initial="hidden"
-          animate="visible"
-          className="rounded-xl bg-[#8b949e10] border border-[#ffffff10] p-4"
-        >
-          <div className="flex items-center gap-2 mb-1.5">
-            <Volume2 size={14} className="text-[#8b949e]" />
-            <p className="text-[10px] font-bold text-[#8b949e] uppercase tracking-wider">Pronunciation</p>
-          </div>
-          <p className="text-sm text-[#c8c8c8]">{card.pronunciation}</p>
-        </motion.div>
-      )}
-
-      {/* Examples */}
-      {card.examples && card.examples.length > 0 && (
-        <motion.div custom={5} variants={contentStagger} initial="hidden" animate="visible" className="space-y-3">
-          <p className="text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider">Examples</p>
-          {card.examples.map((ex, i) => (
-            <div key={i} className="bg-[#141414] border border-[#ffffff06] rounded-xl p-4">
-              <p className="text-base font-medium text-[#eff1f6]">{ex.somali}</p>
-              <p className="text-sm text-[#8c8c8c] mt-1">{ex.english}</p>
-            </div>
           ))}
         </motion.div>
       )}
 
-      {/* Tip */}
-      {card.tip && (
-        <motion.div
-          custom={6}
-          variants={contentStagger}
-          initial="hidden"
-          animate="visible"
-          className="rounded-xl bg-[#ffa11608] border border-[#ffa11625] p-4"
-        >
-          <div className="flex items-start gap-2.5">
-            <span className="text-lg flex-shrink-0">💡</span>
-            <p className="text-sm text-[#c8c8c8] leading-relaxed">{card.tip}</p>
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 }
@@ -484,7 +474,7 @@ function PracticeCard({
         <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#3b82f615] border border-[#3b82f630] text-[10px] font-bold text-[#3b82f6] uppercase tracking-wider mb-3">
           Practice
         </span>
-        <p className="text-lg font-medium text-[#eff1f6] leading-relaxed">{exercise.question}</p>
+        <p className="text-lg font-medium text-[#eff1f6] leading-relaxed"><RichText text={exercise.question} /></p>
         {exercise.somali && (
           <div className="bg-[#141414] border border-[#ffffff08] rounded-xl p-4 mt-3">
             <p className="text-xl font-semibold text-[#eff1f6] font-mono">{exercise.somali}</p>
@@ -492,16 +482,9 @@ function PracticeCard({
         )}
       </motion.div>
 
-      {/* Answer input — varies by exercise type */}
-      {(exercise.type === 'multiple_choice' || exercise.type === 'fill_blank' || exercise.type === 'matching') && (
-        <ChoiceExercise exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
-      )}
-      {exercise.type === 'unscramble' && (
-        <UnscrambleExercise exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
-      )}
-      {(exercise.type === 'translate' || exercise.type === 'marker_identification') && (
-        <FreeResponseExercise exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
-      )}
+      {/* Answer input — exhaustive over ExerciseType (see AnswerInput) */}
+      <AnswerInput exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
+
 
       {/* Hint (always visible) */}
       <motion.div
@@ -512,7 +495,7 @@ function PracticeCard({
         className="rounded-xl bg-[#22d3ee08] border border-[#22d3ee20] p-4"
       >
         <p className="text-[10px] font-bold text-[#22d3ee] uppercase tracking-wider mb-1">Hint</p>
-        <p className="text-sm text-[#8c8c8c]">{exercise.hint}</p>
+        <p className="text-sm text-[#8c8c8c]"><RichText text={exercise.hint} /></p>
       </motion.div>
 
       {/* Feedback (after check) */}
@@ -521,28 +504,36 @@ function PracticeCard({
   );
 }
 
-/** Correctness check shared across exercise types that have a single canonical answer. */
-/** Lowercase, trim, collapse whitespace, and drop trailing sentence punctuation —
- * so e.g. an unscramble built by tapping word chips ("Cali wuu cunay") matches an
- * authored answer with a trailing period ("Cali wuu cunay."). */
-function normalizeAnswer(s: string): string {
-  return s.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.?!]+$/, '');
-}
-
-function isAnswerCorrect(exercise: PracticeExercise, answer: string | null): boolean {
-  if (answer === null) return false;
-  if (exercise.type === 'multiple_choice' || exercise.type === 'fill_blank' || exercise.type === 'matching') {
-    return answer === exercise.correctAnswer;
+/**
+ * Routes an exercise to its input renderer, exhaustively over ExerciseType.
+ *
+ * The `never` default is load-bearing: if a new ExerciseType is added without a
+ * case here, this fails to compile. Previously an unhandled type rendered no
+ * input at all, which left `answer` null forever and permanently disabled the
+ * "Check Answer" button — an unpassable card.
+ */
+function AnswerInput(props: {
+  exercise: PracticeExercise;
+  answer: string | null;
+  checked: boolean;
+  onSelect: (a: string) => void;
+}) {
+  const { exercise } = props;
+  switch (exercise.type) {
+    case 'multiple_choice':
+    case 'fill_blank':
+    case 'matching':
+      return <ChoiceExercise {...props} />;
+    case 'unscramble':
+      return <UnscrambleExercise {...props} />;
+    case 'translate':
+    case 'marker_identification':
+      return <FreeResponseExercise {...props} />;
+    default: {
+      const unhandled: never = exercise.type;
+      throw new Error(`No input renderer for exercise type: ${String(unhandled)}`);
+    }
   }
-  const target = Array.isArray(exercise.answer) ? exercise.answer[0] : exercise.answer;
-  if (!target) return false;
-  return normalizeAnswer(answer) === normalizeAnswer(target);
-}
-
-function displayAnswer(exercise: PracticeExercise): string {
-  if (exercise.correctAnswer) return exercise.correctAnswer;
-  if (Array.isArray(exercise.answer)) return exercise.answer.join(' · ');
-  return exercise.answer ?? '';
 }
 
 function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; answer: string | null }) {
@@ -566,7 +557,7 @@ function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; an
           ? 'Correct! Great job!'
           : `Not quite! The answer is: ${displayAnswer(exercise)}`}
       </p>
-      <p className="text-sm text-[#c8c8c8] leading-relaxed">{exercise.explanation}</p>
+      <p className="text-sm text-[#c8c8c8] leading-relaxed"><RichText text={exercise.explanation} /></p>
     </motion.div>
   );
 }
@@ -753,17 +744,13 @@ function SummaryCard({ card }: { card: TeachingCard }) {
         <h2 className="text-xl font-bold text-[#eff1f6]">{card.title}</h2>
       </motion.div>
 
-      {/* Takeaways */}
-      <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="text-left space-y-3">
-        {card.takeaways?.map((t, i) => (
-          <div key={i} className="flex items-start gap-3 bg-[#141414] border border-[#ffffff06] rounded-xl p-4">
-            <div className="w-5 h-5 rounded-full bg-[#22c55e15] border border-[#22c55e30] flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Check size={10} className="text-[#22c55e]" />
-            </div>
-            <p className="text-sm text-[#c8c8c8] leading-relaxed">{t}</p>
-          </div>
-        ))}
-      </motion.div>
+      {/* Content summary */}
+      {card.content && (
+        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="text-left">
+          <p className="text-sm text-[#c8c8c8] leading-relaxed whitespace-pre-wrap"><RichText text={card.content} /></p>
+        </motion.div>
+      )}
+
     </div>
   );
 }
@@ -787,10 +774,13 @@ function BottomAction({
   onCheck: () => void;
   onContinue: () => void;
 }) {
-  /* Intro / Vocab / Teach / Summary cards: "Got it!" / "Continue" */
-  if (card.type === 'intro' || card.type === 'vocab' || card.type === 'teach' || card.type === 'summary') {
-    const label =
-      card.type === 'intro' ? 'Start Learning' : isLastCard ? 'Complete Lesson' : 'Got it!';
+  /* Practice-role cards gate on Check/Continue; everything else just advances. */
+  const cardType = card.type;
+  const isPracticeCard =
+    cardType === 'notice' || cardType === 'complete' || cardType === 'produce';
+
+  if (!isPracticeCard) {
+    const label = isLastCard ? 'Complete Lesson' : 'Got it!';
     const bgColor = isLastCard ? 'bg-[#22c55e] hover:bg-[#22c55ed0]' : 'bg-[#ffa116] hover:bg-[#ffa116d0]';
 
     return (
@@ -803,8 +793,8 @@ function BottomAction({
     );
   }
 
-  /* Practice card: Check / Continue flow */
-  if (card.type === 'practice') {
+  /* Practice cards: Check → Continue */
+  {
     if (!practiceChecked) {
       return (
         <button

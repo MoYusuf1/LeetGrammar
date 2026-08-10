@@ -6,7 +6,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { SrsCard } from '@/lib/srs';
 import { createCard, reviewCard } from '@/lib/srs';
-import { MAX_LESSON_ID } from '@/data/teaching-content';
+import { MAX_LESSON_ID } from '@/data/authored-lessons';
 
 const STORAGE_KEY = 'leet-somali-progress-v7';
 

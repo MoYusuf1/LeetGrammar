@@ -13,7 +13,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { ArrowLeft, Printer, Eye, EyeOff } from 'lucide-react';
-import { MAX_LESSON_ID } from '@/data/teaching-content';
+import { MAX_LESSON_ID } from '@/data/authored-lessons';
 import { buildWorksheet } from '@/lib/worksheet';
 
 export default function WorksheetPage() {

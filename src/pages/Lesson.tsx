@@ -8,7 +8,7 @@
 
 import { useParams } from 'react-router';
 import { Suspense, lazy } from 'react';
-import { MAX_LESSON_ID } from '@/data/teaching-content';
+import { MAX_LESSON_ID } from '@/data/authored-lessons';
 
 const LessonCards = lazy(() => import('@/components/lesson/LessonCards'));
 

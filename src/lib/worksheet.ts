@@ -6,8 +6,9 @@
  * prints to paper/PDF, with an answer key.
  */
 
-import { getLessonContent, type PracticeExercise } from '@/data/teaching-content';
+import { getLessonContent } from '@/data/authored-lessons';
 import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
+import type { PracticeExercise } from '@/data/types';
 
 export interface Worksheet {
   lessonId: number;
@@ -18,16 +19,17 @@ export interface Worksheet {
 
 /** Assemble the worksheet for a lesson, or null if the lesson has no content. */
 export function buildWorksheet(lessonId: number): Worksheet | null {
-  const content = getLessonContent(lessonId);
-  if (!content) return null;
+  const lesson = getLessonContent(lessonId);
+  if (!lesson) return null;
 
-  const practice = content.cards
-    .filter((c) => c.type === 'practice' && c.exercise)
+  // Extract practice exercises from cards (notice, complete, produce types have exercises)
+  const practice = lesson.cards
+    .filter((c) => c.exercise && ['notice', 'complete', 'produce'].includes(c.type))
     .map((c) => c.exercise as PracticeExercise);
 
   return {
     lessonId,
-    title: content.title,
+    title: lesson.title,
     vocab: getVocabForLesson(lessonId),
     practice,
   };

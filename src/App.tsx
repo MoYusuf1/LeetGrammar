@@ -9,6 +9,7 @@ const Lesson = lazy(() => import('@/pages/Lesson'));
 const Worksheet = lazy(() => import('@/pages/Worksheet'));
 const Lessons = lazy(() => import('@/pages/Lessons'));
 const Profile = lazy(() => import('@/pages/Profile'));
+const Glossary = lazy(() => import('@/pages/Glossary'));
 
 function PageLoader() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
               <Route path="/learn" element={<Lessons />} />
               <Route path="/lesson/:id" element={<Lesson />} />
               <Route path="/worksheet/:id" element={<Worksheet />} />
+              <Route path="/glossary" element={<Glossary />} />
               {/* Redirects for retired routes */}
               <Route path="/path" element={<Navigate to="/learn" replace />} />
               <Route path="/practice" element={<Navigate to="/learn" replace />} />

@@ -10,7 +10,7 @@
 import { useMemo, useState } from 'react';
 import { RotateCcw, Trophy, Calendar, Target, BookOpen } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
-import { LESSON_LIST } from '@/data/teaching-content';
+import { LESSON_LIST } from '@/data/authored-lessons';
 
 const RANK_COLORS = [
   { max: 100, label: 'Novice', color: '#5c5c5c', bg: '#1a1a1a' },

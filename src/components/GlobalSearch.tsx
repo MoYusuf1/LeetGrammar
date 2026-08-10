@@ -11,7 +11,7 @@ import {
   Dialog,
   DialogContent,
 } from '@/components/ui/dialog';
-import { LESSON_LIST } from '@/data/teaching-content';
+import { LESSON_LIST } from '@/data/authored-lessons';
 import { TOP_500_WORDS } from '@/data/vocabulary';
 
 interface LessonResult {
