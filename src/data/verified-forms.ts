@@ -142,6 +142,21 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   buu: { gloss: 'baa + uu (he) contracted', sources: ['N §5.1'], confidence: 'single' },
   bay: { gloss: 'baa + ay (she/they) contracted', sources: ['N §5.1'], confidence: 'single' },
 
+  // ── UNIT 2: the rest of Nilsson's fusion table (N §5.1) ─────────────────
+  // W-gram independently attests only wuu, way, wuxuu and waxay, so the rest
+  // are single-source and, per check S6, may be read but never asked for as a
+  // typed answer.
+  waan: { gloss: 'waa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
+  waad: { gloss: 'waa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
+  waxaan: { gloss: 'waxa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
+  waxaad: { gloss: 'waxa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
+  baan: { gloss: 'baa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
+  baad: { gloss: 'baa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
+  ayaan: { gloss: 'ayaa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
+  ayaad: { gloss: 'ayaa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
+  ayuu: { gloss: 'ayaa + uu (he) contracted', sources: ['N §5.1'], confidence: 'single' },
+  ayay: { gloss: 'ayaa + ay (she/they) contracted', sources: ['N §5.1'], confidence: 'single' },
+
   // ── UNIT 2: words used in Nilsson's focus example (N §12.3) ─────────────
   saaxiib: { gloss: 'friend', gender: 'm', definite: 'saaxiibka', sources: ['N §6.3', 'Wikt'] },
   saaxiibka: { gloss: 'the friend', gender: 'm', sources: ['N §6.3', 'Wikt'] },

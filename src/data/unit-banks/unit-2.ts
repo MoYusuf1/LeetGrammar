@@ -163,6 +163,60 @@ const UNIT_2_ITEMS: PracticeExercise[] = [
     explanation:
       'Somali carries with a signal word what English carries with tone of voice. **baa** spotlights what precedes it, **waxa** what ends the sentence — so a flat, evenly-read Somali sentence still tells a reader exactly which word matters.',
   },
+
+  // ── Lesson 6: fusion ────────────────────────────────────────────────────
+  {
+    id: 'u2-t10',
+    type: 'multiple_choice',
+    objectiveIds: ['signal-fusion'],
+    question: 'Why does a signal word often seem to be missing from a Somali sentence?',
+    options: [
+      'It has fused with the short word for who, into one word',
+      'Signals are optional and are usually left out',
+      'It moved to the end of the sentence',
+      'It only appears in writing, never in speech',
+    ],
+    correctAnswer: 'It has fused with the short word for who, into one word',
+    hint: 'Look at the front of the short words starting w- or b-.',
+    explanation:
+      'The signal is still there — it is the front half of a squashed word. **waa** plus **uu** prints as **wuu**, so hunting for a standalone **waa** finds nothing.',
+  },
+  {
+    id: 'u2-t11',
+    type: 'translate',
+    objectiveIds: ['signal-fusion'],
+    question: 'Type the one word for the plain-statement signal **waa** carrying **uu** (he).',
+    answer: 'wuu',
+    hint: 'The w of the signal, then the vowel of the pronoun.',
+    explanation: '**waa** + **uu** → **wuu**. A plain statement, about him.',
+  },
+  {
+    id: 'u2-t12',
+    type: 'multiple_choice',
+    objectiveIds: ['signal-fusion-unpack'],
+    question: 'Split **waxay** into the two things it is carrying.',
+    options: [
+      'waxa (spotlight at the end) + ay (she / they)',
+      'waa (plain statement) + ay (she / they)',
+      'waxa (spotlight at the end) + uu (he)',
+      'baa (spotlight before) + ay (she / they)',
+    ],
+    correctAnswer: 'waxa (spotlight at the end) + ay (she / they)',
+    hint: 'The front of the word gives the signal; the ending gives who.',
+    explanation:
+      '**waxay** is **waxa** + **ay**. With **uu** instead it would be the irregular **wuxuu**; with the plain signal it would be **way**.',
+  },
+  {
+    id: 'u2-t13',
+    type: 'translate',
+    objectiveIds: ['signal-fusion-unpack'],
+    question:
+      'One squashed word does not look like its own parts. Type the word that is **waxa** plus **uu** (he).',
+    answer: 'wuxuu',
+    hint: 'Not "waxauu" — the vowel in the middle shifts.',
+    explanation:
+      '**wuxuu** is the irregular member of the family, and among the most common words in written Somali. Its neighbours (**waxaan**, **waxaad**, **waxay**) are all regular.',
+  },
 ];
 
 export const UNIT_2_TEST: TestBank = {

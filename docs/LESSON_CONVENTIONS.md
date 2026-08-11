@@ -86,8 +86,9 @@ asked to produce what they have been taught.** **[judgment]**
 rests on one source, so it appears as an option to pick, never as a word to
 type. Everything a learner is asked to produce — `baa`, `waxa` — carries two
 independent sources. Thin sourcing may reach the eye; it may not reach the
-fingers. **[judgment — verified true today, and the best candidate for the next
-validator check]**
+fingers. Production is what gets rehearsed into memory, and with no native
+speaker to ever catch it, a thin form drilled into production is the most
+expensive mistake available here. **[checked — S6]**
 
 ---
 
