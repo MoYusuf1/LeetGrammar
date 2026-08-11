@@ -305,6 +305,67 @@ list `buu`/`bay`, so those are registered `confidence: 'single'`.
 
 ---
 
+## 8. Verbs, and the derived tier — sourcing for Lesson 7
+
+### Why the rule became the unit of verification
+
+Two independent sources give the present tense and **agree on every ending** —
+but they illustrate it with different verbs:
+
+| Person | Ending | Nilsson §11.1 (`hees` sing) | W-gram (`keen` bring) |
+| --- | --- | --- | --- |
+| I | **-aa** | heesaa | (waan) keenaa |
+| you | **-taa** | heestaa | (waad) keentaa |
+| he | **-aa** | heesaa | (wuu) keenaa |
+| she | **-taa** | heestaa | (way) keentaa |
+| we | **-naa** | heesnaa | (waan) keennaa |
+| you (pl) | **-taan** | heestaan | (waad) keentaan |
+| they | **-aan** | heesaan | (way) keenaan |
+
+Nilsson states the morphemes directly: `/aa/` present tense, `/t/` for 2nd
+person and 3rd feminine, `/n/` for plural. Wikipedia conjugates `keen` straight
+through with identical results. **The rule is doubly attested; almost no
+individual form is.**
+
+Under a strict per-form reading of D2, exactly one verb form in the language
+would be teachable — `keenaa`, the only one both sources print. Every remaining
+grammar lesson (tense, negation, questions) is morphology and would hit the
+same wall.
+
+So for morphology the unit of verification is the **rule**. A form may be
+marked `confidence: 'derived'` only when a rule in `DERIVATION_RULES` carries
+two independent sources *and* the stem it applies to is itself registered.
+Validator check **S7** enforces both, and was proven to bite on all three
+failure modes: a derived form naming no rule, a rule citing one author twice,
+and a derived form whose stem is absent.
+
+This is a deliberate widening of D2, not a relaxation of it. Nothing here rests
+on one author, and nothing rests on our own inference about what Somali ought
+to do.
+
+### What is registered
+
+| Form | Gloss | Basis |
+| --- | --- | --- |
+| `keen` | bring (stem) | N §13.1.4a, W-gram |
+| `keenaa` | I bring / he brings | N §13.1.4a ("keenaa brings sth. to a place"), W-gram |
+| `keentaa` | you bring / she brings | derived — `present-tense` |
+| `keennaa` | we bring | derived — `present-tense` |
+| `keentaan` | you (pl) bring | derived — `present-tense` |
+| `keenaan` | they bring | derived — `present-tense` |
+
+`hees` is **not** registered: only Nilsson uses it, so it would be single-source
+and unproducible. Lesson 7 is built on `keen` for exactly that reason.
+
+### One thing the paradigm hides
+
+**`-aa` covers both "I" and "he"; `-taa` covers both "you" and "she".** The
+ending alone does not tell you which — the fused signal in front of it does
+(`waan keenaa` I bring, `wuu keenaa` he brings). That is the direct payoff of
+Lesson 6 and the reason verbs come after fusion rather than before.
+
+---
+
 ## Status
 
 - ✅ Alphabet, pronouns, gender, articles, subject case: **2-source verified**

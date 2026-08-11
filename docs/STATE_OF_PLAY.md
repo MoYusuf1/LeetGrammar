@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-11, after Lesson 6 landed.
+> comes next. **Last updated:** 2026-08-11, after Lesson 7 landed.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -16,7 +16,7 @@
 
 ## What exists
 
-A **6-lesson Somali course** in 2 units, local-only, no accounts, progress in
+A **7-lesson Somali course** in 2 units, local-only, no accounts, progress in
 `localStorage`. Every Somali form in it is source-verified.
 
 | Lesson | Title | Cards | Exercises | Teaches |
@@ -27,8 +27,9 @@ A **6-lesson Somali course** in 2 units, local-only, no accounts, progress in
 | 4 | I, You, He, She | 14 | 6 | eight pronouns; inclusive/exclusive "we"; short subject pronouns; the subject marker |
 | 5 | The Signal Words | 17 | 7 | `waa` plain statement; `baa`/`ayaa` spotlight what precedes; `waxa` spotlights what ends the sentence |
 | 6 | Squishing | 15 | 5 | signals fuse with short pronouns — `wuu`, `way`, `waxay`, and the irregular `wuxuu` |
+| 7 | Action Words | 15 | 6 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
 
-**Totals:** 87 authored cards · 38 exercises · 32% production.
+**Totals:** 102 authored cards · 44 exercises · 32% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
 The course lands on **`Wiilku waa macallin.`** ("The boy is a teacher."), a
@@ -46,17 +47,17 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 
 | | |
 | --- | --- |
-| Verified-form registry | **94** forms (76 with 2+ sources, 67 independently) |
-| Vocabulary entries | 88, of which **30** are sourced |
-| Unit test banks | Unit 1: 32 items · Unit 2: 13 items |
+| Verified-form registry | **100** forms (82 with 2+ sources; 4 rule-derived) |
+| Vocabulary entries | 92, of which **34** are sourced |
+| Unit test banks | Unit 1: 32 items · Unit 2: 17 items |
 | Tests | 63, across 3 files |
-| Validator | 17 checks passing, 0 errors, 3 open warnings |
+| Validator | 18 checks passing, 0 errors, 3 open warnings |
 
 ---
 
 ## What is deliberately *not* built
 
-**Lessons 7–14 are planned, not written.** [COURSE_DESIGN.md](./COURSE_DESIGN.md)
+**Lessons 8–14 are planned, not written.** [COURSE_DESIGN.md](./COURSE_DESIGN.md)
 describes a 14-lesson target; that is the design, not the state. They appear
 nowhere in the UI — no stub rows, no "coming soon".
 
@@ -71,7 +72,7 @@ broad and decorative**. See [POSTMORTEM.md](./POSTMORTEM.md).
 
 ## Known debt
 
-### 1. 58 of 88 vocabulary entries have no sources 🔴
+### 1. 58 of 92 vocabulary entries have no sources 🔴
 
 The largest outstanding content problem. These words **are shown to learners** in
 every lesson's vocab deck, and they are not verified. The validator reports the
@@ -178,7 +179,7 @@ design's seven phases in
 | Phase | Work | State |
 | --- | --- | --- |
 | 1 | Data model + glossary + validator | ✅ done |
-| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | 🟡 **Lessons 5–6 done; 7, 8 not started** |
+| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | 🟡 **Lessons 5–7 done; 8 remains** |
 | 3 | Assessment engine | 🟡 built for Units 1–2; gaps above |
 | 4 | Unit 1 — Lessons 1–4 | ✅ done |
 | 5 | Vocabulary track (~500 words, sourced) | ❌ 26 of 84 sourced |
@@ -190,28 +191,25 @@ the design says should go deepest (§1.11). Lesson 5 gives the learner the
 SIGNAL box: they can now read a flat Somali sentence and say which word it is
 about. They still cannot build a full sentence, because verbs are Lesson 7.
 
-### Next step: Lesson 7 — Action Words
+### Next step: Lesson 8 — Building a Sentence
 
-The **DO** box. This is the gate on everything after it: Lesson 8 assembles the
-full sentence, and Lesson 5 already borrows verbs read-only because they cannot
-be taught yet (see LESSON_CONVENTIONS §2.4).
+The last lesson of Unit 2, and the payoff of the whole unit: **WHO + SIGNAL +
+DO** in order, and what the signal does to that order when it moves the
+spotlight.
 
-**Sourcing is not done, and it is the whole job.** Nothing verb-related is in
-the registry yet. Nilsson §11.1 covers the present tense; the fetched text has
-full paradigms (`salaamaa` greets, and the forms around it at roughly line
-3889). Expect the same pattern as Unit 2: Nilsson gives everything, W-gram
-corroborates a fraction, and whatever it does not corroborate may be read but
-never asked for as a typed answer (check **S6**).
+**Sourcing is largely done.** Everything Lesson 8 needs to assemble is already
+registered — the signals, the fusions, `keen` and its present tense. What it
+may still need is attested *full sentences* showing the ordering, since
+convention 2.2 forbids composing them. Nilsson §13.1 ("Sentence constituents")
+is the place to look; the fetched text has worked examples around lines
+5886–6130, including the pair already used in Lesson 5.
 
-Two decisions to make before authoring:
+The open question is how much of §13.1's word-order detail belongs here versus
+being cut. The unit's job is that the learner can read a plain sentence and say
+which word is spotlighted — not that they can produce every permutation.
 
-1. **Which verb, and how many forms?** `S6`/T1 caps new items at four. A single
-   verb across four persons is four items; two verbs is already too many.
-2. **How much tense?** The design puts tense in Lesson 9, so Lesson 7 should
-   teach person-matching in one tense only and leave time alone.
-
-After that: Lesson 8 (the whole shape — the payoff of the entire unit), then
-the Unit 2 test bank grows to cover lessons 7–8, and Unit 2 is done.
+After Lesson 8, Unit 2 is complete and the natural next moves are the assessment
+gaps above (retake pool, homework layer) or Unit 3.
 
 ---
 

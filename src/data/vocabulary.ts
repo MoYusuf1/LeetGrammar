@@ -146,6 +146,16 @@ export const TOP_500_WORDS: VocabWord[] = [
   { rank: 86, somali: 'wuxuu', english: 'waxa + uu — end spotlight, about him', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
   { rank: 87, somali: 'waxay', english: 'waxa + ay — end spotlight, about her/them', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
 
+  // ── Lesson 7 — the action word `keen`, in the present ──────────────────
+  // keen/keenaa are attested outright by both sources. The inflected forms are
+  // registered as `derived` in verified-forms.ts: the form comes from W-gram's
+  // paradigm and the rule generating it from Nilsson §11.1, which is why both
+  // citations appear here.
+  { rank: 88, somali: 'keen', english: 'bring', pos: 'verb', lessonId: 7, confidence: 'verified', sources: ['Nilsson 2023 §13.1.4a', 'Wikipedia: Somali grammar'] },
+  { rank: 89, somali: 'keenaa', english: 'I bring / he brings', pos: 'verb', lessonId: 7, confidence: 'verified', sources: ['Nilsson 2023 §13.1.4a', 'Wikipedia: Somali grammar'] },
+  { rank: 90, somali: 'keentaa', english: 'you bring / she brings', pos: 'verb', lessonId: 7, confidence: 'verified', sources: ['Wikipedia: Somali grammar', 'Nilsson 2023 §11.1 (present-tense rule)'] },
+  { rank: 91, somali: 'keenaan', english: 'they bring', pos: 'verb', lessonId: 7, confidence: 'verified', sources: ['Wikipedia: Somali grammar', 'Nilsson 2023 §11.1 (present-tense rule)'] },
+
 ];
 
 /** All words taught in a given lesson (1–14 for Phase 6 core), in learning order. */
