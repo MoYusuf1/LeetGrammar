@@ -12,6 +12,10 @@ Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) first. Everything here
 assumes its five rules, especially rule 5: **no Somali ships unless
 `verified-forms.ts` has it.**
 
+This page is the *mechanics* — where files go and what checks run. For how a
+lesson should sound and the judgment calls that recur while writing one, see
+[LESSON_CONVENTIONS.md](./LESSON_CONVENTIONS.md).
+
 ---
 
 ## What is derived, and therefore free

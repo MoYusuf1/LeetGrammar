@@ -236,6 +236,8 @@ It pays off from Lesson 5 onward, and is unproven until then.
 
 1. [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) — the rules, and the gates
 2. This file — what exists and what is next
+2b. [ADDING_CONTENT.md](./ADDING_CONTENT.md) — how to grow the course, and
+    [LESSON_CONVENTIONS.md](./LESSON_CONVENTIONS.md) — how a lesson is written
 3. [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) — the linguistic facts and citations
 4. [POSTMORTEM.md](./POSTMORTEM.md) — why the rules exist
 5. [COURSE_DESIGN.md](./COURSE_DESIGN.md) — the pedagogical design target

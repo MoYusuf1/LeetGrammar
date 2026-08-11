@@ -1,0 +1,139 @@
+# Lesson-writing conventions
+
+> How a lesson in this course is *written* — voice, and the judgment calls that
+> recur. The aim is that Lesson 9 reads like Lesson 3 was written by the same
+> person, because the learner is one person teaching himself and inconsistency
+> costs him real effort.
+
+**This file is deliberately narrow.** Three other documents already own most of
+this, and duplicating them is how a course drifts from its own design:
+
+| For | Read |
+| --- | --- |
+| Why we teach this way at all (the research) | [COURSE_DESIGN.md](./COURSE_DESIGN.md) |
+| Where files go, what checks run, how to add content | [ADDING_CONTENT.md](./ADDING_CONTENT.md) |
+| The five non-negotiable rules | [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) |
+
+What is left — and what lives here — is the part a checker cannot see: how the
+prose sounds, and what to do when the language does not cooperate.
+
+Each convention below is tagged:
+
+- **[checked]** — a test or validator check enforces it; breaking it fails a gate
+- **[judgment]** — nobody will catch you; this is the honour system
+
+> ⚠️ **These are generalised from one lesson.** Lesson 5 is the only lesson
+> written to them end to end. Lessons 1–4 mostly agree but predate the rules.
+> When Lesson 7 (verbs) contradicts something here — and it will, because it is
+> structurally different — **change this file**, do not contort the lesson.
+
+---
+
+## 1. Voice
+
+**1.1 Second person, present tense, short sentences.** "You already know this
+one." Not "the learner will have encountered". No sentence over 30 words.
+**[checked — L2]**
+
+**1.2 Name a concept once, plainly, then reuse that exact name.** The signal
+words are "signals", every time. Not "particles", not "markers", not "focus
+words". A learner who meets three names for one thing assumes there are three
+things. Technical names live only in `/glossary`. **[checked — L1 bans the
+jargon; reuse is judgment]**
+
+**1.3 Give every rule a physical handle.** Not a definition — an operation the
+learner can perform:
+
+> **baa** → look **left**, at the word just before it
+> **waxa** → look **right**, at the word that ends the sentence
+
+"Look left" survives a week; "focuses the immediately preceding noun phrase"
+does not. **[judgment]**
+
+**1.4 Say what is hard, and say it plainly.** "This is why sentences can look
+scrambled at first. They are not." Naming the confusion is what makes the rule
+land. Do not reassure — explain. **[judgment]**
+
+---
+
+## 2. What you are allowed to teach
+
+**2.1 Teach what a form _does_, never what it _is_.** When Nilsson calls `waa`
+a type-of-clause particle and Wikipedia calls it a focus particle, the lesson
+says: *`waa` marks a plain statement, nothing singled out.* Both sources agree
+on the behaviour and disagree on the category, so the behaviour is what ships.
+Categories are somebody else's argument. **[judgment]**
+
+**2.2 Never compose Somali.** Every Somali sentence a learner sees is lifted
+from a source with its gloss. Not adapted, not "obviously fine" — lifted. The
+`Sahra baa salaamaysa saaxiibkeed` pair is Nilsson's own illustration, used
+because he already made the point better than an invented example could.
+**[checked — S1/S2/U1 gate every form against the registry]**
+
+**2.3 Cut what you cannot source, and record why in the code.** `ma` is absent
+from Lesson 5, and the lesson's own docstring says so and explains that the
+question particle is written identically to the negator. Without that note the
+next author "helpfully" restores it. A cut needs a reason attached to it or it
+does not survive contact with the next contributor. **[judgment]**
+
+**2.4 Borrowing from a later lesson is allowed, read-only.** Focus cannot be
+shown without a verb, and verbs are Lesson 7. So Lesson 5 shows whole verb-
+bearing sentences and asks only which word is spotlighted — never how the verb
+is built. The line: **a learner may read anything sourced; they may only be
+asked to produce what they have been taught.** **[judgment]**
+
+**2.5 Single-source forms may be recognised, never produced.** `saaxiibkeed`
+rests on one source, so it appears as an option to pick, never as a word to
+type. Everything a learner is asked to produce — `baa`, `waxa` — carries two
+independent sources. Thin sourcing may reach the eye; it may not reach the
+fingers. **[judgment — verified true today, and the best candidate for the next
+validator check]**
+
+---
+
+## 3. Exercises
+
+**3.1 Distractors are the actual mistake.** Options are the confusions this
+rule really produces — `bilta`/`bilka`/`bilda` against `bisha` — never filler.
+A learner who can eliminate three options by absurdity has practised nothing.
+**[judgment]**
+
+**3.2 The explanation names the rule *and* why the wrong answer was tempting.**
+"**baa** spotlights whatever sits immediately before it, and that is **Sahra**"
+— then what the other reading would have meant. Feedback that only says
+"correct" wastes the one moment the learner is guaranteed to be paying
+attention. **[checked — explanations required; quality is judgment]**
+
+**3.3 Between lesson and test, flip the shape.** What the lesson asked as
+multiple choice, the unit test asks as production, and the reverse. A test made
+of the exercises just completed measures memory of those exercises.
+**[checked — a test fails on a verbatim repeat]**
+
+**3.4 Promise and payoff close literally.** The sentence promised on card 2 is
+the sentence resolved on the payoff card, word for word. Not a related
+sentence. **[judgment]**
+
+---
+
+## 4. Structure
+
+**4.1 One idea per card, four new items per lesson, maximum.** Working memory
+holds about four things. If a lesson needs five, it is two lessons — that is
+why fusion is Lesson 6 and not the back half of Lesson 5. **[checked — T1]**
+
+**4.2 Card type is a pedagogical role; exercise type is an interaction shape.**
+`notice`/`complete`/`produce` describe what the learner is doing; `fill_blank`/
+`marker_identification` describe the widget. Conflating them caused the Lesson 1
+softlock, and putting an `exercise` on a card type that renders prose caused the
+Lesson 5 blank payoff. **[checked — two tests, both proven to bite]**
+
+**4.3 A lesson opens on the blueprint and ends on the summary, with a payoff in
+between.** **[checked — T1]**
+
+---
+
+## When you break one of these
+
+Change this file in the same commit, and say what the lesson needed that the
+convention did not allow. A convention nobody has ever revised is usually one
+nobody has ever read.
