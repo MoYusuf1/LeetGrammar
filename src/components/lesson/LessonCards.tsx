@@ -20,6 +20,8 @@ import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
 import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import CardProgressDots from './CardProgressDots';
+import AnswerInput from './AnswerInput';
+import { contentStagger } from './motion';
 
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -76,15 +78,6 @@ const cardVariants = {
   exit: (direction: number) => ({
     x: direction < 0 ? 300 : -300,
     opacity: 0,
-  }),
-};
-
-const contentStagger = {
-  hidden: { opacity: 0, y: 12 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.08, duration: 0.35, ease: 'easeOut' as const },
   }),
 };
 
@@ -482,9 +475,16 @@ function PracticeCard({
         )}
       </motion.div>
 
-      {/* Answer input — exhaustive over ExerciseType (see AnswerInput) */}
+      {/* Answer input — exhaustive over ExerciseType (see AnswerInput.tsx) */}
       <AnswerInput exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
 
+      {/* Typed answers are self-graded here. The unit test grades them instead,
+          which is why its items are single words with one spelling. */}
+      {(exercise.type === 'translate' || exercise.type === 'marker_identification') && (
+        <p className="text-[10px] text-[#5c5c5c] -mt-3">
+          Type your best answer, then check — you grade yourself against the explanation below.
+        </p>
+      )}
 
       {/* Hint (always visible) */}
       <motion.div
@@ -502,38 +502,6 @@ function PracticeCard({
       {checked && <PracticeFeedback exercise={exercise} answer={answer} />}
     </div>
   );
-}
-
-/**
- * Routes an exercise to its input renderer, exhaustively over ExerciseType.
- *
- * The `never` default is load-bearing: if a new ExerciseType is added without a
- * case here, this fails to compile. Previously an unhandled type rendered no
- * input at all, which left `answer` null forever and permanently disabled the
- * "Check Answer" button — an unpassable card.
- */
-function AnswerInput(props: {
-  exercise: PracticeExercise;
-  answer: string | null;
-  checked: boolean;
-  onSelect: (a: string) => void;
-}) {
-  const { exercise } = props;
-  switch (exercise.type) {
-    case 'multiple_choice':
-    case 'fill_blank':
-    case 'matching':
-      return <ChoiceExercise {...props} />;
-    case 'unscramble':
-      return <UnscrambleExercise {...props} />;
-    case 'translate':
-    case 'marker_identification':
-      return <FreeResponseExercise {...props} />;
-    default: {
-      const unhandled: never = exercise.type;
-      throw new Error(`No input renderer for exercise type: ${String(unhandled)}`);
-    }
-  }
 }
 
 function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; answer: string | null }) {
@@ -562,174 +530,6 @@ function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; an
   );
 }
 
-/* ─── Choice Exercise (multiple_choice / fill_blank / matching) ─────────────── */
-
-function ChoiceExercise({
-  exercise,
-  answer,
-  checked,
-  onSelect,
-}: {
-  exercise: PracticeExercise;
-  answer: string | null;
-  checked: boolean;
-  onSelect: (a: string) => void;
-}) {
-  const isCorrect = checked && answer === exercise.correctAnswer;
-  return (
-    <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-2.5">
-      {(exercise.options ?? []).map((option, i) => {
-        const isSelected = answer === option;
-        const isCorrectOption = checked && option === exercise.correctAnswer;
-        const isWrongOption = checked && isSelected && !isCorrect;
-
-        let borderColor = 'border-[#ffffff08]';
-        let bgColor = 'bg-[#141414]';
-        if (isCorrectOption) { borderColor = 'border-[#22c55e]'; bgColor = 'bg-[#22c55e15]'; }
-        else if (isWrongOption) { borderColor = 'border-[#ef4444]'; bgColor = 'bg-[#ef444415]'; }
-        else if (isSelected && !checked) { borderColor = 'border-[#ffa116]'; bgColor = 'bg-[#ffa11610]'; }
-
-        return (
-          <button
-            key={i}
-            onClick={() => onSelect(option)}
-            disabled={checked}
-            className={`w-full p-4 rounded-xl border ${borderColor} ${bgColor} text-left transition-all duration-200 ${
-              checked ? 'cursor-default' : 'cursor-pointer hover:border-[#ffffff15] active:scale-[0.98]'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <span className={`w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                isCorrectOption
-                  ? 'border-[#22c55e] bg-[#22c55e] text-[#0f0f0f]'
-                  : isWrongOption
-                  ? 'border-[#ef4444] bg-[#ef4444] text-[#0f0f0f]'
-                  : isSelected
-                  ? 'border-[#ffa116] text-[#ffa116]'
-                  : 'border-[#ffffff15] text-[#5c5c5c]'
-              }`}>
-                {isCorrectOption ? '✓' : isWrongOption ? '✕' : String.fromCharCode(65 + i)}
-              </span>
-              <span className={`text-sm font-medium ${
-                isCorrectOption ? 'text-[#22c55e]' : isWrongOption ? 'text-[#ef4444]' : 'text-[#eff1f6]'
-              }`}>
-                {option}
-              </span>
-            </div>
-          </button>
-        );
-      })}
-    </motion.div>
-  );
-}
-
-/* ─── Unscramble Exercise ────────────────────────────────────────────────── */
-
-function UnscrambleExercise({
-  exercise,
-  checked,
-  onSelect,
-}: {
-  exercise: PracticeExercise;
-  answer: string | null;
-  checked: boolean;
-  onSelect: (a: string) => void;
-}) {
-  const bank = exercise.words ?? [];
-  const [placed, setPlaced] = useState<string[]>([]);
-  const [used, setUsed] = useState<boolean[]>(() => bank.map(() => false));
-
-  // Functional updates (not the closed-over `placed`/`used` values) so rapid
-  // consecutive taps can't be dropped via stale closures; onSelect syncs from
-  // the resulting state via effect rather than being computed in the handler.
-  useEffect(() => {
-    onSelect(placed.join(' '));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [placed]);
-
-  const tap = (word: string, i: number) => {
-    if (checked) return;
-    setUsed((prev) => (prev[i] ? prev : prev.map((u, idx) => (idx === i ? true : u))));
-    setPlaced((prev) => (used[i] ? prev : [...prev, word]));
-  };
-
-  const reset = () => {
-    if (checked) return;
-    setPlaced([]);
-    setUsed(bank.map(() => false));
-  };
-
-  return (
-    <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-3">
-      {/* Assembled sentence */}
-      <div className="min-h-[52px] rounded-xl bg-[#141414] border border-[#ffffff08] p-3 flex flex-wrap gap-2 items-center">
-        {placed.length === 0 ? (
-          <span className="text-sm text-[#5c5c5c]">Tap words below in order…</span>
-        ) : (
-          placed.map((w, i) => (
-            <span key={i} className="px-2.5 py-1 rounded-lg bg-[#ffa11615] border border-[#ffa11630] text-sm font-medium text-[#eff1f6]">
-              {w}
-            </span>
-          ))
-        )}
-      </div>
-
-      {/* Word bank */}
-      <div className="flex flex-wrap gap-2">
-        {bank.map((word, i) => (
-          <button
-            key={i}
-            onClick={() => tap(word, i)}
-            disabled={checked || used[i]}
-            className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
-              used[i]
-                ? 'opacity-30 border-[#ffffff08] bg-[#0f0f0f] text-[#5c5c5c] cursor-not-allowed'
-                : 'border-[#ffffff15] bg-[#1a1a1a] text-[#eff1f6] hover:border-[#ffffff25] active:scale-[0.95]'
-            }`}
-          >
-            {word}
-          </button>
-        ))}
-      </div>
-
-      {!checked && placed.length > 0 && (
-        <button onClick={reset} className="text-xs text-[#5c5c5c] hover:text-[#8c8c8c] transition-colors">
-          Reset
-        </button>
-      )}
-    </motion.div>
-  );
-}
-
-/* ─── Free Response Exercise (translate / marker_identification) ────────────── */
-
-function FreeResponseExercise({
-  exercise,
-  answer,
-  checked,
-  onSelect,
-}: {
-  exercise: PracticeExercise;
-  answer: string | null;
-  checked: boolean;
-  onSelect: (a: string) => void;
-}) {
-  return (
-    <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-      <input
-        type="text"
-        value={answer ?? ''}
-        disabled={checked}
-        onChange={(e) => onSelect(e.target.value)}
-        placeholder={exercise.type === 'marker_identification' ? 'Type the marker…' : 'Type your answer in Somali…'}
-        className="w-full p-4 rounded-xl bg-[#141414] border border-[#ffffff08] text-[#eff1f6] text-sm placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa11640]"
-      />
-      <p className="text-[10px] text-[#5c5c5c] mt-2">
-        Type your best answer, then check — you grade yourself against the explanation below.
-      </p>
-    </motion.div>
-  );
-}
 
 /* ─── Summary Card ───────────────────────────────────────────────────────── */
 

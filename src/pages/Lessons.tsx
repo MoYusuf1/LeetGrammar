@@ -8,8 +8,10 @@
 
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { BookOpen, Check, Circle, PlayCircle, FileText } from 'lucide-react';
+import { BookOpen, Check, Circle, PlayCircle, FileText, ClipboardCheck, Lock } from 'lucide-react';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
+import { UNITS, getUnitTest } from '@/data/unit-tests';
+import { isUnitComplete } from '@/lib/assessment';
 import { useProgressStore } from '@/stores/progress-store';
 
 interface Phase {
@@ -32,6 +34,7 @@ export default function LessonsPage() {
     return PHASES.map((phase) => ({
       phase,
       lessons: LESSON_LIST.filter((l) => l.lessonId >= phase.min && l.lessonId <= phase.max),
+      unit: UNITS.find((u) => u.lessonIds.includes(phase.min)),
     }));
   }, []);
 
@@ -66,27 +69,78 @@ export default function LessonsPage() {
 
         {/* Phase groups */}
         <div className="space-y-7">
-          {grouped.map(({ phase, lessons }, phaseIdx) => (
-            <section key={phase.name}>
-              <h2 className="text-sm font-semibold text-[#eff1f6] mb-3">{phaseIdx + 1}. {phase.name}</h2>
+          {grouped.map(({ phase, lessons, unit }, phaseIdx) => {
+            const bank = unit ? getUnitTest(unit.id) : undefined;
+            const unlocked = unit ? isUnitComplete(unit.id, completed) : false;
+            return (
+              <section key={phase.name}>
+                <h2 className="text-sm font-semibold text-[#eff1f6] mb-3">{phaseIdx + 1}. {phase.name}</h2>
 
-              <div className="space-y-2">
-                {lessons.map((lesson) => (
-                  <LessonRow
-                    key={lesson.lessonId}
-                    lesson={lesson}
-                    completed={isCompleted(lesson.lessonId)}
-                    resumeAt={resumeCard(lesson.lessonId)}
-                    onClick={() => navigate(`/lesson/${lesson.lessonId}`)}
-                    onWorksheet={() => navigate(`/worksheet/${lesson.lessonId}`)}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
+                <div className="space-y-2">
+                  {lessons.map((lesson) => (
+                    <LessonRow
+                      key={lesson.lessonId}
+                      lesson={lesson}
+                      completed={isCompleted(lesson.lessonId)}
+                      resumeAt={resumeCard(lesson.lessonId)}
+                      onClick={() => navigate(`/lesson/${lesson.lessonId}`)}
+                      onWorksheet={() => navigate(`/worksheet/${lesson.lessonId}`)}
+                    />
+                  ))}
+                  {unit && bank && (
+                    <UnitTestRow
+                      name={bank.name}
+                      unlocked={unlocked}
+                      onClick={() => unlocked && navigate(`/unit-test/${unit.id}`)}
+                    />
+                  )}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </div>
     </div>
+  );
+}
+
+function UnitTestRow({
+  name,
+  unlocked,
+  onClick,
+}: {
+  name: string;
+  unlocked: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={!unlocked}
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-colors ${
+        unlocked
+          ? 'bg-[#141414] border-[#ffa11630] hover:border-[#ffa11660] hover:bg-[#181818]'
+          : 'bg-[#141414] border-[#ffffff08] opacity-60 cursor-not-allowed'
+      }`}
+    >
+      <span
+        className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
+          unlocked ? 'bg-[#ffa11622] border border-[#ffa11644]' : 'bg-[#1f1f1f] border border-[#ffffff10]'
+        }`}
+      >
+        {unlocked ? (
+          <ClipboardCheck className="w-4 h-4 text-[#ffa116]" />
+        ) : (
+          <Lock className="w-3.5 h-3.5 text-[#5c5c5c]" />
+        )}
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-[#eff1f6] truncate">{name}</p>
+        <p className="text-[11px] text-[#5c5c5c]">
+          {unlocked ? 'All lessons done — take the test' : 'Finish the lessons above to unlock'}
+        </p>
+      </div>
+    </button>
   );
 }
 
