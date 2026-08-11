@@ -45,6 +45,40 @@ function have(cmd) {
   }
 }
 
+/**
+ * Source key `O`. Commercial, so it cannot be fetched — the user supplies the
+ * PDF and this script only extracts it. Recorded here rather than left as
+ * folklore: a cold start needs to know this source exists, what it is for, and
+ * why the script cannot get it for you.
+ */
+const ORWIN = {
+  key: 'O',
+  pdf: resolve(OUT_DIR, 'orwin-colloquial-somali.pdf'),
+  txt: resolve(OUT_DIR, 'orwin-colloquial-somali.txt'),
+  cite: 'Martin Orwin, Colloquial Somali: A Complete Language Course, Routledge',
+};
+
+function extractOrwin() {
+  if (existsSync(ORWIN.txt)) {
+    console.log(`  ✓ already extracted: ${ORWIN.txt}`);
+    return;
+  }
+  if (!existsSync(ORWIN.pdf)) {
+    console.log(`\n  ⓘ ${ORWIN.cite}`);
+    console.log('    Source key O — covers negation, questions, imperatives and the');
+    console.log('    tense system, none of which Wikipedia covers at all.');
+    console.log('    Commercial: this script cannot download it. Put your own copy at');
+    console.log(`      ${ORWIN.pdf}`);
+    console.log('    and re-run. Without it, anything resting on Orwin alone cannot be');
+    console.log('    re-verified — see docs/SOMALI_SOURCES.md.');
+    return;
+  }
+  execFileSync('pdftotext', ['-layout', ORWIN.pdf, ORWIN.txt], { stdio: 'inherit' });
+  console.log(`  ✓ ${ORWIN.txt}`);
+  console.log('    NB: this PDF is scanned. pdftotext is reliable for prose and drops');
+  console.log('    table columns — verify paradigms on the page itself before citing.');
+}
+
 function main() {
   if (!have('pdftotext')) {
     console.error(
@@ -61,6 +95,7 @@ function main() {
   if (existsSync(NILSSON.txt)) {
     console.log(`  ✓ already extracted: ${NILSSON.txt}`);
     console.log('    delete it and re-run to refresh.');
+    extractOrwin();
     return;
   }
 
@@ -81,6 +116,8 @@ function main() {
   console.log('\n  Section numbers cited as "N §x.y" in docs/SOMALI_SOURCES.md are');
   console.log('  the § headings in this text. Find one with, for example:');
   console.log('    grep -n "§ 12.3" sources/nilsson-beginners-somali-grammar.txt');
+
+  extractOrwin();
 }
 
 main();

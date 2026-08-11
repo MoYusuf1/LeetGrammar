@@ -17,6 +17,9 @@
  *
  * Source keys — see docs/SOMALI_SOURCES.md for full citations:
  *   N       Nilsson, Beginner's Somali Grammar, Univ. of Gothenburg, 2023
+ *   O       Orwin, Colloquial Somali, Routledge. Cite as `O p.NN` using the
+ *           book's printed page number. The PDF is scanned: verify on the page
+ *           itself, never from the pdftotext dump, which drops table columns.
  *   W-alpha Wikipedia, Somali Latin alphabet
  *   W-gram  Wikipedia, Somali grammar
  *   Wikt    Wiktionary, Somali entries
@@ -195,7 +198,7 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // W-gram independently attests only wuu, way, wuxuu and waxay, so the rest
   // are single-source and, per check S6, may be read but never asked for as a
   // typed answer.
-  waan: { gloss: 'waa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
+  waan: { gloss: 'waa + aan (I) contracted', sources: ['N §5.1', 'O p.24'] },
   waad: { gloss: 'waa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
   waxaan: { gloss: 'waxa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
   waxaad: { gloss: 'waxa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
@@ -204,7 +207,7 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   ayaan: { gloss: 'ayaa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
   ayaad: { gloss: 'ayaa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
   ayuu: { gloss: 'ayaa + uu (he) contracted', sources: ['N §5.1'], confidence: 'single' },
-  ayay: { gloss: 'ayaa + ay (she/they) contracted', sources: ['N §5.1'], confidence: 'single' },
+  ayay: { gloss: 'ayaa + ay (she/they) contracted', sources: ['N §5.1', 'O p.26'] },
 
   // ── UNIT 2: the verb `keen`, and its present tense ──────────────────────
   // `keen` is the verb both sources handle: Nilsson glosses keenaa directly
@@ -239,8 +242,22 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // ── Single-source only ──────────────────────────────────────────────────
   // Real words, but attested in only one source consulted. Neither appears
   // anywhere in Nilsson, so they must not carry a Nilsson citation.
-  nabad: { gloss: 'peace, wellbeing', gender: 'f', sources: ['Wikt'], confidence: 'single' },
-  subax: { gloss: 'morning', gender: 'm', sources: ['Wikt'], confidence: 'single' },
+  // Both were single-source (Wiktionary) until Orwin was added. Verified on the
+  // page, not by grep: `nabad` appears throughout the Lesson 1 dialogue
+  // ("Waa nabad", "Ma nabad baa?", "Nabad gelyo"), and `subax` is the title of
+  // Lesson 2, "Subax wanaagsan — Good morning".
+  nabad: { gloss: 'peace, wellbeing', gender: 'f', sources: ['Wikt', 'O p.24'] },
+  subax: { gloss: 'morning', gender: 'm', sources: ['Wikt', 'O p.26'] },
+
+  // ── UNIT 3 groundwork: the question marker ──────────────────────────────
+  // Owed to Unit 3 since Lesson 5 deliberately left it out. Nilsson §12.3
+  // gives it as the yes/no question particle and, at high tone, the negator;
+  // Orwin lists it as the "positive interrogative mood classifier" (p.15,
+  // p.23) and separately shows it negating (`ma jiro` is not). Both sources
+  // therefore attest both roles, and both note the tone that writing does not
+  // record. That ambiguity is a teaching point for Unit 3, not a blocker.
+  ma: { gloss: 'question / not — the same spelling does both', sources: ['N §12.3', 'O p.23'] },
+  miyaa: { gloss: 'question word — "is it …?"', sources: ['N §5.2', 'O p.26'] },
 };
 
 /** Proper nouns that appear in sourced example sentences. */
