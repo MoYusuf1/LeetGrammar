@@ -192,3 +192,66 @@ describe('authored-lessons: vocabulary alignment', () => {
     expect(dupes).toEqual([]);
   });
 });
+
+/**
+ * REGRESSION: a card carrying content the player never renders.
+ *
+ * Lesson 5's payoff card was authored with an `exercise`, but RenderCard maps
+ * `payoff` to IntroCard, which reads only `prompt` and `content`. The card
+ * rendered as a bare heading — the promised closing question simply was not
+ * there — and the build, all tests, and the validator stayed green, because
+ * every one of them looks at the data rather than at what the player does with
+ * it. That is the same shape as the Lesson 1 softlock.
+ *
+ * This table mirrors RenderCard in LessonCards.tsx. If a card type gains a
+ * renderer branch there, update it here; if these disagree, content goes
+ * invisible in exactly the way that is hardest to notice.
+ */
+describe('authored-lessons: every card renders the content it carries', () => {
+  /** Fields RenderCard actually reads, per card type. */
+  const RENDERS: Record<string, Array<'prompt' | 'content' | 'exercise' | 'vocab'>> = {
+    blueprint: ['prompt', 'content'],
+    connect: ['prompt', 'content'],
+    promise: ['prompt', 'content'],
+    payoff: ['prompt', 'content'],
+    predict: ['prompt', 'content'],
+    teach: ['content'],
+    example: ['content'],
+    notice: ['exercise'],
+    complete: ['exercise'],
+    produce: ['exercise'],
+    summary: ['content'],
+  };
+
+  it('no card carries a field its own card type does not render', () => {
+    const ignored: string[] = [];
+    for (const lesson of AUTHORED_LESSONS) {
+      for (const card of lesson.cards) {
+        const rendered = RENDERS[card.type];
+        if (!rendered) {
+          ignored.push(`L${lesson.id}/${card.id}: type "${card.type}" has no renderer branch`);
+          continue;
+        }
+        for (const field of ['prompt', 'content', 'exercise'] as const) {
+          if (card[field] && !rendered.includes(field)) {
+            ignored.push(`L${lesson.id}/${card.id}: "${field}" is set but a ${card.type} card never renders it`);
+          }
+        }
+      }
+    }
+    expect(ignored).toEqual([]);
+  });
+
+  it('every card renders at least one thing', () => {
+    const blank: string[] = [];
+    for (const lesson of AUTHORED_LESSONS) {
+      for (const card of lesson.cards) {
+        const rendered = RENDERS[card.type] ?? [];
+        if (!rendered.some((f) => f !== 'vocab' && card[f as 'prompt' | 'content' | 'exercise'])) {
+          blank.push(`L${lesson.id}/${card.id} (${card.type}) renders nothing`);
+        }
+      }
+    }
+    expect(blank).toEqual([]);
+  });
+});

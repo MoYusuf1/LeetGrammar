@@ -953,10 +953,10 @@ const LESSON_5: Lesson = {
       },
     },
     {
-      id: '5-payoff',
-      type: 'payoff',
+      id: '5-produce-2',
+      type: 'produce',
       exercise: {
-        id: 'l5-payoff',
+        id: 'l5-p2',
         type: 'multiple_choice',
         objectiveIds: ['signal-focus-before', 'signal-focus-end'],
         question:
@@ -972,6 +972,15 @@ const LESSON_5: Lesson = {
         explanation:
           'With **baa** directly after **Sahra**, the spotlight lands on Sahra. The **waxa** version spotlights **saaxiibkeed** instead — "Sahra is greeting her FRIEND". Same words, opposite meaning, and nothing but the signal tells you which.',
       },
+    },
+    {
+      id: '5-payoff',
+      type: 'payoff',
+      prompt:
+        'That was the promise, and you just did it.\n\n' +
+        '**Sahra baa salaamaysa saaxiibkeed.** — SAHRA is greeting her friend.\n' +
+        '**Sahra waxa ay salaamaysaa saaxiibkeed.** — Sahra is greeting her FRIEND.\n\n' +
+        'Identical words. The signal, and only the signal, decides which one the sentence is about.',
     },
     {
       id: '5-summary',

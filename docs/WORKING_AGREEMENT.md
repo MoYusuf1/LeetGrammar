@@ -169,8 +169,18 @@ so `scripts/validate-course.mjs` imports `../src/data/*.ts` and inspects real
 objects. No build step, no parsing. Keep it that way — the previous
 regex-over-strings approach is what made it useless.
 
-**The reference grammar is a PDF.** `WebFetch` cannot read it. Download and run
-`pdftotext -layout` to get searchable text.
+**The reference grammar is a PDF.** `WebFetch` cannot read it. Run
+`npm run fetch:sources`, which downloads it and runs `pdftotext -layout` into
+the gitignored `sources/`. Every `N §x.y` citation resolves to a `§` heading in
+that file. Do not rely on an extract left over from a previous session — the
+command is the source of truth, so any tool or person can reproduce it cold.
+
+**The lesson player animates card transitions.** Those animations need
+`requestAnimationFrame`, which a hidden or headless browser never fires, so
+`AnimatePresence mode="wait"` never swaps the next card in: the counter
+advances over frozen content and it looks exactly like a softlock. Before
+driving the player, set `localStorage.setItem('lg-motion', 'off')` and reload.
+See `src/lib/reduced-motion.ts` and docs/ADDING_CONTENT.md.
 
 ---
 

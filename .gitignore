@@ -25,3 +25,7 @@ docs/**/somali_knowledge_graph.json
 scripts/output/
 public/graph.db
 graphify-out/
+
+# Third-party reference sources fetched by `npm run fetch:sources`.
+# The PDF is not ours to redistribute; our notes live in docs/SOMALI_SOURCES.md.
+sources/

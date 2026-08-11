@@ -18,7 +18,8 @@
     "graphify:report": ".venv/bin/graphify cluster-only . --no-label --no-viz",
     "graphify:query": ".venv/bin/graphify query",
     "graphify:path": ".venv/bin/graphify path",
-    "graphify:explain": ".venv/bin/graphify explain"
+    "graphify:explain": ".venv/bin/graphify explain",
+    "fetch:sources": "node scripts/fetch-sources.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

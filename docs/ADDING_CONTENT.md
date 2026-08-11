@@ -150,6 +150,29 @@ are the mistake being tested and are never shown as correct.
 
 ---
 
+## Getting the sources
+
+Sourcing gates everything, and the primary source is a PDF that cannot be read
+by fetching a URL. One command reproduces it:
+
+```bash
+npm run fetch:sources
+```
+
+That downloads Nilsson and runs `pdftotext -layout` into `sources/`, which is
+gitignored. Every `N §x.y` citation in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md)
+refers to a `§` heading in that text:
+
+```bash
+grep -n "§ 12.3" sources/nilsson-beginners-somali-grammar.txt
+```
+
+Nothing about sourcing depends on a previous session. If a citation cannot be
+found in that file, the citation is wrong — say so rather than working around
+it. Invented citations have shipped here before.
+
+---
+
 ## The gates, every time
 
 ```bash
@@ -160,6 +183,32 @@ And if the change is visible in the browser, **open the browser and drive it**.
 A green build is not evidence the app works — the worst bug in this project's
 history compiled cleanly and passed every check that existed.
 
+### Driving the lesson player
+
+**Turn motion off first.** The player animates card transitions, and the
+transition is driven by `requestAnimationFrame`, which a hidden or headless
+browser never fires. The card counter advances while the content stays frozen
+— indistinguishable from a real softlock, and it has already cost one full
+debugging pass.
+
+```js
+localStorage.setItem('lg-motion', 'off');   // then reload
+```
+
+With motion off the player renders the current card directly. Remove the key
+(`localStorage.removeItem('lg-motion')`) to get the animations back. The same
+switch honours the OS "reduce motion" setting — see `src/lib/reduced-motion.ts`.
+
+Clicks driven by automation may not register even so; calling `.click()` on the
+element works. React also ignores programmatic `input.value` — set it through
+the native property descriptor and dispatch an `input` event.
+
+To reset progress between runs:
+
+```js
+localStorage.removeItem('leet-somali-progress-v7');
+```
+
 If the browser shows stale content after an edit, it is the service worker:
 
 ```js
@@ -168,6 +217,9 @@ If the browser shows stale content after an edit, it is the service worker:
 ```
 
 Then open a **new tab** — reloading the existing one is not always enough.
+
+`/worksheet/:id` renders every one of a lesson's exercises on one static page
+with no animation, which makes it the fastest way to eyeball new content.
 
 ---
 

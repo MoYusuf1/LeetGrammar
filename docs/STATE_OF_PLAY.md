@@ -1,7 +1,12 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-10, after Phase 4 (the unit test) landed.
+> comes next. **Last updated:** 2026-08-11, after Lesson 5 and Unit 2 landed.
+>
+> **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
+> rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
+> course), then run `npm run fetch:sources` so citations resolve. Nothing in
+> this project depends on a previous session's state.
 >
 > Numbers here are checkable — run the commands in
 > [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md#the-three-gates) rather than
@@ -11,7 +16,7 @@
 
 ## What exists
 
-A **4-lesson Somali course**, local-only, no accounts, progress in
+A **5-lesson Somali course** in 2 units, local-only, no accounts, progress in
 `localStorage`. Every Somali form in it is source-verified.
 
 | Lesson | Title | Cards | Exercises | Teaches |
@@ -20,8 +25,9 @@ A **4-lesson Somali course**, local-only, no accounts, progress in
 | 2 | Naming Things | 14 | 6 | noun gender; why it is invisible in writing; reading gender off the "the" form |
 | 3 | Saying "The" | 16 | 9 | the article is a suffix; all eight assimilation outcomes; no indefinite article |
 | 4 | I, You, He, She | 14 | 6 | eight pronouns; inclusive/exclusive "we"; short subject pronouns; the subject marker |
+| 5 | The Signal Words | 17 | 7 | `waa` plain statement; `baa`/`ayaa` spotlight what precedes; `waxa` spotlights what ends the sentence |
 
-**Totals:** 55 authored cards · 26 exercises · 31% production.
+**Totals:** 72 authored cards · 33 exercises · 30% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
 The course lands on **`Wiilku waa macallin.`** ("The boy is a teacher."), a
@@ -39,10 +45,10 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 
 | | |
 | --- | --- |
-| Verified-form registry | **69** forms (67 with 2+ sources) |
-| Vocabulary entries | 79, of which **21** are sourced |
-| Unit test bank | 32 items, all 13 objectives covered |
-| Tests | 61, across 3 files |
+| Verified-form registry | **84** forms (76 with 2+ sources, 67 independently) |
+| Vocabulary entries | 84, of which **26** are sourced |
+| Unit test banks | Unit 1: 32 items · Unit 2: 9 items |
+| Tests | 63, across 3 files |
 | Validator | 15 checks passing, 0 errors, 2 open warnings |
 
 ---
@@ -160,38 +166,45 @@ The two that matter pedagogically:
 
 ## Where this sits in the overall plan
 
-⚠️ **The unit test was not the last phase.** Two numbering schemes have been in
-use and they do not line up: the work tracked here as "Phase 4" is the
-*assessment engine* — Phase **3** in
-[COURSE_DESIGN.md Part 7](./COURSE_DESIGN.md#part-7--execution-plan), applied to
-Unit 1 only.
-
-Against the design's seven phases:
+Two numbering schemes have been in use and they do not line up. Against the
+design's seven phases in
+[COURSE_DESIGN.md Part 7](./COURSE_DESIGN.md#part-7--execution-plan):
 
 | Phase | Work | State |
 | --- | --- | --- |
 | 1 | Data model + glossary + validator | ✅ done |
-| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | ❌ **not started** |
-| 3 | Assessment engine | 🟡 built for Unit 1; gaps above |
+| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | 🟡 **Lesson 5 done; 6, 7, 8 not started** |
+| 3 | Assessment engine | 🟡 built for Units 1–2; gaps above |
 | 4 | Unit 1 — Lessons 1–4 | ✅ done |
-| 5 | Vocabulary track (~500 words, sourced) | ❌ 21 of 79 sourced |
+| 5 | Vocabulary track (~500 words, sourced) | ❌ 26 of 84 sourced |
 | 6 | Units 3–4 — Lessons 9–14 | ❌ not started |
 | 7 | Retire `COURSE.md` + generator | ❌ still present |
 
-**Unit 2 is the spine and it is the one thing not built.** The design calls it
-"⭐ the spine", "the direct fix for the original complaint", and the unit that
-should go deepest (§1.11). It teaches `waa` / `baa` / `waxa` / `ma` — the four
-signal words. The original motivation for this whole redesign was that those
-markers "seem random" and had been stranded at lesson 20 of the old course.
+Unit 2 is the spine — "the direct fix for the original complaint", the unit
+the design says should go deepest (§1.11). Lesson 5 gives the learner the
+SIGNAL box: they can now read a flat Somali sentence and say which word it is
+about. They still cannot build a full sentence, because verbs are Lesson 7.
 
-What is shipped today is Unit 1: the **WHO** box. The learner can name things,
-make them definite, and say who is doing something. They cannot yet build a
-Somali sentence, because the `SIGNAL` box — the part with no English
-equivalent — is Lesson 5.
+### Next step: Lesson 6 — Squishing
 
-So the course is a complete, verified, well-gated **first quarter**. Calling it
-finished would repeat the exact error in [POSTMORTEM.md](./POSTMORTEM.md):
-mistaking "every check passes" for "the goal is met".
+**The sourcing is already done**, which is the usual blocker. Nilsson's §5.1
+fusion table is recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §7 and the
+forms are in the registry: `wuu`, `way`, `wuxuu`, `waxay` with two independent
+sources; `buu`, `bay` single-sourced and declared.
+
+```
+wáa aan → wáan      wáxa aan → wáxaan       baa aan → baan
+wáa uu  → wúu       wáxa uu  → wúxuu        baa uu  → buu
+wáa ay  → wáy       wáxa ay  → wáxay        baa ay  → bay
+```
+
+Lesson 5 already sets it up — its closing card promises exactly this, and its
+`waxa ay` card flags the fusion without teaching it. Follow Recipe 3 in
+[ADDING_CONTENT.md](./ADDING_CONTENT.md); add items to
+`src/data/unit-banks/unit-2.ts` for any new objectives, or `U3` fails.
+
+After that: Lesson 7 (verbs — needed before any full sentence can be built) and
+Lesson 8 (the whole shape). Both need fresh sourcing.
 
 ---
 
