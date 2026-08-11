@@ -126,7 +126,7 @@ export default function WorksheetPage() {
                 return (
                   <li key={i} className="text-sm">
                     <p className="text-[#eff1f6] font-medium mb-2 print:text-black">
-                      {i + 1}. {ex.question}
+                      {i + 1}. <Bold text={ex.question} />
                     </p>
                     {ex.somali && (
                       <p className="text-[#eff1f6] font-mono mb-2 pl-4 print:text-black">{ex.somali}</p>
@@ -181,5 +181,29 @@ export default function WorksheetPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+/**
+ * Renders the `**bold**` markup the authored questions use.
+ *
+ * Without this the worksheet printed the asterisks literally — every lesson
+ * uses the markup to mark the Somali form under discussion, so every printed
+ * sheet since the course was built showed `**Sahra baa...**`. The print channel
+ * is the deep-reading half of the design, so it cannot show raw markup.
+ */
+function Bold({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
+        seg.startsWith('**') && seg.endsWith('**') && seg.length > 4 ? (
+          <strong key={i} className="font-semibold">
+            {seg.slice(2, -2)}
+          </strong>
+        ) : (
+          seg
+        ),
+      )}
+    </>
   );
 }

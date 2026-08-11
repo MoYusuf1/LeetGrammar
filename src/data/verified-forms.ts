@@ -142,6 +142,17 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   buu: { gloss: 'baa + uu (he) contracted', sources: ['N §5.1'], confidence: 'single' },
   bay: { gloss: 'baa + ay (she/they) contracted', sources: ['N §5.1'], confidence: 'single' },
 
+  // ── UNIT 2: words used in Nilsson's focus example (N §12.3) ─────────────
+  saaxiib: { gloss: 'friend', gender: 'm', definite: 'saaxiibka', sources: ['N §6.3', 'Wikt'] },
+  saaxiibka: { gloss: 'the friend', gender: 'm', sources: ['N §6.3', 'Wikt'] },
+  // These four occur only inside the minimal pair at N §12.3. They are shown
+  // to the learner as whole sentences, never built from parts — the verb
+  // endings belong to Lesson 7 and the possessive to a later unit.
+  saaxiibkeed: { gloss: 'her friend', sources: ['N §12.3'], confidence: 'single' },
+  saaxiibteed: { gloss: 'her friend (feminine form)', sources: ['N §12.3'], confidence: 'single' },
+  salaamaysa: { gloss: 'is greeting', sources: ['N §12.3'], confidence: 'single' },
+  salaamaysaa: { gloss: 'is greeting', sources: ['N §12.3'], confidence: 'single' },
+
   // ── Further nouns attested with definite forms ──────────────────────────
   caano: { gloss: 'milk', definite: 'caanaha', sources: ['N §6.4', 'Wikt'] },
   magac: { gloss: 'name', sources: ['N §11.1', 'Wikt'] },

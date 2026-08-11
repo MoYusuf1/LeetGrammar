@@ -751,7 +751,244 @@ const LESSON_4: Lesson = {
 // EXPORT
 // ============================================================================
 
-export const AUTHORED_LESSONS: Lesson[] = [LESSON_1, LESSON_2, LESSON_3, LESSON_4];
+// ============================================================================
+// LESSON 5 — The Signal Words  (Unit 2)
+// ============================================================================
+
+/**
+ * The first lesson of Unit 2, and the one the whole course exists for: the
+ * SIGNAL box, which has no English equivalent.
+ *
+ * THREE signals, not four. The design named waa/baa/waxa/ma, but `ma` is
+ * single-sourced and — decisively — the yes/no question particle `ma` is
+ * written identically to the negator `má`, because Somali does not write tone
+ * (N §2.2, §12.3). Teaching "ma = question" would plant a confident error of
+ * exactly the kind that resurfaces on delayed tests. It is cut until it can be
+ * taught truthfully, alongside negation. See docs/SOMALI_SOURCES.md §7.
+ *
+ * Verbs appear here as WHOLE SENTENCES the learner reads, never as parts they
+ * assemble — verb forms are Lesson 7. Focus cannot be demonstrated without a
+ * verb, so the minimal pair is shown intact, exactly as Nilsson gives it, and
+ * every exercise asks which word is *spotlighted*, never how the verb is
+ * built. That is why `salaamaysa` and `salaamaysaa` differ here and the
+ * difference is deliberately not discussed.
+ */
+const LESSON_5: Lesson = {
+  id: 5,
+  unitId: 2,
+  title: 'The Signal Words',
+  newItems: ['5-teach-baa', '5-teach-waxa'],
+  objectives: ['signal-statement', 'signal-focus-before', 'signal-focus-end'],
+  cards: [
+    {
+      id: '5-blueprint',
+      type: 'blueprint',
+      blueprintSlot: 'SIGNAL',
+      content: `${BOX}\n\nA new box, and the reason Somali feels unpredictable. The SIGNAL sits right after WHO, and it decides which word the sentence is really about.`,
+    },
+    {
+      id: '5-connect',
+      type: 'connect',
+      prompt:
+        'You can fill the WHO box — **wiil**, **wiilka**, **Wiilku**, **isaga**. You have also been using one signal all along without naming it: **waa**. Today you meet the other two, and find out what they change.',
+    },
+    {
+      id: '5-promise',
+      type: 'promise',
+      prompt:
+        'By the end you will read two sentences made of **exactly the same words**. One means "SAHRA is greeting her friend". The other means "Sahra is greeting her FRIEND". You will know which is which.',
+    },
+    {
+      id: '5-predict',
+      type: 'predict',
+      prompt:
+        'Here are two real Somali sentences. The words are the same. Only the small word in the middle changes.\n\n' +
+        '**Sahra baa salaamaysa saaxiibkeed.**\n' +
+        '**Sahra waxa ay salaamaysaa saaxiibkeed.**\n\n' +
+        'Both mean "Sahra is greeting her friend". Before reading on — guess what the difference is. English would do it with your **voice**. Somali cannot.',
+    },
+    {
+      id: '5-teach',
+      type: 'teach',
+      title: 'What a signal does',
+      content:
+        'English emphasises a word by saying it louder:\n\n' +
+        '• "**SAHRA** is greeting her friend." — not someone else\n' +
+        '• "Sahra is greeting her **FRIEND**." — not her boss\n\n' +
+        'The words never move. Only your voice changes.\n\n' +
+        'Somali does not do this. **Volume carries no meaning here.** Instead a small word — the **signal** — goes into the sentence. *Where it sits* tells you which part is spotlighted.\n\n' +
+        'This is why sentences can look scrambled at first. They are not. The signal does a job English hands to your tone of voice.\n\n' +
+        'So a Somali speaker reading a flat sentence knows exactly which word matters. An English speaker reading the same sentence sees no emphasis at all.',
+    },
+    {
+      id: '5-teach-waa',
+      type: 'teach',
+      title: 'waa — just tell me',
+      content:
+        'You already know this one. **waa** marks a plain, ordinary statement. Nothing is singled out:\n\n' +
+        '• **Wiilku waa macallin.** — *The boy is a teacher.*\n\n' +
+        'That is a flat fact. No word is being contrasted with anything.\n\n' +
+        'Use **waa** when you would say the English sentence evenly, with no word pushed harder than the rest.',
+    },
+    {
+      id: '5-teach-baa',
+      type: 'teach',
+      isNew: true,
+      title: 'baa — spotlight what came just before',
+      content:
+        '**baa** shines a light on the words **immediately before it**.\n\n' +
+        '• **Sahra baa salaamaysa saaxiibkeed.** — *SAHRA is greeting her friend.*\n\n' +
+        '**Sahra** sits directly before **baa**, so Sahra is the spotlight. The sentence answers "**who** is greeting her friend?"\n\n' +
+        'There is a second word, **ayaa**, that does the identical job. **baa** and **ayaa** are interchangeable — **ayaa** just sounds slightly more formal. You will meet both in real text; treat them as one thing.\n\n' +
+        'The rule to hold on to: **look immediately to the left of baa.** Whatever is there is what the sentence is about.',
+    },
+    {
+      id: '5-notice-1',
+      type: 'notice',
+      exercise: {
+        id: 'l5-n1',
+        type: 'multiple_choice',
+        objectiveIds: ['signal-focus-before'],
+        question:
+          'In **Sahra baa salaamaysa saaxiibkeed**, which word is being spotlighted?',
+        options: ['Sahra', 'salaamaysa', 'saaxiibkeed', 'nothing in particular'],
+        correctAnswer: 'Sahra',
+        hint: 'Find **baa**, then look at the word immediately to its left.',
+        explanation:
+          '**baa** spotlights whatever sits immediately before it, and that is **Sahra**. So the sentence means "**SAHRA** is greeting her friend" — it answers who, not what.',
+      },
+    },
+    {
+      id: '5-notice-2',
+      type: 'notice',
+      exercise: {
+        id: 'l5-n2',
+        type: 'marker_identification',
+        objectiveIds: ['signal-focus-before'],
+        question: 'Which word here is the signal — the one doing the spotlighting?',
+        somali: 'Sahra baa salaamaysa saaxiibkeed',
+        answer: 'baa',
+        hint: 'It is not the name and not the long word. It is the short one sitting second.',
+        explanation:
+          '**baa** is the signal. It carries no meaning you could translate on its own — its whole job is to mark that the word before it, **Sahra**, is the one being spotlighted.',
+      },
+    },
+    {
+      id: '5-teach-waxa',
+      type: 'teach',
+      isNew: true,
+      title: 'waxa — spotlight what comes at the end',
+      content:
+        '**waxa** does the same job as **baa**, pointing in the **opposite direction**. It spotlights whatever lands at the **end** of the sentence.\n\n' +
+        '• **Sahra waxa ay salaamaysaa saaxiibkeed.** — *Sahra is greeting her FRIEND.*\n\n' +
+        'Here the spotlight falls on **saaxiibkeed** — her friend — because that is what finishes the sentence. This one answers "**who** is she greeting?"\n\n' +
+        'So the two signals split the work cleanly:\n\n' +
+        '• **baa** → look **left**, at the word just before it\n' +
+        '• **waxa** → look **right**, at the word that ends the sentence\n\n' +
+        'You will also see **waxa** written **waxaa**. Same word.\n\n' +
+        'One thing to notice and not worry about yet: **waxa ay**. The little **ay** is the short "she" from last lesson, riding along behind the signal. Next lesson those two fuse into a single word.',
+    },
+    {
+      id: '5-notice-3',
+      type: 'notice',
+      exercise: {
+        id: 'l5-n3',
+        type: 'multiple_choice',
+        objectiveIds: ['signal-focus-end'],
+        question:
+          'In **Sahra waxa ay salaamaysaa saaxiibkeed**, which word is being spotlighted?',
+        options: ['saaxiibkeed', 'Sahra', 'waxa', 'salaamaysaa'],
+        correctAnswer: 'saaxiibkeed',
+        hint: '**waxa** points forward, not back. Look at what finishes the sentence.',
+        explanation:
+          '**waxa** spotlights whatever ends the sentence, and that is **saaxiibkeed** (her friend). The sentence means "Sahra is greeting her **FRIEND**" — the same words as the **baa** version, spotlighting the opposite end.',
+      },
+    },
+    {
+      id: '5-complete-1',
+      type: 'complete',
+      exercise: {
+        id: 'l5-c1',
+        type: 'fill_blank',
+        objectiveIds: ['signal-focus-before'],
+        question:
+          'You want to say it was **Sahra** — not anyone else — who is greeting. Which signal goes after her name?\n\nSahra ___ salaamaysa saaxiibkeed.',
+        options: ['baa', 'waxa', 'waa', 'ay'],
+        correctAnswer: 'baa',
+        hint: 'You are spotlighting the word that comes **before** the gap.',
+        explanation:
+          '**baa** spotlights what is immediately before it, so putting it straight after **Sahra** makes Sahra the point of the sentence. **waxa** would push the spotlight to the far end instead.',
+      },
+    },
+    {
+      id: '5-complete-2',
+      type: 'complete',
+      exercise: {
+        id: 'l5-c2',
+        type: 'multiple_choice',
+        objectiveIds: ['signal-statement'],
+        question:
+          'You just want to state a plain fact — "The boy is a teacher" — with no word singled out. Which signal?',
+        options: ['waa', 'baa', 'waxa', 'ayaa'],
+        correctAnswer: 'waa',
+        hint: 'Two of these spotlight something. One just states.',
+        explanation:
+          '**waa** marks an ordinary statement: **Wiilku waa macallin.** Using **baa** or **waxa** would claim you are contrasting something with something else, which changes what the listener thinks you mean.',
+      },
+    },
+    {
+      id: '5-produce-1',
+      type: 'produce',
+      exercise: {
+        id: 'l5-p1',
+        type: 'marker_identification',
+        objectiveIds: ['signal-focus-end'],
+        question:
+          'Read this sentence and type the signal word — the one telling you the spotlight falls at the end.',
+        somali: 'Sahra waxa ay salaamaysaa saaxiibkeed',
+        answer: 'waxa',
+        hint: 'It is not **ay** — that is the short "she". The signal comes first of the two.',
+        explanation:
+          '**waxa** is the signal. **ay** is the short pronoun "she" sitting behind it. Together they point the spotlight at the end of the sentence, onto **saaxiibkeed**.',
+      },
+    },
+    {
+      id: '5-payoff',
+      type: 'payoff',
+      exercise: {
+        id: 'l5-payoff',
+        type: 'multiple_choice',
+        objectiveIds: ['signal-focus-before', 'signal-focus-end'],
+        question:
+          'The promise from the start. Which of these means "**SAHRA** is greeting her friend" — Sahra and nobody else?',
+        options: [
+          'Sahra baa salaamaysa saaxiibkeed.',
+          'Sahra waxa ay salaamaysaa saaxiibkeed.',
+          'Wiilku waa macallin.',
+          'Neither — they mean the same thing.',
+        ],
+        correctAnswer: 'Sahra baa salaamaysa saaxiibkeed.',
+        hint: 'Spotlight on **Sahra** means the signal must sit immediately after her name.',
+        explanation:
+          'With **baa** directly after **Sahra**, the spotlight lands on Sahra. The **waxa** version spotlights **saaxiibkeed** instead — "Sahra is greeting her FRIEND". Same words, opposite meaning, and nothing but the signal tells you which.',
+      },
+    },
+    {
+      id: '5-summary',
+      type: 'summary',
+      title: 'What you can do now',
+      content:
+        'The SIGNAL box is no longer a mystery:\n\n' +
+        '• **waa** — a plain statement, nothing singled out\n' +
+        '• **baa** (and **ayaa**) — spotlight the word **immediately before** it\n' +
+        '• **waxa** (or **waxaa**) — spotlight whatever **ends** the sentence\n\n' +
+        'You can now look at a flat-looking Somali sentence and say which word it is really about. English does that with tone of voice; Somali does it with placement.\n\n' +
+        'Next: those signals stop standing alone. **waxa ay** becomes one word, and so do **waa + uu**, **baa + uu** and the rest.',
+    },
+  ],
+};
+
+export const AUTHORED_LESSONS: Lesson[] = [LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5];
 
 /** Highest built lesson id. Only built lessons appear here — never stubs. */
 export const MAX_LESSON_ID = Math.max(...AUTHORED_LESSONS.map((l) => l.id));
