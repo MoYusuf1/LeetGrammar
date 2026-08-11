@@ -1205,7 +1205,232 @@ const LESSON_6: Lesson = {
   ],
 };
 
-export const AUTHORED_LESSONS: Lesson[] = [LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6];
+// ============================================================================
+// LESSON 7 — Action Words  (Unit 2)
+// ============================================================================
+
+/**
+ * The DO box, and the reason it comes after fusion rather than before.
+ *
+ * The present tense has a genuine ambiguity: **-aa** marks both "I" and "he",
+ * and **-taa** marks both "you" and "she". The ending alone cannot tell you
+ * who is acting — the fused signal in front of it does (`waan keenaa` I bring,
+ * `wuu keenaa` he brings). A learner who met verbs before Lesson 6 would have
+ * no way to resolve that, which is exactly why the design puts fusion first.
+ * The lesson is built around this rather than mentioning it in passing.
+ *
+ * ONE VERB, `keen` (bring). Both sources handle it — Nilsson glosses `keenaa`
+ * directly and Wikipedia conjugates it in full — so the stem and 1sg/3sg.m are
+ * attested outright and the other four forms are `derived` from the
+ * present-tense rule that both sources state. Nilsson's own example verb
+ * `hees` is deliberately *not* used: only one source has it, so under check S6
+ * nothing built on it could be asked for as a typed answer. Sourcing chose the
+ * verb, not preference. See docs/SOMALI_SOURCES.md §8.
+ *
+ * Tense stays out. The design puts it in Lesson 9, and this lesson has a full
+ * budget teaching person-matching in one tense.
+ */
+const LESSON_7: Lesson = {
+  id: 7,
+  unitId: 2,
+  title: 'Action Words',
+  newItems: ['7-teach-endings', '7-teach-ambiguity'],
+  objectives: ['verb-person-endings', 'verb-ending-ambiguity'],
+  cards: [
+    {
+      id: '7-blueprint',
+      type: 'blueprint',
+      blueprintSlot: 'DO',
+      content: `${BOX}\n\nThe last empty box. The action word goes here — and its ending changes depending on who is doing it.`,
+    },
+    {
+      id: '7-connect',
+      type: 'connect',
+      prompt:
+        'You can fill **WHO**, and you can read the **SIGNAL** even when it is squashed onto a pronoun — **wuu**, **way**, **wuxuu**. Today the thing they have all been pointing at: the action itself.',
+    },
+    {
+      id: '7-promise',
+      type: 'promise',
+      prompt:
+        'By the end you will look at **wuu keenaa** and **way keentaa** and say instantly who is doing the bringing. You will also know why the verb alone could never have told you.',
+    },
+    {
+      id: '7-predict',
+      type: 'predict',
+      prompt:
+        'Two forms of the same action word, "bring":\n\n' +
+        '**keenaa**\n' +
+        '**keentaa**\n\n' +
+        'One is used for *I* and *he*. The other for *you* and *she*.\n\n' +
+        'Before reading on — which is which, and what is the one letter doing the work?',
+    },
+    {
+      id: '7-teach',
+      type: 'teach',
+      title: 'The action word matches who',
+      content:
+        'English barely does this. "I bring, you bring, we bring" — the word never moves. Only *he/she* is different: "he bring**s**".\n\n' +
+        'Somali does it properly. The action word takes an ending that matches whoever is doing it, every time.\n\n' +
+        'The verb for "bring" is **keen**. On its own it is just the bare action. Add an ending and it tells you who:\n\n' +
+        '• **keenaa** — bring / brings\n' +
+        '• **keentaa** — bring / brings, for a different set of people\n\n' +
+        'That **t** is the whole difference, and it is doing a specific job.',
+    },
+    {
+      id: '7-teach-endings',
+      type: 'teach',
+      isNew: true,
+      title: 'The endings',
+      content:
+        'Five endings cover everybody:\n\n' +
+        '• **-aa** → I, and he\n' +
+        '• **-taa** → you, and she\n' +
+        '• **-naa** → we\n' +
+        '• **-taan** → you (more than one)\n' +
+        '• **-aan** → they\n\n' +
+        'On **keen** that gives:\n\n' +
+        '• **keenaa** — I bring / he brings\n' +
+        '• **keentaa** — you bring / she brings\n' +
+        '• **keennaa** — we bring\n' +
+        '• **keentaan** — you (plural) bring\n' +
+        '• **keenaan** — they bring\n\n' +
+        'Two patterns worth seeing: a **t** shows up for *you* and *she*, and an **n** shows up for plurals.',
+    },
+    {
+      id: '7-notice-1',
+      type: 'notice',
+      exercise: {
+        id: 'l7-n1',
+        type: 'multiple_choice',
+        objectiveIds: ['verb-person-endings'],
+        question: 'Which form would you use for **they bring**?',
+        options: ['keenaan', 'keentaan', 'keennaa', 'keentaa'],
+        correctAnswer: 'keenaan',
+        hint: 'Plurals carry an **n**. But the *you-plural* one also has the **t** of "you".',
+        explanation:
+          '**keenaan** is "they bring" — the plural **n** with no **t**. **keentaan** has the **t** of *you*, so it is "you (plural) bring". **keennaa** is "we bring".',
+      },
+    },
+    {
+      id: '7-teach-ambiguity',
+      type: 'teach',
+      isNew: true,
+      title: 'The ending does not tell you everything',
+      content:
+        'Look again at the first two:\n\n' +
+        '• **-aa** → **I**, and **he**\n' +
+        '• **-taa** → **you**, and **she**\n\n' +
+        'Each ending covers two different people. So **keenaa** on its own is genuinely ambiguous — it could be *I bring* or *he brings*, and nothing in the word settles it.\n\n' +
+        'This is not sloppiness in the language. The information is simply somewhere else: in the **signal** sitting in front of it, the one you learned to unsquash last lesson.\n\n' +
+        '• **waan keenaa** — **I** bring\n' +
+        '• **wuu keenaa** — **he** brings\n\n' +
+        'Same verb, same ending. The **waan** and the **wuu** carry who.',
+    },
+    {
+      id: '7-notice-2',
+      type: 'notice',
+      exercise: {
+        id: 'l7-n2',
+        type: 'multiple_choice',
+        objectiveIds: ['verb-ending-ambiguity'],
+        question:
+          'You see the word **keenaa** with nothing in front of it. Who is doing the bringing?',
+        options: [
+          'You cannot tell — it is I or he, and the signal decides',
+          'He, definitely — -aa is the he ending',
+          'I, definitely — -aa is the I ending',
+          'They, because -aa is plural',
+        ],
+        correctAnswer: 'You cannot tell — it is I or he, and the signal decides',
+        hint: 'How many people does **-aa** cover?',
+        explanation:
+          '**-aa** covers both *I* and *he*, so the verb alone is genuinely ambiguous. **waan keenaa** is "I bring"; **wuu keenaa** is "he brings". The signal in front carries who.',
+      },
+    },
+    {
+      id: '7-notice-3',
+      type: 'notice',
+      exercise: {
+        id: 'l7-n3',
+        type: 'multiple_choice',
+        objectiveIds: ['verb-ending-ambiguity'],
+        question: 'What does **way keentaa** mean?',
+        options: ['she brings', 'you bring', 'they bring', 'we bring'],
+        correctAnswer: 'she brings',
+        hint: '**way** unsquashes into **waa** + **ay**. And **-taa** covers you and she.',
+        explanation:
+          '**way** is **waa** + **ay** (she / they), and **-taa** covers *you* and *she*. Together they can only mean **she brings** — the signal rules out *you*, the ending rules out *they*.',
+      },
+    },
+    {
+      id: '7-complete-1',
+      type: 'complete',
+      exercise: {
+        id: 'l7-c1',
+        type: 'fill_blank',
+        objectiveIds: ['verb-person-endings'],
+        question: 'Complete this so it means **we bring**:  waan ___',
+        options: ['keennaa', 'keenaa', 'keentaa', 'keenaan'],
+        correctAnswer: 'keennaa',
+        hint: 'The *we* ending is **-naa**, and the stem already ends in n.',
+        explanation:
+          '**keennaa** is "we bring" — the **-naa** ending on **keen** gives a doubled n. **keenaa** would be I or he; **keenaan** would be they.',
+      },
+    },
+    {
+      id: '7-produce-1',
+      type: 'produce',
+      exercise: {
+        id: 'l7-p1',
+        type: 'translate',
+        objectiveIds: ['verb-person-endings'],
+        question: 'Type the form of **keen** that goes with **you** and **she**.',
+        answer: 'keentaa',
+        hint: 'The ending with the **t** in it.',
+        explanation:
+          '**keentaa** — the **-taa** ending, which covers *you* and *she*. Which of the two it means is settled by the signal in front: **waad keentaa** (you) or **way keentaa** (she).',
+      },
+    },
+    {
+      id: '7-produce-2',
+      type: 'produce',
+      exercise: {
+        id: 'l7-p2',
+        type: 'translate',
+        objectiveIds: ['verb-person-endings', 'verb-ending-ambiguity'],
+        question: 'The promise. Type the two words that mean **he brings** — signal first, then the action word.',
+        answer: 'wuu keenaa',
+        hint: '**waa** squashed with **uu** (he), then the **-aa** form of **keen**.',
+        explanation:
+          '**wuu keenaa** — **waa** + **uu** carries "he", and **keenaa** is the **-aa** form. Swap the signal for **waan** and the identical verb now means "I bring".',
+      },
+    },
+    {
+      id: '7-payoff',
+      type: 'payoff',
+      prompt:
+        'That was the promise.\n\n' +
+        '**wuu keenaa** — he brings\n' +
+        '**way keentaa** — she brings\n\n' +
+        'The verb ending narrows it to two people. The signal picks which. Neither could do it alone — which is why you needed last lesson before this one.',
+    },
+    {
+      id: '7-summary',
+      type: 'summary',
+      title: 'What you can do now',
+      content:
+        'The **DO** box is filled:\n\n' +
+        '• **-aa** → I, he · **-taa** → you, she · **-naa** → we · **-taan** → you (plural) · **-aan** → they\n' +
+        '• a **t** means *you* or *she*; an **n** means a plural\n' +
+        '• the ending narrows it to two people, and the signal in front decides which\n\n' +
+        'You now have every box except the details: **WHO**, **SIGNAL**, and **DO**.\n\n' +
+        'Next: putting all three in order, and what happens to that order when a signal moves the spotlight.',
+    },
+  ],
+};
+
+export const AUTHORED_LESSONS: Lesson[] = [LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6, LESSON_7];
 
 /** Highest built lesson id. Only built lessons appear here — never stubs. */
 export const MAX_LESSON_ID = Math.max(...AUTHORED_LESSONS.map((l) => l.id));

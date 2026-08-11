@@ -24,7 +24,7 @@
 import { AUTHORED_LESSONS, LESSON_LIST, MAX_LESSON_ID } from '../src/data/authored-lessons.ts';
 import { TOP_500_WORDS } from '../src/data/vocabulary.ts';
 import { BANNED_TERMS, ALLOWLIST } from '../src/data/banned-terms.ts';
-import { VERIFIED_FORMS, isVerifiedForm } from '../src/data/verified-forms.ts';
+import { VERIFIED_FORMS, DERIVATION_RULES, isVerifiedForm } from '../src/data/verified-forms.ts';
 import { TEST_BANKS, UNITS, getUnitObjectives } from '../src/data/unit-tests.ts';
 import { describeObjective, labelledObjectives, objectiveLabels } from '../src/data/objectives.ts';
 
@@ -186,7 +186,11 @@ function checkVocabSourcing() {
 function checkRegistryIntegrity() {
   const entries = Object.entries(VERIFIED_FORMS);
   const none = entries.filter(([, v]) => !v.sources?.length);
-  const undeclaredSingle = entries.filter(([, v]) => v.sources?.length === 1 && v.confidence !== 'single');
+  // A `derived` form legitimately carries one direct citation: its second line
+  // of evidence is the rule that generates it, which S7 checks separately.
+  const undeclaredSingle = entries.filter(
+    ([, v]) => v.sources?.length === 1 && v.confidence !== 'single' && v.confidence !== 'derived',
+  );
   const declaredSingle = entries.filter(([, v]) => v.confidence === 'single');
 
   if (none.length) {
@@ -254,6 +258,8 @@ function checkSourceIndependence() {
 const PRODUCTION_TYPES_FOR_SOURCING = new Set(['translate', 'unscramble', 'marker_identification']);
 
 function checkProducedFormsAreWellSourced() {
+  // `derived` forms are producible: the rule that generates them carries two
+  // independent sources, which S7 verifies. Only `single` is read-only.
   const thin = new Set(
     Object.entries(VERIFIED_FORMS)
       .filter(([, v]) => v.confidence === 'single')
@@ -283,6 +289,66 @@ function checkProducedFormsAreWellSourced() {
     );
   } else {
     pass('S6', `No production item answers with a single-source form (${thin.size} thin forms in the registry)`);
+  }
+}
+
+/**
+ * S7: `derived` must not become a way to launder thin sourcing.
+ *
+ * The derived tier widens D2 deliberately — the unit of verification for
+ * morphology is the rule rather than the form — but it only holds if the rule
+ * itself is genuinely double-attested and actually named. Without this check,
+ * marking a form `derived` would be strictly easier than sourcing it, which is
+ * exactly the incentive that produced the original invented content.
+ *
+ * Four things must hold for every derived form:
+ *   1. it names a rule
+ *   2. that rule exists
+ *   3. the rule cites two or more genuinely independent sources (same test as S5)
+ *   4. the stem it is built on is itself in the registry
+ */
+function checkDerivationRules() {
+  const rootOf = (s) => s.split(/[ §]/)[0];
+  const problems = [];
+
+  for (const [id, rule] of Object.entries(DERIVATION_RULES)) {
+    const srcs = rule.sources ?? [];
+    if (srcs.length < 2) {
+      problems.push(`rule "${id}" cites ${srcs.length} source(s); a derivation rule needs 2+`);
+    } else if (new Set(srcs.map(rootOf)).size < 2) {
+      problems.push(`rule "${id}" cites one author twice [${srcs.join(', ')}]`);
+    }
+    if (!rule.attestedBy?.trim()) {
+      problems.push(`rule "${id}" does not record how each source attests it`);
+    }
+  }
+
+  for (const [form, v] of Object.entries(VERIFIED_FORMS)) {
+    if (v.confidence !== 'derived') continue;
+    if (!v.rule) {
+      problems.push(`"${form}" is derived but names no rule`);
+      continue;
+    }
+    if (!DERIVATION_RULES[v.rule]) {
+      problems.push(`"${form}" names rule "${v.rule}", which does not exist`);
+      continue;
+    }
+    // The stem must be registered too — a rule applied to an unsourced word
+    // produces an unsourced form, however good the rule is.
+    const stems = Object.keys(VERIFIED_FORMS).filter(
+      (k) => k !== form && VERIFIED_FORMS[k].confidence !== 'derived' && form.startsWith(k),
+    );
+    if (!stems.length) {
+      problems.push(`"${form}" is derived but no registered stem it is built from`);
+    }
+  }
+
+  if (problems.length) {
+    fail('S7', `Derivation problems:\n      ${problems.join('\n      ')}`);
+  } else {
+    const n = Object.values(VERIFIED_FORMS).filter((v) => v.confidence === 'derived').length;
+    const r = Object.keys(DERIVATION_RULES).length;
+    pass('S7', `All ${n} derived form(s) trace to one of ${r} double-attested rule(s) and a registered stem`);
   }
 }
 
@@ -601,6 +667,7 @@ checkVocabSourcing();
 checkRegistryIntegrity();
 checkSourceIndependence();
 checkProducedFormsAreWellSourced();
+checkDerivationRules();
 checkBannedTerms();
 checkSentenceLength();
 checkExerciseMix();

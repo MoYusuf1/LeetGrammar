@@ -217,6 +217,56 @@ const UNIT_2_ITEMS: PracticeExercise[] = [
     explanation:
       '**wuxuu** is the irregular member of the family, and among the most common words in written Somali. Its neighbours (**waxaan**, **waxaad**, **waxay**) are all regular.',
   },
+
+  // ── Lesson 7: verbs and person ──────────────────────────────────────────
+  {
+    id: 'u2-t14',
+    type: 'translate',
+    objectiveIds: ['verb-person-endings'],
+    question: 'Type the form of **keen** (bring) that means **they bring**.',
+    answer: 'keenaan',
+    hint: 'A plural, but not the one with the **t** of "you".',
+    explanation:
+      '**keenaan** — the **-aan** ending. **keentaan** carries the **t** of *you*, so it is "you (plural) bring".',
+  },
+  {
+    id: 'u2-t15',
+    type: 'multiple_choice',
+    objectiveIds: ['verb-person-endings'],
+    question: 'Which ending marks **we**?',
+    options: ['-naa', '-taa', '-aan', '-taan'],
+    correctAnswer: '-naa',
+    hint: 'Plurals bring an **n** with them; this is the one without a **t**.',
+    explanation:
+      '**-naa** is the *we* ending, giving **keennaa**. **-aan** is *they*, **-taan** is *you* plural, and **-taa** is *you* or *she*.',
+  },
+  {
+    id: 'u2-t16',
+    type: 'multiple_choice',
+    objectiveIds: ['verb-ending-ambiguity'],
+    question: 'Why can the ending **-aa** not tell you on its own who is acting?',
+    options: [
+      'It covers both I and he — the signal in front decides',
+      'It is only used in writing, never in speech',
+      'It has no meaning; only the signal carries any',
+      'It covers every person, so it never narrows anything',
+    ],
+    correctAnswer: 'It covers both I and he — the signal in front decides',
+    hint: 'Count how many people that one ending is responsible for.',
+    explanation:
+      '**-aa** covers *I* and *he*, so **keenaa** is ambiguous alone. **waan keenaa** is "I bring", **wuu keenaa** is "he brings". The ending narrows it to two; the signal picks one.',
+  },
+  {
+    id: 'u2-t17',
+    type: 'multiple_choice',
+    objectiveIds: ['verb-ending-ambiguity', 'signal-fusion-unpack'],
+    question: 'What does **waad keentaa** mean?',
+    options: ['you bring', 'she brings', 'they bring', 'I bring'],
+    correctAnswer: 'you bring',
+    hint: 'Unsquash **waad** first, then see which of the two people **-taa** allows.',
+    explanation:
+      '**waad** is **waa** + **aad** (you), and **-taa** covers *you* and *she*. Only *you* satisfies both. Swap the signal to **way** and the same verb means "she brings".',
+  },
 ];
 
 export const UNIT_2_TEST: TestBank = {

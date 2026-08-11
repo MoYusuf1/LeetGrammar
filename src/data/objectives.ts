@@ -42,6 +42,9 @@ const OBJECTIVE_LABELS: Record<string, string> = {
   // Lesson 6
   'signal-fusion': 'Signals and short pronouns squash into one word',
   'signal-fusion-unpack': 'Reading a squashed word back into its two parts',
+  // Lesson 7
+  'verb-person-endings': 'The action word ends differently depending on who',
+  'verb-ending-ambiguity': 'Why the ending alone does not tell you who',
 };
 
 /** objective id → the lesson that declares it. Derived from the course. */
