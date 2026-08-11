@@ -22,6 +22,7 @@ import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import CardProgressDots from './CardProgressDots';
 import AnswerInput from './AnswerInput';
 import { contentStagger } from './motion';
+import { prefersNoMotion } from '@/lib/reduced-motion';
 
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -101,6 +102,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const [practiceAnswer, setPracticeAnswer] = useState<string | null>(null);
   const [practiceChecked, setPracticeChecked] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [noMotion] = useState(prefersNoMotion);
 
   /* Persist position to the progress store. */
   useEffect(() => {
@@ -215,25 +217,41 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
       {/* Card Content */}
       <div className="flex-1 overflow-y-auto hide-scrollbar px-4 pb-4">
         <div className="max-w-[600px] mx-auto">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={cardIndex}
-              custom={direction}
-              variants={cardVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            >
-              <RenderCard
-                card={currentCard}
-                lessonTitle={content.title}
-                practiceAnswer={practiceAnswer}
-                practiceChecked={practiceChecked}
-                onPracticeSelect={handlePracticeSelect}
-              />
-            </motion.div>
-          </AnimatePresence>
+          {/* With motion off the card renders directly. `AnimatePresence
+              mode="wait"` holds the outgoing card until its exit animation
+              finishes, and that animation needs requestAnimationFrame — which
+              a hidden or headless browser never fires, leaving the counter
+              advancing over frozen content. Correctness cannot depend on an
+              animation completing. See lib/reduced-motion.ts. */}
+          {noMotion ? (
+            <RenderCard
+              card={currentCard}
+              lessonTitle={content.title}
+              practiceAnswer={practiceAnswer}
+              practiceChecked={practiceChecked}
+              onPracticeSelect={handlePracticeSelect}
+            />
+          ) : (
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={cardIndex}
+                custom={direction}
+                variants={cardVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              >
+                <RenderCard
+                  card={currentCard}
+                  lessonTitle={content.title}
+                  practiceAnswer={practiceAnswer}
+                  practiceChecked={practiceChecked}
+                  onPracticeSelect={handlePracticeSelect}
+                />
+              </motion.div>
+            </AnimatePresence>
+          )}
         </div>
       </div>
 
@@ -354,7 +372,11 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
             ? 'By lesson end, you\'ll:'
             : card.type === 'blueprint'
               ? 'Learn about:'
-              : 'In this lesson you will learn:'}
+              : card.type === 'payoff'
+                ? 'You can now:'
+                : card.type === 'connect'
+                  ? 'Picking up from last time:'
+                  : 'In this lesson you will learn:'}
         </p>
       </motion.div>
 
