@@ -69,7 +69,11 @@ const ENGLISH_STOPLIST = new Set(
    'including excluding instead alone itself already reliable unpredictable identical separate ' +
    'boy girl man woman house book shoe city knife month teacher father mother lion snake table key story bus cat lamp tree ' +
    'left right first last next same different new old good bad big small long short deep hard easy ' +
-   'three-letter throat pair pairs single missing absent present borrowed unadapted rule rules form forms').split(/\s+/),
+   'three-letter throat pair pairs single missing absent present borrowed unadapted rule rules form forms ' +
+   // Lesson 5 emphasises these English words in bold while teaching the signal
+   // system; they are plain English, not Somali forms awaiting a source.
+   'voice tone volume loud louder emphasis emphasises signal signals spotlight spotlights end friend friends ' +
+   'statement statements before after left right position placement flat evenly ends starts finishes').split(/\s+/),
 );
 
 /**

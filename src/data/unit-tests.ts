@@ -24,15 +24,17 @@ import type { TestBank, Unit } from './types';
 // not resolve an extensionless specifier or the `@/` alias. See WORKING_AGREEMENT.
 import { AUTHORED_LESSONS } from './authored-lessons.ts';
 import { UNIT_1_TEST } from './unit-banks/unit-1.ts';
+import { UNIT_2_TEST } from './unit-banks/unit-2.ts';
 
-export { UNIT_1_TEST };
+export { UNIT_1_TEST, UNIT_2_TEST };
 
 /** Every bank that exists. A unit with no bank simply has no test. */
-export const TEST_BANKS: TestBank[] = [UNIT_1_TEST];
+export const TEST_BANKS: TestBank[] = [UNIT_1_TEST, UNIT_2_TEST];
 
 /** Unit names are editorial; membership is derived from the lessons themselves. */
 const UNIT_NAMES: Record<number, string> = {
   1: 'Filling the WHO box',
+  2: 'Assembling the shape',
 };
 
 /**

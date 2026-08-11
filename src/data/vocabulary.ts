@@ -128,6 +128,15 @@ export const TOP_500_WORDS: VocabWord[] = [
   { rank: 77, somali: 'kooda', english: 'their', pos: 'pronoun', lessonId: 4 },
   { rank: 78, somali: 'kee', english: 'which one', pos: 'pronoun', lessonId: 4 },
 
+  // ── Lesson 5 — the signal words ────────────────────────────────────────
+  // Every entry here is 2-source verified, so this deck adds nothing to the
+  // unsourced-vocabulary debt tracked in docs/STATE_OF_PLAY.md.
+  { rank: 79, somali: 'waa', english: 'statement signal — no word singled out', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
+  { rank: 80, somali: 'baa', english: 'spotlight signal — highlights what comes just before', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wiktionary: baa'] },
+  { rank: 81, somali: 'ayaa', english: 'spotlight signal — same as baa, more formal', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
+  { rank: 82, somali: 'waxa', english: 'spotlight signal — highlights what comes at the end', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
+  { rank: 83, somali: 'saaxiib', english: 'friend', pos: 'noun', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §6.3', 'Wiktionary: saaxiib'] },
+
 ];
 
 /** All words taught in a given lesson (1–14 for Phase 6 core), in learning order. */

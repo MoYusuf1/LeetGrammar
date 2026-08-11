@@ -35,6 +35,10 @@ const OBJECTIVE_LABELS: Record<string, string> = {
   'pronouns-inclusive-exclusive': 'The two ways to say "we"',
   'subject-case': 'Marking which one is the doer',
   'sentence-shape': 'The order a statement runs in',
+  // Lesson 5
+  'signal-statement': 'waa marks a plain statement',
+  'signal-focus-before': 'baa spotlights the words just before it',
+  'signal-focus-end': 'waxa spotlights what comes at the end',
 };
 
 /** objective id → the lesson that declares it. Derived from the course. */
