@@ -39,6 +39,9 @@ const OBJECTIVE_LABELS: Record<string, string> = {
   'signal-statement': 'waa marks a plain statement',
   'signal-focus-before': 'baa spotlights the words just before it',
   'signal-focus-end': 'waxa spotlights what comes at the end',
+  // Lesson 6
+  'signal-fusion': 'Signals and short pronouns squash into one word',
+  'signal-fusion-unpack': 'Reading a squashed word back into its two parts',
 };
 
 /** objective id → the lesson that declares it. Derived from the course. */

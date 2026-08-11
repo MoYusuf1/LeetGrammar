@@ -237,6 +237,55 @@ function checkSourceIndependence() {
   }
 }
 
+/**
+ * S6: thin sourcing may reach the eye, never the fingers.
+ *
+ * A form resting on one source may appear as something the learner reads or
+ * picks from a list — being wrong about it costs a recognition. Asking them to
+ * *produce* it is different: production is what gets rehearsed into memory, and
+ * §1.12 of COURSE_DESIGN is about errors that resurface on delayed tests long
+ * after the correction. With no native speaker to ever catch it, a
+ * single-sourced form drilled into production is the most expensive mistake
+ * this project can make.
+ *
+ * Promoted from a convention in docs/LESSON_CONVENTIONS.md §2.5. It was already
+ * true of every item when written down; this keeps it true.
+ */
+const PRODUCTION_TYPES_FOR_SOURCING = new Set(['translate', 'unscramble', 'marker_identification']);
+
+function checkProducedFormsAreWellSourced() {
+  const thin = new Set(
+    Object.entries(VERIFIED_FORMS)
+      .filter(([, v]) => v.confidence === 'single')
+      .map(([k]) => k),
+  );
+  const offenders = [];
+  const everyItem = [
+    ...allExercises.map(({ ex, where }) => ({ ex, where })),
+    ...allBankItems.map(({ ex, where }) => ({ ex, where })),
+  ];
+  for (const { ex, where } of everyItem) {
+    if (!PRODUCTION_TYPES_FOR_SOURCING.has(ex.type)) continue;
+    const answers = Array.isArray(ex.answer) ? ex.answer : [ex.answer];
+    for (const one of answers) {
+      if (typeof one !== 'string') continue;
+      for (const raw of one.split(/\s+/)) {
+        const t = raw.toLowerCase().replace(/[.,?!:;]+$/, '');
+        if (thin.has(t)) offenders.push(`${where} [${ex.type}] asks the learner to produce "${t}"`);
+      }
+    }
+  }
+  if (offenders.length) {
+    fail(
+      'S6',
+      `Single-source forms used as production answers (recognition is fine, production is not):\n      ` +
+        [...new Set(offenders)].join('\n      '),
+    );
+  } else {
+    pass('S6', `No production item answers with a single-source form (${thin.size} thin forms in the registry)`);
+  }
+}
+
 // ============================================================================
 // LANGUAGE — plain English, no linguistics jargon
 // ============================================================================
@@ -551,6 +600,7 @@ checkProseSourcing();
 checkVocabSourcing();
 checkRegistryIntegrity();
 checkSourceIndependence();
+checkProducedFormsAreWellSourced();
 checkBannedTerms();
 checkSentenceLength();
 checkExerciseMix();

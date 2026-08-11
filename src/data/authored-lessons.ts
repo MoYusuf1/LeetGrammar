@@ -997,7 +997,215 @@ const LESSON_5: Lesson = {
   ],
 };
 
-export const AUTHORED_LESSONS: Lesson[] = [LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5];
+// ============================================================================
+// LESSON 6 — Squishing  (Unit 2)
+// ============================================================================
+
+/**
+ * Lesson 5 left a loose end on purpose: **waxa ay**, two words sitting
+ * together. This lesson closes it.
+ *
+ * SOURCING SHAPES THIS LESSON. Nilsson's fusion table (N §5.1) has sixteen
+ * forms, but W-gram independently attests only four — wuu, way, wuxuu, waxay.
+ * The other twelve rest on Nilsson alone, so per docs/LESSON_CONVENTIONS.md
+ * §2.5 (enforced by validator check S6) they are shown and read but never
+ * asked for as a typed answer. Every production item here answers with one of
+ * the well-sourced four. That is not a compromise on the teaching — the
+ * pattern is the point, and four instances teach a pattern.
+ *
+ * **wuxuu** is the one that does not look like its parts: waxa + uu gives
+ * wuxuu, not "waxauu". It gets its own card because a learner who has spotted
+ * the pattern will expect otherwise and be wrong.
+ */
+const LESSON_6: Lesson = {
+  id: 6,
+  unitId: 2,
+  title: 'Squishing',
+  newItems: ['6-teach-waa-family', '6-teach-waxa-family', '6-teach-baa-family'],
+  objectives: ['signal-fusion', 'signal-fusion-unpack'],
+  cards: [
+    {
+      id: '6-blueprint',
+      type: 'blueprint',
+      blueprintSlot: 'SIGNAL',
+      content: `${BOX}\n\nSame box as last time. Now the signal stops standing alone — it fuses with the word for who, and the two arrive as one.`,
+    },
+    {
+      id: '6-connect',
+      type: 'connect',
+      prompt:
+        'Last lesson ended on a loose end. You saw **Sahra waxa ay salaamaysaa saaxiibkeed** — two little words, **waxa** and **ay**, sitting side by side. Today they become one word, and so do all the others.',
+    },
+    {
+      id: '6-promise',
+      type: 'promise',
+      prompt:
+        'By the end you will see **wuxuu** and read it instantly as two things: the spotlight signal **waxa**, plus **uu** — he.',
+    },
+    {
+      id: '6-predict',
+      type: 'predict',
+      prompt:
+        'You know **waa** (plain statement) and you know **uu** (he). Somali almost never leaves them apart — in speech and in most writing they run together into a single word.\n\nBefore reading on: what do you think **waa + uu** turns into?',
+    },
+    {
+      id: '6-teach',
+      type: 'teach',
+      title: 'Two words, one word',
+      content:
+        'Every signal you met last lesson can carry a short pronoun — the little words for who, from Lesson 4:\n\n' +
+        '**aan** (I) · **aad** (you) · **uu** (he) · **ay** (she / they)\n\n' +
+        'And in practice they almost never stay apart. The signal and the pronoun squash together into one word.\n\n' +
+        'This is the single biggest reason written Somali looks unreadable at first. You go hunting for **waa** and it is not there — because it is now the front half of **wuu**.\n\n' +
+        'Nothing new is being said. It is the same signal and the same pronoun, printed as one word.',
+    },
+    {
+      id: '6-teach-waa-family',
+      type: 'teach',
+      isNew: true,
+      title: 'The waa family',
+      content:
+        'Start with the plain-statement signal:\n\n' +
+        '• **waa** + **aan** (I) → **waan**\n' +
+        '• **waa** + **aad** (you) → **waad**\n' +
+        '• **waa** + **uu** (he) → **wuu**\n' +
+        '• **waa** + **ay** (she / they) → **way**\n\n' +
+        'Read them out and the logic is audible: the **w** of the signal, then the vowel of the pronoun.\n\n' +
+        'So **wuu** is not a new word to memorise. It is **waa** and **uu**, printed together.',
+    },
+    {
+      id: '6-notice-1',
+      type: 'notice',
+      exercise: {
+        id: 'l6-n1',
+        type: 'multiple_choice',
+        objectiveIds: ['signal-fusion-unpack'],
+        question: 'You see **wuu** at the start of a sentence. What two things is it carrying?',
+        options: [
+          'waa (plain statement) + uu (he)',
+          'waxa (spotlight at the end) + uu (he)',
+          'baa (spotlight before) + uu (he)',
+          'waa (plain statement) + ay (she)',
+        ],
+        correctAnswer: 'waa (plain statement) + uu (he)',
+        hint: 'The front of the word tells you the signal; the vowel tells you who.',
+        explanation:
+          '**wuu** is **waa** + **uu** — a plain statement, about him. Had it been about her it would be **way**; had the spotlight been on the end of the sentence it would be **wuxuu**.',
+      },
+    },
+    {
+      id: '6-teach-waxa-family',
+      type: 'teach',
+      isNew: true,
+      title: 'The waxa family — and the odd one',
+      content:
+        'The end-spotlight signal fuses the same way:\n\n' +
+        '• **waxa** + **aan** (I) → **waxaan**\n' +
+        '• **waxa** + **aad** (you) → **waxaad**\n' +
+        '• **waxa** + **ay** (she / they) → **waxay**\n\n' +
+        'Three of the four behave exactly as you would guess. The fourth does not:\n\n' +
+        '• **waxa** + **uu** (he) → **wuxuu**\n\n' +
+        'Not "waxauu". The vowel in the middle shifts, and the word comes out **wuxuu**.\n\n' +
+        'This is the one to learn as a shape rather than a sum. It is also extremely common, so you will meet it constantly.',
+    },
+    {
+      id: '6-notice-2',
+      type: 'notice',
+      exercise: {
+        id: 'l6-n2',
+        type: 'multiple_choice',
+        objectiveIds: ['signal-fusion-unpack'],
+        question: 'Which squashed word means "the spotlight is at the end, and it is about **him**"?',
+        options: ['wuxuu', 'waxay', 'wuu', 'waxaad'],
+        correctAnswer: 'wuxuu',
+        hint: 'The end-spotlight signal is **waxa**. This is the pairing that does not look like its parts.',
+        explanation:
+          '**wuxuu** is **waxa** + **uu** — the odd one, since you would expect "waxauu". **waxay** is the same signal with **ay** (she/they); **wuu** carries the plain statement signal instead.',
+      },
+    },
+    {
+      id: '6-teach-baa-family',
+      type: 'teach',
+      isNew: true,
+      title: 'The baa family',
+      content:
+        'And the spotlight-before signal, following the same habit:\n\n' +
+        '• **baa** + **aan** (I) → **baan**\n' +
+        '• **baa** + **aad** (you) → **baad**\n' +
+        '• **baa** + **uu** (he) → **buu**\n' +
+        '• **baa** + **ay** (she / they) → **bay**\n\n' +
+        '**ayaa** does it too — **ayaan**, **ayaad**, **ayuu**, **ayay** — since **ayaa** and **baa** are the same signal in different clothes.\n\n' +
+        'You do not need to memorise all sixteen. You need the habit: **a word starting with w- or b- is probably a signal with somebody attached.**',
+    },
+    {
+      id: '6-complete-1',
+      type: 'complete',
+      exercise: {
+        id: 'l6-c1',
+        type: 'fill_blank',
+        objectiveIds: ['signal-fusion'],
+        question: 'Squash **waa** (plain statement) together with **ay** (she). Which word do you get?',
+        options: ['way', 'wuu', 'waxay', 'bay'],
+        correctAnswer: 'way',
+        hint: 'The **w** of the signal, then the vowel of the pronoun.',
+        explanation:
+          '**waa** + **ay** → **way**. **wuu** would be about him; **waxay** uses the end-spotlight signal instead of the plain one; **bay** uses the spotlight-before signal.',
+      },
+    },
+    {
+      id: '6-produce-1',
+      type: 'produce',
+      exercise: {
+        id: 'l6-p1',
+        type: 'translate',
+        objectiveIds: ['signal-fusion'],
+        question:
+          'Type the single squashed word for the end-spotlight signal **waxa** carrying **ay** (she / they).',
+        answer: 'waxay',
+        hint: 'This one is regular — the signal, then the pronoun, straight onto the end.',
+        explanation:
+          '**waxa** + **ay** → **waxay**. Regular, unlike its neighbour **wuxuu**, where the vowel shifts.',
+      },
+    },
+    {
+      id: '6-produce-2',
+      type: 'produce',
+      exercise: {
+        id: 'l6-p2',
+        type: 'translate',
+        objectiveIds: ['signal-fusion', 'signal-fusion-unpack'],
+        question:
+          'The promise from the start. Type the one word that means the end-spotlight signal **waxa**, about **him**.',
+        answer: 'wuxuu',
+        hint: 'The irregular one. Not "waxauu" — the vowel in the middle shifts.',
+        explanation:
+          '**wuxuu** is **waxa** + **uu**. It is the only member of the family that does not look like its own parts, and it is one of the most common words in written Somali.',
+      },
+    },
+    {
+      id: '6-payoff',
+      type: 'payoff',
+      prompt:
+        'That was the promise.\n\n' +
+        '**wuxuu** = **waxa** (spotlight at the end) + **uu** (he)\n\n' +
+        'A word that looked like noise two lessons ago is now two pieces you already knew.',
+    },
+    {
+      id: '6-summary',
+      type: 'summary',
+      title: 'What you can do now',
+      content:
+        'Signals do not travel alone:\n\n' +
+        '• **waa** → **waan**, **waad**, **wuu**, **way**\n' +
+        '• **waxa** → **waxaan**, **waxaad**, **wuxuu**, **waxay**\n' +
+        '• **baa** → **baan**, **baad**, **buu**, **bay**\n\n' +
+        'The habit worth keeping: a short word starting **w-** or **b-** is almost always a signal with somebody attached. Split it, and both halves are things you already know.\n\n' +
+        'Next: the **DO** box — action words, and how they match whoever is doing them.',
+    },
+  ],
+};
+
+export const AUTHORED_LESSONS: Lesson[] = [LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6];
 
 /** Highest built lesson id. Only built lessons appear here — never stubs. */
 export const MAX_LESSON_ID = Math.max(...AUTHORED_LESSONS.map((l) => l.id));

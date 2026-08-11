@@ -376,7 +376,9 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
                 ? 'You can now:'
                 : card.type === 'connect'
                   ? 'Picking up from last time:'
-                  : 'In this lesson you will learn:'}
+                  : card.type === 'predict'
+                    ? 'Have a guess first:'
+                    : 'In this lesson you will learn:'}
         </p>
       </motion.div>
 

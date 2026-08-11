@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-11, after Lesson 5 and Unit 2 landed.
+> comes next. **Last updated:** 2026-08-11, after Lesson 6 landed.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -16,7 +16,7 @@
 
 ## What exists
 
-A **5-lesson Somali course** in 2 units, local-only, no accounts, progress in
+A **6-lesson Somali course** in 2 units, local-only, no accounts, progress in
 `localStorage`. Every Somali form in it is source-verified.
 
 | Lesson | Title | Cards | Exercises | Teaches |
@@ -26,8 +26,9 @@ A **5-lesson Somali course** in 2 units, local-only, no accounts, progress in
 | 3 | Saying "The" | 16 | 9 | the article is a suffix; all eight assimilation outcomes; no indefinite article |
 | 4 | I, You, He, She | 14 | 6 | eight pronouns; inclusive/exclusive "we"; short subject pronouns; the subject marker |
 | 5 | The Signal Words | 17 | 7 | `waa` plain statement; `baa`/`ayaa` spotlight what precedes; `waxa` spotlights what ends the sentence |
+| 6 | Squishing | 15 | 5 | signals fuse with short pronouns — `wuu`, `way`, `waxay`, and the irregular `wuxuu` |
 
-**Totals:** 72 authored cards · 33 exercises · 30% production.
+**Totals:** 87 authored cards · 38 exercises · 32% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
 The course lands on **`Wiilku waa macallin.`** ("The boy is a teacher."), a
@@ -45,17 +46,17 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 
 | | |
 | --- | --- |
-| Verified-form registry | **84** forms (76 with 2+ sources, 67 independently) |
-| Vocabulary entries | 84, of which **26** are sourced |
-| Unit test banks | Unit 1: 32 items · Unit 2: 9 items |
+| Verified-form registry | **94** forms (76 with 2+ sources, 67 independently) |
+| Vocabulary entries | 88, of which **30** are sourced |
+| Unit test banks | Unit 1: 32 items · Unit 2: 13 items |
 | Tests | 63, across 3 files |
-| Validator | 15 checks passing, 0 errors, 2 open warnings |
+| Validator | 17 checks passing, 0 errors, 3 open warnings |
 
 ---
 
 ## What is deliberately *not* built
 
-**Lessons 5–14 are planned, not written.** [COURSE_DESIGN.md](./COURSE_DESIGN.md)
+**Lessons 7–14 are planned, not written.** [COURSE_DESIGN.md](./COURSE_DESIGN.md)
 describes a 14-lesson target; that is the design, not the state. They appear
 nowhere in the UI — no stub rows, no "coming soon".
 
@@ -70,22 +71,26 @@ broad and decorative**. See [POSTMORTEM.md](./POSTMORTEM.md).
 
 ## Known debt
 
-### 1. 58 of 79 vocabulary entries have no sources 🔴
+### 1. 58 of 88 vocabulary entries have no sources 🔴
 
 The largest outstanding content problem. These words **are shown to learners** in
 every lesson's vocab deck, and they are not verified. The validator reports the
 count on every run and will keep doing so.
 
-The 21 that are sourced are the pronouns (confirmed against two sources) and the
-nouns whose gender and definite form are attested in the grammar.
+The 30 that are sourced are the pronouns, the signal words and fusions added
+for Unit 2, and the nouns whose gender and definite form are attested in the
+grammar. Everything added since Lesson 5 has been sourced on the way in, so
+this number is now static debt rather than growing debt.
 
 *To fix:* verify against two sources, record in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md),
 add `confidence` + `sources` to the entry in `src/data/vocabulary.ts`.
 
-### 2. `nabad` and `subax` rest on a single source ⚪
+### 2. 18 registry forms rest on a single source ⚪
 
-Real words, attested in Wiktionary, not present in the reference grammar.
-Declared `confidence: 'single'` rather than being passed off as verified.
+Mostly Nilsson's fusion table (`waan`, `baad`, `ayuu` …), which W-gram does not
+list, plus `nabad`/`subax` from Wiktionary. All declared `confidence: 'single'`
+rather than passed off as verified. Check **S6** stops any of them being asked
+for as a typed answer, so they are read-only until a second source turns up.
 
 ### 3. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
 
@@ -173,7 +178,7 @@ design's seven phases in
 | Phase | Work | State |
 | --- | --- | --- |
 | 1 | Data model + glossary + validator | ✅ done |
-| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | 🟡 **Lesson 5 done; 6, 7, 8 not started** |
+| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | 🟡 **Lessons 5–6 done; 7, 8 not started** |
 | 3 | Assessment engine | 🟡 built for Units 1–2; gaps above |
 | 4 | Unit 1 — Lessons 1–4 | ✅ done |
 | 5 | Vocabulary track (~500 words, sourced) | ❌ 26 of 84 sourced |
@@ -185,26 +190,28 @@ the design says should go deepest (§1.11). Lesson 5 gives the learner the
 SIGNAL box: they can now read a flat Somali sentence and say which word it is
 about. They still cannot build a full sentence, because verbs are Lesson 7.
 
-### Next step: Lesson 6 — Squishing
+### Next step: Lesson 7 — Action Words
 
-**The sourcing is already done**, which is the usual blocker. Nilsson's §5.1
-fusion table is recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §7 and the
-forms are in the registry: `wuu`, `way`, `wuxuu`, `waxay` with two independent
-sources; `buu`, `bay` single-sourced and declared.
+The **DO** box. This is the gate on everything after it: Lesson 8 assembles the
+full sentence, and Lesson 5 already borrows verbs read-only because they cannot
+be taught yet (see LESSON_CONVENTIONS §2.4).
 
-```
-wáa aan → wáan      wáxa aan → wáxaan       baa aan → baan
-wáa uu  → wúu       wáxa uu  → wúxuu        baa uu  → buu
-wáa ay  → wáy       wáxa ay  → wáxay        baa ay  → bay
-```
+**Sourcing is not done, and it is the whole job.** Nothing verb-related is in
+the registry yet. Nilsson §11.1 covers the present tense; the fetched text has
+full paradigms (`salaamaa` greets, and the forms around it at roughly line
+3889). Expect the same pattern as Unit 2: Nilsson gives everything, W-gram
+corroborates a fraction, and whatever it does not corroborate may be read but
+never asked for as a typed answer (check **S6**).
 
-Lesson 5 already sets it up — its closing card promises exactly this, and its
-`waxa ay` card flags the fusion without teaching it. Follow Recipe 3 in
-[ADDING_CONTENT.md](./ADDING_CONTENT.md); add items to
-`src/data/unit-banks/unit-2.ts` for any new objectives, or `U3` fails.
+Two decisions to make before authoring:
 
-After that: Lesson 7 (verbs — needed before any full sentence can be built) and
-Lesson 8 (the whole shape). Both need fresh sourcing.
+1. **Which verb, and how many forms?** `S6`/T1 caps new items at four. A single
+   verb across four persons is four items; two verbs is already too many.
+2. **How much tense?** The design puts tense in Lesson 9, so Lesson 7 should
+   teach person-matching in one tense only and leave time alone.
+
+After that: Lesson 8 (the whole shape — the payoff of the entire unit), then
+the Unit 2 test bank grows to cover lessons 7–8, and Unit 2 is done.
 
 ---
 
