@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-09, at commit `311e1f4e` on `main`.
+> comes next. **Last updated:** 2026-08-10, after Phase 4 (the unit test) landed.
 >
 > Numbers here are checkable — run the commands in
 > [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md#the-three-gates) rather than
@@ -28,14 +28,22 @@ The course lands on **`Wiilku waa macallin.`** ("The boy is a teacher."), a
 sentence taken from the reference grammar in which every part is something the
 learner built: `wiil` + the `-ka` article + the `-u` subject marker + `waa`.
 
+After Lesson 4, a **Unit 1 Test** is unlocked: 32 machine-gradable items drawn
+from `verified-forms.ts`, covering all 13 objectives across the four lessons.
+85% passes; missing an objective routes the learner through a short
+correctives set for that objective alone, not the whole test again. Entry
+point is a row on `/learn`, gated by `isUnitComplete()`; route is
+`/#/unit-test/1`.
+
 ### Supporting state
 
 | | |
 | --- | --- |
 | Verified-form registry | **69** forms (67 with 2+ sources) |
 | Vocabulary entries | 79, of which **21** are sourced |
-| Tests | 30, across 2 files |
-| Validator | 10 checks passing, 0 errors, 2 open warnings |
+| Unit test bank | 32 items, all 13 objectives covered |
+| Tests | 61, across 3 files |
+| Validator | 15 checks passing, 0 errors, 2 open warnings |
 
 ---
 
@@ -68,21 +76,12 @@ nouns whose gender and definite form are attested in the grammar.
 *To fix:* verify against two sources, record in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md),
 add `confidence` + `sources` to the entry in `src/data/vocabulary.ts`.
 
-### 2. `src/lib/assessment.ts` has no callers 🟡
-
-Mastery gating (85%), correctives routing and spaced review are implemented and
-untested by use. **Nothing imports the module.** Its header says so.
-
-It was kept rather than deleted because the unit test below needs it. If that
-work is not going to happen, delete the file instead — an engine with no callers
-that looks finished is precisely how this codebase went wrong before.
-
-### 3. `nabad` and `subax` rest on a single source ⚪
+### 2. `nabad` and `subax` rest on a single source ⚪
 
 Real words, attested in Wiktionary, not present in the reference grammar.
 Declared `confidence: 'single'` rather than being passed off as verified.
 
-### 4. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
+### 3. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
 
 `COURSE.md` is 9,399 lines and was the source for the deleted
 `teaching-content.ts`. Its Somali has the same class of problems as the content
@@ -93,28 +92,43 @@ Both are **untouched** and were deliberately excluded from deletion: `COURSE.md`
 may be hand-written and is the only prose record of the wider course plan. It is
 not wired to anything.
 
-### 5. ~10 lint errors ⚪
+### 4. ~10 lint errors ⚪
 
 All in `src/components/ui/*` shadcn boilerplate, all pre-existing. No file under
 `src/data`, `src/lib`, `src/pages` or `src/components/lesson` contributes.
 
 ---
 
-## Next step: the unit test (Phase 4)
+## Phase 4 (the unit test) — done
 
-The one planned piece of work not yet done.
+Previously the one planned piece of work not yet done; now built and routed:
 
-1. Build a unit test bank for lessons 1–4, drawing **only** on
-   `verified-forms.ts`. The previous four test banks were fabricated and were
-   deleted.
-2. Cover every objective declared across the four lessons.
-3. Wire [`assessment.ts`](../src/lib/assessment.ts) to it — scoring, the 85%
-   mastery gate, correctives routing for failed objectives.
-4. Surface it in the UI after Lesson 4.
+1. ✅ Unit test bank for lessons 1–4, drawn only from `verified-forms.ts`
+   (`src/data/unit-tests.ts`, 32 items).
+2. ✅ Covers every objective declared across the four lessons — enforced by
+   validator check U3.
+3. ✅ [`assessment.ts`](../src/lib/assessment.ts) wired to it: scoring, the 85%
+   mastery gate, correctives routing for failed objectives. No longer a
+   caller-less module.
+4. ✅ Surfaced in the UI: a gated row on `/learn` after Lesson 4, route
+   `/#/unit-test/:id`, page at `src/pages/UnitTest.tsx`.
 
-Constraints that apply: no placeholder items, no padding an item count to hit a
-threshold, and every Somali string registry-verified. See
-[WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md).
+What backs the claims `unit-tests.ts` makes in its own header:
+- Validator checks **U0–U4** (`scripts/validate-course.mjs`) cover the bank —
+  answers, word banks, jargon, objective coverage, and that no bank targets an
+  unwritten unit. All six were proven to bite by injecting the defect they
+  guard against and confirming the check fails, then reverting.
+- `src/tests/unit-tests.test.ts` (31 tests) covers gradability, shape, and the
+  "no bank question repeats a lesson question verbatim" claim. The
+  load-bearing ones — empty/partial response scoring, correctives dedup, the
+  no-lessons-never-complete guard, the no-repeat guard — were each proven to
+  bite the same way.
+- Verified end-to-end in the browser per Rule 1: locked → all 4 lessons done →
+  unlocked → intro → 32-item test → results (score, per-objective breakdown,
+  missed items) → correctives → back to results.
+
+Next natural extension, not started: Unit 2 and its test bank, once lesson 5+
+content exists.
 
 ---
 

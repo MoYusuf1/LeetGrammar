@@ -1,15 +1,23 @@
 /**
  * ASSESSMENT ENGINE — mastery gating, correctives, spaced review.
  *
- * ⚠️ NOT WIRED IN. This module currently has zero importers: no UI calls
- * scoreUnitTest(), no unit test exists to score, and nothing reads the review
- * schedule. It is retained because the logic is sound and self-contained, and
- * because building the unit test (the next content job) needs it.
+ * Wired to the Unit 1 test bank (src/data/unit-tests.ts) and driven by
+ * src/pages/UnitTest.tsx. `gradeUnitTest()` is the entry point: it grades a
+ * learner's responses with the same `isAnswerCorrect()` the lesson player uses,
+ * scores each objective separately, and returns both the overall pass/fail at
+ * 85% and the list of objectives to send back through correctives.
  *
- * Do not treat its presence as evidence the course has assessment. It does not.
- * Either wire it to a real test bank or delete it — an engine with no callers
- * that looks finished is how the rest of this codebase went wrong.
+ * Two things this module deliberately does not do:
+ *   • It does not grade anything by itself. Grading lives in lib/grading.ts and
+ *     is tested there; duplicating it here is how the two would drift.
+ *   • It does not invent unit membership. Which lessons are in a unit comes
+ *     from the lessons themselves, so a unit cannot claim lessons that have not
+ *     been written.
  */
+
+import type { PracticeExercise } from '@/data/types';
+import { AUTHORED_LESSONS } from '@/data/authored-lessons';
+import { isAnswerCorrect } from '@/lib/grading';
 
 export const MASTERY_THRESHOLD = 0.85; // 85% to pass unit test
 
@@ -34,7 +42,8 @@ export interface UnitTestResult {
 export interface CorrectivesSession {
   unitId: number;
   failedObjectives: string[];
-  itemsToRetest: number; // Usually 3–5 items per objective
+  itemIds: string[]; // The actual items to re-do, in order
+  itemsToRetest: number; // itemIds.length — kept for display
   timestamp: number;
   completed: boolean;
 }
@@ -76,22 +85,96 @@ export function scoreUnitTest(
 }
 
 /**
+ * Per-objective tallies for a set of graded responses.
+ *
+ * An item tagged with two objectives counts toward both — a learner who gets
+ * it wrong has shown a gap in each, and correctives should cover both.
+ */
+export function tallyByObjective(
+  items: PracticeExercise[],
+  responses: Record<string, string | null>,
+): Map<string, { correct: number; total: number }> {
+  const tally = new Map<string, { correct: number; total: number }>();
+  for (const item of items) {
+    const correct = isAnswerCorrect(item, responses[item.id] ?? null);
+    for (const objective of item.objectiveIds) {
+      const entry = tally.get(objective) ?? { correct: 0, total: 0 };
+      entry.total += 1;
+      if (correct) entry.correct += 1;
+      tally.set(objective, entry);
+    }
+  }
+  return tally;
+}
+
+/**
+ * Grade a whole unit test.
+ *
+ * `responses` maps item id → what the learner answered. An item with no entry
+ * counts as wrong, which is what an unanswered item is.
+ */
+export function gradeUnitTest(
+  unitId: number,
+  items: PracticeExercise[],
+  responses: Record<string, string | null>,
+): UnitTestResult {
+  const correctCount = items.filter((item) =>
+    isAnswerCorrect(item, responses[item.id] ?? null),
+  ).length;
+  return scoreUnitTest(unitId, correctCount, items.length, tallyByObjective(items, responses));
+}
+
+/**
+ * The items to re-do after a failed test: up to `itemsPerObjective` for each
+ * failed objective, in bank order.
+ *
+ * Deterministic on purpose. A randomised selection cannot be tested, and a
+ * learner who retries twice should see the same gap addressed the same way.
+ */
+export function selectCorrectivesItems(
+  items: PracticeExercise[],
+  failedObjectives: string[],
+  itemsPerObjective: number = 3,
+): PracticeExercise[] {
+  const chosen: PracticeExercise[] = [];
+  const seen = new Set<string>();
+  for (const objective of failedObjectives) {
+    let taken = 0;
+    for (const item of items) {
+      if (taken >= itemsPerObjective) break;
+      if (!item.objectiveIds.includes(objective)) continue;
+      taken += 1;
+      if (seen.has(item.id)) continue;
+      seen.add(item.id);
+      chosen.push(item);
+    }
+  }
+  return chosen;
+}
+
+/**
  * Generate correctives session for failed objectives
- * After a unit test failure, user gets a targeted retests on only the failed objectives.
+ * After a unit test failure, user gets a targeted retest on only the failed objectives.
  *
  * @param unitId unit that was failed
  * @param failedObjectives which objectives to remediate
+ * @param items the unit's test bank, to pick real items from
  * @param itemsPerObjective how many items to give per objective (default 3)
  */
 export function generateCorrectivesSession(
   unitId: number,
   failedObjectives: string[],
+  items: PracticeExercise[],
   itemsPerObjective: number = 3
 ): CorrectivesSession {
+  const itemIds = selectCorrectivesItems(items, failedObjectives, itemsPerObjective).map(
+    (i) => i.id,
+  );
   return {
     unitId,
     failedObjectives,
-    itemsToRetest: failedObjectives.length * itemsPerObjective,
+    itemIds,
+    itemsToRetest: itemIds.length,
     timestamp: Date.now(),
     completed: false,
   };
@@ -111,23 +194,24 @@ export function canTakeUnitTest(completedUnits: number[], targetUnit: number): b
 }
 
 /**
- * Get lessons in a unit (for prerequisites)
+ * Get lessons in a unit.
+ *
+ * Derived from the authored lessons, not a hardcoded table. The table this
+ * replaced listed lessons 5–14, none of which exist.
  */
 export function getLessonsInUnit(unitId: number): number[] {
-  const lessonsPerUnit: Record<number, number[]> = {
-    1: [1, 2, 3, 4],
-    2: [5, 6, 7, 8],
-    3: [9, 10, 11],
-    4: [12, 13, 14],
-  };
-  return lessonsPerUnit[unitId] || [];
+  return AUTHORED_LESSONS.filter((l) => l.unitId === unitId).map((l) => l.id);
 }
 
 /**
- * Check if all lessons in a unit are completed
+ * Check if all lessons in a unit are completed.
+ *
+ * A unit with no lessons is not complete — `every` on an empty list is true,
+ * which would unlock a test for a unit that has not been written.
  */
 export function isUnitComplete(unitId: number, completedLessons: number[]): boolean {
   const unitLessons = getLessonsInUnit(unitId);
+  if (unitLessons.length === 0) return false;
   return unitLessons.every((id) => completedLessons.includes(id));
 }
 

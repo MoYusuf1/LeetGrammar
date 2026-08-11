@@ -25,6 +25,8 @@ import { AUTHORED_LESSONS, LESSON_LIST, MAX_LESSON_ID } from '../src/data/author
 import { TOP_500_WORDS } from '../src/data/vocabulary.ts';
 import { BANNED_TERMS, ALLOWLIST } from '../src/data/banned-terms.ts';
 import { VERIFIED_FORMS, isVerifiedForm } from '../src/data/verified-forms.ts';
+import { TEST_BANKS, UNITS, getUnitObjectives } from '../src/data/unit-tests.ts';
+import { describeObjective, labelledObjectives, objectiveLabels } from '../src/data/objectives.ts';
 
 const errors = [];
 const warnings = [];
@@ -52,23 +54,33 @@ const proseOf = (lesson) =>
 // SOURCING — the checks that exist because invented Somali once shipped
 // ============================================================================
 
+/**
+ * The tokens of an exercise that are unambiguously Somali.
+ *
+ * Only answers and word banks qualify. Question and explanation prose is mixed
+ * English and Somali and is covered by the bold-span heuristic in S2 instead.
+ * Shared with the unit-test bank checks so the two cannot diverge — the bank
+ * once claimed in its own header to be checked here while nothing checked it.
+ */
+function somaliTokensOf(ex) {
+  const tokens = [];
+  if (ex.type === 'unscramble') {
+    tokens.push(...(ex.words ?? []));
+    if (typeof ex.answer === 'string') tokens.push(...ex.answer.split(/\s+/));
+  }
+  if (ex.type === 'translate' || ex.type === 'marker_identification') {
+    const answers = Array.isArray(ex.answer) ? ex.answer : [ex.answer];
+    for (const one of answers) if (typeof one === 'string') tokens.push(...one.split(/\s+/));
+    if (typeof ex.somali === 'string') tokens.push(...ex.somali.split(/\s+/));
+  }
+  return tokens.map((t) => t.replace(/[.,?!]+$/, '')).filter(Boolean);
+}
+
 /** S1: every Somali token in a machine-checkable field must be verified. */
 function checkAnswerSourcing() {
   const unverified = [];
   for (const { ex, where } of allExercises) {
-    // These fields are unambiguously Somali.
-    const somaliFields = [];
-    if (ex.type === 'unscramble') {
-      somaliFields.push(...(ex.words ?? []));
-      if (typeof ex.answer === 'string') somaliFields.push(...ex.answer.split(/\s+/));
-    }
-    if (ex.type === 'translate') {
-      const a = Array.isArray(ex.answer) ? ex.answer : [ex.answer];
-      for (const one of a) if (typeof one === 'string') somaliFields.push(...one.split(/\s+/));
-    }
-    for (const tok of somaliFields) {
-      const clean = tok.replace(/[.,?!]+$/, '');
-      if (!clean) continue;
+    for (const clean of somaliTokensOf(ex)) {
       if (!isVerifiedForm(clean)) unverified.push(`${where}: "${clean}"`);
     }
   }
@@ -299,11 +311,155 @@ function checkStructure() {
 }
 
 // ============================================================================
+// UNIT TESTS — the same sourcing and plain-language bar as lesson content
+// ============================================================================
+
+/**
+ * Every bank item, with its unit and a human-readable location.
+ *
+ * A bank whose unit has no lessons is itself a finding (U0): it would mean a
+ * test exists for content nobody can have studied.
+ */
+const allBankItems = TEST_BANKS.flatMap((bank) => {
+  const unitId = Number(bank.id.replace(/^unit-|-test$/g, ''));
+  return bank.items.map((ex) => ({ ex, unitId, where: `${bank.id}/${ex.id}` }));
+});
+
+/** All learner-visible prose in a bank item. */
+const bankProseOf = (ex) =>
+  [ex.question, ex.hint, ex.explanation, ...(ex.options ?? [])].filter(Boolean).join('\n');
+
+/** U0: a bank must belong to a unit that has lessons written. */
+function checkBankUnits() {
+  const orphans = [];
+  for (const bank of TEST_BANKS) {
+    const unitId = Number(bank.id.replace(/^unit-|-test$/g, ''));
+    const unit = UNITS.find((u) => u.id === unitId);
+    if (!unit) orphans.push(`${bank.id} targets unit ${unitId}, which has no lessons`);
+    else if (!bank.items.length) orphans.push(`${bank.id} has no items`);
+  }
+  if (orphans.length) {
+    fail('U0', `Test banks that cannot be taken:\n      ${orphans.join('\n      ')}`);
+  } else {
+    pass('U0', `All ${TEST_BANKS.length} test bank(s) target a unit with written lessons`);
+  }
+}
+
+/**
+ * U1: bank Somali must be registry-verified, exactly as lesson Somali is.
+ *
+ * This is the check the bank's own header claimed was running while nothing
+ * was importing it. Distractor options are deliberately-wrong Somali and are
+ * not checked — they are never presented to the learner as correct.
+ */
+function checkBankSourcing() {
+  const unverified = [];
+  for (const { ex, where } of allBankItems) {
+    for (const clean of somaliTokensOf(ex)) {
+      if (!isVerifiedForm(clean)) unverified.push(`${where}: "${clean}"`);
+    }
+  }
+  if (unverified.length) {
+    fail('U1', `Unverified Somali in unit test answers (add to verified-forms.ts or remove):\n      ${unverified.join('\n      ')}`);
+  } else {
+    pass('U1', `All Somali in unit test answers is source-verified (${allBankItems.length} items checked)`);
+  }
+}
+
+/** U2: no linguistics jargon in test prose either. */
+function checkBankLanguage() {
+  const allowed = new Set(ALLOWLIST.map((a) => a.term.toLowerCase()));
+  const hits = [];
+  for (const { ex, where } of allBankItems) {
+    const prose = bankProseOf(ex).toLowerCase();
+    for (const term of BANNED_TERMS) {
+      if (allowed.has(term.toLowerCase())) continue;
+      if (new RegExp(`\\b${term.toLowerCase()}\\b`).test(prose)) hits.push(`${where}: "${term}"`);
+    }
+  }
+  for (const label of objectiveLabels()) {
+    for (const term of BANNED_TERMS) {
+      if (allowed.has(term.toLowerCase())) continue;
+      if (new RegExp(`\\b${term.toLowerCase()}\\b`).test(label.toLowerCase())) {
+        hits.push(`objective label "${label}": "${term}"`);
+      }
+    }
+  }
+  if (hits.length) {
+    fail('U2', `Linguistics jargon in unit test text:\n      ${[...new Set(hits)].join('\n      ')}`);
+  } else {
+    pass('U2', 'No banned jargon in unit test items or objective labels');
+  }
+}
+
+/**
+ * U3: every objective the unit teaches is tested, with enough items to score.
+ *
+ * Two is the floor because per-objective scoring is only as fine-grained as
+ * the item count — a single-item objective is pass/fail on one question, which
+ * routes a learner to correctives on one slip.
+ */
+function checkBankObjectiveCoverage(minItems = 2) {
+  const problems = [];
+  for (const unit of UNITS) {
+    const bank = TEST_BANKS.find((b) => b.id === unit.testBankId);
+    if (!bank) continue; // a unit with no test is allowed; U0 covers the reverse
+    const declared = new Set(getUnitObjectives(unit.id));
+    const counts = new Map();
+    for (const item of bank.items) {
+      for (const o of item.objectiveIds ?? []) {
+        counts.set(o, (counts.get(o) ?? 0) + 1);
+        if (!declared.has(o)) problems.push(`${bank.id}/${item.id}: "${o}" is not taught in unit ${unit.id}`);
+      }
+    }
+    for (const o of declared) {
+      const n = counts.get(o) ?? 0;
+      if (n < minItems) problems.push(`unit ${unit.id}: "${o}" has ${n} test item(s), needs ${minItems}`);
+    }
+  }
+  if (problems.length) {
+    fail('U3', `Unit test objective coverage:\n      ${[...new Set(problems)].join('\n      ')}`);
+  } else {
+    pass('U3', `Every unit objective has at least ${minItems} test items, and no item tests an untaught objective`);
+  }
+}
+
+/**
+ * U4: every objective in the course has a plain-English label.
+ *
+ * Without one, a learner who fails a test is sent to correctives for
+ * "article-assimilation". describeObjective() falls back to the raw id rather
+ * than throwing, so nothing breaks visibly — which is exactly why it needs a
+ * check here.
+ */
+function checkObjectiveLabels() {
+  const labelled = new Set(labelledObjectives());
+  const declared = [...new Set(AUTHORED_LESSONS.flatMap((l) => l.objectives))];
+  const unlabelled = declared.filter((o) => !labelled.has(o));
+  const stale = [...labelled].filter((o) => !declared.includes(o));
+  const homeless = declared.filter((o) => describeObjective(o).lessonId === undefined);
+
+  const problems = [
+    ...unlabelled.map((o) => `"${o}" is taught but has no label in objectives.ts`),
+    ...stale.map((o) => `"${o}" has a label but no lesson teaches it`),
+    ...homeless.map((o) => `"${o}" resolves to no lesson`),
+  ];
+  if (problems.length) {
+    fail('U4', `Objective labels:\n      ${problems.join('\n      ')}`);
+  } else {
+    pass('U4', `All ${declared.length} course objectives have a plain-English label and a home lesson`);
+  }
+}
+
+// ============================================================================
 // REPORT
 // ============================================================================
 
 console.log('\n\x1b[1mCOURSE VALIDATION\x1b[0m');
-console.log(`${AUTHORED_LESSONS.length} lessons · ${allExercises.length} exercises · ${TOP_500_WORDS.length} vocabulary entries\n`);
+console.log(
+  `${AUTHORED_LESSONS.length} lessons · ${allExercises.length} exercises · ` +
+    `${allBankItems.length} unit test items · ${TOP_500_WORDS.length} vocabulary entries\n`,
+);
 
 checkAnswerSourcing();
 checkProseSourcing();
@@ -316,6 +472,11 @@ checkExerciseDensity();
 checkObjectiveCoverage();
 checkOrphanObjectives();
 checkStructure();
+checkBankUnits();
+checkBankSourcing();
+checkBankLanguage();
+checkBankObjectiveCoverage();
+checkObjectiveLabels();
 
 for (const p of passes) console.log(`  \x1b[32m✓\x1b[0m ${p.id}  ${p.msg}`);
 if (warnings.length) console.log('');

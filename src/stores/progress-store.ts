@@ -7,8 +7,24 @@ import { persist } from 'zustand/middleware';
 import type { SrsCard } from '@/lib/srs';
 import { createCard, reviewCard } from '@/lib/srs';
 import { MAX_LESSON_ID } from '@/data/authored-lessons';
+import type { UnitTestResult } from '@/lib/assessment';
 
 const STORAGE_KEY = 'leet-somali-progress-v7';
+
+/**
+ * What a learner has done on a unit test.
+ *
+ * Both numbers are kept on purpose: `best` is what the learner has achieved and
+ * should not be taken away by a bad retry, while `last` is what correctives has
+ * to work from — the objectives missed on the most recent attempt.
+ */
+export interface UnitTestRecord {
+  unitId: number;
+  attempts: number;
+  bestPercentage: number;
+  passed: boolean; // has ever reached the mastery threshold
+  last: UnitTestResult;
+}
 
 export interface UserProgress {
   completedLessons: number[];
@@ -22,6 +38,9 @@ export interface UserProgress {
 
   // Lesson card positions (resume where you left off)
   lessonCardPositions: Record<number, number>;
+
+  // Unit test results, keyed by unit id
+  unitTestResults: Record<number, UnitTestRecord>;
 }
 
 const defaultProgress: UserProgress = {
@@ -34,6 +53,7 @@ const defaultProgress: UserProgress = {
   activityLog: [],
   dailyGoal: 30,
   lessonCardPositions: {},
+  unitTestResults: {},
 };
 
 function getToday(): string {
@@ -82,6 +102,10 @@ interface ProgressState extends UserProgress {
   setLessonCardPosition: (lessonId: number, cardIndex: number) => void;
   getLessonCardPosition: (lessonId: number) => number;
   clearLessonCardPosition: (lessonId: number) => void;
+
+  // Unit tests
+  recordUnitTestResult: (result: UnitTestResult) => void;
+  getUnitTestRecord: (unitId: number) => UnitTestRecord | undefined;
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -210,6 +234,30 @@ export const useProgressStore = create<ProgressState>()(
           return { ...state, lessonCardPositions: updated };
         });
       },
+
+      // Unit tests — a pass is worth XP once; retries never lower a best score.
+      recordUnitTestResult: (result: UnitTestResult) => {
+        set((state) => {
+          const results = state.unitTestResults ?? {};
+          const previous = results[result.unitId];
+          const firstPass = result.passed && !previous?.passed;
+          const record: UnitTestRecord = {
+            unitId: result.unitId,
+            attempts: (previous?.attempts ?? 0) + 1,
+            bestPercentage: Math.max(previous?.bestPercentage ?? 0, result.percentage),
+            passed: (previous?.passed ?? false) || result.passed,
+            last: result,
+          };
+          return addActivity({
+            ...state,
+            unitTestResults: { ...results, [result.unitId]: record },
+            xp: state.xp + (firstPass ? 25 : 0),
+            lastStudyDate: getToday(),
+          });
+        });
+      },
+
+      getUnitTestRecord: (unitId: number) => (get().unitTestResults ?? {})[unitId],
     }),
     {
       name: STORAGE_KEY,
@@ -223,6 +271,7 @@ export const useProgressStore = create<ProgressState>()(
         activityLog: state.activityLog,
         dailyGoal: state.dailyGoal,
         lessonCardPositions: state.lessonCardPositions,
+        unitTestResults: state.unitTestResults,
       }),
     }
   )
