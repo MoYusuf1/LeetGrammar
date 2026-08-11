@@ -27,9 +27,44 @@ a form to the registry only after recording its sources here.
 | Key | Source |
 | --- | --- |
 | **N** | Morgan Nilsson, *Beginner's Somali Grammar*, University of Gothenburg, 25 Aug 2023. https://morgannilsson.se/BeginnersSomaliGrammar.Aug2023.pdf |
+| **O** | Martin Orwin, *Colloquial Somali: A Complete Language Course*, Routledge (Colloquial Series). **Not redistributable** — supply your own copy, see below. |
 | **W-alpha** | Wikipedia, *Somali Latin alphabet*. https://en.wikipedia.org/wiki/Somali_Latin_alphabet |
 | **W-gram** | Wikipedia, *Somali grammar*. https://en.wikipedia.org/wiki/Somali_grammar |
 | **Wikt** | Wiktionary, Somali entries. https://en.wiktionary.org/ |
+
+### Why a second grammar was necessary
+
+For a long stretch this project effectively had **one** substantive source.
+Wikipedia and Wiktionary cover a fraction of the grammar, so every topic they
+happen to miss was single-sourced by construction — and they miss a lot. Both
+the *Somali grammar* and *Somali language* articles omit **negation and
+questions entirely**, which was verified directly rather than assumed. That put
+two of Unit 3's three lessons out of reach and would have kept the course
+pinned near 31% production for the rest of its life.
+
+Orwin fixes the class of problem rather than one instance of it: it is a
+complete modern course, uses the standard post-1972 orthography, and covers
+negation, questions, imperatives, the tense system and the three conjugations.
+
+### Working with `O`
+
+`sources/orwin-colloquial-somali.pdf` is a commercial book. It is **not
+committed and must not be** — `.gitignore` excludes `sources/` and
+`docs/**/*.pdf`. `npm run fetch:sources` cannot download it; put your own copy
+at that path and the script will extract the text alongside Nilsson's.
+
+**Verify on the page, not in the text dump.** The PDF is scanned, so
+`pdftotext` is reliable for prose and *unreliable for tables* — the verbal
+pronoun table on book p. 21 loses its entire Somali column. The method that
+works:
+
+1. search `sources/orwin-colloquial-somali.txt` to find roughly where a thing is
+2. **read that page of the PDF itself** before citing it
+3. cite as `O p.NN` using the book's own printed page number
+
+A word appearing in the text dump is a *candidate*, never a citation. Treating
+a grep hit as evidence is how invented citations got into this file once
+already.
 
 ---
 
@@ -292,16 +327,24 @@ list `buu`/`bay`, so those are registered `confidence: 'single'`.
    `PR.FOC predicate focus`. The lessons should describe what `waa` *does*
    (marks a plain statement) and not assert which category it belongs to.
 
-2. **`ma` is single-sourced.** Wikipedia's Somali grammar page does not
-   discuss it, and the Wiktionary page for `ma` has no Somali section. It is
-   therefore **not in the registry** and cannot currently be taught.
+2. ~~**`ma` is single-sourced.**~~ **RESOLVED — this was true only while
+   Nilsson was the sole grammar.** Orwin covers `ma` in full: it is listed as
+   the *positive interrogative mood classifier* (O p.15, p.23) with its own
+   fusion table — `ma + aan → miyaan`, `ma + uu → miyuu`, `ma + ay → miyay` —
+   and `miyáa` is glossed in the Lesson 2 vocabulary as "question word: 'Is
+   it …?'" (O p.26). `ma` is now double-sourced and registrable.
 
-3. **`ma` question and `má` negative are the same written word.** Nilsson
-   distinguishes them by tone, and §2.2 establishes that **tone is not
-   written**. So "ma = question signal" is not merely thin, it is misleading:
-   the identical string is also the negator. Teaching it as a clean fourth
-   signal would plant exactly the kind of high-confidence error that §1.12 of
-   COURSE_DESIGN warns resurfaces on delayed tests.
+3. **`ma` question and `ma` negative are the same written word — and now
+   *both* sources say so.** Nilsson distinguishes them by tone; Orwin
+   independently shows `ma` doing both jobs (`ma jiro` "is not", `Ku ma
+   arkin.` "…did not [see]", and a whole section on the negative of the
+   general present). §2.2 establishes that **tone is not written**.
+
+   This no longer blocks teaching `ma` — it *is* the teaching point, and it is
+   now a fact two sources agree on rather than a hazard inferred from one.
+   `ma` still does not belong in Lesson 5, but the reason has changed: it is a
+   clause-type marker, not a focus marker, and it belongs with negation and
+   questions in Unit 3, exactly where the design puts it.
 
 ---
 
@@ -371,9 +414,11 @@ Lesson 6 and the reason verbs come after fusion rather than before.
 - ✅ Alphabet, pronouns, gender, articles, subject case: **2-source verified**
 - ✅ Focus signals `baa`, `ayaa`, `waxa`, `waxaa` and fusions `wuu`, `way`,
   `wuxuu`, `waxay`: **2-source verified** and in the registry
-- ⚠️ `buu`, `bay`: single-source (Nilsson's table only)
-- ❌ `ma`: single-source **and** ambiguous in writing — deliberately not
-  registered; see finding 3 above
+- ✅ `ma` and its fusions: **double-sourced** since Orwin was added — see the
+  correction at finding 2. Registered, and owed to Unit 3.
+- ⚠️ Some fusion forms still rest on Nilsson alone pending page-level
+  verification against Orwin. A grep hit is not a citation; each one needs
+  checking on the page before its confidence is raised.
 - ✅ 10 example sentences: sourced to N
 - ✅ **All Somali in exercise answers and lesson prose is registry-verified**
   and enforced by `npm run validate:course`

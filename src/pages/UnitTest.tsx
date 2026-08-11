@@ -59,7 +59,9 @@ export default function UnitTestPage() {
   const completedLessons = (store.completedLessons as number[] | undefined) ?? [];
   const unlocked = isUnitComplete(unitId, completedLessons);
 
-  const items = bank?.items ?? [];
+  // Memoised so the fallback `[]` is not a fresh array on every render, which
+  // would re-run the correctives memo below each time.
+  const items = useMemo(() => bank?.items ?? [], [bank]);
   const current = items[index];
 
   const correctives = useMemo(

@@ -1,12 +1,13 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-11, after Lesson 7 landed.
+> comes next. **Last updated:** 2026-08-11, after a second grammar (Orwin) was added.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
-> course), then run `npm run fetch:sources` so citations resolve. Nothing in
-> this project depends on a previous session's state.
+> course), then run `npm run fetch:sources` so citations resolve — it will
+> tell you which source PDFs you need to supply. Nothing in this project
+> depends on a previous session's state.
 >
 > Numbers here are checkable — run the commands in
 > [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md#the-three-gates) rather than
@@ -47,11 +48,12 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 
 | | |
 | --- | --- |
-| Verified-form registry | **100** forms (82 with 2+ sources; 4 rule-derived) |
+| Verified-form registry | **102** forms (88 with 2+ sources; 4 rule-derived) |
 | Vocabulary entries | 92, of which **34** are sourced |
 | Unit test banks | Unit 1: 32 items · Unit 2: 17 items |
 | Tests | 63, across 3 files |
 | Validator | 18 checks passing, 0 errors, 3 open warnings |
+| Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
 
 ---
 
@@ -86,12 +88,18 @@ this number is now static debt rather than growing debt.
 *To fix:* verify against two sources, record in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md),
 add `confidence` + `sources` to the entry in `src/data/vocabulary.ts`.
 
-### 2. 18 registry forms rest on a single source ⚪
+### 2. 14 registry forms rest on a single source ⚪
 
-Mostly Nilsson's fusion table (`waan`, `baad`, `ayuu` …), which W-gram does not
-list, plus `nabad`/`subax` from Wiktionary. All declared `confidence: 'single'`
-rather than passed off as verified. Check **S6** stops any of them being asked
-for as a typed answer, so they are read-only until a second source turns up.
+Down from 18: adding Orwin resolved `nabad`, `subax`, `waan` and `ayay`. The
+rest are Nilsson's fusion table (`waad`, `baan`, `ayuu` …) and the four forms
+from Nilsson's focus example. Check **S6** stops any being asked for as a typed
+answer, so they are read-only until verified.
+
+**Most are probably resolvable now.** A text search says Orwin contains 14 of
+the 18, but *a grep hit is not a citation* — the PDF is scanned and its tables
+lose columns, so each one needs checking on the page before its confidence is
+raised. That is unglamorous, mechanical work with a clear payoff: every form
+upgraded becomes something the learner can be asked to produce.
 
 ### 3. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
 
@@ -191,25 +199,48 @@ the design says should go deepest (§1.11). Lesson 5 gives the learner the
 SIGNAL box: they can now read a flat Somali sentence and say which word it is
 about. They still cannot build a full sentence, because verbs are Lesson 7.
 
+### Unit 3 is now feasible — this was in doubt
+
+Before Orwin, **negation and questions could not be sourced at all.** Both
+Wikipedia articles omit them entirely (verified directly, not assumed), so
+`ma` rested on Nilsson alone. Two of Unit 3's three lessons had no second
+source, and the honest options were to shrink the unit or find another book.
+
+Orwin covers negation, questions, imperatives, the tense system and the three
+conjugations. `ma` is registered with both sources, and the fact that the same
+spelling marks *both* a yes/no question and a negation — because tone is not
+written — is now attested by both rather than inferred from one. That stops
+being a hazard and becomes Unit 3's central teaching point.
+
 ### Next step: Lesson 8 — Building a Sentence
 
-The last lesson of Unit 2, and the payoff of the whole unit: **WHO + SIGNAL +
-DO** in order, and what the signal does to that order when it moves the
-spotlight.
+The last lesson of Unit 2 and the payoff of the whole unit: **WHO + SIGNAL +
+DO** in order, and what the signal does to that order.
 
-**Sourcing is largely done.** Everything Lesson 8 needs to assemble is already
-registered — the signals, the fusions, `keen` and its present tense. What it
-may still need is attested *full sentences* showing the ordering, since
-convention 2.2 forbids composing them. Nilsson §13.1 ("Sentence constituents")
-is the place to look; the fetched text has worked examples around lines
-5886–6130, including the pair already used in Lesson 5.
+Everything it assembles is already registered. What it may still need is
+attested *full sentences* showing the ordering, since convention 2.2 forbids
+composing them — and Orwin's dialogues are now a second well of those
+alongside Nilsson §13.1. Orwin p.24 alone has a complete Lesson 1 dialogue
+whose sentences use only forms already in the registry.
 
-The open question is how much of §13.1's word-order detail belongs here versus
-being cut. The unit's job is that the learner can read a plain sentence and say
-which word is spotlighted — not that they can produce every permutation.
+After Lesson 8, Unit 2 is complete. The ordered backlog after that, by
+compounding cost rather than size:
 
-After Lesson 8, Unit 2 is complete and the natural next moves are the assessment
-gaps above (retake pool, homework layer) or Unit 3.
+1. **Cumulative test items** — Unit 2's bank tests no Unit 1 objectives, which
+   violates design `A4`. Retrofit cost grows with the square of the unit count,
+   and cumulative testing is one of only two techniques the research rates
+   "high utility". Cheapest now it will ever be.
+2. **Production ratio** — 32% against a 60% target. The derived tier removed
+   the sourcing blocker, so this is now a content choice rather than a
+   constraint. Set the policy before Unit 3 is written, not after.
+3. **Upgrade the 14 thin forms against Orwin** — mechanical, and each one moves
+   a form from read-only to producible.
+4. **Vocabulary sourcing** — 58 entries, flat cost but *live harm*: they are in
+   front of the learner now, and §1.12 says wrong forms entrench.
+
+Deliberately deferred, because their cost does **not** grow with content:
+the homework layer, SRS wiring, retiring `COURSE.md`, the 10 vendored lint
+errors, and doc consolidation.
 
 ---
 
