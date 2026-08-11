@@ -242,9 +242,77 @@ Currently in `authored-lessons.ts`, unsourced and wrong:
 
 ---
 
+## 7. The signal system — sourcing for Unit 2
+
+Nilsson §12.3 ("Sentence particles") is the primary treatment. **It divides
+into two systems that the course's blueprint presents as one box.**
+
+**(a) Particles marking the TYPE of clause** — N §12.3:
+
+| Form | What Nilsson says | Sources |
+| --- | --- | --- |
+| `waa` | "expresses that the clause is affirmative" | N §12.3, N §11.1, W-gram |
+| `má` | "expresses that the clause is negative"; verb goes to the subjunctive | N §12.3 only |
+| `ma`/`má` | "expresses that the clause is a question that requires yes/no" | N §12.3 only |
+| *(none)* | no particle = a command; verb in the command form | N §12.3 only |
+| `ha` | warnings and prohibitions | N §12.3 only |
+
+**(b) Particles marking FOCUS** — N §12.3:
+
+| Form | What Nilsson says | Sources |
+| --- | --- | --- |
+| `baa` / `ayaa` | focus "the noun phrase **immediately preceding** the particle"; synonymous and interchangeable, `ayaa` a little more formal | N §12.3, W-gram, Wikt (`baa` = "focus marker") |
+| `waxa` / `waxaa` | focus "the noun phrase **at the end** of the clause" | N §12.3, W-gram |
+
+Nilsson's minimal pair, identical words, different signal (N §12.3):
+
+| Somali | English |
+| --- | --- |
+| Sahra **waxa** ay salaamaysaa saaxiibkeed. | Sahra is greeting her FRIEND. |
+| Sahra **baa** salaamaysa saaxiibkeed. | SAHRA is greeting her friend. |
+
+**Fusion with short subject pronouns** — N §5.1, given as a table:
+
+```
+wáa aan → wáan      wáxa aan → wáxaan       baa aan → baan      ayáa aan → ayáan
+wáa aad → wáad      wáxa aad → wáxaad       baa aad → baad      ayáa aad → ayáad
+wáa uu  → wúu       wáxa uu  → wúxuu        baa uu  → buu       ayáa uu  → ayúu
+wáa ay  → wáy       wáxa ay  → wáxay        baa ay  → bay       ayáa ay  → ayáy
+```
+
+W-gram independently attests `wuu`, `way`, `wuxuu`, `waxay`. It does **not**
+list `buu`/`bay`, so those are registered `confidence: 'single'`.
+
+### Three findings that affect what Unit 2 can teach
+
+1. **`waa` is analysed differently by the two sources.** Nilsson calls it a
+   *type-of-clause* particle ("affirmative"). Wikipedia calls it a *focus*
+   particle that "puts the focus on verbs and verb phrases". Both are
+   defensible readings in the literature — Nilsson's own abbreviation list has
+   `PR.FOC predicate focus`. The lessons should describe what `waa` *does*
+   (marks a plain statement) and not assert which category it belongs to.
+
+2. **`ma` is single-sourced.** Wikipedia's Somali grammar page does not
+   discuss it, and the Wiktionary page for `ma` has no Somali section. It is
+   therefore **not in the registry** and cannot currently be taught.
+
+3. **`ma` question and `má` negative are the same written word.** Nilsson
+   distinguishes them by tone, and §2.2 establishes that **tone is not
+   written**. So "ma = question signal" is not merely thin, it is misleading:
+   the identical string is also the negator. Teaching it as a clean fourth
+   signal would plant exactly the kind of high-confidence error that §1.12 of
+   COURSE_DESIGN warns resurfaces on delayed tests.
+
+---
+
 ## Status
 
 - ✅ Alphabet, pronouns, gender, articles, subject case: **2-source verified**
+- ✅ Focus signals `baa`, `ayaa`, `waxa`, `waxaa` and fusions `wuu`, `way`,
+  `wuxuu`, `waxay`: **2-source verified** and in the registry
+- ⚠️ `buu`, `bay`: single-source (Nilsson's table only)
+- ❌ `ma`: single-source **and** ambiguous in writing — deliberately not
+  registered; see finding 3 above
 - ✅ 10 example sentences: sourced to N
 - ✅ **All Somali in exercise answers and lesson prose is registry-verified**
   and enforced by `npm run validate:course`

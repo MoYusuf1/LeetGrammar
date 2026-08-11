@@ -14,29 +14,28 @@ import { UNITS, getUnitTest } from '@/data/unit-tests';
 import { isUnitComplete } from '@/lib/assessment';
 import { useProgressStore } from '@/stores/progress-store';
 
-interface Phase {
-  name: string;
-  min: number;
-  max: number;
-}
-
-/** Only phases whose lessons actually exist. Adding a phase here without
- *  building its lessons puts empty sections in the UI — don't. */
-const PHASES: Phase[] = [
-  { name: 'Unit 1: Foundations', min: 1, max: 4 },
-];
-
 export default function LessonsPage() {
   const navigate = useNavigate();
   const store = useProgressStore();
 
-  const grouped = useMemo(() => {
-    return PHASES.map((phase) => ({
-      phase,
-      lessons: LESSON_LIST.filter((l) => l.lessonId >= phase.min && l.lessonId <= phase.max),
-      unit: UNITS.find((u) => u.lessonIds.includes(phase.min)),
-    }));
-  }, []);
+  /**
+   * Unit sections are derived from UNITS, which derives from the authored
+   * lessons themselves.
+   *
+   * REGRESSION: a hardcoded table used to live here naming lesson ranges
+   * (`{ name: 'Unit 1: Foundations', min: 1, max: 4 }`). Authoring Lesson 5
+   * would have left it invisible on this page while the build, the tests and
+   * the validator all stayed green — the exact failure mode the working
+   * agreement's first rule is about. Nothing here may name a lesson number.
+   */
+  const grouped = useMemo(
+    () =>
+      UNITS.map((unit) => ({
+        unit,
+        lessons: LESSON_LIST.filter((l) => unit.lessonIds.includes(l.lessonId)),
+      })),
+    [],
+  );
 
   const completed = (store.completedLessons as number[] | undefined) ?? [];
   const isCompleted = (id: number) => completed.includes(id);
@@ -56,7 +55,7 @@ export default function LessonsPage() {
             <h1 className="text-xl font-bold text-[#eff1f6]">Lessons</h1>
           </div>
           <p className="text-sm text-[#8c8c8c]">
-            {totalLessons} lessons across {PHASES.length} {PHASES.length === 1 ? 'unit' : 'units'}.
+            {totalLessons} lessons across {UNITS.length} {UNITS.length === 1 ? 'unit' : 'units'}.
           </p>
           <div className="mt-3 h-1.5 rounded-full bg-[#1a1a1a] overflow-hidden">
             <div
@@ -67,14 +66,17 @@ export default function LessonsPage() {
           <p className="text-[11px] text-[#5c5c5c] mt-1">{doneCount} of {totalLessons} complete</p>
         </div>
 
-        {/* Phase groups */}
+        {/* Unit groups */}
         <div className="space-y-7">
-          {grouped.map(({ phase, lessons, unit }, phaseIdx) => {
-            const bank = unit ? getUnitTest(unit.id) : undefined;
-            const unlocked = unit ? isUnitComplete(unit.id, completed) : false;
+          {grouped.map(({ unit, lessons }) => {
+            const bank = getUnitTest(unit.id);
+            const unlocked = isUnitComplete(unit.id, completed);
             return (
-              <section key={phase.name}>
-                <h2 className="text-sm font-semibold text-[#eff1f6] mb-3">{phaseIdx + 1}. {phase.name}</h2>
+              <section key={unit.id}>
+                <h2 className="text-sm font-semibold text-[#eff1f6] mb-3">
+                  Unit {unit.id}
+                  {unit.name ? `: ${unit.name}` : ''}
+                </h2>
 
                 <div className="space-y-2">
                   {lessons.map((lesson) => (
@@ -87,7 +89,7 @@ export default function LessonsPage() {
                       onWorksheet={() => navigate(`/worksheet/${lesson.lessonId}`)}
                     />
                   ))}
-                  {unit && bank && (
+                  {bank && (
                     <UnitTestRow
                       name={bank.name}
                       unlocked={unlocked}

@@ -118,8 +118,29 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // ── Sentence signal ─────────────────────────────────────────────────────
   waa: { gloss: 'statement signal', sources: ['N §11.1', 'W-gram'] },
 
-  // ── Contracted signal + pronoun (N §5.1 "wáa uu → wúu", N §11.1) ────────
-  wuu: { gloss: 'waa + uu (he) contracted', sources: ['N §5.1', 'N §11.1'] },
+  // ── Contracted signal + pronoun (N §5.1 "wáa uu → wúu") ─────────────────
+  // Second source is W-gram, which lists wuu and way as contractions of waa.
+  // It previously cited two Nilsson sections, which is one author twice — see
+  // validator check S5.
+  wuu: { gloss: 'waa + uu (he) contracted', sources: ['N §5.1', 'W-gram'] },
+  way: { gloss: 'waa + ay (she/they) contracted', sources: ['N §5.1', 'W-gram'] },
+
+  // ── UNIT 2: the focus signals (N §12.3 "Sentence particles (b)") ────────
+  // Nilsson separates two systems that the course teaches as one row of the
+  // blueprint: particles marking the TYPE of clause (waa, ma, ha) and
+  // particles marking FOCUS (baa/ayaa, waxa). See docs/SOMALI_SOURCES.md §7.
+  baa: { gloss: 'focus signal — highlights the words just before it', sources: ['N §12.3', 'W-gram', 'Wikt'] },
+  ayaa: { gloss: 'focus signal — same job as baa, a little more formal', sources: ['N §12.3', 'W-gram'] },
+  waxa: { gloss: 'focus signal — highlights what comes at the end', sources: ['N §12.3', 'W-gram'] },
+  waxaa: { gloss: 'focus signal — spelling variant of waxa', sources: ['N §12.3', 'W-gram'] },
+
+  // Fusions of a focus signal with a short subject pronoun (N §5.1 table).
+  // W-gram independently gives wuxuu and waxay; buu/bay it only implies, so
+  // they rest on Nilsson alone and are declared as such.
+  wuxuu: { gloss: 'waxa + uu (he) contracted', sources: ['N §5.1', 'W-gram'] },
+  waxay: { gloss: 'waxa + ay (she/they) contracted', sources: ['N §5.1', 'W-gram'] },
+  buu: { gloss: 'baa + uu (he) contracted', sources: ['N §5.1'], confidence: 'single' },
+  bay: { gloss: 'baa + ay (she/they) contracted', sources: ['N §5.1'], confidence: 'single' },
 
   // ── Further nouns attested with definite forms ──────────────────────────
   caano: { gloss: 'milk', definite: 'caanaha', sources: ['N §6.4', 'Wikt'] },

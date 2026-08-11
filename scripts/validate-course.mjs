@@ -202,6 +202,37 @@ function checkRegistryIntegrity() {
   }
 }
 
+/**
+ * S5: two citations of the same book are one source.
+ *
+ * D2 requires "≥2 independent published sources", and the binding constraint
+ * on this whole project is that no native speaker will ever check the content.
+ * `['N §6.1', 'N §6.3']` is two sections of Nilsson — if Nilsson is wrong, both
+ * are wrong together, which is precisely the failure two-source verification
+ * exists to catch. S4 counted these as verified, so the reported "2+ sources"
+ * figure overstated the guarantee.
+ *
+ * A warning, not an error: these are real forms from a reputable grammar, and
+ * erroring would take down the shipped course over a citation-quality problem.
+ * The point is that the number is honest.
+ */
+function checkSourceIndependence() {
+  const rootOf = (s) => s.split(/[ §]/)[0];
+  const weak = Object.entries(VERIFIED_FORMS).filter(([, v]) => {
+    const srcs = v.sources ?? [];
+    return srcs.length >= 2 && new Set(srcs.map(rootOf)).size < 2;
+  });
+  if (weak.length) {
+    warn(
+      'S5',
+      `${weak.length} form(s) cite one author twice rather than two independent sources:\n      ` +
+        weak.map(([k, v]) => `${k} [${v.sources.join(', ')}]`).join('\n      '),
+    );
+  } else {
+    pass('S5', 'Every multi-source form cites at least two independent sources');
+  }
+}
+
 // ============================================================================
 // LANGUAGE — plain English, no linguistics jargon
 // ============================================================================
@@ -367,6 +398,35 @@ function checkBankUnits() {
 }
 
 /**
+ * U5: a unit that has lessons must be presentable and finishable.
+ *
+ * UNITS is derived from the lessons, so authoring a lesson with a new unitId
+ * creates a unit everywhere in the UI immediately — that is the point, but it
+ * also means a half-registered unit ships silently. Both halves are warnings,
+ * not errors: authoring lessons before their test bank is the normal order of
+ * work, and blocking it would make the validator an obstacle to the workflow
+ * it exists to protect.
+ */
+function checkUnitRegistration() {
+  const unnamed = UNITS.filter((u) => !u.name.trim()).map((u) => u.id);
+  const bankless = UNITS.filter((u) => !TEST_BANKS.some((b) => b.id === u.testBankId)).map((u) => u.id);
+
+  if (unnamed.length) {
+    warn('U5', `Unit(s) with no name in UNIT_NAMES (shown to learners as a bare number): ${unnamed.join(', ')}`);
+  }
+  if (bankless.length) {
+    warn(
+      'U5',
+      `Unit(s) with lessons but no test bank — learners finish the lessons and get no test: ${bankless.join(', ')}. ` +
+        `Add unit-banks/unit-N.ts and register it in TEST_BANKS.`,
+    );
+  }
+  if (!unnamed.length && !bankless.length) {
+    pass('U5', `All ${UNITS.length} unit(s) have a name and a test bank`);
+  }
+}
+
+/**
  * U1: bank Somali must be registry-verified, exactly as lesson Somali is.
  *
  * This is the check the bank's own header claimed was running while nothing
@@ -486,6 +546,7 @@ checkAnswerSourcing();
 checkProseSourcing();
 checkVocabSourcing();
 checkRegistryIntegrity();
+checkSourceIndependence();
 checkBannedTerms();
 checkSentenceLength();
 checkExerciseMix();
@@ -494,6 +555,7 @@ checkObjectiveCoverage();
 checkOrphanObjectives();
 checkStructure();
 checkBankUnits();
+checkUnitRegistration();
 checkBankSourcing();
 checkBankLanguage();
 checkBankObjectiveCoverage();
