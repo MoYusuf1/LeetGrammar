@@ -127,8 +127,71 @@ What backs the claims `unit-tests.ts` makes in its own header:
   unlocked → intro → 32-item test → results (score, per-objective breakdown,
   missed items) → correctives → back to results.
 
-Next natural extension, not started: Unit 2 and its test bank, once lesson 5+
-content exists.
+### What Phase 4 did *not* deliver
+
+Measured against the Phase 3 "Assessment engine" Definition of Done in
+[COURSE_DESIGN.md](./COURSE_DESIGN.md#part-10--per-phase-specification):
+
+| DoD item | State |
+| --- | --- |
+| `A1` bank ≥25 items | ✅ 32 |
+| `A2` bank covers 100% of unit objectives | ✅ check U3 |
+| `A5` 85% threshold in one constant | ✅ `MASTERY_THRESHOLD` |
+| `A6` correctives target only failed objectives | ✅ tested |
+| Gating not bypassable by direct URL | ✅ page checks `isUnitComplete()` |
+| **Retake serves *different* items** | ❌ identical items, same order |
+| **`E9` ≥60% production in test banks** | ❌ bank is 31% production / 62% MCQ |
+| **`A3` homework layer (Layer 2)** | ❌ not built at all |
+| **SRS / spaced review no longer orphaned** | ❌ still no callers |
+
+The two that matter pedagogically:
+
+- **Retake is not a retest.** The results screen shows every missed item with
+  its correct answer, and retaking serves those same 32 items in the same
+  order. A learner can fail, read the answers, and pass by recall of the
+  screen. Fixing this needs *more sourced items*, not just code — with 32
+  items over 13 objectives there is no second pool to draw from.
+- **The bank is 62% multiple choice.** §1.8 of the design calls MCQ "the
+  weakest tool available" and the whole overhaul was motivated partly by the
+  old course being 76% MCQ. 62% is an improvement and still roughly the
+  inverse of the ≥60%-production target. No check enforces this on banks.
+
+---
+
+## Where this sits in the overall plan
+
+⚠️ **The unit test was not the last phase.** Two numbering schemes have been in
+use and they do not line up: the work tracked here as "Phase 4" is the
+*assessment engine* — Phase **3** in
+[COURSE_DESIGN.md Part 7](./COURSE_DESIGN.md#part-7--execution-plan), applied to
+Unit 1 only.
+
+Against the design's seven phases:
+
+| Phase | Work | State |
+| --- | --- | --- |
+| 1 | Data model + glossary + validator | ✅ done |
+| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | ❌ **not started** |
+| 3 | Assessment engine | 🟡 built for Unit 1; gaps above |
+| 4 | Unit 1 — Lessons 1–4 | ✅ done |
+| 5 | Vocabulary track (~500 words, sourced) | ❌ 21 of 79 sourced |
+| 6 | Units 3–4 — Lessons 9–14 | ❌ not started |
+| 7 | Retire `COURSE.md` + generator | ❌ still present |
+
+**Unit 2 is the spine and it is the one thing not built.** The design calls it
+"⭐ the spine", "the direct fix for the original complaint", and the unit that
+should go deepest (§1.11). It teaches `waa` / `baa` / `waxa` / `ma` — the four
+signal words. The original motivation for this whole redesign was that those
+markers "seem random" and had been stranded at lesson 20 of the old course.
+
+What is shipped today is Unit 1: the **WHO** box. The learner can name things,
+make them definite, and say who is doing something. They cannot yet build a
+Somali sentence, because the `SIGNAL` box — the part with no English
+equivalent — is Lesson 5.
+
+So the course is a complete, verified, well-gated **first quarter**. Calling it
+finished would repeat the exact error in [POSTMORTEM.md](./POSTMORTEM.md):
+mistaking "every check passes" for "the goal is met".
 
 ---
 

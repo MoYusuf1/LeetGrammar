@@ -55,12 +55,39 @@ const proseOf = (lesson) =>
 // ============================================================================
 
 /**
+ * Ordinary English words that may legitimately appear where a Somali form
+ * would. Used by S2's bold-span heuristic and by the choice-answer check in
+ * `somaliTokensOf` — a word here is never treated as unsourced Somali.
+ */
+const ENGLISH_STOPLIST = new Set(
+  ('the a an and or but not is are was were be been being of to in on at for with from by as it its this that these those ' +
+   'masculine feminine gender genders noun nouns verb verbs word words letter letters sound sounds vowel vowels consonant ' +
+   'consonants ending endings suffix suffixes subject object plural singular definite indefinite tone spelling alphabet ' +
+   'somali english arabic why what which how when who where because so if then than also just only always never ' +
+   'you your yours we our us they them their he she him her his hers i me my mine one two three both each every ' +
+   'no yes may can will would should could must has have had do does did make makes made take takes ' +
+   'including excluding instead alone itself already reliable unpredictable identical separate ' +
+   'boy girl man woman house book shoe city knife month teacher father mother lion snake table key story bus cat lamp tree ' +
+   'left right first last next same different new old good bad big small long short deep hard easy ' +
+   'three-letter throat pair pairs single missing absent present borrowed unadapted rule rules form forms').split(/\s+/),
+);
+
+/**
  * The tokens of an exercise that are unambiguously Somali.
  *
- * Only answers and word banks qualify. Question and explanation prose is mixed
+ * Answers and word banks qualify. Question and explanation prose is mixed
  * English and Somali and is covered by the bold-span heuristic in S2 instead.
  * Shared with the unit-test bank checks so the two cannot diverge — the bank
  * once claimed in its own header to be checked here while nothing checked it.
+ *
+ * REGRESSION: this function used to skip choice types entirely, so a
+ * multiple_choice item could present an invented Somali word as the *correct*
+ * answer and both S1 and U1 would pass while reporting every item checked.
+ * Verified by injecting `libaaxyaal` as a correct answer: all three gates went
+ * green. A choice answer is a single token once its English gloss is stripped
+ * ("sheeko (story)" → "sheeko"); multi-word answers are English prose
+ * ("writing the vowel twice") and are left alone, as are one- and two-letter
+ * answers, which are alphabet letters rather than words.
  */
 function somaliTokensOf(ex) {
   const tokens = [];
@@ -72,6 +99,13 @@ function somaliTokensOf(ex) {
     const answers = Array.isArray(ex.answer) ? ex.answer : [ex.answer];
     for (const one of answers) if (typeof one === 'string') tokens.push(...one.split(/\s+/));
     if (typeof ex.somali === 'string') tokens.push(...ex.somali.split(/\s+/));
+  }
+  if (ex.type === 'multiple_choice' || ex.type === 'fill_blank' || ex.type === 'matching') {
+    const bare = String(ex.correctAnswer ?? '').replace(/\(.*?\)/g, '').trim();
+    const word = bare.toLowerCase().replace(/[.,?!:;]+$/, '');
+    if (word && !/\s/.test(word) && !/[^a-z']/.test(word) && word.length > 2 && !ENGLISH_STOPLIST.has(word)) {
+      tokens.push(word);
+    }
   }
   return tokens.map((t) => t.replace(/[.,?!]+$/, '')).filter(Boolean);
 }
@@ -99,19 +133,6 @@ function checkAnswerSourcing() {
  * checkable subset. Reported as warnings — a miss here is a prompt to source
  * the form, not proof it is wrong.
  */
-const ENGLISH_STOPLIST = new Set(
-  ('the a an and or but not is are was were be been being of to in on at for with from by as it its this that these those ' +
-   'masculine feminine gender genders noun nouns verb verbs word words letter letters sound sounds vowel vowels consonant ' +
-   'consonants ending endings suffix suffixes subject object plural singular definite indefinite tone spelling alphabet ' +
-   'somali english arabic why what which how when who where because so if then than also just only always never ' +
-   'you your yours we our us they them their he she him her his hers i me my mine one two three both each every ' +
-   'no yes may can will would should could must has have had do does did make makes made take takes ' +
-   'including excluding instead alone itself already reliable unpredictable identical separate ' +
-   'boy girl man woman house book shoe city knife month teacher father mother lion snake table key story bus cat lamp tree ' +
-   'left right first last next same different new old good bad big small long short deep hard easy ' +
-   'three-letter throat pair pairs single missing absent present borrowed unadapted rule rules form forms').split(/\s+/),
-);
-
 function checkProseSourcing() {
   const suspects = new Map();
   for (const lesson of AUTHORED_LESSONS) {
