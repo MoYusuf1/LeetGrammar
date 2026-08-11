@@ -202,6 +202,37 @@ function checkRegistryIntegrity() {
   }
 }
 
+/**
+ * S5: two citations of the same book are one source.
+ *
+ * D2 requires "≥2 independent published sources", and the binding constraint
+ * on this whole project is that no native speaker will ever check the content.
+ * `['N §6.1', 'N §6.3']` is two sections of Nilsson — if Nilsson is wrong, both
+ * are wrong together, which is precisely the failure two-source verification
+ * exists to catch. S4 counted these as verified, so the reported "2+ sources"
+ * figure overstated the guarantee.
+ *
+ * A warning, not an error: these are real forms from a reputable grammar, and
+ * erroring would take down the shipped course over a citation-quality problem.
+ * The point is that the number is honest.
+ */
+function checkSourceIndependence() {
+  const rootOf = (s) => s.split(/[ §]/)[0];
+  const weak = Object.entries(VERIFIED_FORMS).filter(([, v]) => {
+    const srcs = v.sources ?? [];
+    return srcs.length >= 2 && new Set(srcs.map(rootOf)).size < 2;
+  });
+  if (weak.length) {
+    warn(
+      'S5',
+      `${weak.length} form(s) cite one author twice rather than two independent sources:\n      ` +
+        weak.map(([k, v]) => `${k} [${v.sources.join(', ')}]`).join('\n      '),
+    );
+  } else {
+    pass('S5', 'Every multi-source form cites at least two independent sources');
+  }
+}
+
 // ============================================================================
 // LANGUAGE — plain English, no linguistics jargon
 // ============================================================================
@@ -515,6 +546,7 @@ checkAnswerSourcing();
 checkProseSourcing();
 checkVocabSourcing();
 checkRegistryIntegrity();
+checkSourceIndependence();
 checkBannedTerms();
 checkSentenceLength();
 checkExerciseMix();
