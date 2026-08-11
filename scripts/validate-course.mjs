@@ -367,6 +367,35 @@ function checkBankUnits() {
 }
 
 /**
+ * U5: a unit that has lessons must be presentable and finishable.
+ *
+ * UNITS is derived from the lessons, so authoring a lesson with a new unitId
+ * creates a unit everywhere in the UI immediately — that is the point, but it
+ * also means a half-registered unit ships silently. Both halves are warnings,
+ * not errors: authoring lessons before their test bank is the normal order of
+ * work, and blocking it would make the validator an obstacle to the workflow
+ * it exists to protect.
+ */
+function checkUnitRegistration() {
+  const unnamed = UNITS.filter((u) => !u.name.trim()).map((u) => u.id);
+  const bankless = UNITS.filter((u) => !TEST_BANKS.some((b) => b.id === u.testBankId)).map((u) => u.id);
+
+  if (unnamed.length) {
+    warn('U5', `Unit(s) with no name in UNIT_NAMES (shown to learners as a bare number): ${unnamed.join(', ')}`);
+  }
+  if (bankless.length) {
+    warn(
+      'U5',
+      `Unit(s) with lessons but no test bank — learners finish the lessons and get no test: ${bankless.join(', ')}. ` +
+        `Add unit-banks/unit-N.ts and register it in TEST_BANKS.`,
+    );
+  }
+  if (!unnamed.length && !bankless.length) {
+    pass('U5', `All ${UNITS.length} unit(s) have a name and a test bank`);
+  }
+}
+
+/**
  * U1: bank Somali must be registry-verified, exactly as lesson Somali is.
  *
  * This is the check the bank's own header claimed was running while nothing
@@ -494,6 +523,7 @@ checkObjectiveCoverage();
 checkOrphanObjectives();
 checkStructure();
 checkBankUnits();
+checkUnitRegistration();
 checkBankSourcing();
 checkBankLanguage();
 checkBankObjectiveCoverage();

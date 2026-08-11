@@ -754,7 +754,7 @@ const LESSON_4: Lesson = {
 export const AUTHORED_LESSONS: Lesson[] = [LESSON_1, LESSON_2, LESSON_3, LESSON_4];
 
 /** Highest built lesson id. Only built lessons appear here — never stubs. */
-export const MAX_LESSON_ID = AUTHORED_LESSONS.length;
+export const MAX_LESSON_ID = Math.max(...AUTHORED_LESSONS.map((l) => l.id));
 
 /** Lesson summaries for navigation. Derived, so it cannot drift from the content. */
 export const LESSON_LIST: LessonSummary[] = AUTHORED_LESSONS.map((lesson) => ({
