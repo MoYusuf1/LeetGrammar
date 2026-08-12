@@ -409,6 +409,52 @@ Lesson 6 and the reason verbs come after fusion rather than before.
 
 ---
 
+## 9. The fusion tables, verified against Orwin
+
+Nilsson §5.1 gives these forms; Orwin tabulates them independently. **Every one
+below was read on the page**, not matched in the text dump — the dump garbled
+`buu` as "buiu" and "bau" and `ayaa` as "ayda", which is exactly why the rule
+is to look at the page.
+
+**Orwin p.21** — the mood classifier `wáa` with the verbal subject pronouns:
+
+| | | |
+| --- | --- | --- |
+| I | wáa + aan | **wáan** |
+| you (sg.) | wáa + aad | **wáad** |
+| he | wáa + uu | **wúu** |
+| she / they | wáa + ay | **wáy** |
+
+**Orwin p.93** — the focus markers `báa` / `ayáa`, same construction:
+
+| | | `baa-` | `ayaa-` |
+| --- | --- | --- | --- |
+| I | + aan | **báan** | **ayáan** |
+| you (sg.) | + aad | **báad** | **ayáad** |
+| he | + uu | **búu** | **ayúu** |
+| she / they | + ay | **báy** | **ayáy** |
+
+Upgraded from single-source to two independent sources: `waad`, `baan`,
+`baad`, `buu`, `bay`, `ayaan`, `ayaad`, `ayuu` — joining `waan` and `ayay`,
+done earlier. Registry single-source forms: **17 → 9**.
+
+Under check S6 that also makes them **producible**: an exercise may now ask the
+learner to type them, where before they could only be read.
+
+### The nine that remain, and why
+
+| Form(s) | Situation |
+| --- | --- |
+| `waxaan`, `waxaad` | **Winnable.** Orwin has no `waxa`+pronoun table, but both occur in running text — `waxaan` at text-dump lines 4855 and 6649, `waxaad` in a Reading-practice vocabulary near line 6815 glossed "you need". Each needs its printed page located and read. Note the PDF-to-printed-page offset drifts (+10 early, +12 by p.162), so find the page by its printed header rather than by arithmetic. |
+| `saaxiibkeed`, `saaxiibteed`, `salaamaysa`, `salaamaysaa` | Stuck. From Nilsson's focus example §12.3; absent from Orwin. Need a third source. |
+| `tegey`, `cabbay`, `koob` | Stuck. From Orwin's word-order examples p.41–42; absent from Nilsson. Need a third source. |
+
+Seven of the nine genuinely cannot be resolved with the two grammars we have.
+That is a real limit, not a to-do — it is what a two-source rule costs, and the
+alternative is inventing a citation.
+
+---
+
 ## Status
 
 - ✅ Alphabet, pronouns, gender, articles, subject case: **2-source verified**
@@ -416,9 +462,7 @@ Lesson 6 and the reason verbs come after fusion rather than before.
   `wuxuu`, `waxay`: **2-source verified** and in the registry
 - ✅ `ma` and its fusions: **double-sourced** since Orwin was added — see the
   correction at finding 2. Registered, and owed to Unit 3.
-- ⚠️ Some fusion forms still rest on Nilsson alone pending page-level
-  verification against Orwin. A grep hit is not a citation; each one needs
-  checking on the page before its confidence is raised.
+- ✅ The fusion tables are now double-sourced — see §9 below.
 - ✅ 10 example sentences: sourced to N
 - ✅ **All Somali in exercise answers and lesson prose is registry-verified**
   and enforced by `npm run validate:course`
