@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-11, after a vocabulary sourcing pass.
+> comes next. **Last updated:** 2026-08-12, after a bank production-mix pass.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -51,9 +51,10 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 | --- | --- |
 | Verified-form registry | **106** forms (97 with 2+ sources; 4 rule-derived) |
 | Vocabulary entries | 95, of which **43** are 2-source verified |
-| Unit test banks | Unit 1: 32 items · Unit 2: 24 authored + 13 carried back = 37 |
+| Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
+| Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 5) |
 | Tests | 72, across 3 files |
-| Validator | 19 checks passing, 0 errors, 3 open warnings |
+| Validator | 19 checks passing, 0 errors, 4 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
 
 ---
@@ -122,6 +123,42 @@ not wired to anything.
 All in `src/components/ui/*` shadcn boilerplate, all pre-existing. No file under
 `src/data`, `src/lib`, `src/pages` or `src/components/lesson` contributes.
 
+### 5. Test banks sit at 47% / 46% production against a 60% target ⚪
+
+Check `E9` now measures this every run and warns. It reports two figures,
+because they answer different questions: what the bank *author* wrote, and
+what the learner actually sits after carry-back folds in earlier-unit items.
+
+A pass over both banks converted every item that could honestly be flipped —
+`u1-t29` (`wiilku`), `u2-t01` (`waa`), `u2-t05` (`ayaa`), `u2-t15` (`keennaa`)
+— which is what moved the numbers from 44%/35%. What is left does **not** come
+apart with more authoring effort:
+
+- **Unit 1 is capped by its subject matter.** Most remaining recognition items
+  answer with an English proposition — "every noun has a gender", "gender is a
+  grammar label, not a fact about the object", "only the last word of the
+  subject" — because the objective *is* a fact about the language, with nothing
+  to type. The alphabet and digraph items would have to be answered with bare
+  letters (`x`, `sh`), which are not registry forms and so cannot be a typed
+  answer under rule 1.
+- **One item was deliberately left alone.** `u1-t06` teaches vowel length by
+  picking `libaax` out of a list. Asking the learner to type "lion" instead
+  tests whether they remember the word, not whether they double the vowel; and
+  any prompt that supplies the pronunciation hands them the doubling. A worse
+  item that scores better on E9 is the wrong trade.
+- **Unit 2 is capped by sourcing, not authoring.** Its three best remaining
+  candidates — the `Sahra baa salaamaysa saaxiibkeed` focus item, the `cabbay`
+  word-order item, the `koob` imperative — all answer with forms that rest on a
+  single source, so check `S6` correctly refuses them as typed answers. They
+  become convertible the moment those forms get a second source, which is
+  **exactly the blocked list in debt item 2**. Flipping all three would put
+  Unit 2 at 58%.
+
+So the honest reading is that ~60% is reachable for Unit 2 via source work, and
+is probably not reachable for Unit 1 at all. Raising the E9 threshold or
+failing the build on it would push an author toward writing the bad `u1-t06`
+variant — which is how the old validator became decoration. It stays a warning.
+
 ---
 
 ## Phase 4 (the unit test) — done
@@ -165,7 +202,7 @@ Measured against the Phase 3 "Assessment engine" Definition of Done in
 | `A6` correctives target only failed objectives | ✅ tested |
 | Gating not bypassable by direct URL | ✅ page checks `isUnitComplete()` |
 | **Retake serves *different* items** | ❌ identical items, same order |
-| **`E9` ≥60% production in test banks** | ❌ bank is 31% production / 62% MCQ |
+| **`E9` ≥60% production in test banks** | 🟡 47% / 46%, now measured by check `E9` |
 | **`A3` homework layer (Layer 2)** | ❌ not built at all |
 | **SRS / spaced review no longer orphaned** | ❌ still no callers |
 
@@ -176,10 +213,11 @@ The two that matter pedagogically:
   order. A learner can fail, read the answers, and pass by recall of the
   screen. Fixing this needs *more sourced items*, not just code — with 32
   items over 13 objectives there is no second pool to draw from.
-- **The bank is 62% multiple choice.** §1.8 of the design calls MCQ "the
+- **The banks are still recognition-heavy.** §1.8 of the design calls MCQ "the
   weakest tool available" and the whole overhaul was motivated partly by the
-  old course being 76% MCQ. 62% is an improvement and still roughly the
-  inverse of the ≥60%-production target. No check enforces this on banks.
+  old course being 76% MCQ. The banks now run 47% and 46% production against a
+  60% target, and check `E9` reports both figures every run rather than
+  leaving the gap invisible. Why the last 13 points are hard: debt item 5.
 
 ---
 
@@ -236,9 +274,13 @@ compounding cost rather than size:
    items covering all 13 Unit 1 objectives. Composed rather than authored, so
    it cannot be forgotten and needs no new code for Unit 3. Check `A4` and 8
    tests enforce it; both proven to bite.
-2. **Production ratio** — 32% against a 60% target. The derived tier removed
-   the sourcing blocker, so this is now a content choice rather than a
-   constraint. Set the policy before Unit 3 is written, not after.
+2. ~~Production ratio~~ 🟡 **measured and pushed as far as it honestly goes** —
+   check `E9` reports it every run; banks went 44%/35% → 47%/46%. The rest is
+   not an authoring problem: Unit 2's remaining candidates are blocked by `S6`
+   on single-source forms, and Unit 1's are objectives with nothing to type.
+   Debt item 5 has the item-by-item reasoning. Lesson exercises are separately
+   at 32% (check `E1`) and *are* still a free content choice — set that policy
+   before Unit 3 is written, not after.
 3. ~~Upgrade the thin forms against Orwin~~ ✅ **mostly done** — 17 → 9, and
    seven of the remainder need a third source rather than more effort.
 4. **Vocabulary sourcing** — 58 entries, flat cost but *live harm*: they are in

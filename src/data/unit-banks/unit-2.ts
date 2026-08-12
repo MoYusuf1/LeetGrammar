@@ -39,12 +39,11 @@ const UNIT_2_ITEMS: PracticeExercise[] = [
   // ── waa: the plain statement ────────────────────────────────────────────
   {
     id: 'u2-t01',
-    type: 'multiple_choice',
+    type: 'translate',
     objectiveIds: ['signal-statement'],
-    question: 'Which signal marks an ordinary statement, with no word singled out?',
-    options: ['waa', 'baa', 'waxa', 'ayaa'],
-    correctAnswer: 'waa',
-    hint: 'Three of these put a spotlight somewhere. One simply states.',
+    question: 'Type the signal that marks an ordinary statement, with no word singled out.',
+    answer: 'waa',
+    hint: 'Three of the four signals put a spotlight somewhere. You want the one that simply states.',
     explanation:
       '**waa** marks a plain statement — **Wiilku waa macallin**, "The boy is a teacher". The other three all claim that some particular word is the point of the sentence.',
   },
@@ -96,14 +95,13 @@ const UNIT_2_ITEMS: PracticeExercise[] = [
   },
   {
     id: 'u2-t05',
-    type: 'multiple_choice',
+    type: 'translate',
     objectiveIds: ['signal-focus-before'],
-    question: 'Which word does the same job as **baa**, just a little more formally?',
-    options: ['ayaa', 'waxa', 'waa', 'ay'],
-    correctAnswer: 'ayaa',
-    hint: 'It is not the one that points at the end, and not the plain-statement one.',
+    question: 'Type the signal that does the same job as **baa**, just a little more formally.',
+    answer: 'ayaa',
+    hint: 'Four letters. Not the one that points at the end, and not the plain-statement one.',
     explanation:
-      '**ayaa** and **baa** are interchangeable — both spotlight the words immediately before them. **ayaa** reads as slightly more formal. **ay** is something different: the short pronoun "she".',
+      '**ayaa** and **baa** are interchangeable — both spotlight the words immediately before them. **ayaa** reads as slightly more formal. Do not reach for **ay**: that is something different, the short pronoun "she".',
   },
 
   // ── waxa: spotlight to the right ────────────────────────────────────────
@@ -234,14 +232,13 @@ const UNIT_2_ITEMS: PracticeExercise[] = [
   },
   {
     id: 'u2-t15',
-    type: 'multiple_choice',
+    type: 'translate',
     objectiveIds: ['verb-person-endings'],
-    question: 'Which ending marks **we**?',
-    options: ['-naa', '-taa', '-aan', '-taan'],
-    correctAnswer: '-naa',
-    hint: 'Plurals bring an **n** with them; this is the one without a **t**.',
+    question: 'Type the form of **keen** ("bring") that means **we bring**.',
+    answer: 'keennaa',
+    hint: 'The *we* ending is **-naa**, and the stem already ends in an n. Both of them survive.',
     explanation:
-      '**-naa** is the *we* ending, giving **keennaa**. **-aan** is *they*, **-taan** is *you* plural, and **-taa** is *you* or *she*.',
+      '**keennaa** is *we bring*: **-naa** lands on **keen**, so two n\'s meet in the middle. Writing one n gives **keenaa**, which is a real word meaning *I bring* — the doubled n is the whole difference. **keenaan** is *they*, **keentaan** is *you* plural, **keentaa** is *you* or *she*.',
   },
   {
     id: 'u2-t16',
@@ -374,6 +371,31 @@ const UNIT_2_ITEMS: PracticeExercise[] = [
     hint: 'One signal points forward rather than back.',
     explanation:
       '**waxa** spotlights the end of the sentence, so the spotlighted words must travel past the verb to get there. **baa** spotlights what sits immediately before it and leaves the verb at the end.',
+  },
+  // These two exist because the fusion forms became producible: `waan` and
+  // `way` were single-source until Orwin's tables on p.21 and p.93 were
+  // verified, so until then check S6 would not allow them as typed answers.
+  // Both objectives had recognition items only.
+  {
+    id: 'u2-t25',
+    type: 'translate',
+    objectiveIds: ['verb-ending-ambiguity', 'signal-fusion'],
+    question:
+      '**keenaa** on its own could be "I bring" or "he brings". Type the two words that pin it to **I bring**.',
+    answer: 'waan keenaa',
+    hint: 'The verb cannot say who. Put the plain-statement signal in front, carrying "I".',
+    explanation:
+      '**waan keenaa** — **waa** + **aan** ("I") in front settles what **-aa** leaves open. Swap it for **wuu** and the identical verb becomes "he brings".',
+  },
+  {
+    id: 'u2-t26',
+    type: 'translate',
+    objectiveIds: ['order-verb-last', 'verb-person-endings'],
+    question: 'Type the two words that mean **she brings**, in the order Somali puts them.',
+    answer: 'way keentaa',
+    hint: 'Signal first, carrying "she"; then the action word with the **t** ending.',
+    explanation:
+      '**way keentaa** — **waa** + **ay** ("she") comes first and the verb follows immediately. Reversing them is not an option: the signal always sits in front of the action word.',
   },
 ];
 

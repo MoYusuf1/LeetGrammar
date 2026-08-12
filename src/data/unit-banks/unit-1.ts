@@ -251,11 +251,10 @@ const UNIT_1_ITEMS: PracticeExercise[] = [
   },
   {
     id: 'u1-t18',
-    type: 'multiple_choice',
+    type: 'translate',
     objectiveIds: ['article-assimilation'],
-    question: '**Aabbe** (father) is masculine. Which spelling is "the father"?',
-    options: ['aabbaha', 'aabbeha', 'aabbeka', 'aabbaka'],
-    correctAnswer: 'aabbaha',
+    question: '**Aabbe** (father) is masculine. Type the form meaning "the father".',
+    answer: 'aabbaha',
     hint: 'Two things change at once after a final e — the ending, and the e itself.',
     explanation:
       'After **e** the masculine ending becomes **-ha**, and the e changes to a: **aabbaha**. Getting only half of it gives "aabbeha", which is the most common near-miss on this rule.',
@@ -272,11 +271,10 @@ const UNIT_1_ITEMS: PracticeExercise[] = [
   },
   {
     id: 'u1-t20',
-    type: 'multiple_choice',
+    type: 'translate',
     objectiveIds: ['article-assimilation'],
-    question: '**Magaalo** (city) is feminine. Which spelling is "the city"?',
-    options: ['magaalada', 'magaaloda', 'magaalota', 'magaalaha'],
-    correctAnswer: 'magaalada',
+    question: '**Magaalo** (city) is feminine. Type the form meaning "the city".',
+    answer: 'magaalada',
     hint: 'As with a final e, two things change: the ending, and the vowel it lands on.',
     explanation:
       'After **o** the feminine ending becomes **-da**, and the o itself changes to a: **magaalada**. "Magaaloda" softens the ending but leaves the vowel, which is the half-right answer to watch for.',
@@ -337,22 +335,20 @@ const UNIT_1_ITEMS: PracticeExercise[] = [
   },
   {
     id: 'u1-t25',
-    type: 'multiple_choice',
+    type: 'translate',
     objectiveIds: ['pronouns-subject'],
-    question: '**Wuu** is the signal word **waa** joined with a short pronoun. Which short pronoun?',
-    options: ['uu', 'aan', 'aad', 'ay'],
-    correctAnswer: 'uu',
+    question: '**Wuu** is the signal word **waa** joined with a short pronoun. Type that pronoun.',
+    answer: 'uu',
     hint: 'Read the two halves of the joined form aloud and listen for the second one.',
     explanation:
       '**Waa** plus **uu** ("he") contracts to **wuu**. The short pronouns fuse onto the signal word like this constantly, which is why they are worth recognising well before you have to produce them.',
   },
   {
     id: 'u1-t26',
-    type: 'multiple_choice',
+    type: 'translate',
     objectiveIds: ['pronouns-inclusive-exclusive'],
-    question: 'You tell your teammates "we won the match" — they were on the team with you. Which "we" do you use?',
-    options: ['innaga', 'annaga', 'idinka', 'iyaga'],
-    correctAnswer: 'innaga',
+    question: 'You tell your teammates "we won the match" — they were on the team with you. Type the "we" you would use.',
+    answer: 'innaga',
     hint: 'The people you are speaking to are inside the group you are describing.',
     explanation:
       '**Innaga** is the "we" that takes the listener in — "you and I". **Annaga** would leave your teammates out of a win they were part of, which is a real change of meaning rather than a style choice.',
@@ -379,14 +375,13 @@ const UNIT_1_ITEMS: PracticeExercise[] = [
   },
   {
     id: 'u1-t29',
-    type: 'multiple_choice',
+    type: 'translate',
     objectiveIds: ['subject-case'],
-    question: 'When a word ending in **-a** becomes the subject of a sentence, that **-a** changes to what?',
-    options: ['-u', '-i', '-o', '-e'],
-    correctAnswer: '-u',
-    hint: 'Compare **wiilka** with **wiilku**.',
+    question: '**Wiilka** means "the boy". Write it in the form it takes when the boy is the one doing something.',
+    answer: 'wiilku',
+    hint: 'The same one-letter shift that turned **aniga** into **anigu**.',
     explanation:
-      'The final -a becomes **-u**: **wiilka** gives **wiilku**, **aniga** gives **anigu**. It is one small change, and it is the difference between a sentence a speaker accepts and one they have to re-read.',
+      'The final -a becomes **-u**: **wiilka** gives **wiilku**. It is one small change, and it is the difference between a sentence a speaker accepts and one they have to re-read.',
   },
   {
     id: 'u1-t30',
