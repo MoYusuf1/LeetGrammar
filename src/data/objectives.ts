@@ -45,6 +45,10 @@ const OBJECTIVE_LABELS: Record<string, string> = {
   // Lesson 7
   'verb-person-endings': 'The action word ends differently depending on who',
   'verb-ending-ambiguity': 'Why the ending alone does not tell you who',
+  // Lesson 8
+  'order-verb-last': 'The action word usually comes last',
+  'order-signal-hugs-verb': 'The signal sits right before the action word',
+  'order-waxa-moves-it': 'waxa sends the spotlighted words past the verb',
 };
 
 /** objective id → the lesson that declares it. Derived from the course. */

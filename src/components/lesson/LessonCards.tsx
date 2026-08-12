@@ -499,8 +499,15 @@ function PracticeCard({
         )}
       </motion.div>
 
-      {/* Answer input — exhaustive over ExerciseType (see AnswerInput.tsx) */}
-      <AnswerInput exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
+      {/* Answer input — exhaustive over ExerciseType (see AnswerInput.tsx).
+          Keyed by exercise id, and it must stay keyed. AnswerInput holds the
+          assembled word bank for an unscramble in its own state; without a key
+          React reuses the instance across cards, so the words tapped on one
+          card arrive already-placed on the next and its own chips render as
+          spent. Check Answer then stays disabled forever — a softlock the
+          learner can only escape via Reset. It went unnoticed until Lesson 8
+          became the first lesson with two unscrambles in a row. */}
+      <AnswerInput key={exercise.id} exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
 
       {/* Typed answers are self-graded here. The unit test grades them instead,
           which is why its items are single words with one spelling. */}

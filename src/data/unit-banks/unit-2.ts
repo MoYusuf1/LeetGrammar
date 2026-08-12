@@ -1,10 +1,13 @@
 /**
  * UNIT 2 TEST BANK — the signal system.
  *
- * Covers Lesson 5 only for now. Unit 2 is planned as lessons 5–8 (signals,
- * fusion, verbs, full sentences); as each lands, add its items here. The bank
- * is deliberately a separate file per unit so it can grow without the unit
- * registry growing with it — see docs/ADDING_CONTENT.md, Recipe 2.
+ * Covers lessons 5–8: the signals, how they fuse with the short pronouns, the
+ * present-tense endings, and word order. The bank is a separate file per unit
+ * so it can grow without the unit registry growing with it — see
+ * docs/ADDING_CONTENT.md, Recipe 2.
+ *
+ * The test a learner actually sits is larger than this file: composeUnitTest()
+ * folds in one item per Unit 1 objective. You do not write those.
  *
  * THREE RULES FOR ADDING AN ITEM (identical to unit-1.ts)
  *
@@ -24,10 +27,10 @@
  *    asked here as production, and vice versa. A test in src/tests/ fails if a
  *    bank question repeats a lesson question verbatim.
  *
- * ON THE VERBS. Lesson 5 shows Nilsson's minimal pair whole and never asks the
- * learner to build it. The same restraint applies here: items ask *which word
- * is spotlighted* and *which signal does that*, never how a verb is formed.
- * Verb morphology is Lesson 7 and must not leak into this bank early.
+ * ON SHOWING VS ASKING. Several example sentences here carry vocabulary only
+ * one source attests (salaamaysa, cabbay, tegey, koob). Check S6 keeps those
+ * read-only: they appear in questions and options, never as a typed answer.
+ * Every production item answers with fully double-sourced material.
  */
 
 import type { PracticeExercise, TestBank } from '../types';
@@ -266,6 +269,111 @@ const UNIT_2_ITEMS: PracticeExercise[] = [
     hint: 'Unsquash **waad** first, then see which of the two people **-taa** allows.',
     explanation:
       '**waad** is **waa** + **aad** (you), and **-taa** covers *you* and *she*. Only *you* satisfies both. Swap the signal to **way** and the same verb means "she brings".',
+  },
+
+  // ── Lesson 8: word order ────────────────────────────────────────────────
+  // Written production-first where the sourcing allows it. Orwin's example
+  // sentences carry Orwin-only vocabulary, so those items are recognition and
+  // the typed answers use fully double-sourced material instead.
+  {
+    id: 'u2-t18',
+    type: 'unscramble',
+    objectiveIds: ['order-signal-hugs-verb'],
+    question: 'Put these in order to say "he brings".',
+    words: ['keenaa', 'wuu'],
+    answer: 'wuu keenaa',
+    hint: 'The signal hugs the action word from in front.',
+    explanation:
+      '**wuu keenaa.** The signal always sits immediately before the action word, never after it.',
+  },
+  {
+    id: 'u2-t19',
+    type: 'unscramble',
+    objectiveIds: ['order-signal-hugs-verb'],
+    question:
+      'Arrange these so the signal lands where it belongs — immediately before what is said about the boy.',
+    words: ['waa', 'macallin', 'Wiilku'],
+    answer: 'Wiilku waa macallin',
+    hint: 'Who first. The signal goes immediately before what is being said about him.',
+    explanation:
+      '**Wiilku waa macallin.** The subject leads and **waa** takes the slot right before what the boy is — the same place an action word would sit.',
+  },
+  {
+    id: 'u2-t20',
+    type: 'multiple_choice',
+    objectiveIds: ['order-verb-last'],
+    question:
+      '**Nin shaah wuu cabbay** means "A man drank tea". What order are the words actually in?',
+    options: [
+      'a man · tea · (signal + he) · drank',
+      'a man · drank · tea · (signal + he)',
+      'drank · a man · tea · (signal + he)',
+      '(signal + he) · a man · drank · tea',
+    ],
+    correctAnswer: 'a man · tea · (signal + he) · drank',
+    hint: 'The action word is not where English would put it.',
+    explanation:
+      'The thing acted on (**shaah**, tea) comes before the action (**cabbay**, drank), which lands at the end. Read literally it is "a man tea he-drank".',
+  },
+  {
+    id: 'u2-t21',
+    type: 'multiple_choice',
+    objectiveIds: ['order-signal-hugs-verb'],
+    question: 'Which is the most dependable thing to know about where words go in a Somali sentence?',
+    options: [
+      'The signal sits immediately before the action word',
+      'The subject is always the first word',
+      'The object is always the last word',
+      'Nothing is dependable; the order is free',
+    ],
+    correctAnswer: 'The signal sits immediately before the action word',
+    hint: 'One of these holds even when the other words move around.',
+    explanation:
+      'Noun phrases move about more freely in Somali than in English, so subject-first and object-last are tendencies rather than rules. The signal keeping to the front of the verb is the landmark that holds.',
+  },
+  {
+    id: 'u2-t22',
+    type: 'multiple_choice',
+    objectiveIds: ['order-waxa-moves-it', 'signal-focus-end'],
+    question: 'Why do **waxa** sentences put words after the action word, when Somali usually ends on it?',
+    options: [
+      'Because waxa spotlights the end, so the spotlighted words must get there',
+      'Because waxa is an irregular word that ignores word order',
+      'Because the action word moves to the front after waxa',
+      'Because waxa can only be used in questions',
+    ],
+    correctAnswer: 'Because waxa spotlights the end, so the spotlighted words must get there',
+    hint: 'Think about what **waxa** promised to do back in Lesson 5.',
+    explanation:
+      '**waxa** spotlights whatever finishes the sentence. Since the verb normally finishes it, the spotlighted words have to travel past the verb — the construction is the spotlight doing exactly its job.',
+  },
+  {
+    id: 'u2-t23',
+    type: 'multiple_choice',
+    objectiveIds: ['order-verb-last'],
+    question: 'Reading **Koob keen!** literally, word by word, what does it say?',
+    options: ['a cup — bring!', 'bring — a cup!', 'a cup — is brought', 'bring it — the cup'],
+    correctAnswer: 'a cup — bring!',
+    hint: 'Somali gets to the action after saying what it is done to.',
+    explanation:
+      '**Koob keen!** is literally "a cup bring!" — the thing acted on comes first and the action word lands at the end, the reverse of the English order.',
+  },
+  {
+    id: 'u2-t24',
+    type: 'multiple_choice',
+    objectiveIds: ['order-waxa-moves-it', 'order-verb-last'],
+    question:
+      'Somali usually finishes on the action word. Which signal makes words appear *after* it, and why?',
+    options: [
+      'waxa — because it spotlights whatever ends the sentence',
+      'baa — because it spotlights whatever ends the sentence',
+      'waa — because plain statements reverse the order',
+      'None — nothing may follow the action word',
+    ],
+    correctAnswer: 'waxa — because it spotlights whatever ends the sentence',
+    hint: 'One signal points forward rather than back.',
+    explanation:
+      '**waxa** spotlights the end of the sentence, so the spotlighted words must travel past the verb to get there. **baa** spotlights what sits immediately before it and leaves the verb at the end.',
   },
 ];
 

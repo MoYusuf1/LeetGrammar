@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-11, after unit tests became cumulative.
+> comes next. **Last updated:** 2026-08-11, after Lesson 8 completed Unit 2.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -17,7 +17,7 @@
 
 ## What exists
 
-A **7-lesson Somali course** in 2 units, local-only, no accounts, progress in
+An **8-lesson Somali course** in 2 units, local-only, no accounts, progress in
 `localStorage`. Every Somali form in it is source-verified.
 
 | Lesson | Title | Cards | Exercises | Teaches |
@@ -29,8 +29,9 @@ A **7-lesson Somali course** in 2 units, local-only, no accounts, progress in
 | 5 | The Signal Words | 17 | 7 | `waa` plain statement; `baa`/`ayaa` spotlight what precedes; `waxa` spotlights what ends the sentence |
 | 6 | Squishing | 15 | 5 | signals fuse with short pronouns — `wuu`, `way`, `waxay`, and the irregular `wuxuu` |
 | 7 | Action Words | 15 | 6 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
+| 8 | Putting It In Order | 16 | 6 | the action word lands last; the signal hugs the verb; `waxa` sends the spotlight past it |
 
-**Totals:** 102 authored cards · 44 exercises · 32% production.
+**Totals:** 118 authored cards · 50 exercises · 32% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
 The course lands on **`Wiilku waa macallin.`** ("The boy is a teacher."), a
@@ -48,10 +49,10 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 
 | | |
 | --- | --- |
-| Verified-form registry | **102** forms (88 with 2+ sources; 4 rule-derived) |
-| Vocabulary entries | 92, of which **34** are sourced |
-| Unit test banks | Unit 1: 32 items · Unit 2: 17 authored + 13 carried back = 30 |
-| Tests | 71, across 3 files |
+| Verified-form registry | **106** forms (89 with 2+ sources; 4 rule-derived) |
+| Vocabulary entries | 95, of which **35** are sourced |
+| Unit test banks | Unit 1: 32 items · Unit 2: 24 authored + 13 carried back = 37 |
+| Tests | 72, across 3 files |
 | Validator | 19 checks passing, 0 errors, 3 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
 
@@ -59,7 +60,7 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 
 ## What is deliberately *not* built
 
-**Lessons 8–14 are planned, not written.** [COURSE_DESIGN.md](./COURSE_DESIGN.md)
+**Lessons 9–14 are planned, not written.** [COURSE_DESIGN.md](./COURSE_DESIGN.md)
 describes a 14-lesson target; that is the design, not the state. They appear
 nowhere in the UI — no stub rows, no "coming soon".
 
@@ -74,7 +75,7 @@ broad and decorative**. See [POSTMORTEM.md](./POSTMORTEM.md).
 
 ## Known debt
 
-### 1. 58 of 92 vocabulary entries have no sources 🔴
+### 1. 60 of 95 vocabulary entries have no sources 🔴
 
 The largest outstanding content problem. These words **are shown to learners** in
 every lesson's vocab deck, and they are not verified. The validator reports the
@@ -88,7 +89,7 @@ this number is now static debt rather than growing debt.
 *To fix:* verify against two sources, record in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md),
 add `confidence` + `sources` to the entry in `src/data/vocabulary.ts`.
 
-### 2. 14 registry forms rest on a single source ⚪
+### 2. 17 registry forms rest on a single source ⚪
 
 Down from 18: adding Orwin resolved `nabad`, `subax`, `waan` and `ayay`. The
 rest are Nilsson's fusion table (`waad`, `baan`, `ayuu` …) and the four forms
@@ -187,7 +188,7 @@ design's seven phases in
 | Phase | Work | State |
 | --- | --- | --- |
 | 1 | Data model + glossary + validator | ✅ done |
-| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | 🟡 **Lessons 5–7 done; 8 remains** |
+| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | ✅ **complete** |
 | 3 | Assessment engine | 🟡 built for Units 1–2; gaps above |
 | 4 | Unit 1 — Lessons 1–4 | ✅ done |
 | 5 | Vocabulary track (~500 words, sourced) | ❌ 26 of 84 sourced |
