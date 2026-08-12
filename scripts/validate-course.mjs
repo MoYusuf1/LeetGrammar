@@ -25,7 +25,7 @@ import { AUTHORED_LESSONS, LESSON_LIST, MAX_LESSON_ID } from '../src/data/author
 import { TOP_500_WORDS } from '../src/data/vocabulary.ts';
 import { BANNED_TERMS, ALLOWLIST } from '../src/data/banned-terms.ts';
 import { VERIFIED_FORMS, DERIVATION_RULES, isVerifiedForm } from '../src/data/verified-forms.ts';
-import { TEST_BANKS, UNITS, getUnitObjectives } from '../src/data/unit-tests.ts';
+import { TEST_BANKS, UNITS, getUnitObjectives, composeUnitTest } from '../src/data/unit-tests.ts';
 import { describeObjective, labelledObjectives, objectiveLabels } from '../src/data/objectives.ts';
 
 const errors = [];
@@ -546,6 +546,58 @@ function checkUnitRegistration() {
 }
 
 /**
+ * A4: every unit test after the first must be cumulative.
+ *
+ * Design rule A4 (COURSE_DESIGN Part 9) requires unit tests to include items
+ * from all prior units, because cumulative retrieval is one of only two
+ * techniques §1.2 rates "high utility". Unit 2's bank tested zero Unit 1
+ * objectives until composeUnitTest() existed, and nothing noticed.
+ *
+ * This checks the *composed* test rather than the authored bank — carry-back is
+ * assembled, not written, so checking the bank would report a violation that
+ * is not real. It also checks the composed size against the ~25–30 items §3.2
+ * asks for, since carry-back is what pushes a small bank into range.
+ */
+function checkCumulativeTests() {
+  const problems = [];
+  const notes = [];
+  for (const unit of UNITS) {
+    const own = TEST_BANKS.find((b) => b.id === unit.testBankId);
+    if (!own) continue;
+    const composed = composeUnitTest(unit.id);
+    const earlier = UNITS.filter((u) => u.id < unit.id);
+    if (!earlier.length) {
+      notes.push(`unit ${unit.id}: ${composed.length} items (first unit, nothing to carry back)`);
+      continue;
+    }
+    const priorObjectives = new Set(earlier.flatMap((u) => getUnitObjectives(u.id)));
+    const carried = composed.filter((i) => i.objectiveIds.some((o) => priorObjectives.has(o)));
+    if (!carried.length) {
+      problems.push(`unit ${unit.id} carries back nothing from units ${earlier.map((u) => u.id).join(', ')}`);
+      continue;
+    }
+    const covered = new Set(
+      carried.flatMap((i) => i.objectiveIds).filter((o) => priorObjectives.has(o)),
+    );
+    notes.push(
+      `unit ${unit.id}: ${composed.length} items (${composed.length - own.items.length} carried back, ` +
+        `covering ${covered.size}/${priorObjectives.size} earlier objectives)`,
+    );
+    if (composed.length < 25) {
+      problems.push(`unit ${unit.id} composes to ${composed.length} items; §3.2 asks for ~25–30`);
+    }
+    if (new Set(composed.map((i) => i.id)).size !== composed.length) {
+      problems.push(`unit ${unit.id} composes with duplicate items`);
+    }
+  }
+  if (problems.length) {
+    fail('A4', `Unit tests are not cumulative:\n      ${problems.join('\n      ')}`);
+  } else {
+    pass('A4', `Unit tests are cumulative:\n      ${notes.join('\n      ')}`);
+  }
+}
+
+/**
  * U1: bank Somali must be registry-verified, exactly as lesson Somali is.
  *
  * This is the check the bank's own header claimed was running while nothing
@@ -677,6 +729,7 @@ checkOrphanObjectives();
 checkStructure();
 checkBankUnits();
 checkUnitRegistration();
+checkCumulativeTests();
 checkBankSourcing();
 checkBankLanguage();
 checkBankObjectiveCoverage();

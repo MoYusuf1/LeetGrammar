@@ -22,7 +22,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Check, X, Target, RotateCcw } from 'lucide-react';
-import { getUnit, getUnitTest } from '@/data/unit-tests';
+import { getUnit, getUnitTest, composeUnitTest } from '@/data/unit-tests';
 import { describeObjective } from '@/data/objectives';
 import type { PracticeExercise } from '@/data/types';
 import {
@@ -59,9 +59,10 @@ export default function UnitTestPage() {
   const completedLessons = (store.completedLessons as number[] | undefined) ?? [];
   const unlocked = isUnitComplete(unitId, completedLessons);
 
-  // Memoised so the fallback `[]` is not a fresh array on every render, which
-  // would re-run the correctives memo below each time.
-  const items = useMemo(() => bank?.items ?? [], [bank]);
+  // The composed test, not the raw bank: this unit's items plus carried-back
+  // items from earlier units. See composeUnitTest() for why carry-back is
+  // composed rather than authored.
+  const items = useMemo(() => composeUnitTest(unitId), [unitId]);
   const current = items[index];
 
   const correctives = useMemo(
