@@ -191,22 +191,22 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // they rest on Nilsson alone and are declared as such.
   wuxuu: { gloss: 'waxa + uu (he) contracted', sources: ['N §5.1', 'W-gram'] },
   waxay: { gloss: 'waxa + ay (she/they) contracted', sources: ['N §5.1', 'W-gram'] },
-  buu: { gloss: 'baa + uu (he) contracted', sources: ['N §5.1'], confidence: 'single' },
-  bay: { gloss: 'baa + ay (she/they) contracted', sources: ['N §5.1'], confidence: 'single' },
+  buu: { gloss: 'baa + uu (he) contracted', sources: ['N §5.1', 'O p.93'] },
+  bay: { gloss: 'baa + ay (she/they) contracted', sources: ['N §5.1', 'O p.93'] },
 
   // ── UNIT 2: the rest of Nilsson's fusion table (N §5.1) ─────────────────
   // W-gram independently attests only wuu, way, wuxuu and waxay, so the rest
   // are single-source and, per check S6, may be read but never asked for as a
   // typed answer.
   waan: { gloss: 'waa + aan (I) contracted', sources: ['N §5.1', 'O p.24'] },
-  waad: { gloss: 'waa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
+  waad: { gloss: 'waa + aad (you) contracted', sources: ['N §5.1', 'O p.21'] },
   waxaan: { gloss: 'waxa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
   waxaad: { gloss: 'waxa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
-  baan: { gloss: 'baa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
-  baad: { gloss: 'baa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
-  ayaan: { gloss: 'ayaa + aan (I) contracted', sources: ['N §5.1'], confidence: 'single' },
-  ayaad: { gloss: 'ayaa + aad (you) contracted', sources: ['N §5.1'], confidence: 'single' },
-  ayuu: { gloss: 'ayaa + uu (he) contracted', sources: ['N §5.1'], confidence: 'single' },
+  baan: { gloss: 'baa + aan (I) contracted', sources: ['N §5.1', 'O p.93'] },
+  baad: { gloss: 'baa + aad (you) contracted', sources: ['N §5.1', 'O p.93'] },
+  ayaan: { gloss: 'ayaa + aan (I) contracted', sources: ['N §5.1', 'O p.93'] },
+  ayaad: { gloss: 'ayaa + aad (you) contracted', sources: ['N §5.1', 'O p.93'] },
+  ayuu: { gloss: 'ayaa + uu (he) contracted', sources: ['N §5.1', 'O p.93'] },
   ayay: { gloss: 'ayaa + ay (she/they) contracted', sources: ['N §5.1', 'O p.26'] },
 
   // ── UNIT 2: the verb `keen`, and its present tense ──────────────────────

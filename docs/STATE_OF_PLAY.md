@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-11, after Lesson 8 completed Unit 2.
+> comes next. **Last updated:** 2026-08-11, after the fusion tables were verified against Orwin.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -49,7 +49,7 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 
 | | |
 | --- | --- |
-| Verified-form registry | **106** forms (89 with 2+ sources; 4 rule-derived) |
+| Verified-form registry | **106** forms (97 with 2+ sources; 4 rule-derived) |
 | Vocabulary entries | 95, of which **35** are sourced |
 | Unit test banks | Unit 1: 32 items · Unit 2: 24 authored + 13 carried back = 37 |
 | Tests | 72, across 3 files |
@@ -89,18 +89,18 @@ this number is now static debt rather than growing debt.
 *To fix:* verify against two sources, record in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md),
 add `confidence` + `sources` to the entry in `src/data/vocabulary.ts`.
 
-### 2. 17 registry forms rest on a single source ⚪
+### 2. 9 registry forms rest on a single source ⚪
 
-Down from 18: adding Orwin resolved `nabad`, `subax`, `waan` and `ayay`. The
-rest are Nilsson's fusion table (`waad`, `baan`, `ayuu` …) and the four forms
-from Nilsson's focus example. Check **S6** stops any being asked for as a typed
-answer, so they are read-only until verified.
+Down from 18. Orwin's fusion tables on p.21 and p.93 were read on the page and
+resolved eight forms in one pass — `waad`, `baan`, `baad`, `buu`, `bay`,
+`ayaan`, `ayaad`, `ayuu` — on top of `nabad`, `subax`, `waan`, `ayay` earlier.
+Under **S6** those are now producible rather than read-only.
 
-**Most are probably resolvable now.** A text search says Orwin contains 14 of
-the 18, but *a grep hit is not a citation* — the PDF is scanned and its tables
-lose columns, so each one needs checking on the page before its confidence is
-raised. That is unglamorous, mechanical work with a clear payoff: every form
-upgraded becomes something the learner can be asked to produce.
+Of the nine left, **seven genuinely cannot be resolved** with the two grammars
+in hand: four come from Nilsson's focus example and are absent from Orwin, three
+come from Orwin's word-order examples and are absent from Nilsson. They need a
+third source, not more searching. The two winnable ones (`waxaan`, `waxaad`)
+have their exact leads recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §9.
 
 ### 3. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
 
@@ -235,8 +235,8 @@ compounding cost rather than size:
 2. **Production ratio** — 32% against a 60% target. The derived tier removed
    the sourcing blocker, so this is now a content choice rather than a
    constraint. Set the policy before Unit 3 is written, not after.
-3. **Upgrade the 14 thin forms against Orwin** — mechanical, and each one moves
-   a form from read-only to producible.
+3. ~~Upgrade the thin forms against Orwin~~ ✅ **mostly done** — 17 → 9, and
+   seven of the remainder need a third source rather than more effort.
 4. **Vocabulary sourcing** — 58 entries, flat cost but *live harm*: they are in
    front of the learner now, and §1.12 says wrong forms entrench.
 
