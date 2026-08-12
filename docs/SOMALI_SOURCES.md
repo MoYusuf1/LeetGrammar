@@ -455,6 +455,61 @@ alternative is inventing a citation.
 
 ---
 
+## 10. Sourcing the vocabulary decks — method and findings
+
+The vocab decks carried 60 entries with no citation at all, shown to learners
+every lesson. This pass took that to 52, and raised fully-verified entries from
+35 to 43.
+
+### Two traps, both of which produced wrong answers first
+
+**English/Somali homographs.** A plain text search says `run` and `been` appear
+in both grammars. They do — as the *English* words, in English prose:
+Nilsson's "wouldn't have **run** into those difficulties", Orwin's "a catalogue
+record has **been** requested". `bad`, `dad` and `af` are the same hazard.
+Never accept a bare match; require a gloss beside it.
+
+**Spelling variants.** Requiring a gloss then swings too far and misses real
+attestations under a different form. `sariir`, `daaqad` and `xarf` all looked
+absent and are all in Nilsson. `aabo` looked absent and *is* — see below.
+
+The workable filter is: a line short enough to be a dictionary entry, showing
+the word next to a gender marker (`(m. d2)`), a quoted gloss, or a column
+break. Then read the gloss and check it says what our deck says.
+
+### Orwin's Somali–English glossary is the single best target
+
+It is one stable location covering many words, and 18 of the 60 were found
+there with glosses matching ours. Cite as `Orwin: Somali-English glossary` —
+page numbers are **not** reliably computable from the text dump, because the
+printed-page headers do not survive extraction in the early chapters (the
+`nabad` gloss sits at dump line 360, before any extractable marker).
+
+### A real error found: `aabo` → `aabbe`
+
+The deck taught **`aabo`** for "father". Neither grammar contains that
+spelling: Nilsson has `aabb`, `aabbáha`, `aabbihi`, Orwin has `aabbe`, and our
+own `verified-forms.ts` already carried `aabbe` with two sources. The deck was
+teaching a form the registry itself disagreed with. Corrected, and now
+double-sourced.
+
+That is exactly the failure D2 exists to catch, found only because the word was
+checked rather than assumed.
+
+### What the two grammars cannot give us
+
+`fadlan` (please), `ilmo` (child) and `masjid` (mosque) appear in **neither**
+source under any spelling — they are ordinary words, but these are grammars,
+not dictionaries. `been` (lie) and `kee` (which one) could not be separated
+from English homographs and near-forms with confidence.
+
+More broadly: **most vocabulary can only ever reach one source here.** Nilsson
+and Orwin are grammars; their wordlists exist to illustrate rules. Getting the
+decks to two sources needs a dictionary — Wiktionary is already a key and is
+the obvious next one to work through.
+
+---
+
 ## Status
 
 - ✅ Alphabet, pronouns, gender, articles, subject case: **2-source verified**

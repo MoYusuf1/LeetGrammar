@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-11, after the fusion tables were verified against Orwin.
+> comes next. **Last updated:** 2026-08-11, after a vocabulary sourcing pass.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -50,7 +50,7 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 | | |
 | --- | --- |
 | Verified-form registry | **106** forms (97 with 2+ sources; 4 rule-derived) |
-| Vocabulary entries | 95, of which **35** are sourced |
+| Vocabulary entries | 95, of which **43** are 2-source verified |
 | Unit test banks | Unit 1: 32 items · Unit 2: 24 authored + 13 carried back = 37 |
 | Tests | 72, across 3 files |
 | Validator | 19 checks passing, 0 errors, 3 open warnings |
@@ -75,19 +75,23 @@ broad and decorative**. See [POSTMORTEM.md](./POSTMORTEM.md).
 
 ## Known debt
 
-### 1. 60 of 95 vocabulary entries have no sources 🔴
+### 1. 52 of 95 vocabulary entries lack two sources 🔴
 
-The largest outstanding content problem. These words **are shown to learners** in
-every lesson's vocab deck, and they are not verified. The validator reports the
-count on every run and will keep doing so.
+Was 60 with *no* citation at all. A pass against Orwin's Somali-English
+glossary and Nilsson's wordlists took fully-verified entries from 35 to 43 and
+gave most of the rest a real single-source citation instead of nothing. Method,
+traps and findings: [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §10.
 
-The 30 that are sourced are the pronouns, the signal words and fusions added
-for Unit 2, and the nouns whose gender and definite form are attested in the
-grammar. Everything added since Lesson 5 has been sourced on the way in, so
-this number is now static debt rather than growing debt.
+**It found a real error.** The deck taught `aabo` for "father". Neither grammar
+contains that spelling — both have `aabbe`, which our own registry already
+carried with two sources. Corrected.
 
-*To fix:* verify against two sources, record in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md),
-add `confidence` + `sources` to the entry in `src/data/vocabulary.ts`.
+**This number will not reach zero with the current books.** Nilsson and Orwin
+are grammars; their wordlists exist to illustrate rules, so most vocabulary can
+only ever reach one source there. Closing the gap needs a dictionary pass —
+Wiktionary is already a source key and is the obvious next step. `fadlan`,
+`ilmo` and `masjid` appear in neither grammar under any spelling and need
+either a dictionary citation or cutting.
 
 ### 2. 9 registry forms rest on a single source ⚪
 
