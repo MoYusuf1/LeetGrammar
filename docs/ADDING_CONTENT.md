@@ -96,6 +96,17 @@ Per-objective floor is 2 items (`U3`). Two means one miss fails that objective
 — deliberate, since correctives is a short revision pass, not a penalty. Three
 or four is better for the load-bearing rules.
 
+**You do not write carry-back items.** A unit test is not the bank — it is the
+bank *plus* one item per earlier-unit objective, assembled by
+`composeUnitTest()`. Unit 2's bank has 17 items and its test has 30. Carry-back
+is composed rather than authored so that it cannot be forgotten when somebody
+adds Unit 3, and so it scales with no new code. Check `A4` fails if a later
+unit carries back nothing, and it was proven to bite.
+
+A consequence worth knowing: failing a carried-back item routes correctives to
+the *earlier* lesson that taught it. That is intended — verified in the browser,
+where Unit 2's results page links back across lessons 1–7.
+
 ---
 
 ## Recipe 3 — a new lesson in an existing unit

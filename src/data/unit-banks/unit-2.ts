@@ -273,6 +273,6 @@ export const UNIT_2_TEST: TestBank = {
   id: 'unit-2-test',
   name: 'Unit 2 Test',
   description:
-    'The signal system from Lesson 5: waa for a plain statement, baa for a spotlight on what comes just before, waxa for a spotlight on what comes at the end.',
+    'Everything from lessons 5 to 7: the three signals, how they fuse with the short pronouns, and the action-word endings. A handful of questions from Unit 1 are folded in, so this also checks what has stuck.',
   items: UNIT_2_ITEMS,
 };

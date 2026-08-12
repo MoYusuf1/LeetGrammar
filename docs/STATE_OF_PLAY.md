@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-11, after a second grammar (Orwin) was added.
+> comes next. **Last updated:** 2026-08-11, after unit tests became cumulative.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -50,9 +50,9 @@ point is a row on `/learn`, gated by `isUnitComplete()`; route is
 | --- | --- |
 | Verified-form registry | **102** forms (88 with 2+ sources; 4 rule-derived) |
 | Vocabulary entries | 92, of which **34** are sourced |
-| Unit test banks | Unit 1: 32 items · Unit 2: 17 items |
-| Tests | 63, across 3 files |
-| Validator | 18 checks passing, 0 errors, 3 open warnings |
+| Unit test banks | Unit 1: 32 items · Unit 2: 17 authored + 13 carried back = 30 |
+| Tests | 71, across 3 files |
+| Validator | 19 checks passing, 0 errors, 3 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
 
 ---
@@ -226,10 +226,11 @@ whose sentences use only forms already in the registry.
 After Lesson 8, Unit 2 is complete. The ordered backlog after that, by
 compounding cost rather than size:
 
-1. **Cumulative test items** — Unit 2's bank tests no Unit 1 objectives, which
-   violates design `A4`. Retrofit cost grows with the square of the unit count,
-   and cumulative testing is one of only two techniques the research rates
-   "high utility". Cheapest now it will ever be.
+1. ~~Cumulative test items~~ ✅ **done** — `composeUnitTest()` folds one item
+   per earlier objective into every later unit test, so Unit 2's test is 30
+   items covering all 13 Unit 1 objectives. Composed rather than authored, so
+   it cannot be forgotten and needs no new code for Unit 3. Check `A4` and 8
+   tests enforce it; both proven to bite.
 2. **Production ratio** — 32% against a 60% target. The derived tier removed
    the sourcing blocker, so this is now a content choice rather than a
    constraint. Set the policy before Unit 3 is written, not after.

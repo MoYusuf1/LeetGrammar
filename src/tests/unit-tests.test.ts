@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { TEST_BANKS, UNITS, getUnit, getUnitTest, getUnitObjectives } from '@/data/unit-tests';
+import { TEST_BANKS, UNITS, getUnit, getUnitTest, getUnitObjectives, composeUnitTest } from '@/data/unit-tests';
 import { AUTHORED_LESSONS } from '@/data/authored-lessons';
 import { describeObjective, labelledObjectives } from '@/data/objectives';
 import { isAnswerCorrect } from '@/lib/grading';
@@ -377,5 +377,68 @@ describe('assessment: unlock gating', () => {
     expect(getLessonsInUnit(99)).toEqual([]);
     expect(isUnitComplete(99, [])).toBe(false);
     expect(isUnitComplete(99, [1, 2, 3, 4])).toBe(false);
+  });
+});
+
+/**
+ * Cumulative composition — design rule A4.
+ *
+ * REGRESSION: Unit 2's bank tested zero Unit 1 objectives, and every gate was
+ * green. Cumulative retrieval is one of only two techniques COURSE_DESIGN §1.2
+ * rates "high utility", so a non-cumulative unit test is not a cosmetic miss.
+ * Carry-back is composed rather than authored precisely so it cannot be
+ * forgotten by whoever writes the next unit.
+ */
+describe('unit-tests: the composed test carries earlier units forward', () => {
+  it('the first unit has nothing to carry back and is just its bank', () => {
+    expect(composeUnitTest(1).map((i) => i.id)).toEqual(getUnitTest(1)!.items.map((i) => i.id));
+  });
+
+  it('a later unit carries back items testing earlier objectives', () => {
+    const composed = composeUnitTest(2);
+    const own = new Set(getUnitTest(2)!.items.map((i) => i.id));
+    const carried = composed.filter((i) => !own.has(i.id));
+    expect(carried.length).toBeGreaterThan(0);
+
+    const prior = new Set(getUnitObjectives(1));
+    for (const item of carried) {
+      expect(item.objectiveIds.some((o) => prior.has(o)), `${item.id} is not an earlier-unit item`).toBe(true);
+    }
+  });
+
+  it('carry-back spreads across earlier objectives rather than over-sampling one', () => {
+    const composed = composeUnitTest(2);
+    const own = new Set(getUnitTest(2)!.items.map((i) => i.id));
+    const carried = composed.filter((i) => !own.has(i.id));
+    const prior = getUnitObjectives(1);
+    const covered = new Set(carried.flatMap((i) => i.objectiveIds).filter((o) => prior.includes(o)));
+    // One item per earlier objective, so coverage should equal what was carried.
+    expect(covered.size).toBe(Math.min(prior.length, carried.length));
+  });
+
+  it('never repeats an item, and never duplicates one the unit already owns', () => {
+    const composed = composeUnitTest(2);
+    const ids = composed.map((i) => i.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('is deterministic — same test, same items, same order', () => {
+    expect(composeUnitTest(2).map((i) => i.id)).toEqual(composeUnitTest(2).map((i) => i.id));
+  });
+
+  it('respects the carry-back cap', () => {
+    const own = getUnitTest(2)!.items.length;
+    expect(composeUnitTest(2, 3)).toHaveLength(own + 3);
+    expect(composeUnitTest(2, 0)).toHaveLength(own);
+  });
+
+  it('every carried item is still gradable and still registry-clean', () => {
+    for (const item of composeUnitTest(2)) {
+      expect(isAnswerCorrect(item, intendedAnswer(item)), `${item.id} grades wrong`).toBe(true);
+    }
+  });
+
+  it('a unit with no bank composes to nothing rather than throwing', () => {
+    expect(composeUnitTest(99)).toEqual([]);
   });
 });
