@@ -599,6 +599,53 @@ function checkCumulativeTests() {
 }
 
 /**
+ * E9: how much of each test bank asks the learner to *produce*.
+ *
+ * §1.8 rates recall above recognition and productive practice above receptive,
+ * and design rule E9 asks for ≥60% production in test banks. We are not there
+ * and the number should be visible rather than quietly missed, so this reports
+ * the real figure every run.
+ *
+ * A warning, not an error, and deliberately so. Part of the shortfall is not
+ * fixable by writing better items: a good number of Unit 1's objectives are
+ * facts *about* the language ("every noun has a gender", "tone is not
+ * written") which have nothing to type, and the alphabet items would have to
+ * be answered with bare letters, which are not registry forms. Failing the
+ * build over a target that the content cannot reach would train people to
+ * weaken the check, which is how the old validator became decoration.
+ *
+ * Both numbers are reported because they answer different questions. The
+ * authored figure is the one an author controls when adding items to a bank
+ * file. The composed figure is the test a learner actually sits, after
+ * carry-back folds in items from earlier units — so a unit can write a
+ * production-heavy bank and still hand the learner a recognition-heavy test.
+ */
+function checkBankProductionMix() {
+  const mix = (items) => {
+    const p = items.filter((i) => PRODUCTION_TYPES.has(i.type)).length;
+    return { p, n: items.length, pct: Math.round((p / items.length) * 100) };
+  };
+  const lines = [];
+  let short = false;
+  for (const unit of UNITS) {
+    const own = TEST_BANKS.find((b) => b.id === unit.testBankId);
+    if (!own) continue;
+    const authored = mix(own.items);
+    const sat = mix(composeUnitTest(unit.id));
+    if (sat.pct < 60) short = true;
+    lines.push(
+      `${own.id}: ${authored.p}/${authored.n} authored (${authored.pct}%) · ` +
+        `learner sits ${sat.p}/${sat.n} (${sat.pct}%)`,
+    );
+  }
+  if (short) {
+    warn('E9', `Test banks below the 60% production target of design rule E9:\n      ${lines.join('\n      ')}`);
+  } else {
+    pass('E9', `Every test bank meets the 60% production target:\n      ${lines.join('\n      ')}`);
+  }
+}
+
+/**
  * U1: bank Somali must be registry-verified, exactly as lesson Somali is.
  *
  * This is the check the bank's own header claimed was running while nothing
@@ -731,6 +778,7 @@ checkStructure();
 checkBankUnits();
 checkUnitRegistration();
 checkCumulativeTests();
+checkBankProductionMix();
 checkBankSourcing();
 checkBankLanguage();
 checkBankObjectiveCoverage();
