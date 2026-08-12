@@ -156,6 +156,11 @@ export const TOP_500_WORDS: VocabWord[] = [
   { rank: 90, somali: 'keentaa', english: 'you bring / she brings', pos: 'verb', lessonId: 7, confidence: 'verified', sources: ['Wikipedia: Somali grammar', 'Nilsson 2023 §11.1 (present-tense rule)'] },
   { rank: 91, somali: 'keenaan', english: 'they bring', pos: 'verb', lessonId: 7, confidence: 'verified', sources: ['Wikipedia: Somali grammar', 'Nilsson 2023 §11.1 (present-tense rule)'] },
 
+  // ── Lesson 8 — words from the word-order examples ──────────────────────
+  { rank: 93, somali: 'shaah', english: 'tea', pos: 'noun', lessonId: 8, confidence: 'verified', sources: ['Nilsson 2023 §11.13.3a', 'Orwin p.41'] },
+  { rank: 94, somali: 'tegey', english: 'went', pos: 'verb', lessonId: 8, confidence: 'single-source', sources: ['Orwin p.41'] },
+  { rank: 95, somali: 'cabbay', english: 'drank', pos: 'verb', lessonId: 8, confidence: 'single-source', sources: ['Orwin p.41'] },
+
 ];
 
 /** All words taught in a given lesson (1–14 for Phase 6 core), in learning order. */

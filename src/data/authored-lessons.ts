@@ -1430,7 +1430,252 @@ const LESSON_7: Lesson = {
   ],
 };
 
-export const AUTHORED_LESSONS: Lesson[] = [LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6, LESSON_7];
+// ============================================================================
+// LESSON 8 — Putting It In Order  (Unit 2)
+// ============================================================================
+
+/**
+ * The last lesson of Unit 2 and the payoff of the whole unit: the boxes in
+ * order, and what the spotlight does to that order.
+ *
+ * WHAT THIS LESSON DELIBERATELY DOES NOT SAY. The obvious lesson here is
+ * "Somali is SOV — the verb goes last", and it was very nearly written that
+ * way. The sources do not support it as a rule. Orwin p.41 gives
+ * "SUBJECT OBJECT VERB" as the *basic* order and then immediately allows
+ * objects after the verb; Nilsson §12 is blunter — "there is no requirement
+ * for the subject of a clause to occur in any specific position" and "the
+ * object may equally well occur before as after the verb phrase".
+ *
+ * So the lesson teaches what both sources actually agree on:
+ *   1. the action word usually lands at the end, and the thing acted on comes
+ *      before it — the reverse of English, and the reason a Somali sentence
+ *      reads back-to-front at first;
+ *   2. the signal sits *immediately before the verb*. This is the part that is
+ *      genuinely rigid — Orwin states it as the rule of thumb for the mood
+ *      classifier ("as close to the verb as possible") and Nilsson's fixed
+ *      phrase-internal order agrees;
+ *   3. `waxa` is the exception that proves it: the spotlighted words land
+ *      *after* the verb.
+ *
+ * Per LESSON_CONVENTIONS §2.1, that is a rule stated as behaviour rather than
+ * as a typological label, and it has the advantage of being true.
+ *
+ * SOURCING SHAPED THE EXERCISES. Orwin's example sentences carry vocabulary
+ * only Orwin has (`tegey`, `cabbay`, `koob`), so under check S6 they are shown
+ * and read but never typed. Every production item answers with fully
+ * double-sourced material the learner already owns — `Wiilku waa macallin`
+ * from Unit 1, and `wuu keenaa` from Lesson 7.
+ */
+const LESSON_8: Lesson = {
+  id: 8,
+  unitId: 2,
+  title: 'Putting It In Order',
+  newItems: ['8-teach-verb-last', '8-teach-signal-hugs', '8-teach-waxa-moves'],
+  objectives: ['order-verb-last', 'order-signal-hugs-verb', 'order-waxa-moves-it'],
+  cards: [
+    {
+      id: '8-blueprint',
+      type: 'blueprint',
+      blueprintSlot: 'DO',
+      content: `${BOX}\n\nEvery box is filled. The last question is what order they come in — and the answer is not the English one.`,
+    },
+    {
+      id: '8-connect',
+      type: 'connect',
+      prompt:
+        'You have all the pieces: **WHO**, the **SIGNAL** (even squashed onto a pronoun), and the **DO** box with an ending that matches who. Today: the order they stand in.',
+    },
+    {
+      id: '8-promise',
+      type: 'promise',
+      prompt:
+        'By the end you will read **Nin shaah wuu cabbay** — four words in an order English would never use. You will know exactly why each one sits where it does.',
+    },
+    {
+      id: '8-predict',
+      type: 'predict',
+      prompt:
+        'Here is a real Somali sentence meaning **"A man drank tea."**\n\n' +
+        '**Nin shaah wuu cabbay.**\n\n' +
+        'The words are: *nin* a man · *shaah* tea · *wuu* the signal + he · *cabbay* drank.\n\n' +
+        'Before reading on: what has moved, compared with the English?',
+    },
+    {
+      id: '8-teach-verb-last',
+      type: 'teach',
+      isNew: true,
+      title: 'The action lands at the end',
+      content:
+        'English puts the action in the middle: *A man **drank** tea.*\n\n' +
+        'Somali usually puts it last, with the thing acted on **before** it:\n\n' +
+        '• **Nin shaah wuu cabbay.** — a man / tea / (signal+he) / drank\n' +
+        '• **Koob keen!** — a cup / bring!\n\n' +
+        'Read literally, that is *"a man tea he-drank"* and *"a cup bring"*. This is the single biggest reason a Somali sentence feels back-to-front at first: you are waiting for the verb and it has not arrived yet.\n\n' +
+        'The honest version of the rule is **usually**, not always. Somali moves noun phrases around more freely than English does, and you will meet sentences with things after the verb. What follows is the part that does not move.',
+    },
+    {
+      id: '8-notice-1',
+      type: 'notice',
+      exercise: {
+        id: 'l8-n1',
+        type: 'multiple_choice',
+        objectiveIds: ['order-verb-last'],
+        question: 'In **Nin shaah wuu cabbay** ("A man drank tea"), where has the action word gone, compared with English?',
+        options: [
+          'To the end, after the thing being drunk',
+          'To the front, before everything else',
+          'Straight after the man, as in English',
+          'Nowhere — the order matches English exactly',
+        ],
+        correctAnswer: 'To the end, after the thing being drunk',
+        hint: 'Line the two up word by word: *a man / tea / he / drank*.',
+        explanation:
+          '**cabbay** (drank) is last, and **shaah** (tea) comes before it. English would say "a man drank tea"; Somali gets to the action after telling you what it was done to.',
+      },
+    },
+    {
+      id: '8-teach-signal-hugs',
+      type: 'teach',
+      isNew: true,
+      title: 'The signal never leaves the verb',
+      content:
+        'Noun phrases can shift about. The signal does not. **It sits as close to the action word as it can get.**\n\n' +
+        '• **Nin waa tegey.** — a man / (signal) / went\n' +
+        '• **Nin shaah wuu cabbay.** — a man / tea / (signal+he) / drank\n\n' +
+        'In both, the signal is the last thing before the verb. Even with an extra word wedged in, it does not drift.\n\n' +
+        'This is the most reliable thing you know about Somali word order, and it is worth more than any rule about subjects and objects. **Find the signal, and the action word is immediately to its right.**',
+    },
+    {
+      id: '8-notice-2',
+      type: 'notice',
+      exercise: {
+        id: 'l8-n2',
+        type: 'multiple_choice',
+        objectiveIds: ['order-signal-hugs-verb'],
+        question: 'You are reading a long Somali sentence and you spot the signal **wuu**. What do you know immediately?',
+        options: [
+          'The action word is the next thing along',
+          'The sentence has just ended',
+          'The action word is right before it',
+          'The next word is the subject',
+        ],
+        correctAnswer: 'The action word is the next thing along',
+        hint: 'The signal keeps as close to the verb as it can, and it sits in front.',
+        explanation:
+          'The signal hugs the verb from in front, so whatever follows it is the action word. That holds even when other words move around, which makes it the most dependable landmark in the sentence.',
+      },
+    },
+    {
+      id: '8-complete-1',
+      type: 'complete',
+      exercise: {
+        id: 'l8-c1',
+        type: 'fill_blank',
+        objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
+        question:
+          'Put the pieces of "A man went" in order:  Nin ___ tegey.',
+        options: ['waa', 'baa', 'waxa', 'ma'],
+        correctAnswer: 'waa',
+        hint: 'A plain statement, nothing spotlighted — and it belongs right before the verb.',
+        explanation:
+          '**Nin waa tegey.** The plain-statement signal **waa** sits immediately before **tegey** (went). **baa** and **waxa** would both claim something is being spotlighted.',
+      },
+    },
+    {
+      id: '8-teach-waxa-moves',
+      type: 'teach',
+      isNew: true,
+      title: 'waxa breaks the pattern on purpose',
+      content:
+        'One thing does move the verb off the end: **waxa**, the signal that spotlights whatever comes last.\n\n' +
+        'It has to. If **waxa** spotlights the end of the sentence, and the verb is at the end, then something must give — so the spotlighted words go **after** the verb:\n\n' +
+        '**waxa** (+ who) → **verb** → *the spotlighted words*\n\n' +
+        'That is why **waxa** sentences look inside out even once you are comfortable with the rest. They are not an exception to the system; they are the system, with the spotlight doing exactly what Lesson 5 said it does.\n\n' +
+        'The landmark still holds: the signal is still immediately before the verb.',
+    },
+    {
+      id: '8-notice-3',
+      type: 'notice',
+      exercise: {
+        id: 'l8-n3',
+        type: 'multiple_choice',
+        objectiveIds: ['order-waxa-moves-it'],
+        question: 'In a **waxa** sentence, where do the spotlighted words land?',
+        options: [
+          'After the action word',
+          'Before the action word, as usual',
+          'At the very start of the sentence',
+          'Directly before waxa',
+        ],
+        correctAnswer: 'After the action word',
+        hint: '**waxa** spotlights whatever finishes the sentence — so what has to move?',
+        explanation:
+          '**waxa** spotlights the end, so the spotlighted words go past the verb to get there. **baa** does the opposite: it spotlights what sits immediately before it, and leaves the verb at the end.',
+      },
+    },
+    {
+      id: '8-produce-1',
+      type: 'produce',
+      exercise: {
+        id: 'l8-p1',
+        type: 'unscramble',
+        objectiveIds: ['order-signal-hugs-verb'],
+        question: 'Build "The boy is a teacher." — the sentence you first made in Unit 1, now that you know why the pieces sit where they do.',
+        words: ['macallin', 'Wiilku', 'waa'],
+        answer: 'Wiilku waa macallin',
+        hint: 'Who first, then the signal. Here the signal is next to what the boy *is*, since there is no action word.',
+        explanation:
+          '**Wiilku waa macallin.** The subject leads, and **waa** sits immediately before what is being said about him — the same slot the action word would occupy if there were one.',
+      },
+    },
+    {
+      id: '8-produce-2',
+      type: 'produce',
+      exercise: {
+        id: 'l8-p2',
+        type: 'unscramble',
+        objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
+        question: 'Build "he brings" — signal and action word, in the order Somali puts them.',
+        words: ['keenaa', 'wuu'],
+        answer: 'wuu keenaa',
+        hint: 'The signal hugs the verb from in front.',
+        explanation:
+          '**wuu keenaa.** The signal comes first and the action word follows immediately — never the other way round.',
+      },
+    },
+    {
+      id: '8-payoff',
+      type: 'payoff',
+      prompt:
+        'That was the promise.\n\n' +
+        '**Nin shaah wuu cabbay.** — a man · tea · (signal + he) · drank\n\n' +
+        'The action waits until the end. The thing acted on comes before it. And the signal is welded to the front of the verb, which is how you find your way in even when the rest moves.',
+    },
+    {
+      id: '8-summary',
+      type: 'summary',
+      title: 'What you can do now',
+      content:
+        'Unit 2 is finished, and the four boxes are all yours:\n\n' +
+        '• the action word usually lands **last**, with the thing acted on before it\n' +
+        '• the **signal sits immediately before the action word** — the one part that does not drift\n' +
+        '• **waxa** sends the spotlighted words **past** the verb, which is why those sentences look inside out\n\n' +
+        'You started this unit unable to say why Somali sentences seemed to scramble themselves. You can now read a plain sentence, find the signal, find the action, and say which word the sentence is really about.\n\n' +
+        'Next, the unit test — and it will ask about Unit 1 as well, not just this one.',
+    },
+  ],
+};
+
+export const AUTHORED_LESSONS: Lesson[] = [
+  LESSON_1,
+  LESSON_2,
+  LESSON_3,
+  LESSON_4,
+  LESSON_5,
+  LESSON_6,
+  LESSON_7,
+  LESSON_8,
+];
 
 /** Highest built lesson id. Only built lessons appear here — never stubs. */
 export const MAX_LESSON_ID = Math.max(...AUTHORED_LESSONS.map((l) => l.id));

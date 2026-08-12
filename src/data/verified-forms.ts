@@ -258,6 +258,14 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // record. That ambiguity is a teaching point for Unit 3, not a blocker.
   ma: { gloss: 'question / not — the same spelling does both', sources: ['N §12.3', 'O p.23'] },
   miyaa: { gloss: 'question word — "is it …?"', sources: ['N §5.2', 'O p.26'] },
+
+  // ── UNIT 2: words in Orwin's word-order examples (O p.41–42) ────────────
+  // Lesson 8 shows these sentences whole; only `shaah` is double-sourced, so
+  // under check S6 the rest are read but never asked for as a typed answer.
+  shaah: { gloss: 'tea', gender: 'm', sources: ['N §11.13.3a', 'O p.41'] },
+  tegey: { gloss: 'went', sources: ['O p.41'], confidence: 'single' },
+  cabbay: { gloss: 'drank', sources: ['O p.41'], confidence: 'single' },
+  koob: { gloss: 'cup', sources: ['O p.42'], confidence: 'single' },
 };
 
 /** Proper nouns that appear in sourced example sentences. */

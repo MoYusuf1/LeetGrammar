@@ -1,4 +1,7 @@
 import { describe, it, expect } from 'vitest';
+// `?raw` gives the file as a string through Vite, so this needs no node types.
+import lessonCardsSrc from '@/components/lesson/LessonCards.tsx?raw';
+import unitTestSrc from '@/pages/UnitTest.tsx?raw';
 import {
   MAX_LESSON_ID,
   LESSON_LIST,
@@ -253,5 +256,38 @@ describe('authored-lessons: every card renders the content it carries', () => {
       }
     }
     expect(blank).toEqual([]);
+  });
+});
+
+/**
+ * REGRESSION: AnswerInput must be keyed by exercise id, everywhere.
+ *
+ * AnswerInput keeps the assembled word bank of an `unscramble` in its own
+ * state. Rendered without a `key`, React reuses the same instance from one card
+ * to the next, so the words tapped on card 13 arrive already-placed on card 14
+ * and card 14's own chips render as spent. Check Answer stays disabled and the
+ * learner is stuck — the Lesson 1 softlock, in a new costume.
+ *
+ * It hid for a long time because it only bites when two stateful inputs appear
+ * back to back, which no lesson did until Lesson 8. The unit test player was
+ * keyed from the start and the lesson player was not, so nothing compared them.
+ *
+ * This reads the source because the invariant is structural: there is no
+ * component-rendering setup here, and an unkeyed AnswerInput is invisible to
+ * every data-level check.
+ */
+describe('lesson player: stateful inputs are keyed', () => {
+  it('every <AnswerInput> is keyed by exercise id', () => {
+    const roots: Array<[string, string]> = [
+      ['LessonCards.tsx', lessonCardsSrc],
+      ['UnitTest.tsx', unitTestSrc],
+    ];
+    const unkeyed: string[] = [];
+    for (const [file, src] of roots) {
+      for (const m of src.matchAll(/<AnswerInput\b([\s\S]{0,220}?)\/>/g)) {
+        if (!/\bkey=\{/.test(m[1])) unkeyed.push(`${file}: an <AnswerInput> has no key`);
+      }
+    }
+    expect(unkeyed).toEqual([]);
   });
 });

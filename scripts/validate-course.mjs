@@ -73,7 +73,8 @@ const ENGLISH_STOPLIST = new Set(
    // Lesson 5 emphasises these English words in bold while teaching the signal
    // system; they are plain English, not Somali forms awaiting a source.
    'voice tone volume loud louder emphasis emphasises signal signals spotlight spotlights end friend friends ' +
-   'statement statements before after left right position placement flat evenly ends starts finishes').split(/\s+/),
+   'statement statements before after left right position placement flat evenly ends starts finishes ' +
+   'drank went brought usually always past order action landmark').split(/\s+/),
 );
 
 /**
