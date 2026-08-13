@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-12, after retrieval density was fixed course-wide and T2 promoted to an error.
+> comes next. **Last updated:** 2026-08-12, after Layer 2 (homework) was built.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -60,8 +60,8 @@ worth knowing that the routine exists and is documented in
 | Vocabulary entries | 95, of which **43** are 2-source verified |
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
-| Tests | 72, across 3 files |
-| Validator | 20 checks passing, 0 errors, 4 open warnings |
+| Tests | 83, across 4 files |
+| Validator | 21 checks passing, 0 errors, 4 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
 
 ---
@@ -114,23 +114,31 @@ come from Orwin's word-order examples and are absent from Nilsson. They need a
 third source, not more searching. The two winnable ones (`waxaan`, `waxaad`)
 have their exact leads recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §9.
 
-### 3. The course has no retention layer 🔴
+### 3. Retention layer — Layer 2 built, spacing still open 🟡
 
-The design names exactly **two** techniques as "high utility" (§1.2): practice
-testing and **distributed practice**. We built the first thoroughly and the
-second not at all.
+§1.2 rates exactly two techniques "high utility": practice testing and
+**distributed practice**. The course had the first twice over (in-lesson
+practice, unit test) and none of the second.
 
-- `getNextReviewDate` and `getItemsDueForReview` still have **no callers**, so
-  nothing a learner meets is ever deliberately resurfaced (§1.4).
-- The **homework layer** (design Layer 2 of 3) does not exist, which is also
-  where the first interleaving was supposed to happen (§1.5). We block and
-  never interleave.
-- Cumulative unit tests, added recently, are the only revisiting mechanism —
-  one exposure at the end of a unit. That is a final exam, not spacing.
+**Homework now exists** — `src/lib/homework.ts`, page at `/#/homework/:id`,
+offered on each completed lesson row. 12 items, **33% carried back** from
+earlier lessons, 67–100% production for lessons 3+, immediate metalinguistic
+feedback, scored via `recordPracticeScore` and **gating nothing**. Retrying
+serves a completely different set (0/12 overlap), deterministically.
 
-For a learner working alone on a phone with no teacher to notice decay, this is
-the wrong half of the design to be missing. It is now the largest gap in the
-course, larger than any remaining content.
+Items are *composed* from material that already exists rather than authored,
+the same decision as unit-test carry-back: nothing new to source and nothing a
+future author can forget. Check `A3` enforces the 30% floor and 11 tests cover
+the rest; both proven to bite.
+
+This is also where **interleaving** starts (§1.5) — in-lesson practice is
+blocked deliberately, and homework is the first place lessons are mixed.
+Verified in the browser: Lesson 5's homework served a Lesson 3 item
+(`magaalo → magaalada`) badged "From earlier", and the set completed 12/12.
+
+**Still open: spacing.** `getNextReviewDate` and `getItemsDueForReview` remain
+without callers, so nothing *schedules* a return — the learner has to choose to
+open homework. Fixed-interval review (§1.4) is the remaining half of debt 3.
 
 ### 4. Retrieval density — resolved ✅
 

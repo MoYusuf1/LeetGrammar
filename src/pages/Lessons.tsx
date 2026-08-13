@@ -8,7 +8,7 @@
 
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { BookOpen, Check, Circle, PlayCircle, FileText, ClipboardCheck, Lock } from 'lucide-react';
+import { BookOpen, Check, Circle, PlayCircle, FileText, ClipboardCheck, Lock, Repeat } from 'lucide-react';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
 import { UNITS, getUnitTest } from '@/data/unit-tests';
 import { isUnitComplete } from '@/lib/assessment';
@@ -87,6 +87,7 @@ export default function LessonsPage() {
                       resumeAt={resumeCard(lesson.lessonId)}
                       onClick={() => navigate(`/lesson/${lesson.lessonId}`)}
                       onWorksheet={() => navigate(`/worksheet/${lesson.lessonId}`)}
+                      onHomework={() => navigate(`/homework/${lesson.lessonId}`)}
                     />
                   ))}
                   {bank && (
@@ -152,12 +153,14 @@ function LessonRow({
   resumeAt,
   onClick,
   onWorksheet,
+  onHomework,
 }: {
   lesson: LessonSummary;
   completed: boolean;
   resumeAt: number;
   onClick: () => void;
   onWorksheet: () => void;
+  onHomework: () => void;
 }) {
   const inProgress = !completed && resumeAt > 0;
   return (
@@ -192,6 +195,19 @@ function LessonRow({
           </p>
         </div>
       </button>
+
+      {/* Homework is Layer 2: mixed, carries earlier lessons back, gates nothing.
+          Offered once the lesson is done, since it revisits rather than teaches. */}
+      {completed && (
+        <button
+          onClick={onHomework}
+          title="Homework — mixed practice, including earlier lessons"
+          aria-label={`Homework for lesson ${lesson.lessonId}`}
+          className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#141414] border border-[#22d3ee30] flex items-center justify-center text-[#22d3ee] hover:border-[#22d3ee60] transition-colors"
+        >
+          <Repeat className="w-4 h-4" />
+        </button>
+      )}
 
       <button
         onClick={onWorksheet}

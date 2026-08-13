@@ -27,6 +27,7 @@ import { BANNED_TERMS, ALLOWLIST } from '../src/data/banned-terms.ts';
 import { VERIFIED_FORMS, DERIVATION_RULES, isVerifiedForm } from '../src/data/verified-forms.ts';
 import { TEST_BANKS, UNITS, getUnitObjectives, composeUnitTest } from '../src/data/unit-tests.ts';
 import { describeObjective, labelledObjectives, objectiveLabels } from '../src/data/objectives.ts';
+import { composeHomework, carryBackCount } from '../src/lib/homework.ts';
 
 const errors = [];
 const warnings = [];
@@ -721,6 +722,44 @@ function checkBankProductionMix() {
 }
 
 /**
+ * A3: homework must carry material back from earlier lessons.
+ *
+ * Design rule A3 asks for ≥30% carry-back, because homework is where
+ * distributed practice and the first interleaving live (§1.2, §1.5). Homework
+ * that only asks about the lesson just finished is a third helping of blocked
+ * practice, not a second layer.
+ *
+ * Checks the composed set rather than an authored bank — homework is assembled
+ * by `composeHomework()`, exactly as unit-test carry-back is. Lesson 1 is
+ * exempt for the obvious reason.
+ */
+function checkHomeworkCarryBack() {
+  const problems = [];
+  const notes = [];
+  for (const lesson of AUTHORED_LESSONS) {
+    const items = composeHomework(lesson.id);
+    if (!items.length) {
+      problems.push(`L${lesson.id} composes no homework at all`);
+      continue;
+    }
+    const back = carryBackCount(lesson.id, items);
+    const pct = Math.round((back / items.length) * 100);
+    const isFirst = !AUTHORED_LESSONS.some((l) => l.id < lesson.id);
+    if (isFirst) {
+      notes.push(`L${lesson.id}: ${items.length} items (first lesson, nothing to carry back)`);
+      continue;
+    }
+    notes.push(`L${lesson.id}: ${items.length} items, ${back} carried back (${pct}%)`);
+    if (pct < 30) problems.push(`L${lesson.id} carries back ${pct}%; A3 asks for at least 30%`);
+  }
+  if (problems.length) {
+    fail('A3', `Homework carry-back:\n      ${problems.join('\n      ')}`);
+  } else {
+    pass('A3', `Homework carries earlier lessons forward:\n      ${notes.join('\n      ')}`);
+  }
+}
+
+/**
  * U1: bank Somali must be registry-verified, exactly as lesson Somali is.
  *
  * This is the check the bank's own header claimed was running while nothing
@@ -854,6 +893,7 @@ checkStructure();
 checkBankUnits();
 checkUnitRegistration();
 checkCumulativeTests();
+checkHomeworkCarryBack();
 checkBankProductionMix();
 checkBankSourcing();
 checkBankLanguage();

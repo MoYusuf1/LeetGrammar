@@ -9,6 +9,7 @@ const Lesson = lazy(() => import('@/pages/Lesson'));
 const Worksheet = lazy(() => import('@/pages/Worksheet'));
 const Lessons = lazy(() => import('@/pages/Lessons'));
 const UnitTest = lazy(() => import('@/pages/UnitTest'));
+const Homework = lazy(() => import('@/pages/Homework'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Glossary = lazy(() => import('@/pages/Glossary'));
 
@@ -33,6 +34,7 @@ export default function App() {
               <Route path="/learn" element={<Lessons />} />
               <Route path="/lesson/:id" element={<Lesson />} />
               <Route path="/unit-test/:id" element={<UnitTest />} />
+              <Route path="/homework/:id" element={<Homework />} />
               <Route path="/worksheet/:id" element={<Worksheet />} />
               <Route path="/glossary" element={<Glossary />} />
               {/* Redirects for retired routes */}
