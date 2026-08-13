@@ -22,7 +22,7 @@
  */
 
 import { AUTHORED_LESSONS, LESSON_LIST, MAX_LESSON_ID } from '../src/data/authored-lessons.ts';
-import { TOP_500_WORDS } from '../src/data/vocabulary.ts';
+import { TOP_500_WORDS, getVocabForLesson } from '../src/data/vocabulary.ts';
 import { BANNED_TERMS, ALLOWLIST } from '../src/data/banned-terms.ts';
 import { VERIFIED_FORMS, DERIVATION_RULES, isVerifiedForm } from '../src/data/verified-forms.ts';
 import { TEST_BANKS, UNITS, getUnitObjectives, composeUnitTest } from '../src/data/unit-tests.ts';
@@ -459,6 +459,70 @@ function checkOrphanObjectives() {
   }
 }
 
+/**
+ * T2: how far a learner can scroll without being asked to retrieve anything.
+ *
+ * This is design rule `S5` from COURSE_DESIGN Part 9, renumbered because this
+ * file's `S*` ids mean *sourcing* and its `T*` ids mean *structure*; the design
+ * uses `S*` for structure. The two schemes diverged long before this check, and
+ * S5 here is already source independence.
+ *
+ * It allows no run of more than three cards without a retrieval
+ * card, because passive scrolling on a phone is the weakest mode there is and
+ * frequent forced recall is the antidote (§1.16). It was specified as an error
+ * in Part 9 and then never implemented, so nothing measured it for eight
+ * lessons.
+ *
+ * A retrieval card is one that makes the learner produce something: any card
+ * carrying an exercise, plus `predict`, which §1.16 counts as a retrieval event
+ * precisely because guessing before the reveal converts reading into recall.
+ *
+ * THIS MEASURES THE FLOW THE LEARNER SITS, NOT THE AUTHORED ARRAY, and the two
+ * differ in a way that matters. LessonCards injects the vocabulary deck after
+ * card 0, so a lesson authored as blueprint → connect → promise → predict — a
+ * compliant run of exactly three — reaches the learner as blueprint → vocab →
+ * connect → promise → predict, a run of four. Lessons 5–8 were written to the
+ * rule and still breach it once the deck lands. Checking `lesson.cards` would
+ * have reported them clean.
+ *
+ * Warning rather than error *for now*, and this is a debt not a decision: all
+ * eight lessons breach it, so failing the build would only invite someone to
+ * weaken the check. It should be promoted to an error once the openings are
+ * fixed — moving the vocab deck after the first retrieval card would settle
+ * lessons 5–8 by itself.
+ */
+function checkRetrievalDensity(maxRun = 3) {
+  const isRetrieval = (c) => Boolean(c.exercise) || c.type === 'predict';
+  const breaches = [];
+  for (const lesson of AUTHORED_LESSONS) {
+    const flow = [...lesson.cards];
+    if (getVocabForLesson(lesson.id).length) flow.splice(1, 0, { type: 'vocab' });
+    let longest = 0;
+    let run = 0;
+    let endsAt = 0;
+    flow.forEach((card, i) => {
+      if (isRetrieval(card)) run = 0;
+      else if (++run > longest) {
+        longest = run;
+        endsAt = i + 1;
+      }
+    });
+    if (longest > maxRun) {
+      breaches.push(`L${lesson.id}: ${longest} cards without retrieval (ending at card ${endsAt} of ${flow.length})`);
+    }
+  }
+  if (breaches.length) {
+    warn(
+      'T2',
+      `Passive runs longer than ${maxRun} cards, measured on the flow the learner sits (design rule S5):\n      ` +
+        breaches.join('\n      ') +
+        `\n      The injected vocabulary deck adds one passive card after the blueprint.`,
+    );
+  } else {
+    pass('T2', `No lesson lets the learner pass more than ${maxRun} cards without retrieving something`);
+  }
+}
+
 // ============================================================================
 // STRUCTURE
 // ============================================================================
@@ -772,6 +836,7 @@ checkBannedTerms();
 checkSentenceLength();
 checkExerciseMix();
 checkExerciseDensity();
+checkRetrievalDensity();
 checkObjectiveCoverage();
 checkOrphanObjectives();
 checkStructure();

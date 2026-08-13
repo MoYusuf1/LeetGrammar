@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-12, after a bank production-mix pass.
+> comes next. **Last updated:** 2026-08-12, after a pedagogy audit against the design's own rubric.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -59,7 +59,7 @@ worth knowing that the routine exists and is documented in
 | Verified-form registry | **106** forms (97 with 2+ sources; 4 rule-derived) |
 | Vocabulary entries | 95, of which **43** are 2-source verified |
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
-| Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 5) |
+| Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
 | Tests | 72, across 3 files |
 | Validator | 19 checks passing, 0 errors, 4 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
@@ -114,7 +114,76 @@ come from Orwin's word-order examples and are absent from Nilsson. They need a
 third source, not more searching. The two winnable ones (`waxaan`, `waxaad`)
 have their exact leads recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §9.
 
-### 3. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
+### 3. The course has no retention layer 🔴
+
+The design names exactly **two** techniques as "high utility" (§1.2): practice
+testing and **distributed practice**. We built the first thoroughly and the
+second not at all.
+
+- `getNextReviewDate` and `getItemsDueForReview` still have **no callers**, so
+  nothing a learner meets is ever deliberately resurfaced (§1.4).
+- The **homework layer** (design Layer 2 of 3) does not exist, which is also
+  where the first interleaving was supposed to happen (§1.5). We block and
+  never interleave.
+- Cumulative unit tests, added recently, are the only revisiting mechanism —
+  one exposure at the end of a unit. That is a final exam, not spacing.
+
+For a learner working alone on a phone with no teacher to notice decay, this is
+the wrong half of the design to be missing. It is now the largest gap in the
+course, larger than any remaining content.
+
+### 4. Retrieval density breaches the design on every lesson ⚪
+
+Design rule `S5` allows no run of more than three cards without retrieval
+(§1.16: passive scrolling is the weakest mode, forced recall is the antidote).
+It was specified as an **error** in Part 9 and never implemented, so nothing
+measured it for eight lessons. Check **T2** now does.
+
+Two things it turned up. Lessons 1–4 breach it on the authored cards alone
+(runs of 4–6). Lessons 5–8 were written to the rule and hit exactly 3 — **and
+still breach it**, because `LessonCards` injects the vocabulary deck after card
+0, turning the compliant blueprint → connect → promise opening into four
+passive cards. Checking the authored array would have called them clean.
+
+Moving the vocab deck to sit after the first retrieval card fixes 5–8 outright.
+T2 is a warning until then; it should be promoted to an error once the openings
+comply, since the design specifies it as one.
+
+### 5. The Part 11 rubric had never been applied ⚪
+
+The design says to score every lesson, pass being **≥17/20 with no dimension at
+zero**. No lesson had ever been scored. Lesson 5 — the strongest one, and the
+unit's flagship — scores **15/20 with one zero**:
+
+| | Dimension | Score | Why |
+| --- | --- | --- | --- |
+| R1 | Blueprint | 2 | present, SIGNAL highlighted, advances one step |
+| R2 | Connection | 2 | names what was gained and what is being added |
+| R3 | Promise → payoff | 2 | the promised discrimination is tested, then closed word for word |
+| R4 | Cognitive load | 2 | two new items, each with its own card |
+| R5 | Plain language | 2 | no jargon; reads like ordinary English |
+| R6 | **Structured input** | **1** | see below |
+| R7 | **Retrieval density** | **0** | 4 cards without retrieval — see debt 7 |
+| R8 | Feedback | 2 | every explanation names the rule and why the distractor tempts |
+| R9 | Production weight | 1 | 2 of 7 items (29%); a strict read of "mostly MCQ" would give 0 |
+| R10 | Sourcing | 1 | four forms in the shown examples rest on a single source |
+
+**R6 is the finding that matters.** §1.10 is the most Somali-specific claim in
+the whole evidence base: learners default to reading the *first noun* as the
+subject, and particle lessons must be engineered so that guessing by word order
+fails. Lesson 5's first notice item asks which word `baa` spotlights in
+*Sahra baa salaamaysa saaxiibkeed* — and the answer is **Sahra, the first
+noun**. A learner applying exactly the wrong heuristic gets it right. The
+`waxa` item two cards later does discriminate, since its answer is the last
+word, but half the structured input rewards the habit the course exists to
+break.
+
+Nothing checks this. `E10` was specified as a warning with a rubric line and
+was never implemented, because it resists automation — which is precisely why
+the design says manual review of `E10`/`V6` is "the highest-value human check
+available", and why it should be done per lesson rather than left to a script.
+
+### 6. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
 
 `COURSE.md` is 9,399 lines and was the source for the deleted
 `teaching-content.ts`. Its Somali has the same class of problems as the content
@@ -125,12 +194,12 @@ Both are **untouched** and were deliberately excluded from deletion: `COURSE.md`
 may be hand-written and is the only prose record of the wider course plan. It is
 not wired to anything.
 
-### 4. ~10 lint errors ⚪
+### 7. ~10 lint errors ⚪
 
 All in `src/components/ui/*` shadcn boilerplate, all pre-existing. No file under
 `src/data`, `src/lib`, `src/pages` or `src/components/lesson` contributes.
 
-### 5. Test banks sit at 47% / 46% production against a 60% target ⚪
+### 8. Test banks sit at 47% / 46% production against a 60% target ⚪
 
 Check `E9` now measures this every run and warns. It reports two figures,
 because they answer different questions: what the bank *author* wrote, and
