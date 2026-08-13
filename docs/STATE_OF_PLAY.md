@@ -45,6 +45,13 @@ correctives set for that objective alone, not the whole test again. Entry
 point is a row on `/learn`, gated by `isUnitComplete()`; route is
 `/#/unit-test/1`.
 
+The bank production conversions (design rule `E9`) were **verified in the
+browser**: Unit 1's composed test was driven end to end and scored 30/32 (94%,
+pass), with every one of its 15 production items rendering an input and grading
+real typed text. The commit that made those conversions could not check this —
+worth knowing that the routine exists and is documented in
+[ADDING_CONTENT.md](./ADDING_CONTENT.md).
+
 ### Supporting state
 
 | | |

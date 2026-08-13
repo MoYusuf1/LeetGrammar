@@ -198,6 +198,25 @@ And if the change is visible in the browser, **open the browser and drive it**.
 A green build is not evidence the app works — the worst bug in this project's
 history compiled cleanly and passed every check that existed.
 
+### Driving a unit test
+
+Same motion switch, and worth doing whenever bank items change shape —
+especially when an item is converted from multiple-choice to a typed answer,
+because a production item that renders no input is invisible to every gate.
+
+```js
+localStorage.setItem('lg-motion', 'off');
+localStorage.removeItem('leet-somali-progress-v7');
+// then complete the unit's lessons through the store and open /#/unit-test/N
+```
+
+Answer items by reading the bank itself rather than hardcoding a key — import
+`composeUnitTest(N)` in the page and take `correctAnswer` for choice types and
+`answer` for the rest. Note the three input shapes differ: choice types are
+buttons, `translate` and `marker_identification` use a text field, and
+`unscramble` uses word chips that must be clicked in order. A driver that
+assumes a text field will report a false failure on every unscramble.
+
 ### Driving the lesson player
 
 **Turn motion off first.** The player animates card transitions, and the
