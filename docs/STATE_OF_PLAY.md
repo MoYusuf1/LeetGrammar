@@ -228,78 +228,101 @@ The two that matter pedagogically:
 
 ---
 
-## Where this sits in the overall plan
+## The plan
 
-Two numbering schemes have been in use and they do not line up. Against the
-design's seven phases in
-[COURSE_DESIGN.md Part 7](./COURSE_DESIGN.md#part-7--execution-plan):
+### What changed, and why the original sequencing no longer fits
+
+[COURSE_DESIGN Part 7](./COURSE_DESIGN.md#part-7--execution-plan) sequenced the
+build by *content* — units in order, on the assumption that a lesson could be
+written once someone sat down to write it. That assumption was wrong, and the
+correction is the most useful thing this project has learned:
+
+**Sourcing gates content, and it decides what a lesson can say.** Twice now the
+sources changed a lesson after it was planned. Lesson 5 lost `ma`, because one
+grammar could not attest it. Lesson 8 lost the claim "Somali is SOV", because
+one grammar explicitly denies it. Neither was discoverable from the design; both
+were discoverable in an afternoon of reading. So **every content phase now opens
+with a sourcing pass, and its outcome is allowed to reshape the phase.**
+
+Four more rules fall out of the same experience:
+
+1. **For morphology, source the rule; for vocabulary, you need a dictionary.**
+   Grammars illustrate rules with a handful of example words. That is enough to
+   license a whole paradigm (the `derived` tier, check `S7`) and nowhere near
+   enough for breadth — which is why 52 vocabulary entries still lack a second
+   source and no amount of re-reading Nilsson will fix it.
+2. **A target the content cannot reach gets measured, not chased.** Unit 1's
+   production ceiling is structural: its objectives are facts *about* the
+   language, with nothing to type. `E9` reports the number every run and warns.
+   Padding items to clear a threshold is the failure the postmortem describes.
+3. **Drive it in the browser.** Three softlocks so far passed build, tests and
+   validator. The routine is in [ADDING_CONTENT.md](./ADDING_CONTENT.md).
+4. **Write for a cold reader.** Another tool picked this repo up mid-stream and
+   continued correctly, which only worked because the docs carried the
+   reasoning and not just the result.
+
+### Where the phases stand
 
 | Phase | Work | State |
 | --- | --- | --- |
-| 1 | Data model + glossary + validator | ✅ done |
-| **2** | **Unit 2 — Lessons 5–8, the sentence formula** | ✅ **complete** |
-| 3 | Assessment engine | 🟡 built for Units 1–2; gaps above |
-| 4 | Unit 1 — Lessons 1–4 | ✅ done |
-| 5 | Vocabulary track (~500 words, sourced) | ❌ 26 of 84 sourced |
-| 6 | Units 3–4 — Lessons 9–14 | ❌ not started |
-| 7 | Retire `COURSE.md` + generator | ❌ still present |
+| 1 | Data model + glossary + validator | ✅ |
+| 2 | Unit 2 — Lessons 5–8 | ✅ |
+| 3 | Assessment engine | 🟡 tests, gating, correctives, cumulative done; **retake pool, homework, SRS open** |
+| 4 | Unit 1 — Lessons 1–4 | ✅ |
+| 5 | Vocabulary track | ❌ blocked on a dictionary, not on effort |
+| 6 | Units 3–4 — Lessons 9–14 | ❌ Unit 3 sourced and ready; Unit 4 unverified |
+| 7 | Retire `COURSE.md` + generator | ❌ trivial, deferred on purpose |
 
-Unit 2 is the spine — "the direct fix for the original complaint", the unit
-the design says should go deepest (§1.11). Lesson 5 gives the learner the
-SIGNAL box: they can now read a flat Somali sentence and say which word it is
-about. They still cannot build a full sentence, because verbs are Lesson 7.
+### Sequence from here
 
-### Unit 3 is now feasible — this was in doubt
+**A — Unit 3 (Lessons 9–11).** The next real gain, and sourcing is confirmed
+rather than assumed: both grammars cover past tense, negation and questions
+substantially. This is also where `ma` finally gets taught, closing the promise
+Lesson 5's docstring made when it cut it.
 
-Before Orwin, **negation and questions could not be sourced at all.** Both
-Wikipedia articles omit them entirely (verified directly, not assumed), so
-`ma` rested on Nilsson alone. Two of Unit 3's three lessons had no second
-source, and the honest options were to shrink the unit or find another book.
+One decision to make before authoring, recorded under Open Questions below:
+**which comes first, negation or questions.** The design says negation (10) then
+questions (11); Orwin introduces `ma` the other way round, as the interrogative
+classifier long before the negative. Since the same written word does both jobs,
+the order decides which meaning the learner meets first.
 
-Orwin covers negation, questions, imperatives, the tense system and the three
-conjugations. `ma` is registered with both sources, and the fact that the same
-spelling marks *both* a yes/no question and a negation — because tone is not
-written — is now attested by both rather than inferred from one. That stops
-being a hazard and becomes Unit 3's central teaching point.
+**B — Close the retake hole.** Unit 3 makes this worse rather than better: every
+new unit is another test whose results screen shows all the answers and whose
+retake serves the same items. Fixing it needs roughly double the items per
+objective — content, not code — so it is cheapest to do *while* authoring Unit 3
+rather than after.
 
-### Next step: Lesson 8 — Building a Sentence
+**C — The dictionary pass.** 52 vocabulary entries, plus the seven registry
+forms that two grammars cannot resolve. Wiktionary is already a source key.
+This is mechanical and can run in the background of anything else.
 
-The last lesson of Unit 2 and the payoff of the whole unit: **WHO + SIGNAL +
-DO** in order, and what the signal does to that order.
+**D — Unit 4 (Lessons 12–14), sourcing pass first.** Adjectives and prepositions
+are well covered in both grammars. **Numerals are the thin spot** — Orwin
+mentions them barely, so check that before planning Lesson 13, not after.
+Expect Unit 4 to be more lexical than Unit 2 or 3, which means the vocabulary
+constraint bites harder here than it has so far.
 
-Everything it assembles is already registered. What it may still need is
-attested *full sentences* showing the ordering, since convention 2.2 forbids
-composing them — and Orwin's dialogues are now a second well of those
-alongside Nilsson §13.1. Orwin p.24 alone has a complete Lesson 1 dialogue
-whose sentences use only forms already in the registry.
+**E — Cleanup.** `COURSE.md` retirement, the ten vendored lint errors, doc
+consolidation. All flat-cost, none of it gets worse by waiting, and it should
+not displace A–D.
 
-After Lesson 8, Unit 2 is complete. The ordered backlog after that, by
-compounding cost rather than size:
+### Deliberately not planned
 
-1. ~~Cumulative test items~~ ✅ **done** — `composeUnitTest()` folds one item
-   per earlier objective into every later unit test, so Unit 2's test is 30
-   items covering all 13 Unit 1 objectives. Composed rather than authored, so
-   it cannot be forgotten and needs no new code for Unit 3. Check `A4` and 8
-   tests enforce it; both proven to bite.
-2. ~~Production ratio~~ 🟡 **measured and pushed as far as it honestly goes** —
-   check `E9` reports it every run; banks went 44%/35% → 47%/46%. The rest is
-   not an authoring problem: Unit 2's remaining candidates are blocked by `S6`
-   on single-source forms, and Unit 1's are objectives with nothing to type.
-   Debt item 5 has the item-by-item reasoning. Lesson exercises are separately
-   at 32% (check `E1`) and *are* still a free content choice — set that policy
-   before Unit 3 is written, not after.
-3. ~~Upgrade the thin forms against Orwin~~ ✅ **mostly done** — 17 → 9, and
-   seven of the remainder need a third source rather than more effort.
-4. **Vocabulary sourcing** — 58 entries, flat cost but *live harm*: they are in
-   front of the learner now, and §1.12 says wrong forms entrench.
-
-Deliberately deferred, because their cost does **not** grow with content:
-the homework layer, SRS wiring, retiring `COURSE.md`, the 10 vendored lint
-errors, and doc consolidation.
-
----
+The homework layer (design Layer 2) and SRS wiring remain unbuilt. Both are real
+gaps against the design, and both are flat-cost: they read from banks that will
+exist anyway, so building them earlier buys nothing. Revisit once Unit 3 has
+landed and there is more material for them to work on.
 
 ## Open questions — these need a human decision
+
+**Does Unit 3 teach negation before questions, or the other way round?**
+`ma` is written identically in both roles, because tone is not written, so
+whichever comes first is the meaning the learner will reach for by default.
+COURSE_DESIGN puts negation at Lesson 10 and questions at 11; Orwin introduces
+`ma` as the interrogative classifier on p.15, long before the negative. Both
+orders are defensible and the sources do not settle it — it is a teaching
+judgement about which default is less harmful to unlearn later.
+
 
 **Should `haweeney` replace `naag` as the primary word for "woman"?**
 `naag` is the standard dictionary form, correctly feminine, and Lesson 2 leans on

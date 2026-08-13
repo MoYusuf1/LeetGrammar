@@ -516,6 +516,15 @@ The `PracticeExercise` union added in the last overhaul (`unscramble`, `translat
 
 # Part 7 — Execution plan
 
+> ⚠️ **The live sequencing is in
+> [STATE_OF_PLAY.md](./STATE_OF_PLAY.md#the-plan), not here.** The phases below
+> are the original plan and are kept because their *rationale* still holds —
+> notably why Unit 2 was built first. What they get wrong is the assumption
+> that content is limited by authoring effort. It is limited by **sourcing**,
+> which twice changed what a lesson could say after it was planned. STATE_OF_PLAY
+> carries the revised order and the rules that came out of that.
+
+
 Sequenced so nothing is built twice, and so the teaching model is validated on real
 content before it's applied fourteen times.
 
