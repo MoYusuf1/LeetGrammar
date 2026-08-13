@@ -495,8 +495,16 @@ function checkRetrievalDensity(maxRun = 3) {
   const isRetrieval = (c) => Boolean(c.exercise) || c.type === 'predict';
   const breaches = [];
   for (const lesson of AUTHORED_LESSONS) {
+    // Mirrors the insertion in LessonCards: after the second retrieval card.
     const flow = [...lesson.cards];
-    if (getVocabForLesson(lesson.id).length) flow.splice(1, 0, { type: 'vocab' });
+    if (getVocabForLesson(lesson.id).length) {
+      let seen = 0;
+      let at = flow.length;
+      for (let i = 0; i < flow.length; i++) {
+        if (isRetrieval(flow[i]) && ++seen === 2) { at = i + 1; break; }
+      }
+      flow.splice(at, 0, { type: 'vocab' });
+    }
     let longest = 0;
     let run = 0;
     let endsAt = 0;
@@ -516,7 +524,7 @@ function checkRetrievalDensity(maxRun = 3) {
       'T2',
       `Passive runs longer than ${maxRun} cards, measured on the flow the learner sits (design rule S5):\n      ` +
         breaches.join('\n      ') +
-        `\n      The injected vocabulary deck adds one passive card after the blueprint.`,
+        `\n      The injected vocabulary deck adds one passive card after the second retrieval.`,
     );
   } else {
     pass('T2', `No lesson lets the learner pass more than ${maxRun} cards without retrieving something`);

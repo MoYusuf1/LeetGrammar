@@ -120,6 +120,25 @@ rule really produces — `bilta`/`bilka`/`bilda` against `bisha` — never fille
 A learner who can eliminate three options by absurdity has practised nothing.
 **[judgment]**
 
+**3.1b A `notice` item must fail for a learner using the wrong strategy.**
+This is design rule `E10` and rubric line `R6`, and it is the most
+Somali-specific requirement in the whole evidence base. §1.10: learners default
+to reading the **first noun** as the subject and the point of the sentence. A
+structured-input item has to be built so that habit produces the *wrong*
+answer — otherwise it rewards exactly what the course exists to break.
+
+Lesson 5 failed this for a while and it is worth knowing how, because the item
+looked fine. It asked which word `baa` spotlights in *Sahra baa salaamaysa
+saaxiibkeed*, and the answer was **Sahra — the first noun.** Guessing by
+position got you full marks. It now uses *Gabadhu bariiska baa cuntay*, where
+the spotlight lands on the second noun and the first-noun reflex fails.
+
+**Before shipping any `notice` item, answer it using only the wrong heuristic
+and check that you get it wrong.** No script can do this — `E10` was specified
+as a warning precisely because it resists automation, which is why the design
+calls manual review of it the highest-value human check available. **[judgment
+— and the one most worth spending attention on]**
+
 **3.2 The explanation names the rule *and* why the wrong answer was tempting.**
 "**baa** spotlights whatever sits immediately before it, and that is **Sahra**"
 — then what the other reading would have meant. Feedback that only says

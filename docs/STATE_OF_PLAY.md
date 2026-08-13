@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-12, after a pedagogy audit against the design's own rubric.
+> comes next. **Last updated:** 2026-08-12, after fixing the two defects the pedagogy audit found.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -61,7 +61,7 @@ worth knowing that the routine exists and is documented in
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
 | Tests | 72, across 3 files |
-| Validator | 19 checks passing, 0 errors, 4 open warnings |
+| Validator | 20 checks passing, 0 errors, 5 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
 
 ---
@@ -132,7 +132,7 @@ For a learner working alone on a phone with no teacher to notice decay, this is
 the wrong half of the design to be missing. It is now the largest gap in the
 course, larger than any remaining content.
 
-### 4. Retrieval density breaches the design on every lesson ⚪
+### 4. Retrieval density: fixed for lessons 5–8, open for 1–4 ⚪
 
 Design rule `S5` allows no run of more than three cards without retrieval
 (§1.16: passive scrolling is the weakest mode, forced recall is the antidote).
@@ -140,20 +140,29 @@ It was specified as an **error** in Part 9 and never implemented, so nothing
 measured it for eight lessons. Check **T2** now does.
 
 Two things it turned up. Lessons 1–4 breach it on the authored cards alone
-(runs of 4–6). Lessons 5–8 were written to the rule and hit exactly 3 — **and
-still breach it**, because `LessonCards` injects the vocabulary deck after card
-0, turning the compliant blueprint → connect → promise opening into four
-passive cards. Checking the authored array would have called them clean.
+(runs of 4–6). Lessons 5–8 were written to the rule and breached it anyway,
+because `LessonCards` injected the vocabulary deck after card 0 and turned the
+compliant blueprint → connect → promise opening into four passive cards.
+Checking the authored array would have called them clean.
 
-Moving the vocab deck to sit after the first retrieval card fixes 5–8 outright.
-T2 is a warning until then; it should be promoted to an error once the openings
-comply, since the design specifies it as one.
+**Fixed for 5–8.** The deck now lands after the *second* retrieval card, which
+was chosen by measuring four candidate positions rather than guessing: it takes
+breaches from 8/8 to 4/8, is the only option that makes 5–8 compliant, and
+unlike parking the deck at the end it leaves the summary as the closing beat.
+Verified in the browser — the deck moved from card 2 to card 9 of Lesson 5.
+
+**Lessons 1–4 still breach it** (runs of 4–6) and need a content pass: a
+retrieval card inside their long teach stretches. T2 stays a warning until they
+comply, then should be promoted to an error, since the design specifies it as
+one.
 
 ### 5. The Part 11 rubric had never been applied ⚪
 
 The design says to score every lesson, pass being **≥17/20 with no dimension at
 zero**. No lesson had ever been scored. Lesson 5 — the strongest one, and the
-unit's flagship — scores **15/20 with one zero**:
+unit's flagship — scored **15/20 with one zero**, so it failed on both counts.
+After the two fixes below it scores **17/20 with no zeros, which is a pass**,
+though only just:
 
 | | Dimension | Score | Why |
 | --- | --- | --- | --- |
@@ -162,26 +171,33 @@ unit's flagship — scores **15/20 with one zero**:
 | R3 | Promise → payoff | 2 | the promised discrimination is tested, then closed word for word |
 | R4 | Cognitive load | 2 | two new items, each with its own card |
 | R5 | Plain language | 2 | no jargon; reads like ordinary English |
-| R6 | **Structured input** | **1** | see below |
-| R7 | **Retrieval density** | **0** | 4 cards without retrieval — see debt 7 |
+| R6 | **Structured input** | ~~1~~ → **2** | fixed; see below |
+| R7 | **Retrieval density** | ~~0~~ → **1** | fixed to exactly 3 cards; 2 needs ≤2 |
 | R8 | Feedback | 2 | every explanation names the rule and why the distractor tempts |
 | R9 | Production weight | 1 | 2 of 7 items (29%); a strict read of "mostly MCQ" would give 0 |
 | R10 | Sourcing | 1 | four forms in the shown examples rest on a single source |
 
-**R6 is the finding that matters.** §1.10 is the most Somali-specific claim in
+**R6 was the finding that mattered, and it is now fixed.** §1.10 is the most Somali-specific claim in
 the whole evidence base: learners default to reading the *first noun* as the
 subject, and particle lessons must be engineered so that guessing by word order
 fails. Lesson 5's first notice item asks which word `baa` spotlights in
 *Sahra baa salaamaysa saaxiibkeed* — and the answer is **Sahra, the first
 noun**. A learner applying exactly the wrong heuristic gets it right. The
-`waxa` item two cards later does discriminate, since its answer is the last
-word, but half the structured input rewards the habit the course exists to
+`waxa` item two cards later did discriminate, since its answer is the last
+word, but half the structured input rewarded the habit the course exists to
 break.
 
-Nothing checks this. `E10` was specified as a warning with a rubric line and
-was never implemented, because it resists automation — which is precisely why
-the design says manual review of `E10`/`V6` is "the highest-value human check
-available", and why it should be done per lesson rather than left to a script.
+It now uses Orwin's p.93 example **Gabadhu bariiska baa cuntay** ("The girl ate
+*the rice*"), where the spotlight falls on the **second** noun. Confirmed in
+the browser: answering with the first noun — the girl, who is also the subject
+and the one doing the eating — is rejected. The wrong strategy now produces the
+wrong answer.
+
+No script can check this. `E10` was specified as a warning precisely because it
+resists automation, which is why the design calls manual review of it "the
+highest-value human check available". It is now a required step in
+[LESSON_CONVENTIONS.md](./LESSON_CONVENTIONS.md) §3.1b: **answer every notice
+item using only the wrong heuristic, and confirm you get it wrong.**
 
 ### 6. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
 

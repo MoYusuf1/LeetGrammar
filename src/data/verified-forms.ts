@@ -263,6 +263,15 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // Lesson 8 shows these sentences whole; only `shaah` is double-sourced, so
   // under check S6 the rest are read but never asked for as a typed answer.
   shaah: { gloss: 'tea', gender: 'm', sources: ['N §11.13.3a', 'O p.41'] },
+
+  // ── Orwin's focus example, p.93 — read on the page ──────────────────────
+  // "Gabádhu bariiska báa cuntay." glossed 'The girl ate THE RICE', with the
+  // rice italicised as the focused phrase. Lesson 5 needs this because the
+  // spotlight falls on the SECOND noun: an item built on it cannot be answered
+  // by the first-noun habit §1.10 warns about.
+  gabadhu: { gloss: 'the girl (subject form)', gender: 'f', sources: ['O p.93'], confidence: 'single' },
+  bariiska: { gloss: 'the rice', gender: 'm', sources: ['O p.93'], confidence: 'single' },
+  cuntay: { gloss: 'ate', sources: ['N §11.1', 'O p.93'] },
   tegey: { gloss: 'went', sources: ['O p.41'], confidence: 'single' },
   cabbay: { gloss: 'drank', sources: ['O p.41'], confidence: 'single' },
   koob: { gloss: 'cup', sources: ['O p.42'], confidence: 'single' },

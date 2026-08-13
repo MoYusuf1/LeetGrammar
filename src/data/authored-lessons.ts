@@ -850,12 +850,13 @@ const LESSON_5: Lesson = {
         type: 'multiple_choice',
         objectiveIds: ['signal-focus-before'],
         question:
-          'In **Sahra baa salaamaysa saaxiibkeed**, which word is being spotlighted?',
-        options: ['Sahra', 'salaamaysa', 'saaxiibkeed', 'nothing in particular'],
-        correctAnswer: 'Sahra',
-        hint: 'Find **baa**, then look at the word immediately to its left.',
+          'Here is a different sentence: **Gabadhu bariiska baa cuntay** — "The girl ate the rice." Which words is the spotlight on?',
+        options: ['bariiska — the rice', 'Gabadhu — the girl', 'cuntay — ate', 'nothing in particular'],
+        correctAnswer: 'bariiska — the rice',
+        hint: 'Do not go by position in the sentence. Find **baa**, then look at what sits immediately to its left.',
         explanation:
-          '**baa** spotlights whatever sits immediately before it, and that is **Sahra**. So the sentence means "**SAHRA** is greeting her friend" — it answers who, not what.',
+          '**baa** spotlights whatever is immediately before it, and here that is **bariiska** — the rice. So it means "The girl ate **THE RICE**".\n\n' +
+          'Notice what did *not* work: the girl is the first thing in the sentence and the one doing the eating, and she is **not** the spotlight. Reaching for the first noun is the habit to break — only the position of **baa** tells you.',
       },
     },
     {

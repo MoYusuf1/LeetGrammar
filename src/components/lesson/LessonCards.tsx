@@ -109,14 +109,38 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     useProgressStore.getState().setLessonCardPosition(lessonId, cardIndex);
   }, [cardIndex, lessonId]);
 
-  /* Card flow = authored cards + an injected vocab deck placed right after the blueprint/intro. */
+  /*
+   * Card flow = the authored cards plus an injected vocabulary deck.
+   *
+   * The deck lands after the SECOND retrieval card, and where it goes is a
+   * pedagogical constraint rather than a layout preference. Design rule S5
+   * allows no run of more than three cards without retrieval (§1.16). This used
+   * to insert at index 1, straight after the blueprint, which turned the
+   * authored opening — blueprint, connect, promise, then a predict card — from
+   * a compliant run of three into four. Lessons 5–8 were written to the rule
+   * and breached it anyway, and because the breach only existed in the injected
+   * flow, nothing looking at `lesson.cards` could see it. Check T2 measures
+   * this flow now, not the authored array.
+   *
+   * Landing after the second retrieval also reads better: by then the learner
+   * has met the lesson's first new idea, so the deck is a list of words they
+   * have just seen used rather than a list to be taken on faith.
+   */
   const cards: FlowCard[] = useMemo(() => {
     const base: FlowCard[] = content?.cards ?? [];
     const words = getVocabForLesson(lessonId);
     if (!content || words.length === 0) return base;
     const vocabCard: VocabFlowCard = { type: 'vocab', words };
-    // Insert vocab card after the first card (blueprint in new structure, intro in old)
-    const insertAt = base.length > 0 ? 1 : 0;
+
+    const isRetrieval = (c: FlowCard) => Boolean((c as TeachingCard).exercise) || c.type === 'predict';
+    let seen = 0;
+    let insertAt = base.length; // no retrieval cards at all: park it at the end
+    for (let i = 0; i < base.length; i++) {
+      if (isRetrieval(base[i]) && ++seen === 2) {
+        insertAt = i + 1;
+        break;
+      }
+    }
     return [...base.slice(0, insertAt), vocabCard, ...base.slice(insertAt)];
   }, [content, lessonId]);
 
