@@ -485,11 +485,14 @@ function checkOrphanObjectives() {
  * rule and still breach it once the deck lands. Checking `lesson.cards` would
  * have reported them clean.
  *
- * Warning rather than error *for now*, and this is a debt not a decision: all
- * eight lessons breach it, so failing the build would only invite someone to
- * weaken the check. It should be promoted to an error once the openings are
- * fixed — moving the vocab deck after the first retrieval card would settle
- * lessons 5–8 by itself.
+ * An ERROR, as the design specifies. It was a warning only while the course
+ * breached it everywhere; all eight lessons now comply, so the property is
+ * locked in rather than merely observed. Two changes got here: the vocabulary
+ * deck moved to sit after the second retrieval card, and lessons 1–4 gained
+ * the `predict` card that lessons 5–8 always had.
+ *
+ * If this fails, do not raise `maxRun`. Add a retrieval card — a `predict`
+ * before a rule is revealed is the cheapest one and is what §1.16 asks for.
  */
 function checkRetrievalDensity(maxRun = 3) {
   const isRetrieval = (c) => Boolean(c.exercise) || c.type === 'predict';
@@ -520,7 +523,7 @@ function checkRetrievalDensity(maxRun = 3) {
     }
   }
   if (breaches.length) {
-    warn(
+    fail(
       'T2',
       `Passive runs longer than ${maxRun} cards, measured on the flow the learner sits (design rule S5):\n      ` +
         breaches.join('\n      ') +

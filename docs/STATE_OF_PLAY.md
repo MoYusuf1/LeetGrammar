@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-12, after fixing the two defects the pedagogy audit found.
+> comes next. **Last updated:** 2026-08-12, after retrieval density was fixed course-wide and T2 promoted to an error.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -22,16 +22,16 @@ An **8-lesson Somali course** in 2 units, local-only, no accounts, progress in
 
 | Lesson | Title | Cards | Exercises | Teaches |
 | --- | --- | --- | --- | --- |
-| 1 | Sounds & Spelling | 11 | 5 | alphabet; no P/V/Z; dh/kh/sh; the throat letters **c** and **x**; doubled vowels |
-| 2 | Naming Things | 14 | 6 | noun gender; why it is invisible in writing; reading gender off the "the" form |
-| 3 | Saying "The" | 16 | 9 | the article is a suffix; all eight assimilation outcomes; no indefinite article |
-| 4 | I, You, He, She | 14 | 6 | eight pronouns; inclusive/exclusive "we"; short subject pronouns; the subject marker |
+| 1 | Sounds & Spelling | 12 | 5 | alphabet; no P/V/Z; dh/kh/sh; the throat letters **c** and **x**; doubled vowels |
+| 2 | Naming Things | 15 | 6 | noun gender; why it is invisible in writing; reading gender off the "the" form |
+| 3 | Saying "The" | 17 | 9 | the article is a suffix; all eight assimilation outcomes; no indefinite article |
+| 4 | I, You, He, She | 15 | 6 | eight pronouns; inclusive/exclusive "we"; short subject pronouns; the subject marker |
 | 5 | The Signal Words | 17 | 7 | `waa` plain statement; `baa`/`ayaa` spotlight what precedes; `waxa` spotlights what ends the sentence |
 | 6 | Squishing | 15 | 5 | signals fuse with short pronouns — `wuu`, `way`, `waxay`, and the irregular `wuxuu` |
 | 7 | Action Words | 15 | 6 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
 | 8 | Putting It In Order | 16 | 6 | the action word lands last; the signal hugs the verb; `waxa` sends the spotlight past it |
 
-**Totals:** 118 authored cards · 50 exercises · 32% production.
+**Totals:** 121 authored cards · 50 exercises · 32% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
 The course lands on **`Wiilku waa macallin.`** ("The boy is a teacher."), a
@@ -61,7 +61,7 @@ worth knowing that the routine exists and is documented in
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
 | Tests | 72, across 3 files |
-| Validator | 20 checks passing, 0 errors, 5 open warnings |
+| Validator | 20 checks passing, 0 errors, 4 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
 
 ---
@@ -132,29 +132,31 @@ For a learner working alone on a phone with no teacher to notice decay, this is
 the wrong half of the design to be missing. It is now the largest gap in the
 course, larger than any remaining content.
 
-### 4. Retrieval density: fixed for lessons 5–8, open for 1–4 ⚪
+### 4. Retrieval density — resolved ✅
 
 Design rule `S5` allows no run of more than three cards without retrieval
-(§1.16: passive scrolling is the weakest mode, forced recall is the antidote).
-It was specified as an **error** in Part 9 and never implemented, so nothing
-measured it for eight lessons. Check **T2** now does.
+(§1.16: passive scrolling is the weakest mode, forced recall the antidote). It
+was specified as an **error** in Part 9 and never implemented, so nothing
+measured it for eight lessons. Check **T2** does, and now **fails the build**
+rather than warning, because the course complies.
 
-Two things it turned up. Lessons 1–4 breach it on the authored cards alone
-(runs of 4–6). Lessons 5–8 were written to the rule and breached it anyway,
-because `LessonCards` injected the vocabulary deck after card 0 and turned the
-compliant blueprint → connect → promise opening into four passive cards.
-Checking the authored array would have called them clean.
+Two causes, both fixed:
 
-**Fixed for 5–8.** The deck now lands after the *second* retrieval card, which
-was chosen by measuring four candidate positions rather than guessing: it takes
-breaches from 8/8 to 4/8, is the only option that makes 5–8 compliant, and
-unlike parking the deck at the end it leaves the summary as the closing beat.
-Verified in the browser — the deck moved from card 2 to card 9 of Lesson 5.
+- **The vocabulary deck was injected after card 0**, turning the compliant
+  opening blueprint → connect → promise → predict into four passive cards.
+  Lessons 5–8 were written to the rule and breached it anyway, and because the
+  breach lived only in the injected flow, nothing reading `lesson.cards` could
+  see it. The deck now lands after the *second* retrieval card — a position
+  chosen by measuring four candidates, not guessing.
+- **Lessons 1–4 had no `predict` card at all.** That is the whole reason they
+  breached where 5–8 did not; the beat simply predates the convention. Each now
+  opens blueprint → (connect) → promise → predict, matching Unit 2. The cards
+  are real predictions on already-sourced material, not filler: L2 asks where
+  gender hides given that `guri` and `magaalo` look alike, L3 asks what happened
+  between `guri` and `guriga`.
 
-**Lessons 1–4 still breach it** (runs of 4–6) and need a content pass: a
-retrieval card inside their long teach stretches. T2 stays a warning until they
-comply, then should be promoted to an error, since the design specifies it as
-one.
+Proven to bite by deleting one `predict` card: T2 fails and names the lesson.
+If it ever fails again, add a retrieval card — do not raise the threshold.
 
 ### 5. The Part 11 rubric had never been applied ⚪
 

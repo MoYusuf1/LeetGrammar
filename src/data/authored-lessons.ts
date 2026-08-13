@@ -54,6 +54,13 @@ const LESSON_1: Lesson = {
       prompt: 'By the end of this lesson you will be able to read any written Somali word aloud — including the four letters that trip up English speakers.',
     },
     {
+      id: '1-predict',
+      type: 'predict',
+      prompt:
+        'Somali is written with the same letters you are reading right now. But three of them never appear in a Somali word at all.\n\n' +
+        'Before reading on — have a guess at which three. If nothing comes to mind, guess at what kind of letters they might be.',
+    },
+    {
       id: '1-teach',
       type: 'teach',
       title: 'The Somali alphabet',
@@ -204,6 +211,13 @@ const LESSON_2: Lesson = {
       id: '2-promise',
       type: 'promise',
       prompt: 'By the end you will know why **wiil** (boy) and **gabadh** (girl) behave differently in every sentence. And why you cannot tell which is which by looking.',
+    },
+    {
+      id: '2-predict',
+      type: 'predict',
+      prompt:
+        '**guri** means house. **magaalo** means city. One of them is masculine and the other is feminine — and nothing in the spelling tells you which.\n\n' +
+        'Before reading on — where do you think that information is hiding, if not in the word itself?',
     },
     {
       id: '2-teach',
@@ -378,6 +392,13 @@ const LESSON_3: Lesson = {
       id: '3-promise',
       type: 'promise',
       prompt: 'By the end you will turn any noun you meet into its "the" form — including the ones where the ending changes shape.',
+    },
+    {
+      id: '3-predict',
+      type: 'predict',
+      prompt:
+        '**guri** means house. **guriga** means *the* house.\n\n' +
+        'Before reading on — look at those two words and say what happened. Where did "the" go?',
     },
     {
       id: '3-teach',
@@ -589,6 +610,13 @@ const LESSON_4: Lesson = {
       id: '4-promise',
       type: 'promise',
       prompt: 'By the end you will build a complete, correct Somali sentence: **Wiilku waa macallin.** — "The boy is a teacher."',
+    },
+    {
+      id: '4-predict',
+      type: 'predict',
+      prompt:
+        'English has one word for "we", and it is quietly ambiguous: "we are going" may or may not include the person you are talking to.\n\n' +
+        'Somali makes you choose. Before reading on — guess what goes wrong if you pick the wrong one.',
     },
     {
       id: '4-teach',
