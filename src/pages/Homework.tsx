@@ -41,7 +41,11 @@ export default function HomeworkPage() {
   const lessonId = parseInt(id ?? '1', 10);
   const lesson = getLessonContent(lessonId);
 
-  const [attempt, setAttempt] = useState(0);
+  // Each scheduled return should be a different set, so the attempt starts at
+  // however many times this lesson has already come back.
+  const [attempt, setAttempt] = useState(
+    () => useProgressStore.getState().reviewSchedule?.[parseInt(id ?? '1', 10)]?.reviewCount ?? 0,
+  );
   const [phase, setPhase] = useState<Phase>('intro');
   const [index, setIndex] = useState(0);
   const [answer, setAnswer] = useState<string | null>(null);
@@ -70,6 +74,9 @@ export default function HomeworkPage() {
     if (index === items.length - 1) {
       const pct = Math.round((correct / items.length) * 100);
       store.recordPracticeScore(lessonId, pct);
+      // Doing the homework *is* the review — push this lesson to its next
+      // interval so it stops being due and comes back later. See lib/review.ts.
+      store.recordLessonReviewed(lessonId);
       setPhase('done');
       return;
     }

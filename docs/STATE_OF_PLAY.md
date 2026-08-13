@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-12, after Layer 2 (homework) was built.
+> comes next. **Last updated:** 2026-08-12, after spaced review completed the retention layer.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -60,7 +60,7 @@ worth knowing that the routine exists and is documented in
 | Vocabulary entries | 95, of which **43** are 2-source verified |
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
-| Tests | 83, across 4 files |
+| Tests | 92, across 5 files |
 | Validator | 21 checks passing, 0 errors, 4 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
 
@@ -114,31 +114,36 @@ come from Orwin's word-order examples and are absent from Nilsson. They need a
 third source, not more searching. The two winnable ones (`waxaan`, `waxaad`)
 have their exact leads recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §9.
 
-### 3. Retention layer — Layer 2 built, spacing still open 🟡
+### 3. Retention layer — built ✅
 
 §1.2 rates exactly two techniques "high utility": practice testing and
 **distributed practice**. The course had the first twice over (in-lesson
-practice, unit test) and none of the second.
+practice, unit test) and none of the second. Both halves now exist.
 
-**Homework now exists** — `src/lib/homework.ts`, page at `/#/homework/:id`,
-offered on each completed lesson row. 12 items, **33% carried back** from
-earlier lessons, 67–100% production for lessons 3+, immediate metalinguistic
-feedback, scored via `recordPracticeScore` and **gating nothing**. Retrying
-serves a completely different set (0/12 overlap), deterministically.
+**Homework (Layer 2)** — `src/lib/homework.ts`, page at `/#/homework/:id`.
+12 items, **33% carried back** from earlier lessons, 67–100% production for
+lessons 3+, immediate metalinguistic feedback, scored and **gating nothing**.
+Items are *composed* from existing verified material rather than authored, so
+there is nothing new to source and nothing a future author must remember.
+Check `A3` enforces the carry-back floor. This is also where **interleaving**
+starts (§1.5) — in-lesson practice is blocked deliberately, and homework is the
+first place lessons mix.
 
-Items are *composed* from material that already exists rather than authored,
-the same decision as unit-test carry-back: nothing new to source and nothing a
-future author can forget. Check `A3` enforces the 30% floor and 11 tests cover
-the rest; both proven to bite.
+**Spaced review** — `src/lib/review.ts`. Finishing a lesson puts it into a
+fixed-interval rota (1, 3, 7, 14, 30, 60, 90 days per §1.4); `/learn` shows what
+is due, most overdue first, and doing that lesson's homework advances it. The
+review count is passed to `composeHomework` as the attempt, so the fourth
+return of Lesson 3 is not the first one again.
 
-This is also where **interleaving** starts (§1.5) — in-lesson practice is
-blocked deliberately, and homework is the first place lessons are mixed.
-Verified in the browser: Lesson 5's homework served a Lesson 3 item
-(`magaalo → magaalada`) badged "From earlier", and the set completed 12/12.
+**Fixed intervals, not SM-2.** `lib/srs.ts` implements SM-2 with ease factors
+and is deliberately unused: §1.4 found equal and expanding intervals
+statistically equivalent, so the design rules out expanding schedules as costing
+more for nothing — and SM-2 needs a per-item quality rating this course has
+nowhere to collect. Debt 9 covers what remains of that file.
 
-**Still open: spacing.** `getNextReviewDate` and `getItemsDueForReview` remain
-without callers, so nothing *schedules* a return — the learner has to choose to
-open homework. Fixed-interval review (§1.4) is the remaining half of debt 3.
+Verified in the browser: with lessons 2 and 3 backdated, `/learn` shows
+"2 lessons are due for review · Start with lesson 3 — it has been the longest",
+and only those two carry the due indicator.
 
 ### 4. Retrieval density — resolved ✅
 
@@ -452,3 +457,15 @@ It pays off from Lesson 5 onward, and is unproven until then.
 5. [COURSE_DESIGN.md](./COURSE_DESIGN.md) — the pedagogical design target
 
 Then read `src/data/authored-lessons.ts`. It is the course.
+
+### 9. `lib/srs.ts` is unused by design ⚪
+
+An SM-2 implementation with ease factors and quality ratings, wired to
+`srsCards` in the store, called by nothing. Spaced review deliberately uses the
+fixed intervals in `getNextReviewDate` instead, because §1.4 found expanding
+schedules no better and more expensive, and SM-2 needs a self-rated quality per
+item that this course never collects.
+
+Keep it only if the vocabulary track (Phase 5) will genuinely want per-word
+scheduling; otherwise delete it and `srsCards` together. An engine with no
+callers that looks finished is what [POSTMORTEM.md](./POSTMORTEM.md) is about.

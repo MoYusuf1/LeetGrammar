@@ -12,6 +12,7 @@ import { BookOpen, Check, Circle, PlayCircle, FileText, ClipboardCheck, Lock, Re
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
 import { UNITS, getUnitTest } from '@/data/unit-tests';
 import { isUnitComplete } from '@/lib/assessment';
+import { dueLessons } from '@/lib/review';
 import { useProgressStore } from '@/stores/progress-store';
 
 export default function LessonsPage() {
@@ -42,6 +43,12 @@ export default function LessonsPage() {
   const resumeCard = (id: number): number =>
     store.getLessonCardPosition ? store.getLessonCardPosition(id) : 0;
 
+  /* Lessons the fixed-interval schedule says are owed a review, most overdue
+     first. Spacing only works if the learner is told; asking them to remember
+     which lesson has gone quiet is the thing §1.4 exists to replace. */
+  const due = dueLessons(store.reviewSchedule ?? {}, completed);
+  const dueSet = new Set(due);
+
   const totalLessons = LESSON_LIST.length;
   const doneCount = completed.filter((id) => id >= 1 && id <= totalLessons).length;
 
@@ -64,6 +71,25 @@ export default function LessonsPage() {
             />
           </div>
           <p className="text-[11px] text-[#5c5c5c] mt-1">{doneCount} of {totalLessons} complete</p>
+
+          {due.length > 0 && (
+            <button
+              onClick={() => navigate(`/homework/${due[0]}`)}
+              className="w-full mt-4 flex items-center gap-3 px-4 py-3 rounded-xl bg-[#a78bfa10] border border-[#a78bfa40] hover:border-[#a78bfa70] transition-colors text-left"
+            >
+              <span className="w-7 h-7 rounded-full flex items-center justify-center bg-[#a78bfa22] border border-[#a78bfa44] flex-shrink-0">
+                <Repeat className="w-4 h-4 text-[#a78bfa]" />
+              </span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-[#eff1f6]">
+                  {due.length} {due.length === 1 ? 'lesson is' : 'lessons are'} due for review
+                </p>
+                <p className="text-[11px] text-[#5c5c5c]">
+                  Start with lesson {due[0]} — it has been the longest
+                </p>
+              </div>
+            </button>
+          )}
         </div>
 
         {/* Unit groups */}
@@ -88,6 +114,7 @@ export default function LessonsPage() {
                       onClick={() => navigate(`/lesson/${lesson.lessonId}`)}
                       onWorksheet={() => navigate(`/worksheet/${lesson.lessonId}`)}
                       onHomework={() => navigate(`/homework/${lesson.lessonId}`)}
+                      dueForReview={dueSet.has(lesson.lessonId)}
                     />
                   ))}
                   {bank && (
@@ -154,6 +181,7 @@ function LessonRow({
   onClick,
   onWorksheet,
   onHomework,
+  dueForReview,
 }: {
   lesson: LessonSummary;
   completed: boolean;
@@ -161,6 +189,7 @@ function LessonRow({
   onClick: () => void;
   onWorksheet: () => void;
   onHomework: () => void;
+  dueForReview: boolean;
 }) {
   const inProgress = !completed && resumeAt > 0;
   return (
@@ -203,9 +232,16 @@ function LessonRow({
           onClick={onHomework}
           title="Homework — mixed practice, including earlier lessons"
           aria-label={`Homework for lesson ${lesson.lessonId}`}
-          className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#141414] border border-[#22d3ee30] flex items-center justify-center text-[#22d3ee] hover:border-[#22d3ee60] transition-colors"
+          className={`relative flex-shrink-0 w-10 h-10 rounded-xl bg-[#141414] border flex items-center justify-center transition-colors ${
+            dueForReview
+              ? 'border-[#a78bfa60] text-[#a78bfa] hover:border-[#a78bfa]'
+              : 'border-[#22d3ee30] text-[#22d3ee] hover:border-[#22d3ee60]'
+          }`}
         >
           <Repeat className="w-4 h-4" />
+          {dueForReview && (
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#a78bfa] border-2 border-[#0f0f0f]" />
+          )}
         </button>
       )}
 

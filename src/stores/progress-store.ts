@@ -8,6 +8,7 @@ import type { SrsCard } from '@/lib/srs';
 import { createCard, reviewCard } from '@/lib/srs';
 import { MAX_LESSON_ID } from '@/data/authored-lessons';
 import type { UnitTestResult } from '@/lib/assessment';
+import { seedReview, advanceReview, type ReviewSchedule } from '@/lib/review';
 
 const STORAGE_KEY = 'leet-somali-progress-v7';
 
@@ -41,6 +42,13 @@ export interface UserProgress {
 
   // Unit test results, keyed by unit id
   unitTestResults: Record<number, UnitTestRecord>;
+
+  /**
+   * When each finished lesson is next owed a review, keyed by lesson id.
+   * Seeded on completion, advanced when its homework is done. Fixed intervals
+   * per §1.4 — see lib/review.ts.
+   */
+  reviewSchedule: ReviewSchedule;
 }
 
 const defaultProgress: UserProgress = {
@@ -54,6 +62,7 @@ const defaultProgress: UserProgress = {
   dailyGoal: 30,
   lessonCardPositions: {},
   unitTestResults: {},
+  reviewSchedule: {},
 };
 
 function getToday(): string {
@@ -105,6 +114,8 @@ interface ProgressState extends UserProgress {
 
   // Unit tests
   recordUnitTestResult: (result: UnitTestResult) => void;
+  /** Advance a lesson to its next review interval. Called when homework is done. */
+  recordLessonReviewed: (lessonId: number) => void;
   getUnitTestRecord: (unitId: number) => UnitTestRecord | undefined;
 }
 
@@ -125,6 +136,10 @@ export const useProgressStore = create<ProgressState>()(
             streak: newStreak,
             lastStudyDate: getToday(),
             xp: state.xp + 10,
+            // Finishing a lesson puts it into the review rota. Without this the
+            // schedule would only ever contain lessons someone happened to
+            // revisit, which is the wrong way round.
+            reviewSchedule: { ...(state.reviewSchedule ?? {}), [lessonId]: seedReview(lessonId) },
           });
         });
       },
@@ -258,6 +273,18 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       getUnitTestRecord: (unitId: number) => (get().unitTestResults ?? {})[unitId],
+
+      recordLessonReviewed: (lessonId: number) => {
+        set((state) => {
+          const schedule = state.reviewSchedule ?? {};
+          const entry = schedule[lessonId] ?? seedReview(lessonId);
+          return addActivity({
+            ...state,
+            lastStudyDate: getToday(),
+            reviewSchedule: { ...schedule, [lessonId]: advanceReview(entry) },
+          });
+        });
+      },
     }),
     {
       name: STORAGE_KEY,
@@ -272,6 +299,7 @@ export const useProgressStore = create<ProgressState>()(
         dailyGoal: state.dailyGoal,
         lessonCardPositions: state.lessonCardPositions,
         unitTestResults: state.unitTestResults,
+        reviewSchedule: state.reviewSchedule,
       }),
     }
   )
