@@ -51,26 +51,26 @@ const LESSON_1: Lesson = {
     {
       id: '1-promise',
       type: 'promise',
-      prompt: 'By the end of this lesson you will be able to read any written Somali word aloud — including the four letters that trip up English speakers.',
+      prompt: 'By the end of this lesson you will be able to read any written Somali word aloud, including the four letters that trip up English speakers.',
     },
     {
       id: '1-predict',
       type: 'predict',
       prompt:
         'Somali is written with the same letters you are reading right now. But three of them never appear in a Somali word at all.\n\n' +
-        'Before reading on — have a guess at which three. If nothing comes to mind, guess at what kind of letters they might be.',
+        'Before reading on, have a guess at which three. If nothing comes to mind, guess at what kind of letters they might be.',
     },
     {
       id: '1-teach',
       type: 'teach',
       title: 'The Somali alphabet',
       content:
-        'Somali is written in the Latin alphabet — the same letters you already read. Two things are different.\n\n' +
+        'Somali is written in the Latin alphabet: the same letters you already read. Two things are different.\n\n' +
         '**Three letters are missing.** Somali never uses **p**, **v**, or **z**. If you see them, the word is borrowed and unadapted.\n\n' +
-        '**Three pairs act as single letters.** These are not two sounds — each pair is one:\n' +
-        '• **dh** — a "d" made with the tongue curled back\n' +
-        '• **kh** — a rasp in the back of the throat, like Scottish "loch"\n' +
-        '• **sh** — as in English "ship"\n\n' +
+        '**Three pairs act as single letters.** These are not two sounds. Each pair is one:\n' +
+        '• **dh**: a "d" made with the tongue curled back\n' +
+        '• **kh**: a rasp in the back of the throat, like Scottish "loch"\n' +
+        '• **sh**: as in English "ship"\n\n' +
         'That is the whole list. There are exactly three.',
     },
     {
@@ -106,12 +106,23 @@ const LESSON_1: Lesson = {
         id: 'l1-n2',
         type: 'multiple_choice',
         objectiveIds: ['somali-alphabet'],
-        question: 'You just met the word **libaax** (lion). Which throat letter does it end with?',
-        options: ['x', 'c', 'q', 'kh'],
-        correctAnswer: 'x',
-        hint: 'Look at the final letter. It is one of the two deep-throat letters from the last card.',
+        // Asks for the SOUND, not the letter. The old version was "which throat
+        // letter does it end with?" with **libaax** printed in the question and
+        // 'x' among the options, so the answer sat in plain sight and the item
+        // tested nothing but eyesight. This is the E10 class the validator warns
+        // about and cannot detect.
+        question:
+          'You just met **libaax** (lion). Its last letter is **x**. What sound does that stand for?',
+        options: [
+          'a hard, breathy "h" from deep in the throat',
+          'the "ks" in English "box"',
+          'a tightening in the throat, with no breath',
+          'the "sh" in English "ship"',
+        ],
+        correctAnswer: 'a hard, breathy "h" from deep in the throat',
+        hint: 'It is one of the two deep-throat letters. The other one is **c**, and they do different jobs.',
         explanation:
-          '**Libaax** ends in **x** — a hard, breathy "h" from deep in the throat. It is not "ks" as in English "box". The definite form is **libaaxa**.',
+          '**Libaax** ends in **x**: a hard, breathy "h" from deep in the throat. It is not "ks" as in English "box". The definite form is **libaaxa**.',
       },
     },
     {
@@ -122,8 +133,8 @@ const LESSON_1: Lesson = {
         type: 'multiple_choice',
         objectiveIds: ['somali-digraphs'],
         question: 'How many letter-pairs act as a single letter in Somali?',
-        options: ['two — dh and kh', 'three — dh, kh and sh', 'four — dh, kh, sh and ch', 'five — dh, kh, sh, ph and th'],
-        correctAnswer: 'three — dh, kh and sh',
+        options: ['two: dh and kh', 'three: dh, kh and sh', 'four: dh, kh, sh and ch', 'five: dh, kh, sh, ph and th'],
+        correctAnswer: 'three: dh, kh and sh',
         hint: 'Count the pairs from the alphabet card. Somali has no "ch", "ph" or "th".',
         explanation:
           'There are exactly **three**: **dh**, **kh**, **sh**. Each is one sound, not two. Somali has no ch, ph or th.',
@@ -146,7 +157,7 @@ const LESSON_1: Lesson = {
         correctAnswer: 'Hold the vowel longer',
         hint: 'Somali writes long vowels by simply writing the vowel twice. Nothing else changes.',
         explanation:
-          'A doubled vowel means **hold it longer**: aa, ee, ii, oo, uu. That is the only way Somali marks vowel length — there are no accent marks.',
+          'A doubled vowel means **hold it longer**: aa, ee, ii, oo, uu. That is the only way Somali marks vowel length: there are no accent marks.',
       },
     },
     {
@@ -159,9 +170,9 @@ const LESSON_1: Lesson = {
         question: 'The name **Cali** begins with **c**. How is it pronounced?',
         options: [
           'A tightening deep in the throat, then "ali"',
-          'Like English "k" — "Kali"',
-          'Like English "s" — "Sali"',
-          'Like English "ch" — "Chali"',
+          'Like English "k": "Kali"',
+          'Like English "s": "Sali"',
+          'Like English "ch": "Chali"',
         ],
         correctAnswer: 'A tightening deep in the throat, then "ali"',
         hint: 'Somali **c** is one of the two throat letters. It is not borrowed from how English uses the letter c.',
@@ -173,14 +184,14 @@ const LESSON_1: Lesson = {
       id: '1-payoff',
       type: 'payoff',
       prompt:
-        'You can now read these correctly:\n\n**libaax** — lion (throat x)\n**caano** — milk (throat c)\n**gabadh** — girl (the dh pair)\n**buug** — book\n\nNothing here needs memorising. You are just reading.',
+        'You can now read these correctly:\n\n**libaax**: lion (throat x)\n**caano**: milk (throat c)\n**gabadh**: girl (the dh pair)\n**buug**: book\n\nNothing here needs memorising. You are just reading.',
     },
     {
       id: '1-summary',
       type: 'summary',
       title: 'What you learned',
       content:
-        'Somali uses the Latin alphabet without p, v, z. Three pairs act as single letters: dh, kh, sh. Two letters — c and x — are made deep in the throat and have no English equivalent. Doubled vowels are held longer.',
+        'Somali uses the Latin alphabet without p, v, z. Three pairs act as single letters: dh, kh, sh. Two letters (c and x) are made deep in the throat and have no English equivalent. Doubled vowels are held longer.',
     },
   ],
   newItems: ['1-teach', '1-teach-cx'],
@@ -200,7 +211,7 @@ const LESSON_2: Lesson = {
       id: '2-blueprint',
       type: 'blueprint',
       blueprintSlot: 'WHO',
-      content: `${BOX}\n\nToday: the WHO box. Nouns — and the one property of them you cannot see.`,
+      content: `${BOX}\n\nToday: the WHO box. Nouns, and the one property of them you cannot see.`,
     },
     {
       id: '2-connect',
@@ -216,22 +227,22 @@ const LESSON_2: Lesson = {
       id: '2-predict',
       type: 'predict',
       prompt:
-        '**guri** means house. **magaalo** means city. One of them is masculine and the other is feminine — and nothing in the spelling tells you which.\n\n' +
-        'Before reading on — where do you think that information is hiding, if not in the word itself?',
+        '**guri** means house. **magaalo** means city. One of them is masculine and the other is feminine, and nothing in the spelling tells you which.\n\n' +
+        'Before reading on, where do you think that information is hiding, if not in the word itself?',
     },
     {
       id: '2-teach',
       type: 'teach',
       title: 'Every noun has a gender',
       content:
-        'Every Somali noun is either **masculine** or **feminine**. This is a grammar label, not a statement about the world — **buug** (book) is masculine and **kab** (shoe) is feminine.\n\n' +
+        'Every Somali noun is either **masculine** or **feminine**. This is a grammar label, not a statement about the world: **buug** (book) is masculine and **kab** (shoe) is feminine.\n\n' +
         'It matters because gender decides the ending you attach when you say "the", which you will learn next lesson. Get the gender wrong and the whole word comes out wrong.\n\n' +
         'Some nouns you can guess from meaning:\n' +
-        '• **nin** (man), **wiil** (boy) — masculine\n' +
-        '• **naag** (woman), **gabadh** (girl) — feminine\n\n' +
+        '• **nin** (man), **wiil** (boy): masculine\n' +
+        '• **naag** (woman), **gabadh** (girl): feminine\n\n' +
         'Most you cannot:\n' +
-        '• **guri** (house), **buug** (book), **miis** (table) — masculine\n' +
-        '• **magaalo** (city), **kab** (shoe), **bil** (month) — feminine',
+        '• **guri** (house), **buug** (book), **miis** (table): masculine\n' +
+        '• **magaalo** (city), **kab** (shoe), **bil** (month): feminine',
     },
     {
       id: '2-example',
@@ -239,20 +250,20 @@ const LESSON_2: Lesson = {
       title: 'Why you cannot see it',
       content:
         'Somali speakers hear gender in the **tone** of the word. Compare:\n\n' +
-        '**inan** — boy (tone falls on the first syllable)\n' +
-        '**inan** — girl (tone rises to the last)\n\n' +
+        '**inan**: boy (tone falls on the first syllable)\n' +
+        '**inan**: girl (tone rises to the last)\n\n' +
         'Same letters. Different word. Different gender.\n\n' +
         'Here is the catch: **Somali does not write tone.** There are no accent marks in ordinary spelling. So on the page these two words are identical, and no spelling rule will ever tell you which is which.\n\n' +
-        'This is why gender has to be learned with the word, the way you would learn it in French or German. It is not that Somali is irregular — it is that the writing system leaves the clue out.',
+        'This is why gender has to be learned with the word, the way you would learn it in French or German. It is not that Somali is irregular: it is that the writing system leaves the clue out.',
     },
     {
       id: '2-teach-diagnostic',
       type: 'teach',
       title: 'How to find out a noun\'s gender',
       content:
-        'Since spelling will not tell you, look at the word\'s **"the" form** — that is where gender shows up:\n\n' +
-        '• **wiil** → **wiilka** (the boy) — a **k** appears → masculine\n' +
-        '• **naag** → **naagta** (the woman) — a **t** appears → feminine\n\n' +
+        'Since spelling will not tell you, look at the word\'s **"the" form**: that is where gender shows up:\n\n' +
+        '• **wiil** → **wiilka** (the boy): a **k** appears → masculine\n' +
+        '• **naag** → **naagta** (the woman): a **t** appears → feminine\n\n' +
         'Masculine nouns take a **k**-type ending. Feminine nouns take a **t**-type ending.\n\n' +
         'A good dictionary lists the "the" form for exactly this reason. When you meet a new noun, learn it in that form and the gender comes free.',
     },
@@ -268,7 +279,7 @@ const LESSON_2: Lesson = {
         correctAnswer: 'It is masculine',
         hint: 'Look at the consonant that appears in the ending. A k-sound points one way, a t-sound the other.',
         explanation:
-          '**Guriga** contains a **g** — a k-type ending — so **guri** is **masculine**. Feminine nouns would show a t-type ending instead, as in **naagta**.',
+          '**Guriga** contains a **g** (a k-type ending) so **guri** is **masculine**. Feminine nouns would show a t-type ending instead, as in **naagta**.',
       },
     },
     {
@@ -279,11 +290,11 @@ const LESSON_2: Lesson = {
         type: 'multiple_choice',
         objectiveIds: ['noun-gender-diagnostic'],
         question: 'The word for "the city" is **magaalada**. Is **magaalo** masculine or feminine?',
-        options: ['Feminine', 'Masculine', 'Both, depending on context', 'Neither — cities have no gender'],
+        options: ['Feminine', 'Masculine', 'Both, depending on context', 'Neither: cities have no gender'],
         correctAnswer: 'Feminine',
         hint: 'The ending contains a d, which is a t-type ending. Which gender takes t-type endings?',
         explanation:
-          '**Magaalada** shows a **d** — a t-type ending — so **magaalo** is **feminine**. Every Somali noun has a gender, including inanimate ones like cities.',
+          '**Magaalada** shows a **d** (a t-type ending) so **magaalo** is **feminine**. Every Somali noun has a gender, including inanimate ones like cities.',
       },
     },
     {
@@ -303,7 +314,7 @@ const LESSON_2: Lesson = {
         correctAnswer: 'The difference is in the tone, which Somali does not write',
         hint: 'Think about what a Somali speaker hears that the page does not show.',
         explanation:
-          'Spoken Somali distinguishes them by **tone** — the boy word and the girl word carry it differently. Written Somali uses no accent marks, so both come out as **inan**. Context, or the "the" form, resolves it.',
+          'Spoken Somali distinguishes them by **tone**: the boy word and the girl word carry it differently. Written Somali uses no accent marks, so both come out as **inan**. Context, or the "the" form, resolves it.',
       },
     },
     {
@@ -318,7 +329,7 @@ const LESSON_2: Lesson = {
         correctAnswer: 'masculine',
         hint: 'The doubled g is a k-type ending. That points to one gender.',
         explanation:
-          '**Buugga** has a k-type ending, so **buug** is **masculine** — a good example of gender having nothing to do with meaning.',
+          '**Buugga** has a k-type ending, so **buug** is **masculine**: a good example of gender having nothing to do with meaning.',
       },
     },
     {
@@ -333,7 +344,7 @@ const LESSON_2: Lesson = {
         correctAnswer: 'kab (shoe)',
         hint: 'Its "the" form is kabta. The others are wiilka, miiska and buugga.',
         explanation:
-          '**Kab** (shoe) is feminine — **kabta**. The other three are masculine: **miiska**, **buugga**, **wiilka**.',
+          '**Kab** (shoe) is feminine: **kabta**. The other three are masculine: **miiska**, **buugga**, **wiilka**.',
       },
     },
     {
@@ -343,11 +354,11 @@ const LESSON_2: Lesson = {
         id: 'l2-p1',
         type: 'translate',
         objectiveIds: ['noun-gender-diagnostic'],
-        question: 'A text uses **naagta** ("the woman"). Write the bare noun — the form with the "the" ending stripped off.',
+        question: 'A text uses **naagta** ("the woman"). Write the bare noun: the form with the "the" ending stripped off.',
         answer: 'naag',
         hint: 'Remove the t-type ending. What is left is the word as a dictionary lists it.',
         explanation:
-          'Strip **-ta** and you get **naag** (woman). The t-type ending also tells you it is feminine — the bare noun alone would not.',
+          'Strip **-ta** and you get **naag** (woman). The t-type ending also tells you it is feminine: the bare noun alone would not.',
       },
     },
     {
@@ -386,19 +397,19 @@ const LESSON_3: Lesson = {
     {
       id: '3-connect',
       type: 'connect',
-      prompt: 'You already used these endings as a gender test — wiilka, naagta. Now you will build them yourself.',
+      prompt: 'You already used these endings as a gender test: wiilka, naagta. Now you will build them yourself.',
     },
     {
       id: '3-promise',
       type: 'promise',
-      prompt: 'By the end you will turn any noun you meet into its "the" form — including the ones where the ending changes shape.',
+      prompt: 'By the end you will turn any noun you meet into its "the" form, including the ones where the ending changes shape.',
     },
     {
       id: '3-predict',
       type: 'predict',
       prompt:
         '**guri** means house. **guriga** means *the* house.\n\n' +
-        'Before reading on — look at those two words and say what happened. Where did "the" go?',
+        'Before reading on, look at those two words and say what happened. Where did "the" go?',
     },
     {
       id: '3-teach',
@@ -408,7 +419,7 @@ const LESSON_3: Lesson = {
         'Somali has no separate word for "the". It is an **ending stuck onto the noun**:\n\n' +
         '• **mas** (a snake) → **maska** (the snake)\n' +
         '• **kab** (a shoe) → **kabta** (the shoe)\n\n' +
-        'Write it joined — **maska**, not "mas-ka".\n\n' +
+        'Write it joined: **maska**, not "mas-ka".\n\n' +
         'There is also **no word for "a"**. The bare noun already covers it: **kab** on its own means "shoe" or "a shoe", whichever the English needs.\n\n' +
         'The basic endings are **-ka** for masculine and **-ta** for feminine.',
     },
@@ -418,11 +429,11 @@ const LESSON_3: Lesson = {
       title: 'The ending changes shape',
       content:
         'The ending softens to match the sound just before it. This is the part learners skip, and it is why their Somali comes out wrong.\n\n' +
-        '**Masculine** — base **-ka**:\n' +
+        '**Masculine**: base **-ka**:\n' +
         '• after **g, aa, i, y, w** → **-ga**: guri → **guriga**\n' +
         '• after **e** or **o** → **-ha**, and e becomes a: aabbe → **aabbaha**\n' +
         '• after **c, h, x, kh, q** → just **-a**: libaax → **libaaxa**\n\n' +
-        '**Feminine** — base **-ta**:\n' +
+        '**Feminine**: base **-ta**:\n' +
         '• after **d, i, y, w, c, h, x, kh, q** → **-da**: mindi → **mindida**\n' +
         '• after **o** → **-da**, and o becomes a: magaalo → **magaalada**\n' +
         '• after **dh** → just **-a**: gabadh → **gabadha**\n' +
@@ -488,7 +499,7 @@ const LESSON_3: Lesson = {
         objectiveIds: ['article-assimilation'],
         question: '**Magaalo** (city) is feminine and ends in **o**. Write "the city" in Somali.',
         answer: 'magaalada',
-        hint: 'After o, the feminine ending becomes -da — and the o itself changes to a.',
+        hint: 'After o, the feminine ending becomes -da, and the o itself changes to a.',
         explanation:
           'After **o** the feminine ending becomes **-da**, and the **o changes to a**: magaalo → **magaalada**. Two changes at once, which is why this one is easy to get half-right.',
       },
@@ -520,7 +531,7 @@ const LESSON_3: Lesson = {
         answer: ['gabadha', 'gabarta'],
         hint: 'After dh, the feminine ending shrinks to just -a in writing.',
         explanation:
-          'After **dh** the feminine ending is written as just **-a**: gabadh → **gabadha**. The dh itself is pronounced more strongly. (You may also meet **gabar** for "girl", giving **gabarta** — both are correct.)',
+          'After **dh** the feminine ending is written as just **-a**: gabadh → **gabadha**. The dh itself is pronounced more strongly. (You may also meet **gabar** for "girl", giving **gabarta**: both are correct.)',
       },
     },
     {
@@ -579,7 +590,7 @@ const LESSON_3: Lesson = {
       type: 'summary',
       title: 'The "the" ending',
       content:
-        '"The" is an ending, not a word, and it is written joined. Base forms are -ka (masculine) and -ta (feminine), but the ending softens to match the sound before it: -ga, -ha, -a, -da, -sha. There is no word for "a" — the bare noun covers it.',
+        '"The" is an ending, not a word, and it is written joined. Base forms are -ka (masculine) and -ta (feminine), but the ending softens to match the sound before it: -ga, -ha, -a, -da, -sha. There is no word for "a": the bare noun covers it.',
     },
   ],
   newItems: ['3-teach', '3-teach-assim'],
@@ -599,7 +610,7 @@ const LESSON_4: Lesson = {
       id: '4-blueprint',
       type: 'blueprint',
       blueprintSlot: 'WHO',
-      content: `${BOX}\n\nLast time in the WHO box. Pronouns — and the marker that says "this one is the subject".`,
+      content: `${BOX}\n\nLast time in the WHO box. Pronouns, and the marker that says "this one is the subject".`,
     },
     {
       id: '4-connect',
@@ -609,31 +620,31 @@ const LESSON_4: Lesson = {
     {
       id: '4-promise',
       type: 'promise',
-      prompt: 'By the end you will build a complete, correct Somali sentence: **Wiilku waa macallin.** — "The boy is a teacher."',
+      prompt: 'By the end you will build a complete, correct Somali sentence: **Wiilku waa macallin.**: "The boy is a teacher."',
     },
     {
       id: '4-predict',
       type: 'predict',
       prompt:
         'English has one word for "we", and it is quietly ambiguous: "we are going" may or may not include the person you are talking to.\n\n' +
-        'Somali makes you choose. Before reading on — guess what goes wrong if you pick the wrong one.',
+        'Somali makes you choose. Before reading on, guess what goes wrong if you pick the wrong one.',
     },
     {
       id: '4-teach',
       type: 'teach',
       title: 'The eight pronouns',
       content:
-        'These are the standalone pronouns — the ones you would use to answer "who?":\n\n' +
-        '• **aniga** — I\n' +
-        '• **adiga** — you (one person)\n' +
-        '• **isaga** — he\n' +
-        '• **iyada** — she\n' +
-        '• **annaga** — we (**not** including you)\n' +
-        '• **innaga** — we (**including** you)\n' +
-        '• **idinka** — you (more than one)\n' +
-        '• **iyaga** — they\n\n' +
+        'These are the standalone pronouns: the ones you would use to answer "who?":\n\n' +
+        '• **aniga**: I\n' +
+        '• **adiga**: you (one person)\n' +
+        '• **isaga**: he\n' +
+        '• **iyada**: she\n' +
+        '• **annaga**: we (**not** including you)\n' +
+        '• **innaga**: we (**including** you)\n' +
+        '• **idinka**: you (more than one)\n' +
+        '• **iyaga**: they\n\n' +
         'Two things English speakers should notice.\n\n' +
-        '**Somali splits "we".** **Annaga** excludes the listener — "we, but not you". **Innaga** includes them — "we, you and I". English makes you guess; Somali makes you choose.\n\n' +
+        '**Somali splits "we".** **Annaga** excludes the listener: "we, but not you". **Innaga** includes them: "we, you and I". English makes you guess; Somali makes you choose.\n\n' +
         '**"They" has no gender.** **Iyaga** covers any group. There is no separate feminine "they".',
     },
     {
@@ -642,11 +653,11 @@ const LESSON_4: Lesson = {
       title: 'The short subject pronouns',
       content:
         'Alongside those, Somali has a set of short pronouns that sit next to the sentence signal:\n\n' +
-        '• **aan** — I\n' +
-        '• **aad** — you\n' +
-        '• **uu** — he\n' +
-        '• **ay** — she / they\n\n' +
-        'You will see these fused onto **waa**, the statement signal, in the next unit — **waa + uu** becomes **wuu**.\n\n' +
+        '• **aan**: I\n' +
+        '• **aad**: you\n' +
+        '• **uu**: he\n' +
+        '• **ay**: she / they\n\n' +
+        'You will see these fused onto **waa**, the statement signal, in the next unit: **waa + uu** becomes **wuu**.\n\n' +
         'For now just recognise them. They are short, they are everywhere, and they are not the same words as **aniga / adiga / isaga / iyada**.',
     },
     {
@@ -661,7 +672,7 @@ const LESSON_4: Lesson = {
         correctAnswer: 'annaga',
         hint: 'One "we" shuts the listener out of the group; the other pulls them in.',
         explanation:
-          '**Annaga** is the exclusive "we" — it means "us, not you". **Innaga** would wrongly include your friend in a trip they did not go on.',
+          '**Annaga** is the exclusive "we": it means "us, not you". **Innaga** would wrongly include your friend in a trip they did not go on.',
       },
     },
     {
@@ -684,10 +695,10 @@ const LESSON_4: Lesson = {
       type: 'teach',
       title: 'Marking the subject',
       content:
-        'Somali flags which noun phrase is the **subject** — the doer. When a word ending in **-a** becomes the subject, that **-a** changes to **-u**:\n\n' +
-        '• **wiilka** (the boy) → **Wiilku** waa macallin. — *The boy is a teacher.*\n' +
+        'Somali flags which noun phrase is the **subject**: the doer. When a word ending in **-a** becomes the subject, that **-a** changes to **-u**:\n\n' +
+        '• **wiilka** (the boy) → **Wiilku** waa macallin.: *The boy is a teacher.*\n' +
         '• **aniga** (I) → **Anigu**...\n\n' +
-        'Only the **last word** of the subject phrase takes the marker, and only the subject gets it. In **Wiilku waa macallin**, the word **macallin** is what the boy *is*, not the doer — so it stays plain.\n\n' +
+        'Only the **last word** of the subject phrase takes the marker, and only the subject gets it. In **Wiilku waa macallin**, the word **macallin** is what the boy *is*, not the doer, so it stays plain.\n\n' +
         'English does this too, just barely: "he" versus "him". Somali applies it to nouns as well.',
     },
     {
@@ -702,7 +713,7 @@ const LESSON_4: Lesson = {
         correctAnswer: 'Wiilku',
         hint: 'The final -a of the subject changes to -u.',
         explanation:
-          'As the subject, **wiilka** becomes **Wiilku**: the final -a shifts to -u. **Wiilku waa macallin** — "The boy is a teacher."',
+          'As the subject, **wiilka** becomes **Wiilku**: the final -a shifts to -u. **Wiilku waa macallin**: "The boy is a teacher."',
       },
     },
     {
@@ -714,15 +725,15 @@ const LESSON_4: Lesson = {
         objectiveIds: ['subject-case'],
         question: 'In **Wiilku waa macallin**, why does **macallin** have no ending at all?',
         options: [
-          'It is not the subject — it is what the boy is',
+          'It is not the subject: it is what the boy is',
           'It is feminine, so it takes no ending',
           'Ending markers are optional on the last word',
           'It is a borrowed word, so it never changes',
         ],
-        correctAnswer: 'It is not the subject — it is what the boy is',
+        correctAnswer: 'It is not the subject: it is what the boy is',
         hint: 'Only one noun phrase in a sentence is the doer. Which one is it here?',
         explanation:
-          'Only the **subject** takes the marker. **Wiilku** is the subject; **macallin** describes what he is, so it stays in its bare form — which also means "a teacher", since Somali has no word for "a".',
+          'Only the **subject** takes the marker. **Wiilku** is the subject; **macallin** describes what he is, so it stays in its bare form, which also means "a teacher", since Somali has no word for "a".',
       },
     },
     {
@@ -740,7 +751,7 @@ const LESSON_4: Lesson = {
         answer: 'Wiilku waa macallin',
         hint: 'Subject first, then the signal word waa, then what he is.',
         explanation:
-          '**Wiilku waa macallin.** Subject (Wiilku) → signal (waa) → what he is (macallin). That order — WHO then SIGNAL then the rest — is the shape of the whole language.',
+          '**Wiilku waa macallin.** Subject (Wiilku) → signal (waa) → what he is (macallin). That order (WHO then SIGNAL then the rest) is the shape of the whole language.',
       },
     },
     {
@@ -752,7 +763,7 @@ const LESSON_4: Lesson = {
         objectiveIds: ['pronouns-inclusive-exclusive'],
         question: 'Write the Somali pronoun for "we" when you are speaking to someone who **is** part of the group.',
         answer: 'innaga',
-        hint: 'This is the inclusive one — the "we" that pulls the listener in.',
+        hint: 'This is the inclusive one: the "we" that pulls the listener in.',
         explanation:
           '**Innaga** is the inclusive "we", meaning "you and I". **Annaga** would exclude the person you are speaking to.',
       },
@@ -818,7 +829,7 @@ const LESSON_5: Lesson = {
       id: '5-connect',
       type: 'connect',
       prompt:
-        'You can fill the WHO box — **wiil**, **wiilka**, **Wiilku**, **isaga**. You have also been using one signal all along without naming it: **waa**. Today you meet the other two, and find out what they change.',
+        'You can fill the WHO box: **wiil**, **wiilka**, **Wiilku**, **isaga**. You have also been using one signal all along without naming it: **waa**. Today you meet the other two, and find out what they change.',
     },
     {
       id: '5-promise',
@@ -833,7 +844,7 @@ const LESSON_5: Lesson = {
         'Here are two real Somali sentences. The words are the same. Only the small word in the middle changes.\n\n' +
         '**Sahra baa salaamaysa saaxiibkeed.**\n' +
         '**Sahra waxa ay salaamaysaa saaxiibkeed.**\n\n' +
-        'Both mean "Sahra is greeting her friend". Before reading on — guess what the difference is. English would do it with your **voice**. Somali cannot.',
+        'Both mean "Sahra is greeting her friend". Before reading on, guess what the difference is. English would do it with your **voice**. Somali cannot.',
     },
     {
       id: '5-teach',
@@ -841,20 +852,20 @@ const LESSON_5: Lesson = {
       title: 'What a signal does',
       content:
         'English emphasises a word by saying it louder:\n\n' +
-        '• "**SAHRA** is greeting her friend." — not someone else\n' +
-        '• "Sahra is greeting her **FRIEND**." — not her boss\n\n' +
+        '• "**SAHRA** is greeting her friend.": not someone else\n' +
+        '• "Sahra is greeting her **FRIEND**.": not her boss\n\n' +
         'The words never move. Only your voice changes.\n\n' +
-        'Somali does not do this. **Volume carries no meaning here.** Instead a small word — the **signal** — goes into the sentence. *Where it sits* tells you which part is spotlighted.\n\n' +
+        'Somali does not do this. **Volume carries no meaning here.** Instead a small word (the **signal**) goes into the sentence. *Where it sits* tells you which part is spotlighted.\n\n' +
         'This is why sentences can look scrambled at first. They are not. The signal does a job English hands to your tone of voice.\n\n' +
         'So a Somali speaker reading a flat sentence knows exactly which word matters. An English speaker reading the same sentence sees no emphasis at all.',
     },
     {
       id: '5-teach-waa',
       type: 'teach',
-      title: 'waa — just tell me',
+      title: 'waa: just tell me',
       content:
         'You already know this one. **waa** marks a plain, ordinary statement. Nothing is singled out:\n\n' +
-        '• **Wiilku waa macallin.** — *The boy is a teacher.*\n\n' +
+        '• **Wiilku waa macallin.**: *The boy is a teacher.*\n\n' +
         'That is a flat fact. No word is being contrasted with anything.\n\n' +
         'Use **waa** when you would say the English sentence evenly, with no word pushed harder than the rest.',
     },
@@ -862,12 +873,12 @@ const LESSON_5: Lesson = {
       id: '5-teach-baa',
       type: 'teach',
       isNew: true,
-      title: 'baa — spotlight what came just before',
+      title: 'baa: spotlight what came just before',
       content:
         '**baa** shines a light on the words **immediately before it**.\n\n' +
-        '• **Sahra baa salaamaysa saaxiibkeed.** — *SAHRA is greeting her friend.*\n\n' +
+        '• **Sahra baa salaamaysa saaxiibkeed.**: *SAHRA is greeting her friend.*\n\n' +
         '**Sahra** sits directly before **baa**, so Sahra is the spotlight. The sentence answers "**who** is greeting her friend?"\n\n' +
-        'There is a second word, **ayaa**, that does the identical job. **baa** and **ayaa** are interchangeable — **ayaa** just sounds slightly more formal. You will meet both in real text; treat them as one thing.\n\n' +
+        'There is a second word, **ayaa**, that does the identical job. **baa** and **ayaa** are interchangeable: **ayaa** just sounds slightly more formal. You will meet both in real text; treat them as one thing.\n\n' +
         'The rule to hold on to: **look immediately to the left of baa.** Whatever is there is what the sentence is about.',
     },
     {
@@ -878,13 +889,13 @@ const LESSON_5: Lesson = {
         type: 'multiple_choice',
         objectiveIds: ['signal-focus-before'],
         question:
-          'Here is a different sentence: **Gabadhu bariiska baa cuntay** — "The girl ate the rice." Which words is the spotlight on?',
-        options: ['bariiska — the rice', 'Gabadhu — the girl', 'cuntay — ate', 'nothing in particular'],
-        correctAnswer: 'bariiska — the rice',
+          'Here is a different sentence: **Gabadhu bariiska baa cuntay**: "The girl ate the rice." Which words is the spotlight on?',
+        options: ['bariiska: the rice', 'Gabadhu: the girl', 'cuntay: ate', 'nothing in particular'],
+        correctAnswer: 'bariiska: the rice',
         hint: 'Do not go by position in the sentence. Find **baa**, then look at what sits immediately to its left.',
         explanation:
-          '**baa** spotlights whatever is immediately before it, and here that is **bariiska** — the rice. So it means "The girl ate **THE RICE**".\n\n' +
-          'Notice what did *not* work: the girl is the first thing in the sentence and the one doing the eating, and she is **not** the spotlight. Reaching for the first noun is the habit to break — only the position of **baa** tells you.',
+          '**baa** spotlights whatever is immediately before it, and here that is **bariiska**: the rice. So it means "The girl ate **THE RICE**".\n\n' +
+          'Notice what did *not* work: the girl is the first thing in the sentence and the one doing the eating, and she is **not** the spotlight. Reaching for the first noun is the habit to break: only the position of **baa** tells you.',
       },
     },
     {
@@ -894,23 +905,23 @@ const LESSON_5: Lesson = {
         id: 'l5-n2',
         type: 'marker_identification',
         objectiveIds: ['signal-focus-before'],
-        question: 'Which word here is the signal — the one doing the spotlighting?',
+        question: 'Which word here is the signal: the one doing the spotlighting?',
         somali: 'Sahra baa salaamaysa saaxiibkeed',
         answer: 'baa',
         hint: 'It is not the name and not the long word. It is the short one sitting second.',
         explanation:
-          '**baa** is the signal. It carries no meaning you could translate on its own — its whole job is to mark that the word before it, **Sahra**, is the one being spotlighted.',
+          '**baa** is the signal. It carries no meaning you could translate on its own: its whole job is to mark that the word before it, **Sahra**, is the one being spotlighted.',
       },
     },
     {
       id: '5-teach-waxa',
       type: 'teach',
       isNew: true,
-      title: 'waxa — spotlight what comes at the end',
+      title: 'waxa: spotlight what comes at the end',
       content:
         '**waxa** does the same job as **baa**, pointing in the **opposite direction**. It spotlights whatever lands at the **end** of the sentence.\n\n' +
-        '• **Sahra waxa ay salaamaysaa saaxiibkeed.** — *Sahra is greeting her FRIEND.*\n\n' +
-        'Here the spotlight falls on **saaxiibkeed** — her friend — because that is what finishes the sentence. This one answers "**who** is she greeting?"\n\n' +
+        '• **Sahra waxa ay salaamaysaa saaxiibkeed.**: *Sahra is greeting her FRIEND.*\n\n' +
+        'Here the spotlight falls on **saaxiibkeed** (her friend) because that is what finishes the sentence. This one answers "**who** is she greeting?"\n\n' +
         'So the two signals split the work cleanly:\n\n' +
         '• **baa** → look **left**, at the word just before it\n' +
         '• **waxa** → look **right**, at the word that ends the sentence\n\n' +
@@ -930,7 +941,7 @@ const LESSON_5: Lesson = {
         correctAnswer: 'saaxiibkeed',
         hint: '**waxa** points forward, not back. Look at what finishes the sentence.',
         explanation:
-          '**waxa** spotlights whatever ends the sentence, and that is **saaxiibkeed** (her friend). The sentence means "Sahra is greeting her **FRIEND**" — the same words as the **baa** version, spotlighting the opposite end.',
+          '**waxa** spotlights whatever ends the sentence, and that is **saaxiibkeed** (her friend). The sentence means "Sahra is greeting her **FRIEND**": the same words as the **baa** version, spotlighting the opposite end.',
       },
     },
     {
@@ -941,7 +952,7 @@ const LESSON_5: Lesson = {
         type: 'fill_blank',
         objectiveIds: ['signal-focus-before'],
         question:
-          'You want to say it was **Sahra** — not anyone else — who is greeting. Which signal goes after her name?\n\nSahra ___ salaamaysa saaxiibkeed.',
+          'You want to say it was **Sahra** (not anyone else) who is greeting. Which signal goes after her name?\n\nSahra ___ salaamaysa saaxiibkeed.',
         options: ['baa', 'waxa', 'waa', 'ay'],
         correctAnswer: 'baa',
         hint: 'You are spotlighting the word that comes **before** the gap.',
@@ -957,7 +968,7 @@ const LESSON_5: Lesson = {
         type: 'multiple_choice',
         objectiveIds: ['signal-statement'],
         question:
-          'You just want to state a plain fact — "The boy is a teacher" — with no word singled out. Which signal?',
+          'You just want to state a plain fact: "The boy is a teacher": with no word singled out. Which signal?',
         options: ['waa', 'baa', 'waxa', 'ayaa'],
         correctAnswer: 'waa',
         hint: 'Two of these spotlight something. One just states.',
@@ -973,10 +984,10 @@ const LESSON_5: Lesson = {
         type: 'marker_identification',
         objectiveIds: ['signal-focus-end'],
         question:
-          'Read this sentence and type the signal word — the one telling you the spotlight falls at the end.',
+          'Read this sentence and type the signal word: the one telling you the spotlight falls at the end.',
         somali: 'Sahra waxa ay salaamaysaa saaxiibkeed',
         answer: 'waxa',
-        hint: 'It is not **ay** — that is the short "she". The signal comes first of the two.',
+        hint: 'It is not **ay**: that is the short "she". The signal comes first of the two.',
         explanation:
           '**waxa** is the signal. **ay** is the short pronoun "she" sitting behind it. Together they point the spotlight at the end of the sentence, onto **saaxiibkeed**.',
       },
@@ -989,17 +1000,17 @@ const LESSON_5: Lesson = {
         type: 'multiple_choice',
         objectiveIds: ['signal-focus-before', 'signal-focus-end'],
         question:
-          'The promise from the start. Which of these means "**SAHRA** is greeting her friend" — Sahra and nobody else?',
+          'The promise from the start. Which of these means "**SAHRA** is greeting her friend": Sahra and nobody else?',
         options: [
           'Sahra baa salaamaysa saaxiibkeed.',
           'Sahra waxa ay salaamaysaa saaxiibkeed.',
           'Wiilku waa macallin.',
-          'Neither — they mean the same thing.',
+          'Neither: they mean the same thing.',
         ],
         correctAnswer: 'Sahra baa salaamaysa saaxiibkeed.',
         hint: 'Spotlight on **Sahra** means the signal must sit immediately after her name.',
         explanation:
-          'With **baa** directly after **Sahra**, the spotlight lands on Sahra. The **waxa** version spotlights **saaxiibkeed** instead — "Sahra is greeting her FRIEND". Same words, opposite meaning, and nothing but the signal tells you which.',
+          'With **baa** directly after **Sahra**, the spotlight lands on Sahra. The **waxa** version spotlights **saaxiibkeed** instead: "Sahra is greeting her FRIEND". Same words, opposite meaning, and nothing but the signal tells you which.',
       },
     },
     {
@@ -1007,8 +1018,8 @@ const LESSON_5: Lesson = {
       type: 'payoff',
       prompt:
         'That was the promise, and you just did it.\n\n' +
-        '**Sahra baa salaamaysa saaxiibkeed.** — SAHRA is greeting her friend.\n' +
-        '**Sahra waxa ay salaamaysaa saaxiibkeed.** — Sahra is greeting her FRIEND.\n\n' +
+        '**Sahra baa salaamaysa saaxiibkeed.**: SAHRA is greeting her friend.\n' +
+        '**Sahra waxa ay salaamaysaa saaxiibkeed.**: Sahra is greeting her FRIEND.\n\n' +
         'Identical words. The signal, and only the signal, decides which one the sentence is about.',
     },
     {
@@ -1017,9 +1028,9 @@ const LESSON_5: Lesson = {
       title: 'What you can do now',
       content:
         'The SIGNAL box is no longer a mystery:\n\n' +
-        '• **waa** — a plain statement, nothing singled out\n' +
-        '• **baa** (and **ayaa**) — spotlight the word **immediately before** it\n' +
-        '• **waxa** (or **waxaa**) — spotlight whatever **ends** the sentence\n\n' +
+        '• **waa**: a plain statement, nothing singled out\n' +
+        '• **baa** (and **ayaa**): spotlight the word **immediately before** it\n' +
+        '• **waxa** (or **waxaa**): spotlight whatever **ends** the sentence\n\n' +
         'You can now look at a flat-looking Somali sentence and say which word it is really about. English does that with tone of voice; Somali does it with placement.\n\n' +
         'Next: those signals stop standing alone. **waxa ay** becomes one word, and so do **waa + uu**, **baa + uu** and the rest.',
     },
@@ -1057,35 +1068,35 @@ const LESSON_6: Lesson = {
       id: '6-blueprint',
       type: 'blueprint',
       blueprintSlot: 'SIGNAL',
-      content: `${BOX}\n\nSame box as last time. Now the signal stops standing alone — it fuses with the word for who, and the two arrive as one.`,
+      content: `${BOX}\n\nSame box as last time. Now the signal stops standing alone: it fuses with the word for who, and the two arrive as one.`,
     },
     {
       id: '6-connect',
       type: 'connect',
       prompt:
-        'Last lesson ended on a loose end. You saw **Sahra waxa ay salaamaysaa saaxiibkeed** — two little words, **waxa** and **ay**, sitting side by side. Today they become one word, and so do all the others.',
+        'Last lesson ended on a loose end. You saw **Sahra waxa ay salaamaysaa saaxiibkeed**: two little words, **waxa** and **ay**, sitting side by side. Today they become one word, and so do all the others.',
     },
     {
       id: '6-promise',
       type: 'promise',
       prompt:
-        'By the end you will see **wuxuu** and read it instantly as two things: the spotlight signal **waxa**, plus **uu** — he.',
+        'By the end you will see **wuxuu** and read it instantly as two things: the spotlight signal **waxa**, plus **uu**: he.',
     },
     {
       id: '6-predict',
       type: 'predict',
       prompt:
-        'You know **waa** (plain statement) and you know **uu** (he). Somali almost never leaves them apart — in speech and in most writing they run together into a single word.\n\nBefore reading on: what do you think **waa + uu** turns into?',
+        'You know **waa** (plain statement) and you know **uu** (he). Somali almost never leaves them apart: in speech and in most writing they run together into a single word.\n\nBefore reading on: what do you think **waa + uu** turns into?',
     },
     {
       id: '6-teach',
       type: 'teach',
       title: 'Two words, one word',
       content:
-        'Every signal you met last lesson can carry a short pronoun — the little words for who, from Lesson 4:\n\n' +
+        'Every signal you met last lesson can carry a short pronoun: the little words for who, from Lesson 4:\n\n' +
         '**aan** (I) · **aad** (you) · **uu** (he) · **ay** (she / they)\n\n' +
         'And in practice they almost never stay apart. The signal and the pronoun squash together into one word.\n\n' +
-        'This is the single biggest reason written Somali looks unreadable at first. You go hunting for **waa** and it is not there — because it is now the front half of **wuu**.\n\n' +
+        'This is the single biggest reason written Somali looks unreadable at first. You go hunting for **waa** and it is not there, because it is now the front half of **wuu**.\n\n' +
         'Nothing new is being said. It is the same signal and the same pronoun, printed as one word.',
     },
     {
@@ -1119,14 +1130,14 @@ const LESSON_6: Lesson = {
         correctAnswer: 'waa (plain statement) + uu (he)',
         hint: 'The front of the word tells you the signal; the vowel tells you who.',
         explanation:
-          '**wuu** is **waa** + **uu** — a plain statement, about him. Had it been about her it would be **way**; had the spotlight been on the end of the sentence it would be **wuxuu**.',
+          '**wuu** is **waa** + **uu**: a plain statement, about him. Had it been about her it would be **way**; had the spotlight been on the end of the sentence it would be **wuxuu**.',
       },
     },
     {
       id: '6-teach-waxa-family',
       type: 'teach',
       isNew: true,
-      title: 'The waxa family — and the odd one',
+      title: 'The waxa family, and the odd one',
       content:
         'The end-spotlight signal fuses the same way:\n\n' +
         '• **waxa** + **aan** (I) → **waxaan**\n' +
@@ -1149,7 +1160,7 @@ const LESSON_6: Lesson = {
         correctAnswer: 'wuxuu',
         hint: 'The end-spotlight signal is **waxa**. This is the pairing that does not look like its parts.',
         explanation:
-          '**wuxuu** is **waxa** + **uu** — the odd one, since you would expect "waxauu". **waxay** is the same signal with **ay** (she/they); **wuu** carries the plain statement signal instead.',
+          '**wuxuu** is **waxa** + **uu**: the odd one, since you would expect "waxauu". **waxay** is the same signal with **ay** (she/they); **wuu** carries the plain statement signal instead.',
       },
     },
     {
@@ -1163,7 +1174,7 @@ const LESSON_6: Lesson = {
         '• **baa** + **aad** (you) → **baad**\n' +
         '• **baa** + **uu** (he) → **buu**\n' +
         '• **baa** + **ay** (she / they) → **bay**\n\n' +
-        '**ayaa** does it too — **ayaan**, **ayaad**, **ayuu**, **ayay** — since **ayaa** and **baa** are the same signal in different clothes.\n\n' +
+        '**ayaa** does it too (**ayaan**, **ayaad**, **ayuu**, **ayay**) since **ayaa** and **baa** are the same signal in different clothes.\n\n' +
         'You do not need to memorise all sixteen. You need the habit: **a word starting with w- or b- is probably a signal with somebody attached.**',
     },
     {
@@ -1191,7 +1202,7 @@ const LESSON_6: Lesson = {
         question:
           'Type the single squashed word for the end-spotlight signal **waxa** carrying **ay** (she / they).',
         answer: 'waxay',
-        hint: 'This one is regular — the signal, then the pronoun, straight onto the end.',
+        hint: 'This one is regular: the signal, then the pronoun, straight onto the end.',
         explanation:
           '**waxa** + **ay** → **waxay**. Regular, unlike its neighbour **wuxuu**, where the vowel shifts.',
       },
@@ -1206,7 +1217,7 @@ const LESSON_6: Lesson = {
         question:
           'The promise from the start. Type the one word that means the end-spotlight signal **waxa**, about **him**.',
         answer: 'wuxuu',
-        hint: 'The irregular one. Not "waxauu" — the vowel in the middle shifts.',
+        hint: 'The irregular one. Not "waxauu": the vowel in the middle shifts.',
         explanation:
           '**wuxuu** is **waxa** + **uu**. It is the only member of the family that does not look like its own parts, and it is one of the most common words in written Somali.',
       },
@@ -1229,7 +1240,7 @@ const LESSON_6: Lesson = {
         '• **waxa** → **waxaan**, **waxaad**, **wuxuu**, **waxay**\n' +
         '• **baa** → **baan**, **baad**, **buu**, **bay**\n\n' +
         'The habit worth keeping: a short word starting **w-** or **b-** is almost always a signal with somebody attached. Split it, and both halves are things you already know.\n\n' +
-        'Next: the **DO** box — action words, and how they match whoever is doing them.',
+        'Next: the **DO** box: action words, and how they match whoever is doing them.',
     },
   ],
 };
@@ -1270,13 +1281,13 @@ const LESSON_7: Lesson = {
       id: '7-blueprint',
       type: 'blueprint',
       blueprintSlot: 'DO',
-      content: `${BOX}\n\nThe last empty box. The action word goes here — and its ending changes depending on who is doing it.`,
+      content: `${BOX}\n\nThe last empty box. The action word goes here, and its ending changes depending on who is doing it.`,
     },
     {
       id: '7-connect',
       type: 'connect',
       prompt:
-        'You can fill **WHO**, and you can read the **SIGNAL** even when it is squashed onto a pronoun — **wuu**, **way**, **wuxuu**. Today the thing they have all been pointing at: the action itself.',
+        'You can fill **WHO**, and you can read the **SIGNAL** even when it is squashed onto a pronoun: **wuu**, **way**, **wuxuu**. Today the thing they have all been pointing at: the action itself.',
     },
     {
       id: '7-promise',
@@ -1292,18 +1303,18 @@ const LESSON_7: Lesson = {
         '**keenaa**\n' +
         '**keentaa**\n\n' +
         'One is used for *I* and *he*. The other for *you* and *she*.\n\n' +
-        'Before reading on — which is which, and what is the one letter doing the work?',
+        'Before reading on, which is which, and what is the one letter doing the work?',
     },
     {
       id: '7-teach',
       type: 'teach',
       title: 'The action word matches who',
       content:
-        'English barely does this. "I bring, you bring, we bring" — the word never moves. Only *he/she* is different: "he bring**s**".\n\n' +
+        'English barely does this. "I bring, you bring, we bring": the word never moves. Only *he/she* is different: "he bring**s**".\n\n' +
         'Somali does it properly. The action word takes an ending that matches whoever is doing it, every time.\n\n' +
         'The verb for "bring" is **keen**. On its own it is just the bare action. Add an ending and it tells you who:\n\n' +
-        '• **keenaa** — bring / brings\n' +
-        '• **keentaa** — bring / brings, for a different set of people\n\n' +
+        '• **keenaa**: bring / brings\n' +
+        '• **keentaa**: bring / brings, for a different set of people\n\n' +
         'That **t** is the whole difference, and it is doing a specific job.',
     },
     {
@@ -1319,11 +1330,11 @@ const LESSON_7: Lesson = {
         '• **-taan** → you (more than one)\n' +
         '• **-aan** → they\n\n' +
         'On **keen** that gives:\n\n' +
-        '• **keenaa** — I bring / he brings\n' +
-        '• **keentaa** — you bring / she brings\n' +
-        '• **keennaa** — we bring\n' +
-        '• **keentaan** — you (plural) bring\n' +
-        '• **keenaan** — they bring\n\n' +
+        '• **keenaa**: I bring / he brings\n' +
+        '• **keentaa**: you bring / she brings\n' +
+        '• **keennaa**: we bring\n' +
+        '• **keentaan**: you (plural) bring\n' +
+        '• **keenaan**: they bring\n\n' +
         'Two patterns worth seeing: a **t** shows up for *you* and *she*, and an **n** shows up for plurals.',
     },
     {
@@ -1338,7 +1349,7 @@ const LESSON_7: Lesson = {
         correctAnswer: 'keenaan',
         hint: 'Plurals carry an **n**. But the *you-plural* one also has the **t** of "you".',
         explanation:
-          '**keenaan** is "they bring" — the plural **n** with no **t**. **keentaan** has the **t** of *you*, so it is "you (plural) bring". **keennaa** is "we bring".',
+          '**keenaan** is "they bring": the plural **n** with no **t**. **keentaan** has the **t** of *you*, so it is "you (plural) bring". **keennaa** is "we bring".',
       },
     },
     {
@@ -1350,10 +1361,10 @@ const LESSON_7: Lesson = {
         'Look again at the first two:\n\n' +
         '• **-aa** → **I**, and **he**\n' +
         '• **-taa** → **you**, and **she**\n\n' +
-        'Each ending covers two different people. So **keenaa** on its own is genuinely ambiguous — it could be *I bring* or *he brings*, and nothing in the word settles it.\n\n' +
+        'Each ending covers two different people. So **keenaa** on its own is genuinely ambiguous: it could be *I bring* or *he brings*, and nothing in the word settles it.\n\n' +
         'This is not sloppiness in the language. The information is simply somewhere else: in the **signal** sitting in front of it, the one you learned to unsquash last lesson.\n\n' +
-        '• **waan keenaa** — **I** bring\n' +
-        '• **wuu keenaa** — **he** brings\n\n' +
+        '• **waan keenaa**: **I** bring\n' +
+        '• **wuu keenaa**: **he** brings\n\n' +
         'Same verb, same ending. The **waan** and the **wuu** carry who.',
     },
     {
@@ -1366,12 +1377,12 @@ const LESSON_7: Lesson = {
         question:
           'You see the word **keenaa** with nothing in front of it. Who is doing the bringing?',
         options: [
-          'You cannot tell — it is I or he, and the signal decides',
-          'He, definitely — -aa is the he ending',
-          'I, definitely — -aa is the I ending',
+          'You cannot tell: it is I or he, and the signal decides',
+          'He, definitely: -aa is the he ending',
+          'I, definitely: -aa is the I ending',
           'They, because -aa is plural',
         ],
-        correctAnswer: 'You cannot tell — it is I or he, and the signal decides',
+        correctAnswer: 'You cannot tell: it is I or he, and the signal decides',
         hint: 'How many people does **-aa** cover?',
         explanation:
           '**-aa** covers both *I* and *he*, so the verb alone is genuinely ambiguous. **waan keenaa** is "I bring"; **wuu keenaa** is "he brings". The signal in front carries who.',
@@ -1389,7 +1400,7 @@ const LESSON_7: Lesson = {
         correctAnswer: 'she brings',
         hint: '**way** unsquashes into **waa** + **ay**. And **-taa** covers you and she.',
         explanation:
-          '**way** is **waa** + **ay** (she / they), and **-taa** covers *you* and *she*. Together they can only mean **she brings** — the signal rules out *you*, the ending rules out *they*.',
+          '**way** is **waa** + **ay** (she / they), and **-taa** covers *you* and *she*. Together they can only mean **she brings**: the signal rules out *you*, the ending rules out *they*.',
       },
     },
     {
@@ -1404,7 +1415,7 @@ const LESSON_7: Lesson = {
         correctAnswer: 'keennaa',
         hint: 'The *we* ending is **-naa**, and the stem already ends in n.',
         explanation:
-          '**keennaa** is "we bring" — the **-naa** ending on **keen** gives a doubled n. **keenaa** would be I or he; **keenaan** would be they.',
+          '**keennaa** is "we bring": the **-naa** ending on **keen** gives a doubled n. **keenaa** would be I or he; **keenaan** would be they.',
       },
     },
     {
@@ -1418,7 +1429,7 @@ const LESSON_7: Lesson = {
         answer: 'keentaa',
         hint: 'The ending with the **t** in it.',
         explanation:
-          '**keentaa** — the **-taa** ending, which covers *you* and *she*. Which of the two it means is settled by the signal in front: **waad keentaa** (you) or **way keentaa** (she).',
+          '**keentaa**: the **-taa** ending, which covers *you* and *she*. Which of the two it means is settled by the signal in front: **waad keentaa** (you) or **way keentaa** (she).',
       },
     },
     {
@@ -1428,11 +1439,11 @@ const LESSON_7: Lesson = {
         id: 'l7-p2',
         type: 'translate',
         objectiveIds: ['verb-person-endings', 'verb-ending-ambiguity'],
-        question: 'The promise. Type the two words that mean **he brings** — signal first, then the action word.',
+        question: 'The promise. Type the two words that mean **he brings**: signal first, then the action word.',
         answer: 'wuu keenaa',
         hint: '**waa** squashed with **uu** (he), then the **-aa** form of **keen**.',
         explanation:
-          '**wuu keenaa** — **waa** + **uu** carries "he", and **keenaa** is the **-aa** form. Swap the signal for **waan** and the identical verb now means "I bring".',
+          '**wuu keenaa**: **waa** + **uu** carries "he", and **keenaa** is the **-aa** form. Swap the signal for **waan** and the identical verb now means "I bring".',
       },
     },
     {
@@ -1440,9 +1451,9 @@ const LESSON_7: Lesson = {
       type: 'payoff',
       prompt:
         'That was the promise.\n\n' +
-        '**wuu keenaa** — he brings\n' +
-        '**way keentaa** — she brings\n\n' +
-        'The verb ending narrows it to two people. The signal picks which. Neither could do it alone — which is why you needed last lesson before this one.',
+        '**wuu keenaa**: he brings\n' +
+        '**way keentaa**: she brings\n\n' +
+        'The verb ending narrows it to two people. The signal picks which. Neither could do it alone, which is why you needed last lesson before this one.',
     },
     {
       id: '7-summary',
@@ -1506,7 +1517,7 @@ const LESSON_8: Lesson = {
       id: '8-blueprint',
       type: 'blueprint',
       blueprintSlot: 'DO',
-      content: `${BOX}\n\nEvery box is filled. The last question is what order they come in — and the answer is not the English one.`,
+      content: `${BOX}\n\nEvery box is filled. The last question is what order they come in, and the answer is not the English one.`,
     },
     {
       id: '8-connect',
@@ -1518,7 +1529,7 @@ const LESSON_8: Lesson = {
       id: '8-promise',
       type: 'promise',
       prompt:
-        'By the end you will read **Nin shaah wuu cabbay** — four words in an order English would never use. You will know exactly why each one sits where it does.',
+        'By the end you will read **Nin shaah wuu cabbay**: four words in an order English would never use. You will know exactly why each one sits where it does.',
     },
     {
       id: '8-predict',
@@ -1537,8 +1548,8 @@ const LESSON_8: Lesson = {
       content:
         'English puts the action in the middle: *A man **drank** tea.*\n\n' +
         'Somali usually puts it last, with the thing acted on **before** it:\n\n' +
-        '• **Nin shaah wuu cabbay.** — a man / tea / (signal+he) / drank\n' +
-        '• **Koob keen!** — a cup / bring!\n\n' +
+        '• **Nin shaah wuu cabbay.**: a man / tea / (signal+he) / drank\n' +
+        '• **Koob keen!**: a cup / bring!\n\n' +
         'Read literally, that is *"a man tea he-drank"* and *"a cup bring"*. This is the single biggest reason a Somali sentence feels back-to-front at first: you are waiting for the verb and it has not arrived yet.\n\n' +
         'The honest version of the rule is **usually**, not always. Somali moves noun phrases around more freely than English does, and you will meet sentences with things after the verb. What follows is the part that does not move.',
     },
@@ -1554,7 +1565,7 @@ const LESSON_8: Lesson = {
           'To the end, after the thing being drunk',
           'To the front, before everything else',
           'Straight after the man, as in English',
-          'Nowhere — the order matches English exactly',
+          'Nowhere: the order matches English exactly',
         ],
         correctAnswer: 'To the end, after the thing being drunk',
         hint: 'Line the two up word by word: *a man / tea / he / drank*.',
@@ -1569,8 +1580,8 @@ const LESSON_8: Lesson = {
       title: 'The signal never leaves the verb',
       content:
         'Noun phrases can shift about. The signal does not. **It sits as close to the action word as it can get.**\n\n' +
-        '• **Nin waa tegey.** — a man / (signal) / went\n' +
-        '• **Nin shaah wuu cabbay.** — a man / tea / (signal+he) / drank\n\n' +
+        '• **Nin waa tegey.**: a man / (signal) / went\n' +
+        '• **Nin shaah wuu cabbay.**: a man / tea / (signal+he) / drank\n\n' +
         'In both, the signal is the last thing before the verb. Even with an extra word wedged in, it does not drift.\n\n' +
         'This is the most reliable thing you know about Somali word order, and it is worth more than any rule about subjects and objects. **Find the signal, and the action word is immediately to its right.**',
     },
@@ -1605,7 +1616,7 @@ const LESSON_8: Lesson = {
           'Put the pieces of "A man went" in order:  Nin ___ tegey.',
         options: ['waa', 'baa', 'waxa', 'ma'],
         correctAnswer: 'waa',
-        hint: 'A plain statement, nothing spotlighted — and it belongs right before the verb.',
+        hint: 'A plain statement, nothing spotlighted, and it belongs right before the verb.',
         explanation:
           '**Nin waa tegey.** The plain-statement signal **waa** sits immediately before **tegey** (went). **baa** and **waxa** would both claim something is being spotlighted.',
       },
@@ -1617,7 +1628,7 @@ const LESSON_8: Lesson = {
       title: 'waxa breaks the pattern on purpose',
       content:
         'One thing does move the verb off the end: **waxa**, the signal that spotlights whatever comes last.\n\n' +
-        'It has to. If **waxa** spotlights the end of the sentence, and the verb is at the end, then something must give — so the spotlighted words go **after** the verb:\n\n' +
+        'It has to. If **waxa** spotlights the end of the sentence, and the verb is at the end, then something must give, so the spotlighted words go **after** the verb:\n\n' +
         '**waxa** (+ who) → **verb** → *the spotlighted words*\n\n' +
         'That is why **waxa** sentences look inside out even once you are comfortable with the rest. They are not an exception to the system; they are the system, with the spotlight doing exactly what Lesson 5 said it does.\n\n' +
         'The landmark still holds: the signal is still immediately before the verb.',
@@ -1637,7 +1648,7 @@ const LESSON_8: Lesson = {
           'Directly before waxa',
         ],
         correctAnswer: 'After the action word',
-        hint: '**waxa** spotlights whatever finishes the sentence — so what has to move?',
+        hint: '**waxa** spotlights whatever finishes the sentence, so what has to move?',
         explanation:
           '**waxa** spotlights the end, so the spotlighted words go past the verb to get there. **baa** does the opposite: it spotlights what sits immediately before it, and leaves the verb at the end.',
       },
@@ -1649,12 +1660,12 @@ const LESSON_8: Lesson = {
         id: 'l8-p1',
         type: 'unscramble',
         objectiveIds: ['order-signal-hugs-verb'],
-        question: 'Build "The boy is a teacher." — the sentence you first made in Unit 1, now that you know why the pieces sit where they do.',
+        question: 'Build "The boy is a teacher.": the sentence you first made in Unit 1, now that you know why the pieces sit where they do.',
         words: ['macallin', 'Wiilku', 'waa'],
         answer: 'Wiilku waa macallin',
         hint: 'Who first, then the signal. Here the signal is next to what the boy *is*, since there is no action word.',
         explanation:
-          '**Wiilku waa macallin.** The subject leads, and **waa** sits immediately before what is being said about him — the same slot the action word would occupy if there were one.',
+          '**Wiilku waa macallin.** The subject leads, and **waa** sits immediately before what is being said about him: the same slot the action word would occupy if there were one.',
       },
     },
     {
@@ -1664,12 +1675,12 @@ const LESSON_8: Lesson = {
         id: 'l8-p2',
         type: 'unscramble',
         objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
-        question: 'Build "he brings" — signal and action word, in the order Somali puts them.',
+        question: 'Build "he brings": signal and action word, in the order Somali puts them.',
         words: ['keenaa', 'wuu'],
         answer: 'wuu keenaa',
         hint: 'The signal hugs the verb from in front.',
         explanation:
-          '**wuu keenaa.** The signal comes first and the action word follows immediately — never the other way round.',
+          '**wuu keenaa.** The signal comes first and the action word follows immediately, never the other way round.',
       },
     },
     {
@@ -1677,7 +1688,7 @@ const LESSON_8: Lesson = {
       type: 'payoff',
       prompt:
         'That was the promise.\n\n' +
-        '**Nin shaah wuu cabbay.** — a man · tea · (signal + he) · drank\n\n' +
+        '**Nin shaah wuu cabbay.**: a man · tea · (signal + he) · drank\n\n' +
         'The action waits until the end. The thing acted on comes before it. And the signal is welded to the front of the verb, which is how you find your way in even when the rest moves.',
     },
     {
@@ -1687,10 +1698,10 @@ const LESSON_8: Lesson = {
       content:
         'Unit 2 is finished, and the four boxes are all yours:\n\n' +
         '• the action word usually lands **last**, with the thing acted on before it\n' +
-        '• the **signal sits immediately before the action word** — the one part that does not drift\n' +
+        '• the **signal sits immediately before the action word**: the one part that does not drift\n' +
         '• **waxa** sends the spotlighted words **past** the verb, which is why those sentences look inside out\n\n' +
         'You started this unit unable to say why Somali sentences seemed to scramble themselves. You can now read a plain sentence, find the signal, find the action, and say which word the sentence is really about.\n\n' +
-        'Next, the unit test — and it will ask about Unit 1 as well, not just this one.',
+        'Next, the unit test, and it will ask about Unit 1 as well, not just this one.',
     },
   ],
 };

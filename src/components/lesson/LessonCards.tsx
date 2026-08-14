@@ -334,7 +334,7 @@ function FeedbackHeading({
   if (isAnswerCorrect(exercise, answer)) return <>Correct</>;
   return (
     <>
-      Not quite — the answer is <Somali inherit>{displayAnswer(exercise)}</Somali>
+      Not quite. The answer is <Somali inherit>{displayAnswer(exercise)}</Somali>
     </>
   );
 }
@@ -567,7 +567,7 @@ function PracticeCard({
 
       {(exercise.type === 'translate' || exercise.type === 'marker_identification') && (
         <p className="text-footnote text-label-3">
-          Type your best answer, then check — you grade yourself against the explanation.
+          Type your best answer, then check: you grade yourself against the explanation.
         </p>
       )}
 

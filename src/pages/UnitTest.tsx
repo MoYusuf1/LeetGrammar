@@ -119,7 +119,7 @@ export default function UnitTestPage() {
         <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
           <Row label="To pass" value={`${PASS_MARK}%`} />
-          <Row label="Hints" value="Off — this one is on you" />
+          <Row label="Hints" value="Off, this one is on you" />
           <Row label="Answers" value="Shown at the end, with what you missed" />
           {record && (
             <Row
@@ -131,7 +131,7 @@ export default function UnitTestPage() {
 
         <p className="mt-4 text-footnote text-label-3">
           Miss too much of one topic and you will be sent back through a short set of
-          questions on that topic alone — not the whole test again.
+          questions on that topic alone, not the whole test again.
         </p>
 
         {/* Stated, not enforced. The criterion is real; the lock is not. */}
@@ -211,7 +211,7 @@ export default function UnitTestPage() {
             )}
           </div>
           <p className="mt-2 text-center text-caption2 text-label-3">
-            Skipping is allowed — an unanswered question is marked wrong.
+            Skipping is allowed: an unanswered question is marked wrong.
           </p>
         </div>
       </Shell>
@@ -302,7 +302,7 @@ export default function UnitTestPage() {
                         to={`/lesson/${info.lessonId}`}
                         className="ml-1.5 font-medium text-accent hover:underline"
                       >
-                        — Lesson {info.lessonId}: {info.lessonTitle}
+                        Lesson {info.lessonId}: {info.lessonTitle}
                       </Link>
                     )}
                   </li>
@@ -333,7 +333,7 @@ export default function UnitTestPage() {
                   <p className="mt-2 text-footnote text-label-2">
                     Your answer:{' '}
                     <span className="text-red">
-                      {responses[item.id]?.trim() ? responses[item.id] : '— left blank —'}
+                      {responses[item.id]?.trim() ? responses[item.id] : '(left blank)'}
                     </span>
                   </p>
                   <p className="text-footnote text-label-2">
@@ -442,7 +442,7 @@ function Correctives({
               'Correct'
             ) : (
               <>
-                Not quite — the answer is{' '}
+                Not quite. The answer is{' '}
                 <Somali inherit>{displayAnswer(current)}</Somali>
               </>
             )}

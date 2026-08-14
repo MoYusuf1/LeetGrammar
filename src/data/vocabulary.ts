@@ -131,20 +131,20 @@ export const TOP_500_WORDS: VocabWord[] = [
   // ── Lesson 5 — the signal words ────────────────────────────────────────
   // Every entry here is 2-source verified, so this deck adds nothing to the
   // unsourced-vocabulary debt tracked in docs/STATE_OF_PLAY.md.
-  { rank: 79, somali: 'waa', english: 'statement signal — no word singled out', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
-  { rank: 80, somali: 'baa', english: 'spotlight signal — highlights what comes just before', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wiktionary: baa'] },
-  { rank: 81, somali: 'ayaa', english: 'spotlight signal — same as baa, more formal', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
-  { rank: 82, somali: 'waxa', english: 'spotlight signal — highlights what comes at the end', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
+  { rank: 79, somali: 'waa', english: 'statement signal: no word singled out', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
+  { rank: 80, somali: 'baa', english: 'spotlight signal: highlights what comes just before', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wiktionary: baa'] },
+  { rank: 81, somali: 'ayaa', english: 'spotlight signal: same as baa, more formal', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
+  { rank: 82, somali: 'waxa', english: 'spotlight signal: highlights what comes at the end', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
   { rank: 83, somali: 'saaxiib', english: 'friend', pos: 'noun', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §6.3', 'Wiktionary: saaxiib'] },
 
   // ── Lesson 6 — signals fused with a short pronoun ──────────────────────
   // Only the four that W-gram attests independently; the other twelve in
   // Nilsson's table are single-source and are taught as a reference table
   // rather than as vocabulary to drill (see validator check S6).
-  { rank: 84, somali: 'wuu', english: 'waa + uu — plain statement, about him', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
-  { rank: 85, somali: 'way', english: 'waa + ay — plain statement, about her/them', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
-  { rank: 86, somali: 'wuxuu', english: 'waxa + uu — end spotlight, about him', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
-  { rank: 87, somali: 'waxay', english: 'waxa + ay — end spotlight, about her/them', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
+  { rank: 84, somali: 'wuu', english: 'waa + uu: plain statement, about him', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
+  { rank: 85, somali: 'way', english: 'waa + ay: plain statement, about her/them', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
+  { rank: 86, somali: 'wuxuu', english: 'waxa + uu: end spotlight, about him', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
+  { rank: 87, somali: 'waxay', english: 'waxa + ay: end spotlight, about her/them', pos: 'particle', lessonId: 6, confidence: 'verified', sources: ['Nilsson 2023 §5.1', 'Wikipedia: Somali grammar'] },
 
   // ── Lesson 7 — the action word `keen`, in the present ──────────────────
   // keen/keenaa are attested outright by both sources. The inflected forms are

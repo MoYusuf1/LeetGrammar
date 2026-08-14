@@ -129,14 +129,14 @@ export default function HomeworkPage() {
       <Shell onClose={() => navigate('/learn')} title="Practice">
         <h1 className="text-title1 font-bold text-label">{lesson.title}</h1>
         <p className="mt-2 text-title3 text-label-2">
-          A mixed set — most of it from this lesson, some from earlier ones so the older
+          A mixed set, most of it from this lesson, some from earlier ones so the older
           material does not go quiet.
         </p>
 
         <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
           <Row label="Due for review" value={`${carried}`} />
-          <Row label="Hints" value="On — this is practice" />
+          <Row label="Hints" value="On, this is practice" />
           <Row label="Scoring" value="Not marked" />
         </dl>
 
@@ -269,7 +269,7 @@ export default function HomeworkPage() {
               'Correct'
             ) : (
               <>
-                Not quite — the answer is{' '}
+                Not quite. The answer is{' '}
                 <Somali inherit>{displayAnswer(current)}</Somali>
               </>
             )}
