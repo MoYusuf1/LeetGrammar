@@ -377,6 +377,30 @@ list `buu`/`bay`, so those are registered `confidence: 'single'`.
    `PR.FOC predicate focus`. The lessons should describe what `waa` *does*
    (marks a plain statement) and not assert which category it belongs to.
 
+   **1b. Nilsson gives no example of `waa` at all.** §12.3's entry for it ends
+   with the author's own note — *"Add examples!"* — and every `waa` sentence
+   found elsewhere in Nilsson is equative (`Gabdhuhu waa carruurtayda`, "The
+   girls are my children"). This matters because it produced a real defect:
+   Lesson 5 could only show `waa` in `Wiilku waa macallin`, which English
+   translates with "is", so nothing stopped a learner concluding **`waa` means
+   "is"** — an error §1.12 says would compete with the correct model
+   indefinitely, with no native speaker downstream to catch it.
+
+   **Orwin does have non-equative examples**, several: `Ninku waa toosay` ("The
+   man got up", p.2110 of the text dump), `Bariisku waa karay` ("The rice
+   boiled"), `Gabadhu waa tagtay` ("The girl went"). **They were not used.** All
+   are past tense, and Unit 2 teaches only the present, so importing one would
+   smuggle in unsourced morphology to fix a wording problem. They are recorded
+   here because they are the right examples for **Unit 3**, where the past tense
+   arrives — verify them on the page first, since the Orwin dump is OCR and
+   visibly damaged nearby (`wuiu` for `wuu`).
+
+   The fix taken instead was a forward reference to `wuu keenaa` ("he brings"),
+   whose halves are already double-sourced (`wuu` N §5.1 + W-gram; `keenaa`
+   N §13.1.4a + W-gram) and which Lesson 7 teaches in full. No new form, no new
+   morphology, and it states plainly that the English "is" has no counterpart in
+   the Somali.
+
 2. ~~**`ma` is single-sourced.**~~ **RESOLVED — this was true only while
    Nilsson was the sole grammar.** Orwin covers `ma` in full: it is listed as
    the *positive interrogative mood classifier* (O p.15, p.23) with its own

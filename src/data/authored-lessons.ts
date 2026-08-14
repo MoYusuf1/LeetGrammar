@@ -852,8 +852,8 @@ const LESSON_5: Lesson = {
       title: 'What a signal does',
       content:
         'English emphasises a word by saying it louder:\n\n' +
-        '• "**SAHRA** is greeting her friend.": not someone else\n' +
-        '• "Sahra is greeting her **FRIEND**.": not her boss\n\n' +
+        '• "**SAHRA** is greeting her friend." (not someone else)\n' +
+        '• "Sahra is greeting her **FRIEND**." (not her boss)\n\n' +
         'The words never move. Only your voice changes.\n\n' +
         'Somali does not do this. **Volume carries no meaning here.** Instead a small word (the **signal**) goes into the sentence. *Where it sits* tells you which part is spotlighted.\n\n' +
         'This is why sentences can look scrambled at first. They are not. The signal does a job English hands to your tone of voice.\n\n' +
@@ -865,8 +865,20 @@ const LESSON_5: Lesson = {
       title: 'waa: just tell me',
       content:
         'You already know this one. **waa** marks a plain, ordinary statement. Nothing is singled out:\n\n' +
-        '• **Wiilku waa macallin.**: *The boy is a teacher.*\n\n' +
+        '• **Wiilku waa macallin.**  *The boy is a teacher.*\n\n' +
         'That is a flat fact. No word is being contrasted with anything.\n\n' +
+        // Closes the `waa` = "is" inference. Without this the learner meets waa
+        // only in a sentence English translates with "is", and concludes waa IS
+        // "is" — a wrong model that §1.12 says would compete with the right one
+        // indefinitely, with nothing downstream to catch it. Forward-referencing
+        // `wuu keenaa` rather than inventing an example: both halves are already
+        // double-sourced (`wuu` N §5.1 + W-gram, `keenaa` N §13.1.4a + W-gram)
+        // and Lesson 7 teaches it. Previewing the next unit is this lesson's own
+        // established habit — the waxa card does the same with `waxa ay`.
+        '**One thing to be careful about.** That English sentence has the word "is" in it, and the Somali does not. There is no verb in **Wiilku waa macallin** at all. English simply cannot say it without one.\n\n' +
+        '**waa** is not the word for "is". It sits in front of action words just the same:\n\n' +
+        '• **wuu keenaa**  *he brings*\n\n' +
+        'You will build that one properly in a couple of lessons. For now, just notice that **waa** is there doing the same job: marking a plain statement, whatever follows it.\n\n' +
         'Use **waa** when you would say the English sentence evenly, with no word pushed harder than the rest.',
     },
     {
@@ -876,7 +888,7 @@ const LESSON_5: Lesson = {
       title: 'baa: spotlight what came just before',
       content:
         '**baa** shines a light on the words **immediately before it**.\n\n' +
-        '• **Sahra baa salaamaysa saaxiibkeed.**: *SAHRA is greeting her friend.*\n\n' +
+        '• **Sahra baa salaamaysa saaxiibkeed.**  *SAHRA is greeting her friend.*\n\n' +
         '**Sahra** sits directly before **baa**, so Sahra is the spotlight. The sentence answers "**who** is greeting her friend?"\n\n' +
         'There is a second word, **ayaa**, that does the identical job. **baa** and **ayaa** are interchangeable: **ayaa** just sounds slightly more formal. You will meet both in real text; treat them as one thing.\n\n' +
         'The rule to hold on to: **look immediately to the left of baa.** Whatever is there is what the sentence is about.',
@@ -920,7 +932,7 @@ const LESSON_5: Lesson = {
       title: 'waxa: spotlight what comes at the end',
       content:
         '**waxa** does the same job as **baa**, pointing in the **opposite direction**. It spotlights whatever lands at the **end** of the sentence.\n\n' +
-        '• **Sahra waxa ay salaamaysaa saaxiibkeed.**: *Sahra is greeting her FRIEND.*\n\n' +
+        '• **Sahra waxa ay salaamaysaa saaxiibkeed.**  *Sahra is greeting her FRIEND.*\n\n' +
         'Here the spotlight falls on **saaxiibkeed** (her friend) because that is what finishes the sentence. This one answers "**who** is she greeting?"\n\n' +
         'So the two signals split the work cleanly:\n\n' +
         '• **baa** → look **left**, at the word just before it\n' +
