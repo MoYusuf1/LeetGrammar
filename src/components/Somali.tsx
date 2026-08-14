@@ -1,70 +1,54 @@
 /**
  * <Somali> — the one way Somali text is rendered.
  *
- * WHY THIS IS A COMPONENT AND NOT A CLASS YOU REMEMBER TO APPLY:
+ * The interface is quiet and small; the language is large. That scale contrast
+ * is the whole visual idea, so it lives in one component rather than being
+ * re-decided per screen.
  *
- * The course exists to make a learner *notice forms* — that `guri` became
- * `guriga`, that `aa` is two letters and not a long one, that `c` and `x` are
- * consonants. Before this, every page styled Somali its own way: some bold,
- * some accent-colored, some just inline text. A learner had no visual signal
- * telling them "this is the language" versus "this is me explaining it", so
- * the noticing had to come entirely from the prose.
+ * Set in New York, Apple's system serif — a genuine iPhone font, so it reads
+ * native next to SF while still giving the target language its own voice.
+ * Tracking is slightly open because the course turns on noticing that `aa` is
+ * two letters and that `guri` became `guriga`.
  *
- * Now serif means Somali, everywhere, with no exceptions — and English never
- * uses the serif. See the rule at the top of src/index.css.
- *
- * It also sets lang="so", so a screen reader stops applying English phonetics
- * to Somali strings mid-sentence.
+ * Also sets lang="so", so a screen reader stops applying English phonetics to
+ * Somali mid-sentence.
  */
 
 import type { ElementType, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-type SomaliSize = 'inline' | 'lg' | 'block';
-type SomaliTone = 'accent' | 'ink' | 'inherit';
+type Size = 'inline' | 'lg' | 'hero';
 
 export interface SomaliProps {
   children: ReactNode;
   /**
-   * inline — flows inside a sentence of English (default)
-   * lg     — a form being examined, e.g. on a card or a word chip
-   * block  — the specimen of the card; the thing the learner is looking at
+   * inline — inside a sentence of English
+   * lg     — a form on a row or a chip
+   * hero   — the specimen: the biggest thing on the screen
    */
-  size?: SomaliSize;
-  /**
-   * accent  — the default: henna ink, marks it as the target language
-   * ink     — body ink, for when the surface is already accent-colored
-   *           (a filled chip, a selected option) and accent-on-accent would
-   *           lose contrast
-   * inherit — take the parent's color, for print and for the answer key
-   */
-  tone?: SomaliTone;
+  size?: Size;
+  /** Take the parent's color instead of label — for tinted feedback text. */
+  inherit?: boolean;
   as?: ElementType;
   className?: string;
 }
 
-const SIZE: Record<SomaliSize, string> = {
-  inline: 'somali',
-  lg: 'somali somali-lg',
-  block: 'somali-block',
-};
-
-const TONE: Record<SomaliTone, string> = {
-  accent: '',
-  ink: 'text-ink',
-  inherit: 'text-inherit',
+const SIZE: Record<Size, string> = {
+  inline: 'so so-inline',
+  lg: 'so so-lg',
+  hero: 'so-hero',
 };
 
 export default function Somali({
   children,
   size = 'inline',
-  tone = 'accent',
+  inherit = false,
   as,
   className,
 }: SomaliProps) {
-  const Tag = (as ?? (size === 'block' ? 'p' : 'span')) as ElementType;
+  const Tag = (as ?? (size === 'hero' ? 'p' : 'span')) as ElementType;
   return (
-    <Tag lang="so" className={cn(SIZE[size], TONE[tone], className)}>
+    <Tag lang="so" className={cn(SIZE[size], inherit && 'text-inherit', className)}>
       {children}
     </Tag>
   );

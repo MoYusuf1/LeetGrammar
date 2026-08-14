@@ -34,35 +34,35 @@ export default function WorksheetPage() {
 
   if (!worksheet) {
     return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-surface px-4">
-        <p className="text-body text-ink-muted">Worksheet not found.</p>
+      <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4">
+        <p className="text-body text-label-2">Worksheet not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-[100dvh] bg-surface print:bg-white">
+    <div className="min-h-[100dvh] bg-bg print:bg-white">
       {/* Action bar — hidden when printing */}
-      <header className="sticky top-0 z-20 border-b border-border bg-surface px-4 pt-safe-t print:hidden">
+      <header className="glass glass-top sticky top-0 z-20 px-4 pt-safe-t print:hidden">
         <div className="mx-auto flex max-w-2xl items-center gap-2 py-2.5">
           <button
             onClick={() => navigate(-1)}
             aria-label="Close"
-            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
+            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
           >
             <X className="h-[18px] w-[18px]" />
           </button>
-          <span className="flex-1 text-small font-medium text-ink">Worksheet</span>
+          <span className="flex-1 text-footnote font-medium text-label">Worksheet</span>
           <button
             onClick={() => setShowAnswers((s) => !s)}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-small font-medium text-ink-muted transition-colors hover:bg-surface-sunken"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-footnote font-medium text-label-2 transition-colors hover:bg-fill"
           >
             {showAnswers ? <EyeOff size={15} /> : <Eye size={15} />}
             <span className="hidden sm:inline">{showAnswers ? 'Hide answers' : 'Show answers'}</span>
           </button>
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-1.5 rounded-lg bg-accent-strong px-3 py-2 text-small font-semibold text-white transition-colors hover:bg-accent-hover"
+            className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-footnote font-semibold text-accent-ink transition-colors hover:opacity-90"
           >
             <Printer size={15} />
             <span className="hidden sm:inline">Print</span>
@@ -72,36 +72,36 @@ export default function WorksheetPage() {
 
       <div className="mx-auto max-w-2xl px-4 py-6 print:px-0 print:py-0">
         {/* Worksheet header */}
-        <header className="mb-6 border-b border-border pb-4 print:border-black">
-          <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint print:text-black">
+        <header className="mb-6 pb-4 print:border-black">
+          <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3 print:text-black">
             Lesson {worksheet.lessonId} · Worksheet
           </p>
-          <h1 className="mt-1 text-title font-semibold text-ink print:text-black">
+          <h1 className="mt-1 text-title1 font-semibold text-label print:text-black">
             {worksheet.title}
           </h1>
-          <p className="mt-2 text-small text-ink-muted print:text-black">
+          <p className="mt-2 text-footnote text-label-2 print:text-black">
             Name: ______________________________&nbsp;&nbsp;&nbsp;Date: ____________________
           </p>
         </header>
 
         {/* Section A — Vocabulary */}
         <section className="mb-8">
-          <h2 className="mb-3 text-small font-semibold uppercase tracking-wider text-ink print:text-black">
+          <h2 className="mb-3 text-footnote font-semibold uppercase tracking-wider text-label print:text-black">
             A. Vocabulary — write the English meaning
           </h2>
-          <div className="overflow-hidden rounded-xl border border-border print:rounded-none print:border-black">
-            <table className="w-full text-small">
+          <div className="overflow-hidden rounded-xl print:rounded-none print:border-black">
+            <table className="w-full text-footnote">
               <thead>
-                <tr className="bg-surface-sunken print:bg-white">
-                  <th className="px-4 py-2.5 text-left text-micro font-semibold uppercase tracking-wider text-ink-faint print:text-black">
+                <tr className="bg-fill print:bg-white">
+                  <th className="px-4 py-2.5 text-left text-caption2 font-semibold uppercase tracking-wider text-label-3 print:text-black">
                     Somali
                   </th>
-                  <th className="px-4 py-2.5 text-left text-micro font-semibold uppercase tracking-wider text-ink-faint print:text-black">
+                  <th className="px-4 py-2.5 text-left text-caption2 font-semibold uppercase tracking-wider text-label-3 print:text-black">
                     English
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border print:divide-black">
+              <tbody className="divide-y divide-separator print:divide-black">
                 {worksheet.vocab.map((w) => (
                   <tr key={w.rank}>
                     <td className="px-4 py-2.5">
@@ -109,9 +109,9 @@ export default function WorksheetPage() {
                     </td>
                     <td className="px-4 py-2.5 print:text-black">
                       {showAnswers ? (
-                        <span className="text-success print:text-black">{w.english}</span>
+                        <span className="text-green print:text-black">{w.english}</span>
                       ) : (
-                        <span className="text-ink-faint print:text-black">
+                        <span className="text-label-3 print:text-black">
                           ______________________
                         </span>
                       )}
@@ -126,7 +126,7 @@ export default function WorksheetPage() {
         {/* Section B — Practice */}
         {worksheet.practice.length > 0 && (
           <section className="mb-8 break-before-page">
-            <h2 className="mb-3 text-small font-semibold uppercase tracking-wider text-ink print:text-black">
+            <h2 className="mb-3 text-footnote font-semibold uppercase tracking-wider text-label print:text-black">
               B. Practice — circle the correct answer
             </h2>
             <ol className="space-y-5">
@@ -136,8 +136,8 @@ export default function WorksheetPage() {
                 const answerText =
                   ex.correctAnswer ?? (Array.isArray(ex.answer) ? ex.answer.join(' · ') : ex.answer);
                 return (
-                  <li key={i} className="text-small">
-                    <p className="mb-2 font-medium text-ink print:text-black">
+                  <li key={i} className="text-footnote">
+                    <p className="mb-2 font-medium text-label print:text-black">
                       {i + 1}. <Bold text={ex.question} />
                     </p>
                     {ex.somali && (
@@ -160,7 +160,7 @@ export default function WorksheetPage() {
                             <p
                               key={j}
                               className={`print:text-black ${
-                                isAnswer ? 'font-semibold text-success' : 'text-ink-muted'
+                                isAnswer ? 'font-semibold text-green' : 'text-label-2'
                               }`}
                             >
                               {String.fromCharCode(65 + j)}. {opt}
@@ -172,16 +172,16 @@ export default function WorksheetPage() {
                     ) : (
                       <p className="pl-4 print:text-black">
                         {showAnswers ? (
-                          <span className="text-success print:text-black">{answerText}</span>
+                          <span className="text-green print:text-black">{answerText}</span>
                         ) : (
-                          <span className="text-ink-faint print:text-black">
+                          <span className="text-label-3 print:text-black">
                             ______________________________
                           </span>
                         )}
                       </p>
                     )}
                     {showAnswers && (
-                      <p className="mt-1.5 pl-4 text-micro text-ink-muted print:text-black">
+                      <p className="mt-1.5 pl-4 text-caption2 text-label-2 print:text-black">
                         {ex.explanation}
                       </p>
                     )}
@@ -193,8 +193,8 @@ export default function WorksheetPage() {
         )}
 
         {/* Footer note — screen only */}
-        <p className="mt-8 text-small text-ink-faint print:hidden">
-          Tip: toggle <span className="text-ink">Show answers</span> to print an answer key, or
+        <p className="mt-8 text-footnote text-label-3 print:hidden">
+          Tip: toggle <span className="text-label">Show answers</span> to print an answer key, or
           leave it off to print a blank worksheet.
         </p>
       </div>

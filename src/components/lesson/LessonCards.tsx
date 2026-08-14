@@ -158,8 +158,8 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   /* All hooks are declared above — safe to bail out for a missing lesson now. */
   if (!content) {
     return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-surface px-4">
-        <p className="text-small text-ink-muted">Lesson content not found.</p>
+      <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4">
+        <p className="text-footnote text-label-2">Lesson content not found.</p>
       </div>
     );
   }
@@ -193,14 +193,14 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   /* ─── Render ───────────────────────────────────────────────────────────── */
 
   return (
-    <div className="lesson-container flex min-h-[100dvh] flex-col bg-surface">
+    <div className="lesson-container flex min-h-[100dvh] flex-col bg-bg">
       {/* Top bar */}
-      <header className="sticky top-0 z-20 flex-shrink-0 border-b border-border bg-surface px-4 pt-safe-t">
+      <header className="glass glass-top sticky top-0 z-20 flex-shrink-0 px-4 pt-safe-t">
         <div className="mx-auto flex max-w-column items-center gap-3 py-2.5">
           <button
             onClick={handleExit}
             aria-label="Close lesson"
-            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
           >
             <X className="h-[18px] w-[18px]" />
           </button>
@@ -214,7 +214,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
             />
           </div>
 
-          <span className="flex-shrink-0 text-micro font-medium tabular-nums text-ink-faint">
+          <span className="flex-shrink-0 text-caption2 font-medium tabular-nums text-label-3">
             {cardIndex + 1}/{cards.length}
           </span>
 
@@ -223,7 +223,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
           <button
             onClick={() => setShowGlossary(true)}
             aria-label="Open glossary"
-            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
           >
             <BookA className="h-[18px] w-[18px]" />
           </button>
@@ -272,7 +272,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
       </div>
 
       {/* Bottom action — in the thumb zone, clear of the home indicator. */}
-      <div className="action-bar sticky bottom-0 z-10 flex-shrink-0 px-4 pt-3">
+      <div className="glass glass-bottom sticky bottom-0 z-10 flex-shrink-0 px-4 pt-3">
         <div className="mx-auto max-w-column">
           <BottomAction
             card={currentCard}
@@ -291,21 +291,21 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
       {/* Exit confirmation */}
       {showExitConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-[2px]">
-          <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-raised animate-fade-in">
-            <h3 className="mb-1.5 text-heading font-semibold text-ink">Leave this lesson?</h3>
-            <p className="mb-5 text-small text-ink-muted">
+          <div className="w-full max-w-sm rounded-2xl bg-elevated p-6  animate-fade-in">
+            <h3 className="mb-1.5 text-title3 font-semibold text-label">Leave this lesson?</h3>
+            <p className="mb-5 text-footnote text-label-2">
               Your place is saved — you will come back to this card.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowExitConfirm(false)}
-                className="flex-1 rounded-xl bg-accent-strong py-3 text-small font-semibold text-white transition-colors hover:bg-accent-hover"
+                className="flex-1 rounded-xl bg-accent py-3 text-footnote font-semibold text-accent-ink transition-colors hover:opacity-90"
               >
                 Stay
               </button>
               <button
                 onClick={() => navigate(-1)}
-                className="flex-1 rounded-xl border border-border-strong py-3 text-small font-semibold text-ink-muted transition-colors hover:bg-surface-sunken"
+                className="flex-1 rounded-xl bg-fill py-3 text-footnote font-semibold text-label-2 transition-colors hover:bg-fill"
               >
                 Leave
               </button>
@@ -376,7 +376,7 @@ function RenderCard({
 /** Small caps label above a card. One shape for every card role. */
 function CardLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">
+    <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">
       {children}
     </p>
   );
@@ -401,12 +401,12 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
                     ? 'Have a guess first:'
                     : 'In this lesson you will learn:'}
         </CardLabel>
-        <h1 className="mt-1.5 text-title font-semibold text-ink">{lessonTitle}</h1>
+        <h1 className="mt-1.5 text-title1 font-semibold text-label">{lessonTitle}</h1>
       </motion.div>
 
       {card.prompt && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <p className="whitespace-pre-wrap text-lead text-ink-muted">
+          <p className="whitespace-pre-wrap text-title3 text-label-2">
             <RichText text={card.prompt} />
           </p>
         </motion.div>
@@ -416,7 +416,7 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
           monospaced — the alignment is the diagram. */}
       {card.content && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <pre className="overflow-auto rounded-xl border border-border bg-card p-4 font-mono text-micro text-ink-muted">
+          <pre className="overflow-auto rounded-xl bg-elevated p-4 font-mono text-caption2 text-label-2">
             {card.content}
           </pre>
         </motion.div>
@@ -432,7 +432,7 @@ function VocabCard({ words }: { words: VocabWord[] }) {
     <div className="space-y-5 pt-6">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
         <CardLabel>Vocabulary · {words.length} words</CardLabel>
-        <p className="mt-1.5 text-lead text-ink-muted">
+        <p className="mt-1.5 text-title3 text-label-2">
           Words for this lesson. You will meet them again in the practice.
         </p>
       </motion.div>
@@ -442,20 +442,20 @@ function VocabCard({ words }: { words: VocabWord[] }) {
         variants={contentStagger}
         initial="hidden"
         animate="visible"
-        className="overflow-hidden rounded-xl border border-border bg-card"
+        className="overflow-hidden rounded-xl bg-elevated"
       >
         {words.map((w, i) => (
           <div
             key={w.rank}
             className={`flex items-baseline justify-between gap-3 px-4 py-3 ${
-              i === 0 ? '' : 'border-t border-border'
+              i === 0 ? '' : 'border-t border-separator'
             }`}
           >
             <div className="min-w-0">
               <Somali size="lg">{w.somali}</Somali>
-              <p className="mt-0.5 text-small text-ink-muted">{w.english}</p>
+              <p className="mt-0.5 text-footnote text-label-2">{w.english}</p>
             </div>
-            <span className="flex-shrink-0 text-micro uppercase tracking-wider text-ink-faint">
+            <span className="flex-shrink-0 text-caption2 uppercase tracking-wider text-label-3">
               {w.pos}
             </span>
           </div>
@@ -482,7 +482,7 @@ function TeachCard({ card }: { card: TeachingCard }) {
           variants={contentStagger}
           initial="hidden"
           animate="visible"
-          className="text-lead text-ink"
+          className="text-title3 text-label"
         >
           {card.content.split('\n\n').map((para, i) => (
             <p key={i} className="mb-4">
@@ -517,14 +517,14 @@ function PracticeCard({
     <div className="space-y-5 pt-6">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
         <CardLabel>Practice</CardLabel>
-        <p className="mt-1.5 text-lead font-medium text-ink">
+        <p className="mt-1.5 text-title3 font-medium text-label">
           <RichText text={exercise.question} />
         </p>
         {/* A typed field on the exercise, so this is guaranteed Somali — safe
             to give the serif treatment. */}
         {exercise.somali && (
-          <div className="mt-3 rounded-xl border border-border bg-card px-4 py-4 text-center">
-            <Somali size="block">{exercise.somali}</Somali>
+          <div className="mt-3 rounded-xl bg-elevated px-4 py-4 text-center">
+            <Somali size="hero">{exercise.somali}</Somali>
           </div>
         )}
       </motion.div>
@@ -542,7 +542,7 @@ function PracticeCard({
       {/* Typed answers are self-graded here. The unit test grades them instead,
           which is why its items are single words with one spelling. */}
       {(exercise.type === 'translate' || exercise.type === 'marker_identification') && (
-        <p className="-mt-3 text-micro text-ink-faint">
+        <p className="-mt-3 text-caption2 text-label-3">
           Type your best answer, then check — you grade yourself against the explanation below.
         </p>
       )}
@@ -552,10 +552,10 @@ function PracticeCard({
         variants={contentStagger}
         initial="hidden"
         animate="visible"
-        className="rounded-xl border border-border bg-surface-sunken p-4"
+        className="rounded-xl bg-fill p-4"
       >
         <CardLabel>Hint</CardLabel>
-        <p className="mt-1 text-small text-ink-muted">
+        <p className="mt-1 text-footnote text-label-2">
           <RichText text={exercise.hint} />
         </p>
       </motion.div>
@@ -574,25 +574,23 @@ function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; an
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-xl border p-4 ${
-        positive ? 'border-success-line bg-success-wash' : 'border-error-line bg-error-wash'
-      }`}
+      className="rounded-xl bg-elevated p-4"
     >
-      <p className={`mb-1 text-small font-semibold ${positive ? 'text-success' : 'text-error'}`}>
+      <p className={`mb-1 text-footnote font-semibold ${positive ? 'text-green' : 'text-red'}`}>
         {isSelfGraded ? (
           <>
-            Answer: <Somali tone="inherit">{displayAnswer(exercise)}</Somali>
+            Answer: <Somali inherit>{displayAnswer(exercise)}</Somali>
           </>
         ) : isCorrect ? (
           'Correct'
         ) : (
           <>
             Not quite — the answer is{' '}
-            <Somali tone="inherit">{displayAnswer(exercise)}</Somali>
+            <Somali inherit>{displayAnswer(exercise)}</Somali>
           </>
         )}
       </p>
-      <p className="text-small leading-relaxed text-ink">
+      <p className="text-footnote leading-relaxed text-label">
         <RichText text={exercise.explanation} />
       </p>
     </motion.div>
@@ -607,12 +605,12 @@ function SummaryCard({ card }: { card: TeachingCard }) {
     <div className="space-y-5 pt-6">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
         <CardLabel>Lesson complete</CardLabel>
-        <h2 className="mt-1.5 text-title font-semibold text-ink">{card.title}</h2>
+        <h2 className="mt-1.5 text-title1 font-semibold text-label">{card.title}</h2>
       </motion.div>
 
       {card.content && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <p className="whitespace-pre-wrap text-lead text-ink-muted">
+          <p className="whitespace-pre-wrap text-title3 text-label-2">
             <RichText text={card.content} />
           </p>
         </motion.div>
@@ -646,13 +644,13 @@ function BottomAction({
     cardType === 'notice' || cardType === 'complete' || cardType === 'produce';
 
   const base =
-    'tap-scale w-full rounded-xl py-4 text-body font-semibold transition-colors min-h-[52px]';
+    'pressable w-full rounded-xl py-4 text-body font-semibold transition-colors min-h-[52px]';
 
   if (!isPracticeCard) {
     return (
       <button
         onClick={onPrimary}
-        className={`${base} bg-accent-strong text-white hover:bg-accent-hover`}
+        className={`${base} bg-accent text-accent-ink hover:opacity-90`}
       >
         {isLastCard ? 'Finish lesson' : 'Got it'}
       </button>
@@ -667,8 +665,8 @@ function BottomAction({
         disabled={!practiceAnswer}
         className={`${base} ${
           practiceAnswer
-            ? 'bg-accent-strong text-white hover:bg-accent-hover'
-            : 'cursor-not-allowed bg-surface-sunken text-ink-faint'
+            ? 'bg-accent text-accent-ink hover:opacity-90'
+            : 'cursor-not-allowed bg-fill text-label-3'
         }`}
       >
         Check answer
@@ -679,7 +677,7 @@ function BottomAction({
   return (
     <button
       onClick={onContinue}
-      className={`${base} bg-accent-strong text-white hover:bg-accent-hover`}
+      className={`${base} bg-accent text-accent-ink hover:opacity-90`}
     >
       {isLastCard ? 'Finish lesson' : 'Continue'}
     </button>

@@ -20,6 +20,7 @@ import { Routes, Route, Navigate } from 'react-router';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 const Learn = lazy(() => import('@/pages/Learn'));
+const Lessons = lazy(() => import('@/pages/Lessons'));
 const Lesson = lazy(() => import('@/pages/Lesson'));
 const Homework = lazy(() => import('@/pages/Homework'));
 const UnitTest = lazy(() => import('@/pages/UnitTest'));
@@ -27,7 +28,7 @@ const Worksheet = lazy(() => import('@/pages/Worksheet'));
 
 function PageLoader() {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-surface">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-bg">
       <div className="h-5 w-5 animate-spin rounded-full border-2 border-accent border-t-transparent" />
       <span className="sr-only">Loading</span>
     </div>
@@ -39,10 +40,11 @@ export default function App() {
     <ErrorBoundary>
       {/* 100dvh, not 100vh: on mobile the URL bar makes vh taller than the
           visible viewport, which pushed the bottom action off-screen. */}
-      <div className="min-h-[100dvh] bg-surface text-ink">
+      <div className="min-h-[100dvh] bg-bg text-label">
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/learn" element={<Learn />} />
+            <Route path="/lessons" element={<Lessons />} />
             <Route path="/lesson/:id" element={<Lesson />} />
             <Route path="/homework/:id" element={<Homework />} />
             <Route path="/unit-test/:id" element={<UnitTest />} />

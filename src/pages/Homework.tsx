@@ -98,16 +98,16 @@ export default function HomeworkPage() {
   if (phase === 'intro') {
     return (
       <Shell onClose={() => navigate('/learn')} title="Practice">
-        <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">
+        <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">
           Lesson {lessonId}
         </p>
-        <h1 className="mt-1.5 text-title font-semibold text-ink">{lesson.title}</h1>
-        <p className="mt-2 text-lead text-ink-muted">
+        <h1 className="mt-1.5 text-title1 font-semibold text-label">{lesson.title}</h1>
+        <p className="mt-2 text-title3 text-label-2">
           A mixed set — most of it from this lesson, some from earlier ones so the older
           material does not go quiet.
         </p>
 
-        <dl className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
+        <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
           <Row label="From earlier lessons" value={`${carried}`} />
           <Row label="Hints" value="On — this is practice" />
@@ -115,14 +115,14 @@ export default function HomeworkPage() {
           {best !== undefined && <Row label="Your best" value={`${best}%`} />}
         </dl>
 
-        <p className="mt-4 text-small text-ink-faint">
+        <p className="mt-4 text-footnote text-label-3">
           Come back to this a few days after finishing the lesson rather than straight away.
           Spacing it out is most of where the value is.
         </p>
 
         <button
           onClick={start}
-          className="tap-scale mt-6 w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+          className="pressable mt-6 w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
         >
           Start
         </button>
@@ -132,7 +132,7 @@ export default function HomeworkPage() {
             screen, one step further out. */}
         <button
           onClick={() => navigate(`/worksheet/${lessonId}`)}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border-strong py-4 text-body font-medium text-ink transition-colors hover:bg-surface-sunken"
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-4 text-body font-medium text-label transition-colors hover:bg-fill"
         >
           <Printer className="h-4 w-4" />
           Print a worksheet instead
@@ -148,11 +148,11 @@ export default function HomeworkPage() {
     return (
       <Shell onClose={() => navigate('/learn')} title="Practice">
         <div className="pt-6 text-center">
-          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-accent-line bg-accent-wash">
-            <span className="text-title font-semibold tabular-nums text-accent">{pct}%</span>
+          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-fill">
+            <span className="text-title1 font-semibold tabular-nums text-accent">{pct}%</span>
           </div>
-          <h1 className="mt-5 text-title font-semibold text-ink">Practice done</h1>
-          <p className="mt-1 text-body text-ink-muted">
+          <h1 className="mt-5 text-title1 font-semibold text-label">Practice done</h1>
+          <p className="mt-1 text-body text-label-2">
             {correct} of {items.length} correct — nothing is gated by this
           </p>
         </div>
@@ -160,7 +160,7 @@ export default function HomeworkPage() {
         <div className="mt-8 space-y-3">
           <button
             onClick={() => navigate('/learn')}
-            className="tap-scale w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+            className="pressable w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
           >
             Done
           </button>
@@ -169,7 +169,7 @@ export default function HomeworkPage() {
               setAttempt((a) => a + 1);
               start();
             }}
-            className="tap-scale flex w-full items-center justify-center gap-2 rounded-xl border border-border-strong py-4 text-body font-semibold text-ink transition-colors hover:bg-surface-sunken"
+            className="pressable flex w-full items-center justify-center gap-2 rounded-xl py-4 text-body font-semibold text-label transition-colors hover:bg-fill"
           >
             <RotateCcw className="h-4 w-4" />
             Again, fresh questions
@@ -194,16 +194,16 @@ export default function HomeworkPage() {
     >
       {/* Naming a carried-back item is deliberate: §1.5 wants the learner to
           notice that practice is interleaved, not to be quietly surprised. */}
-      <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">
+      <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">
         {fromEarlier ? 'From an earlier lesson' : 'This lesson'}
       </p>
 
-      <p className="mt-1.5 text-lead font-medium text-ink">
+      <p className="mt-1.5 text-title3 font-medium text-label">
         <RichText text={current.question} />
       </p>
       {current.somali && (
-        <div className="mt-3 rounded-xl border border-border bg-card px-4 py-4 text-center">
-          <Somali size="block">{current.somali}</Somali>
+        <div className="mt-3 rounded-xl bg-elevated px-4 py-4 text-center">
+          <Somali size="hero">{current.somali}</Somali>
         </div>
       )}
 
@@ -218,9 +218,9 @@ export default function HomeworkPage() {
         />
       </div>
 
-      <div className="mt-5 rounded-xl border border-border bg-surface-sunken p-4">
-        <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">Hint</p>
-        <p className="mt-1 text-small text-ink-muted">
+      <div className="mt-5 rounded-xl bg-fill p-4">
+        <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">Hint</p>
+        <p className="mt-1 text-footnote text-label-2">
           <RichText text={current.hint} />
         </p>
       </div>
@@ -229,31 +229,29 @@ export default function HomeworkPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`mt-4 rounded-xl border p-4 ${
-            isRight ? 'border-success-line bg-success-wash' : 'border-error-line bg-error-wash'
-          }`}
+          className="mt-4 rounded-xl bg-elevated p-4"
         >
-          <p className={`mb-1 text-small font-semibold ${isRight ? 'text-success' : 'text-error'}`}>
+          <p className={`mb-1 text-footnote font-semibold ${isRight ? 'text-green' : 'text-red'}`}>
             {isRight ? (
               'Correct'
             ) : (
               <>
                 Not quite — the answer is{' '}
-                <Somali tone="inherit">{displayAnswer(current)}</Somali>
+                <Somali inherit>{displayAnswer(current)}</Somali>
               </>
             )}
           </p>
-          <p className="text-small leading-relaxed text-ink">
+          <p className="text-footnote leading-relaxed text-label">
             <RichText text={current.explanation} />
           </p>
         </motion.div>
       )}
 
-      <div className="action-bar sticky bottom-0 mt-6 pt-3">
+      <div className="glass glass-bottom sticky bottom-0 -mx-4 mt-6 px-4 pt-3">
         {checked ? (
           <button
             onClick={next}
-            className="tap-scale w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+            className="pressable w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
           >
             {index === items.length - 1 ? 'Finish' : 'Continue'}
           </button>
@@ -261,10 +259,10 @@ export default function HomeworkPage() {
           <button
             onClick={check}
             disabled={!answer}
-            className={`tap-scale w-full rounded-xl py-4 text-body font-semibold transition-colors ${
+            className={`pressable w-full rounded-xl py-4 text-body font-semibold transition-colors ${
               answer
-                ? 'bg-accent-strong text-white hover:bg-accent-hover'
-                : 'cursor-not-allowed bg-surface-sunken text-ink-faint'
+                ? 'bg-accent text-accent-ink hover:opacity-90'
+                : 'cursor-not-allowed bg-fill text-label-3'
             }`}
           >
             Check answer
@@ -294,24 +292,24 @@ function Shell({
   progress?: string;
 }) {
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-surface">
-      <header className="sticky top-0 z-20 border-b border-border bg-surface px-4 pt-safe-t">
+    <div className="flex min-h-[100dvh] flex-col bg-bg">
+      <header className="glass glass-top sticky top-0 z-20 px-4 pt-safe-t">
         <div className="mx-auto flex max-w-column items-center gap-3 py-2.5">
           <button
             onClick={onClose}
             aria-label="Close"
-            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
+            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
           >
             <X className="h-[18px] w-[18px]" />
           </button>
-          <span className="flex-1 text-small font-medium text-ink">{title}</span>
+          <span className="flex-1 text-footnote font-medium text-label">{title}</span>
           {progress && (
-            <span className="text-micro tabular-nums text-ink-faint">{progress}</span>
+            <span className="text-caption2 tabular-nums text-label-3">{progress}</span>
           )}
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-column flex-1 px-4 pb-[calc(1.5rem+var(--safe-bottom))] pt-5">
+      <main className="mx-auto w-full max-w-column flex-1 px-4 pb-[calc(1.5rem+var(--safe-b))] pt-5">
         {children}
       </main>
     </div>
@@ -320,8 +318,8 @@ function Shell({
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-surface px-4">
-      <div className="max-w-sm text-center text-body text-ink-muted">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4">
+      <div className="max-w-sm text-center text-body text-label-2">
         {children}
         <div className="mt-4">
           <Link to="/learn" className="text-body font-medium text-accent hover:underline">
@@ -337,11 +335,11 @@ function Row({ label, value, first }: { label: string; value: string; first?: bo
   return (
     <div
       className={`flex items-baseline justify-between gap-3 px-4 py-3 ${
-        first ? '' : 'border-t border-border'
+        first ? '' : 'border-t border-separator'
       }`}
     >
-      <dt className="text-small text-ink-muted">{label}</dt>
-      <dd className="text-right text-small font-medium text-ink">{value}</dd>
+      <dt className="text-footnote text-label-2">{label}</dt>
+      <dd className="text-right text-footnote font-medium text-label">{value}</dd>
     </div>
   );
 }

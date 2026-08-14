@@ -44,12 +44,12 @@ export default function GlossarySheet({ onClose }: { onClose: () => void }) {
         role="dialog"
         aria-modal="true"
         aria-label="Glossary"
-        className="relative flex max-h-[85dvh] w-full max-w-column flex-col rounded-t-2xl border border-border bg-card shadow-raised animate-slide-up sm:rounded-2xl"
+        className="relative flex max-h-[85dvh] w-full max-w-column flex-col rounded-t-2xl bg-elevated  animate-sheet-up sm:rounded-2xl"
       >
-        <header className="flex items-start justify-between gap-3 border-b border-border px-5 pt-5 pb-4">
+        <header className="flex items-start justify-between gap-3 px-5 pt-5 pb-4">
           <div>
-            <h2 className="text-heading font-semibold text-ink">Glossary</h2>
-            <p className="mt-1 text-small text-ink-muted">
+            <h2 className="text-title3 font-semibold text-label">Glossary</h2>
+            <p className="mt-1 text-footnote text-label-2">
               Plain words on the left are what this course says. The technical names are
               what you will meet in grammar books and videos. You never need them here.
             </p>
@@ -57,23 +57,23 @@ export default function GlossarySheet({ onClose }: { onClose: () => void }) {
           <button
             onClick={onClose}
             aria-label="Close"
-            className="-mr-2 -mt-1 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
+            className="-mr-2 -mt-1 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
           >
             <X className="h-[18px] w-[18px]" />
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-2 pb-[calc(1.25rem+var(--safe-bottom))]">
-          <dl className="divide-y divide-border">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-2 pb-[calc(1.25rem+var(--safe-b))]">
+          <dl className="divide-y divide-separator">
             {terms.map((term, i) => (
               <div key={i} className="py-3.5">
-                <dt className="text-body font-semibold text-ink">{term.plain}</dt>
-                <dd className="mt-0.5 text-small text-ink-muted">
+                <dt className="text-body font-semibold text-label">{term.plain}</dt>
+                <dd className="mt-0.5 text-footnote text-label-2">
                   grammar books call this{' '}
                   <span className="font-medium text-accent">{term.technical}</span>
                 </dd>
                 {term.note && (
-                  <dd className="mt-2 rounded-lg bg-surface-sunken px-3 py-2 text-small text-ink-muted">
+                  <dd className="mt-2 rounded-lg bg-fill px-3 py-2 text-footnote text-label-2">
                     {term.note}
                   </dd>
                 )}

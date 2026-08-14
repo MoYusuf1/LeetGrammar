@@ -79,14 +79,14 @@ export default function UnitTestPage() {
   if (!unlocked) {
     return (
       <Centered>
-        <p className="mb-1 text-body font-semibold text-ink">{bank.name} is locked</p>
+        <p className="mb-1 text-body font-semibold text-label">{bank.name} is locked</p>
         <p className="mb-4">
           Finish lessons {unit.lessonIds[0]}–{unit.lessonIds.at(-1)} first — the test only asks
           about what they teach.
         </p>
         <Link
           to="/learn"
-          className="inline-block rounded-xl bg-accent-strong px-5 py-3 text-small font-semibold text-white"
+          className="inline-block rounded-xl bg-accent px-5 py-3 text-footnote font-semibold text-accent-ink"
         >
           Back to lessons
         </Link>
@@ -121,13 +121,13 @@ export default function UnitTestPage() {
     const record = store.getUnitTestRecord?.(unitId);
     return (
       <Shell onClose={() => navigate('/learn')} title={bank.name}>
-        <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">
+        <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">
           Unit {unit.id} · {unit.name}
         </p>
-        <h1 className="mt-1.5 text-title font-semibold text-ink">{bank.name}</h1>
-        <p className="mt-2 text-lead text-ink-muted">{bank.description}</p>
+        <h1 className="mt-1.5 text-title1 font-semibold text-label">{bank.name}</h1>
+        <p className="mt-2 text-title3 text-label-2">{bank.description}</p>
 
-        <dl className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
+        <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
           <Row label="To pass" value={`${PASS_MARK}%`} />
           <Row label="Hints" value="Off — this one is on you" />
@@ -140,14 +140,14 @@ export default function UnitTestPage() {
           )}
         </dl>
 
-        <p className="mt-4 text-small text-ink-faint">
+        <p className="mt-4 text-footnote text-label-3">
           Miss too much of one topic and you will be sent back through a short set of
           questions on that topic alone — not the whole test again.
         </p>
 
         <button
           onClick={() => setPhase('test')}
-          className="tap-scale mt-6 w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+          className="pressable mt-6 w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
         >
           Start the test
         </button>
@@ -188,32 +188,32 @@ export default function UnitTestPage() {
           />
         </div>
 
-        <div className="action-bar sticky bottom-0 mt-7 pt-3">
+        <div className="glass glass-bottom sticky bottom-0 -mx-4 mt-7 px-4 pt-3">
           <div className="flex gap-3">
             <button
               onClick={() => setIndex((i) => Math.max(0, i - 1))}
               disabled={index === 0}
-              className="rounded-xl border border-border-strong px-5 py-4 text-body font-medium text-ink transition-colors hover:bg-surface-sunken disabled:opacity-30"
+              className="rounded-xl bg-fill px-5 py-4 text-body font-medium text-label transition-colors hover:bg-fill disabled:opacity-30"
             >
               Back
             </button>
             {isLast ? (
               <button
                 onClick={finish}
-                className="tap-scale flex-1 rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+                className="pressable flex-1 rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
               >
                 Finish · {answered}/{items.length} answered
               </button>
             ) : (
               <button
                 onClick={() => setIndex((i) => Math.min(items.length - 1, i + 1))}
-                className="tap-scale flex-1 rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+                className="pressable flex-1 rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
               >
                 Next
               </button>
             )}
           </div>
-          <p className="mt-2 text-center text-micro text-ink-faint">
+          <p className="mt-2 text-center text-caption2 text-label-3">
             Skipping is allowed — an unanswered question is marked wrong.
           </p>
         </div>
@@ -243,31 +243,27 @@ export default function UnitTestPage() {
       <Shell onClose={() => navigate('/learn')} title="Results">
         <div className="pt-2 text-center">
           <div
-            className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full border ${
-              result.passed
-                ? 'border-success-line bg-success-wash'
-                : 'border-accent-line bg-accent-wash'
-            }`}
+            className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-fill"
           >
             <span
-              className={`text-title font-semibold tabular-nums ${
-                result.passed ? 'text-success' : 'text-accent'
+              className={`text-title1 font-semibold tabular-nums ${
+                result.passed ? 'text-green' : 'text-accent'
               }`}
             >
               {result.percentage}%
             </span>
           </div>
-          <h1 className="mt-5 text-title font-semibold text-ink">
+          <h1 className="mt-5 text-title1 font-semibold text-label">
             {result.passed ? 'Unit passed' : 'Not there yet'}
           </h1>
-          <p className="mt-1 text-body text-ink-muted">
+          <p className="mt-1 text-body text-label-2">
             {result.correctItems} of {result.totalItems} correct · {PASS_MARK}% needed
           </p>
         </div>
 
         {/* Per-objective breakdown */}
-        <h2 className="mb-2.5 mt-8 text-small font-semibold text-ink">How each topic went</h2>
-        <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <h2 className="mb-2.5 mt-8 text-footnote font-semibold text-label">How each topic went</h2>
+        <div className="overflow-hidden rounded-xl bg-elevated">
           {[...tally.entries()].map(([objectiveId, score], i) => {
             const info = describeObjective(objectiveId);
             const failed = result.failedObjectives.includes(objectiveId);
@@ -275,18 +271,18 @@ export default function UnitTestPage() {
               <div
                 key={objectiveId}
                 className={`flex items-center gap-3 px-4 py-3 ${
-                  i === 0 ? '' : 'border-t border-border'
+                  i === 0 ? '' : 'border-t border-separator'
                 }`}
               >
                 <span
                   className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ${
-                    failed ? 'bg-error-wash text-error' : 'bg-success-wash text-success'
+                    failed ? 'bg-fill text-red' : 'bg-fill text-green'
                   }`}
                 >
                   {failed ? <X size={13} /> : <Check size={13} />}
                 </span>
-                <span className="min-w-0 flex-1 text-small text-ink">{info.label}</span>
-                <span className="flex-shrink-0 text-micro tabular-nums text-ink-faint">
+                <span className="min-w-0 flex-1 text-footnote text-label">{info.label}</span>
+                <span className="flex-shrink-0 text-caption2 tabular-nums text-label-3">
                   {score.correct}/{score.total}
                 </span>
               </div>
@@ -296,13 +292,13 @@ export default function UnitTestPage() {
 
         {/* Correctives */}
         {result.failedObjectives.length > 0 && (
-          <div className="mt-6 rounded-xl border border-accent-line bg-accent-wash p-4">
-            <p className="text-small font-semibold text-accent">Go back over these</p>
+          <div className="mt-6 rounded-xl bg-fill p-4">
+            <p className="text-footnote font-semibold text-accent">Go back over these</p>
             <ul className="mb-4 mt-2 space-y-1.5">
               {result.failedObjectives.map((objectiveId) => {
                 const info = describeObjective(objectiveId);
                 return (
-                  <li key={objectiveId} className="text-small text-ink">
+                  <li key={objectiveId} className="text-footnote text-label">
                     {info.label}
                     {info.lessonId && (
                       <Link
@@ -318,7 +314,7 @@ export default function UnitTestPage() {
             </ul>
             <button
               onClick={() => setPhase('correctives')}
-              className="tap-scale w-full rounded-xl bg-accent-strong py-3.5 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+              className="pressable w-full rounded-xl bg-accent py-3.5 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
             >
               Practise these {correctives.length} questions
             </button>
@@ -328,28 +324,28 @@ export default function UnitTestPage() {
         {/* What you missed */}
         {missed.length > 0 && (
           <>
-            <h2 className="mb-2.5 mt-8 text-small font-semibold text-ink">
+            <h2 className="mb-2.5 mt-8 text-footnote font-semibold text-label">
               What you missed ({missed.length})
             </h2>
             <div className="space-y-2.5">
               {missed.map((item) => (
-                <div key={item.id} className="rounded-xl border border-border bg-card p-4">
-                  <p className="text-small font-medium text-ink">
+                <div key={item.id} className="rounded-xl bg-elevated p-4">
+                  <p className="text-footnote font-medium text-label">
                     <RichText text={item.question} />
                   </p>
-                  <p className="mt-2 text-small text-ink-muted">
+                  <p className="mt-2 text-footnote text-label-2">
                     Your answer:{' '}
-                    <span className="text-error">
+                    <span className="text-red">
                       {responses[item.id]?.trim() ? responses[item.id] : '— left blank —'}
                     </span>
                   </p>
-                  <p className="text-small text-ink-muted">
+                  <p className="text-footnote text-label-2">
                     Correct:{' '}
-                    <span className="text-success">
-                      <Somali tone="inherit">{displayAnswer(item)}</Somali>
+                    <span className="text-green">
+                      <Somali inherit>{displayAnswer(item)}</Somali>
                     </span>
                   </p>
-                  <p className="mt-2 text-small leading-relaxed text-ink-muted">
+                  <p className="mt-2 text-footnote leading-relaxed text-label-2">
                     <RichText text={item.explanation} />
                   </p>
                 </div>
@@ -361,13 +357,13 @@ export default function UnitTestPage() {
         <div className="mt-8 space-y-3">
           <button
             onClick={() => navigate('/learn')}
-            className="tap-scale w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+            className="pressable w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
           >
             Done
           </button>
           <button
             onClick={restart}
-            className="tap-scale flex w-full items-center justify-center gap-2 rounded-xl border border-border-strong py-4 text-body font-semibold text-ink transition-colors hover:bg-surface-sunken"
+            className="pressable flex w-full items-center justify-center gap-2 rounded-xl py-4 text-body font-semibold text-label transition-colors hover:bg-fill"
           >
             <RotateCcw className="h-4 w-4" />
             Retake
@@ -404,7 +400,7 @@ function Correctives({
   if (!current) {
     return (
       <Shell onClose={onBack} title="Correctives">
-        <p className="text-body text-ink-muted">Nothing to practise.</p>
+        <p className="text-body text-label-2">Nothing to practise.</p>
       </Shell>
     );
   }
@@ -432,9 +428,9 @@ function Correctives({
         />
       </div>
 
-      <div className="mt-5 rounded-xl border border-border bg-surface-sunken p-4">
-        <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">Hint</p>
-        <p className="mt-1 text-small text-ink-muted">
+      <div className="mt-5 rounded-xl bg-fill p-4">
+        <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">Hint</p>
+        <p className="mt-1 text-footnote text-label-2">
           <RichText text={current.hint} />
         </p>
       </div>
@@ -443,31 +439,29 @@ function Correctives({
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`mt-4 rounded-xl border p-4 ${
-            correct ? 'border-success-line bg-success-wash' : 'border-error-line bg-error-wash'
-          }`}
+          className="mt-4 rounded-xl bg-elevated p-4"
         >
-          <p className={`mb-1 text-small font-semibold ${correct ? 'text-success' : 'text-error'}`}>
+          <p className={`mb-1 text-footnote font-semibold ${correct ? 'text-green' : 'text-red'}`}>
             {correct ? (
               'Correct'
             ) : (
               <>
                 Not quite — the answer is{' '}
-                <Somali tone="inherit">{displayAnswer(current)}</Somali>
+                <Somali inherit>{displayAnswer(current)}</Somali>
               </>
             )}
           </p>
-          <p className="text-small leading-relaxed text-ink">
+          <p className="text-footnote leading-relaxed text-label">
             <RichText text={current.explanation} />
           </p>
         </motion.div>
       )}
 
-      <div className="action-bar sticky bottom-0 mt-6 pt-3">
+      <div className="glass glass-bottom sticky bottom-0 -mx-4 mt-6 px-4 pt-3">
         {checked ? (
           <button
             onClick={next}
-            className="tap-scale w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+            className="pressable w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
           >
             {isLast ? 'Back to results' : 'Continue'}
           </button>
@@ -475,10 +469,10 @@ function Correctives({
           <button
             onClick={() => answer && setChecked(true)}
             disabled={!answer}
-            className={`tap-scale w-full rounded-xl py-4 text-body font-semibold transition-colors ${
+            className={`pressable w-full rounded-xl py-4 text-body font-semibold transition-colors ${
               answer
-                ? 'bg-accent-strong text-white hover:bg-accent-hover'
-                : 'cursor-not-allowed bg-surface-sunken text-ink-faint'
+                ? 'bg-accent text-accent-ink hover:opacity-90'
+                : 'cursor-not-allowed bg-fill text-label-3'
             }`}
           >
             Check answer
@@ -494,12 +488,12 @@ function Correctives({
 function ItemQuestion({ exercise }: { exercise: PracticeExercise }) {
   return (
     <div>
-      <p className="text-lead font-medium text-ink">
+      <p className="text-title3 font-medium text-label">
         <RichText text={exercise.question} />
       </p>
       {exercise.somali && (
-        <div className="mt-3 rounded-xl border border-border bg-card px-4 py-4 text-center">
-          <Somali size="block">{exercise.somali}</Somali>
+        <div className="mt-3 rounded-xl bg-elevated px-4 py-4 text-center">
+          <Somali size="hero">{exercise.somali}</Somali>
         </div>
       )}
     </div>
@@ -519,24 +513,24 @@ function Shell({
   progress?: string;
 }) {
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-surface">
-      <header className="sticky top-0 z-20 border-b border-border bg-surface px-4 pt-safe-t">
+    <div className="flex min-h-[100dvh] flex-col bg-bg">
+      <header className="glass glass-top sticky top-0 z-20 px-4 pt-safe-t">
         <div className="mx-auto flex max-w-column items-center gap-3 py-2.5">
           <button
             onClick={onClose}
             aria-label="Close"
-            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
+            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
           >
             <X className="h-[18px] w-[18px]" />
           </button>
-          <span className="min-w-0 flex-1 truncate text-small font-medium text-ink">{title}</span>
+          <span className="min-w-0 flex-1 truncate text-footnote font-medium text-label">{title}</span>
           {progress && (
-            <span className="flex-shrink-0 text-micro tabular-nums text-ink-faint">{progress}</span>
+            <span className="flex-shrink-0 text-caption2 tabular-nums text-label-3">{progress}</span>
           )}
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-column flex-1 px-4 pb-[calc(1.5rem+var(--safe-bottom))] pt-5">
+      <main className="mx-auto w-full max-w-column flex-1 px-4 pb-[calc(1.5rem+var(--safe-b))] pt-5">
         {children}
       </main>
     </div>
@@ -545,8 +539,8 @@ function Shell({
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-surface px-4">
-      <div className="max-w-sm text-center text-body text-ink-muted">{children}</div>
+    <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4">
+      <div className="max-w-sm text-center text-body text-label-2">{children}</div>
     </div>
   );
 }
@@ -555,11 +549,11 @@ function Row({ label, value, first }: { label: string; value: string; first?: bo
   return (
     <div
       className={`flex items-baseline justify-between gap-3 px-4 py-3 ${
-        first ? '' : 'border-t border-border'
+        first ? '' : 'border-t border-separator'
       }`}
     >
-      <dt className="text-small text-ink-muted">{label}</dt>
-      <dd className="text-right text-small font-medium text-ink">{value}</dd>
+      <dt className="text-footnote text-label-2">{label}</dt>
+      <dd className="text-right text-footnote font-medium text-label">{value}</dd>
     </div>
   );
 }

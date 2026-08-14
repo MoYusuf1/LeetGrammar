@@ -73,37 +73,38 @@ function ChoiceExercise({ exercise, answer, checked, onSelect }: AnswerInputProp
         const isCorrectOption = checked && option === exercise.correctAnswer;
         const isWrongOption = checked && isSelected && !isCorrect;
 
-        let tone = 'border-border bg-card';
-        if (isCorrectOption) tone = 'border-success-line bg-success-wash';
-        else if (isWrongOption) tone = 'border-error-line bg-error-wash';
-        else if (isSelected && !checked) tone = 'border-accent bg-accent-wash';
-
+        /* Flat: no borders anywhere. State is carried by the badge and the
+           label color alone, which is how a grouped iOS list shows selection. */
         return (
           <button
             key={i}
             onClick={() => onSelect(option)}
             disabled={checked}
-            className={`w-full rounded-xl border p-4 text-left transition-colors ${tone} ${
-              checked ? 'cursor-default' : 'tap-scale cursor-pointer hover:border-border-strong'
+            className={`w-full rounded-xl bg-elevated p-4 text-left ${
+              checked ? 'cursor-default' : 'pressable cursor-pointer'
             }`}
           >
             <div className="flex items-center gap-3">
               <span
-                className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border text-micro font-bold ${
+                className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-caption2 font-semibold ${
                   isCorrectOption
-                    ? 'border-success bg-success text-white'
+                    ? 'bg-green text-accent-ink'
                     : isWrongOption
-                      ? 'border-error bg-error text-white'
+                      ? 'bg-red text-accent-ink'
                       : isSelected
-                        ? 'border-accent text-accent'
-                        : 'border-border-strong text-ink-faint'
+                        ? 'bg-accent text-accent-ink'
+                        : 'bg-fill text-label-3'
                 }`}
               >
                 {isCorrectOption ? '✓' : isWrongOption ? '✕' : String.fromCharCode(65 + i)}
               </span>
               <span
-                className={`text-body font-medium ${
-                  isCorrectOption ? 'text-success' : isWrongOption ? 'text-error' : 'text-ink'
+                className={`text-body ${
+                  isCorrectOption
+                    ? 'font-semibold text-green'
+                    : isWrongOption
+                      ? 'font-semibold text-red'
+                      : 'text-label'
                 }`}
               >
                 {option}
@@ -159,14 +160,14 @@ function UnscrambleExercise({ exercise, answer, checked, onSelect }: AnswerInput
     <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-3">
       {/* The sentence being assembled. Words here are always Somali — an
           unscramble reorders a Somali sentence — so the serif applies. */}
-      <div className="flex min-h-[60px] flex-wrap items-center gap-2 rounded-xl border border-dashed border-border-strong bg-card p-3">
+      <div className="flex min-h-[60px] flex-wrap items-center gap-2 rounded-xl border border-dashed border-separator bg-elevated p-3">
         {placed.length === 0 ? (
-          <span className="text-small text-ink-faint">Tap the words below, in order…</span>
+          <span className="text-footnote text-label-3">Tap the words below, in order…</span>
         ) : (
           placed.map((w, i) => (
             <span
               key={i}
-              className="rounded-lg border border-accent-line bg-accent-wash px-2.5 py-1"
+              className="rounded-lg bg-fill px-2.5 py-1"
             >
               <Somali>{w}</Somali>
             </span>
@@ -183,8 +184,8 @@ function UnscrambleExercise({ exercise, answer, checked, onSelect }: AnswerInput
             disabled={checked || used[i]}
             className={`rounded-lg border px-3 py-2 transition-colors ${
               used[i]
-                ? 'cursor-not-allowed border-border bg-surface-sunken opacity-40'
-                : 'tap-scale border-border-strong bg-card hover:border-accent'
+                ? 'cursor-not-allowed border-separator bg-fill opacity-40'
+                : 'pressable border-separator bg-elevated hover:border-accent'
             }`}
           >
             <Somali>{word}</Somali>
@@ -195,7 +196,7 @@ function UnscrambleExercise({ exercise, answer, checked, onSelect }: AnswerInput
       {!checked && placed.length > 0 && (
         <button
           onClick={reset}
-          className="text-small text-ink-faint underline underline-offset-4 transition-colors hover:text-ink"
+          className="text-footnote text-label-3 underline underline-offset-4 transition-colors hover:text-label"
         >
           Reset
         </button>
@@ -223,7 +224,7 @@ function FreeResponseExercise({ exercise, answer, checked, onSelect }: AnswerInp
         autoCorrect="off"
         spellCheck={false}
         placeholder={exercise.type === 'marker_identification' ? 'Type the marker…' : 'Type your answer in Somali…'}
-        className="somali somali-lg w-full rounded-xl border border-border bg-card p-4 placeholder:font-sans placeholder:text-body placeholder:font-normal placeholder:tracking-normal placeholder:text-ink-faint focus:border-accent focus:outline-none disabled:opacity-70"
+        className="somali somali-lg w-full rounded-xl bg-elevated p-4 placeholder:font-sans placeholder:text-body placeholder:font-normal placeholder:tracking-normal placeholder:text-label-3 focus:border-accent focus:outline-none disabled:opacity-70"
       />
     </motion.div>
   );
