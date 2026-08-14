@@ -5,14 +5,23 @@
 >
 > (`PONYTAIL_DEBT.md` stays separate: it tracks *code* debt, not teaching design.)
 >
-> **Status:** design settled, four core decisions made (Part 0).
+> **Status:** design settled, four core decisions made (Part 0), **amended August 2026**
+> after a research review — see the `Correction` and `Tension` blocks in §1.16, §3.1 and
+> §3.2, plus new §1.17, §1.17b, §1.18, §2.0 and §2.0b. The review itself lived in
+> `TEACHING_OPTIONS.md`, which was folded in here and deleted; it is in git history at
+> commit `28ce3566` if the full reasoning and options are wanted.
 >
 > ### ⚠️ Built scope is narrower than this document
 >
 > This is the *design target*: 14 lessons in 4 units. **What is actually built is
-> 4 lessons in 1 unit** (Sounds, Nouns & Gender, Saying "The", Pronouns &
-> Subject Marker) — see `src/data/authored-lessons.ts`, which is authoritative
-> for what exists.
+> 8 lessons in 2 units** — Unit 1 (Sounds, Naming Things, Saying "The", Pronouns
+> & Subject Marker) and Unit 2 (The Signal Words, Squishing, Action Words,
+> Putting It In Order). See `src/data/authored-lessons.ts`, which is
+> authoritative for what exists, and `STATE_OF_PLAY.md` for the inventory.
+>
+> *This block said "4 lessons in 1 unit" until August 2026, long after Unit 2
+> shipped. It was believed and acted on. If you are reading a claim about scope
+> in this document, check it against the data before building on it.*
 >
 > The narrowing was deliberate. A previous pass produced all 14 lessons as
 > mostly-empty stubs — 3 exercises across the whole course, unverified Somali,
@@ -64,13 +73,56 @@ being asked to acquire English linguistics terminology as a prerequisite to Soma
 One person, building this for himself.
 
 - **Not a Somali speaker**, and **no native speaker available to check anything — ever.**
-  This is the binding constraint on the whole project.
+  Confirmed as impossible, not merely difficult, including for a one-off audit of the
+  hundred-odd forms actually taught. **But this is two constraints, and only one binds —
+  see below.**
 - **Adult, analytical, wants explicit rules.** Wants *the formula*.
 - **Text-only.** Listening happens outside, on YouTube. The app's job is to make the
   formula legible enough that real speech becomes parseable.
 - **No teacher.** All feedback must be built into the material.
 - **Somali is genuinely hard for English speakers**: SOV word order, a focus-particle
   system with *no English equivalent*, four noun cases, gender agreement, gender polarity.
+
+### The missing native speaker is two problems, not one
+
+Treating them as one made the whole thing look hopeless. Separated, one is nearly solved and
+the other is the real risk.
+
+**Feedback — does a human need to correct the learner?** No, and the evidence is strong:
+[computer-mediated corrective feedback shows a large overall effect, **d = 1.21**, with
+computer-assisted instruction outperforming
+face-to-face](https://journals.sagepub.com/doi/abs/10.1177/07356331211064066) in these
+comparisons. §1.7's commitment to metalinguistic explanation on every item is the
+well-supported version of this. **This document previously overstated the cost of the
+missing teacher.**
+
+**Content truth — is the Somali itself correct?** This is the part that does not move, and
+§1.12 is why it matters: a wrong form learned now competes with the right one indefinitely,
+and nothing downstream will ever catch it. The two-source rule and *cut what you cannot
+source* are therefore **more** load-bearing than they look, not less.
+
+What partially substitutes, in order of value:
+
+- **A corpus.** Dictionaries record what a lexicographer claims; a corpus records what
+  Somalis wrote. [soWaC](https://www.sketchengine.eu/sowac-somali-corpus/) is 71M words of
+  Somali web text, POS-tagged, with a concordancer. It is far better at *dis*confirming than
+  confirming — a form absent from 71M words triggers the rule we already have — and it is
+  the only thing that touches the highest-risk content we produce: **example sentences we
+  assembled ourselves**, which validator checks `E10`/`V6` flag and cannot automate. Note
+  that the `hadii`/`haddii` finding in D2 was already a corpus study, run against the wrong
+  corpus.
+- **Dictionaries**, with independence accounted for. See `SOMALI_SOURCES.md`.
+- **Audio**, if obtainable. A phonemic orthography means recordings and spelling check each
+  other, which would not work for English.
+
+**Never a source: machine translation, translation apps, or an LLM.** Not a preference — a
+rule, recorded in `WORKING_AGREEMENT.md`. Somali is low-resource; the systems are trained on
+the same small pool this project already draws from, so citing them is circularity that
+*defeats* the two-source check rather than failing it. [An audit of 205 web-crawled language
+corpora](https://aclanthology.org/2022.tacl-1.4/) found at least 15 with no usable text and
+a significant fraction under 50% acceptable quality, concentrated in exactly this tier of
+language. And structurally, a translator is a generator: it cannot decline, so it can never
+answer the only question being asked of it.
 
 ---
 
@@ -204,12 +256,116 @@ hypothesis" adds that habitual fragmented phone use trains shallow processing by
 **→ The one real pedagogical cost of going mobile-first.** But the mitigation is something
 we already committed to: **retrieval practice directly punctures the illusion of
 understanding**. Passive reading on a phone is the weakest possible mode; frequent forced
-retrieval is the fix. This also independently justifies the existing print/worksheet
-feature as the deep-reading channel.
+retrieval is the fix.
+
+> **Correction (Aug 2026).** This section used to end by saying the finding "independently
+> justifies the existing print/worksheet feature as the deep-reading channel." **It does
+> not.** Screen inferiority is a result about comprehension of *continuous prose*; the
+> worksheet was a vocabulary recall grid, so the finding never applied to it. The worksheet
+> has been deleted — it had also never once been printed. What survives is §1.17b: there is
+> a real case for a handwriting channel, it is about word form rather than deep reading, and
+> nothing currently implements it.
+
+### 1.17 Successive relearning — retrieval and spacing are stronger combined
+§1.2 names practice testing and distributed practice as the only two high-utility
+techniques. **Successive relearning is the protocol for doing both at once**: retrieval to a
+criterion (at least one correct recall) in *each of several spaced sessions*. Rawson &
+Dunlosky found that [recalling an item correctly once in each of three spaced sessions
+produced **more than twice** the recall of getting it right three times in one
+session](https://www.retrievalpractice.org/strategies/2018/successive-relearning); three
+sessions capture most of the benefit, and the effect [holds on real course
+exams](https://onlinelibrary.wiley.com/doi/abs/10.1002/acp.3699).
+
+On interval size, [Cepeda et al. (2008), N > 1,350](https://laplab.ucsd.edu/articles/Cepeda%20et%20al%202008_psychsci.pdf)
+give a principle rather than a ladder: the optimal gap is a **proportion of the retention
+interval you actually want** — ~20% at a few weeks, falling to 5–10% at a year.
+
+**→ Homework carry-back and spaced review are not two mechanisms. They are one, done
+badly.** Merge them. And see §2.0: the retention target is *permanent*, which sets how far
+the ladder has to run.
+
+### 1.17b Handwriting builds word form — the case for a channel we do not have
+The [2024 meta-analysis of handwritten vs typed notes](https://eric.ed.gov/?id=EJ1430416&pg=50&q=g)
+(24 studies) found a small achievement advantage for handwriting, **g = 0.248**, while
+typing won on volume recorded (g = 0.919). Thin on its own. The L2-specific finding is
+better aimed: [writing target words by hand directs attention to word
+*form*](https://euroslajournal.org/articles/10.22599/jesla.44) and beats meaning-focus for
+word learning, because semantic elaboration consumes the resources word-form encoding
+needs. Hand-copying letter strings also builds **letter–sound mapping**.
+
+That last part matters here specifically: **Somali orthography is near-perfectly phonemic** —
+[one-to-one consonants](https://en.wikipedia.org/wiki/Somali_Latin_alphabet), long vowels
+written doubled, no p/v/z because the sounds do not exist. Letter–sound mapping in Somali is
+a *solvable problem*, unlike in English.
+
+**→ If a handwriting channel is ever built, build it on this, and put it where the learner
+already is.** The deleted worksheet was not that; it asked for English meanings, when the
+evidence says the value is in writing the Somali.
+
+### 1.18 The scale of the target, stated honestly
+Three numbers that between them decide what this app can claim:
+
+- FSI puts Somali at roughly [**1,100 class hours**](https://www.fsi-language-courses.org/blog/fsi-language-difficulty/)
+  to professional working proficiency. That is a classroom figure at a far higher target,
+  so it is a scale check, not a prediction — but it is the right order of magnitude.
+- Reading authentic text needs [**95% lexical coverage ≈ 3,000–4,000 word families**, 98% ≈
+  6,000–8,000](https://onlinelibrary.wiley.com/doi/10.1111/j.1540-4781.2011.01146.x). The
+  planned vocabulary track is ~500 words. Below threshold, graded material is not optional.
+- Listening: [aural decoding predicts **46.9% of the variance** in L2 listening
+  comprehension](https://www.researchgate.net/publication/391446594_Aural_Decoding_and_Comprehension_in_L2_Listening),
+  and orthographic knowledge feeds listening through decoding.
+
+**→ "Making real speech parseable" is not something fourteen lessons deliver, and this
+document will stop implying it does — see §2.0.** But the third number is the opening: a
+phonemic orthography makes decoding a closed problem, and decoding is the bridge to the
+listening that happens elsewhere.
 
 ---
 
 # Part 2 — WHAT we teach
+
+## 2.0 What "done" means, and what this app is not for
+
+Previously unstated, which made every other decision unevaluable.
+
+**The app delivers two things:**
+
+1. **Formula literacy.** Given a written Somali sentence in the taught patterns, the learner
+   can say what each piece is doing. This is what D3 and §1.11 buy — depth over breadth,
+   fourteen lessons taught properly.
+2. **Decoding fluency.** The learner can read written Somali aloud, accurately, at speed.
+   Justified by §1.18: aural decoding carries ~47% of listening variance, and Somali's
+   phonemic orthography makes this a closed problem rather than an endless one.
+
+**The app does not deliver, and will not claim to:**
+
+- **Comprehension of authentic Somali text.** That needs 3,000–4,000 word families (§1.18).
+  The course teaches a fraction of that and always will.
+- **Listening comprehension.** It is text-only by design. Listening happens on YouTube.
+- **Speaking.** Never in scope.
+
+The honest framing: *this app makes the formula legible and the spelling readable.
+Comprehension comes from reading and listening done elsewhere.* It is an on-ramp, and an
+on-ramp is a real thing to be.
+
+## 2.0b The retention target is permanent
+
+Stated by the learner, and it changes the shape of the app rather than a constant in it:
+**learn Somali for good.**
+
+Two consequences:
+
+1. **The interval ladder does not terminate.** Per §1.17, gap size scales with the retention
+   interval you actually want. A ladder stopping at 90 days encodes a target of about a
+   year. For permanent retention it must keep widening — 1, 3, 7, 21, 60, 180, 365 days,
+   then annually, indefinitely. This does not conflict with §1.4: Kim & Webb found equal and
+   expanding schedules equivalent, which is about the ladder's *shape*. What changes is its
+   *span*.
+2. **Nothing graduates.** "Mastered" is a state that decays back into the rota, not an exit.
+
+And the consequence nobody had written down: **finishing the course is not the end state, it
+is the start of the maintenance regime.** The app has to still be useful on the day there
+are no lessons left. Any design that assumes a completion event is wrong.
 
 ## 2.1 Two tracks, deliberately decoupled
 
@@ -319,11 +475,44 @@ precisely the mechanism that makes lessons feel connected rather than like a lis
 
 Two orderings are deliberate and load-bearing:
 
-- **PREDICT before EXPLAIN.** Guessing first converts passive reading into a retrieval
-  event, which is the direct antidote to screen overconfidence (§1.16), and a wrong
-  high-confidence guess produces the hypercorrection benefit (§1.12). It costs one tap.
+- **PREDICT before EXPLAIN.** It directs attention to the target form in the material that
+  immediately follows, which is the mechanism the prequestion literature actually supports.
+  It costs one tap. **See the correction below — the justification here used to be
+  different and was wrong.**
 - **6 → 9.** Interleaving is withheld until each piece is blocked-practiced to solidity
   (§1.5).
+
+> **Correction (Aug 2026) — PREDICT.** This step was previously justified by claiming a
+> wrong high-confidence guess "produces the hypercorrection benefit (§1.12)" and antidotes
+> screen overconfidence (§1.16). **The pretesting literature does not support that for the
+> content this course teaches.** The [EPR review of prequestioning and pretesting
+> effects](https://link.springer.com/article/10.1007/s10648-023-09814-5) finds that factual
+> pretesting improved learning while **conceptual pretesting did not enhance conceptual
+> learning** — and that **conceptual pretest errors were significantly more likely to be
+> repeated on the final test**. A 2025 [multilevel meta-analysis of
+> prequestions](https://link.springer.com/article/10.1007/s10648-025-10075-7) adds that the
+> benefit is confined to the specific information asked about, with no general lesson-wide
+> gain.
+>
+> Rule-inference prompts ("guess which word marks the subject") are conceptual. For those,
+> the old justification runs *backwards* — §1.12's hypercorrection concern becomes an
+> argument against, not for. **PREDICT stays, on the attentional rationale only, and
+> factual prompts are preferred over rule-inference ones where a lesson allows the
+> choice.**
+
+> **Tension worth knowing about — EXPLAIN vs NOTICE.** §1.1 says explicit instruction wins,
+> and the whole delivery model follows from it. But the processing-instruction literature
+> that §1.10 rests on found that [the benefit came from the **structured input activities**,
+> not from the explicit
+> explanation](https://www.cambridge.org/core/journals/studies-in-second-language-acquisition/article/abs/explanation-versus-structured-input-in-processing-instruction/CADC0357472A2FF7A8195A3A58A8E602) —
+> strip the explanation and learners still gain — and that [PI improved comprehension where
+> traditional instruction improved only
+> production](https://www.researchgate.net/publication/236032459_The_effectiveness_of_processing_instruction_on_L2_grammar_acquisition_A_meta-analysis).
+>
+> These two findings pull against each other and this document does not resolve them. What
+> follows practically: **NOTICE carries more weight than its position in the list suggests,
+> and EXPLAIN less.** A lesson short on cards should cut explanation before it cuts
+> structured input. Lesson 5 is the test of this.
 
 ## 3.2 The reinforcement architecture
 
@@ -335,16 +524,46 @@ feedback. **Not scored, not gated.** Unlimited attempts. This is learning, not m
 
 **Layer 2 — Homework** (end of every lesson, first interleaving)
 ~10–15 items across all points from the lesson, plus **~30% carried back** from earlier
-lessons. Production-weighted; minimal MCQ. Scored and recorded but **does not gate**.
-Retryable with fresh items.
+lessons. Production-weighted; minimal MCQ. Recorded but **not presented as a verdict**, and
+does not gate. Retryable with fresh items.
 
-**Layer 3 — Unit Test** (end of unit, cumulative, gating)
+> **Homework is instruction, not measurement — because the learner writes it.** Nothing in
+> this document used to acknowledge that the author and the learner are the same person.
+> Retrieval practice needs retrieval to be effortful, and an item whose answer and
+> distractors you chose yourself is not. Self-assessment bias runs the same way: the
+> consistent finding is that [lower-proficiency learners
+> **overestimate**](https://onlinelibrary.wiley.com/doi/10.1111/flan.12379).
+>
+> The good news is larger than the bad. Student-generated questions produce **medium-to-large
+> effects** on comprehension and recall and [beat restudy, group discussion and
+> summarising](https://rightquestion.org/resources/research-on-the-impact-of-student-questions-on-learning/),
+> *regardless of the quality of the questions generated*. **Authoring this course is itself
+> one of the better-evidenced things the learner can do with the time.**
+>
+> Three consequences: the score is recorded but never shown as a judgement; a **minimum
+> delay** separates authoring an item from sitting it (§1.17 gives the principle — a
+> proportion of the retention target); and at least one measure must come from **outside**
+> what the learner wrote — a Nilsson exercise, a graded text, a page of Orwin.
+
+**Layer 3 — Unit Test** (end of unit, cumulative)
 ~25–30 items: this unit's objectives **plus** cumulative items from prior units.
-**85% to pass.** Below that → **correctives** targeting the specific failed objectives,
-then **retest with different items**. Passing unlocks the next unit — the only hard gate.
+**85% is the criterion**, and below it the learner is routed to **correctives** targeting
+the specific failed objectives, then **retest with different items**.
+
+> **The criterion stays; the hard lock goes.** Mastery learning is well supported — [36
+> studies, average effect 0.59, with higher thresholds yielding greater
+> gains](https://www.structural-learning.com/post/mastery-learning) — and the active
+> ingredients it identifies are the *criterion* and the *correctives*, both of which are
+> kept. What is dropped is the block on proceeding.
+>
+> **This is a deviation from the evidence, not an application of it.** The mastery research
+> comes from gated classroom designs. It is traded for adherence in a solo adult learner who
+> can simply stop using the app, and it should not be written up as an improvement.
 
 **Cross-cutting — Spaced Review**
-Items from passed units resurface at **fixed** intervals (§1.4).
+Merged with Layer 2's carry-back rather than run alongside it (§1.17): carry-back draws
+from the due queue, so one mechanism has two faces. Intervals run to the permanent-retention
+ladder in §2.0b, and no item graduates out.
 
 ---
 
@@ -509,7 +728,7 @@ texts & discourse.
 | Language | jargon throughout | plain English; separate glossary page |
 | Assessment | in-lesson practice only | 3 layers + gating unit tests + correctives |
 | Progression | any lesson, any time | mastery-gated at unit boundaries |
-| Vocabulary | 1:1 with lessons | independent spaced-repetition track |
+| Vocabulary | 1:1 with lessons | independent track — **deferred**, see §2.0; at ~500 words it cannot reach a comprehension threshold, so its job needs redefining as word-form and decoding practice first |
 | Lesson opening | straight into content | Blueprint → connect-to-last → promised sentence |
 | Lesson density | 8–14 teach cards | **≤4 new items**, one idea per card |
 | Card types | intro/vocab/teach/practice/summary | + `blueprint`, `predict`, `notice`, `payoff` |
@@ -913,3 +1132,25 @@ rule driving curriculum design rather than the reverse.**
   research: MCQ ≤25% (vs. 76% today), explanation ≥80 chars (vs. ~90 average today, where
   length is padding not substance), rubric pass ≥17/20. They are deliberately set where
   current content clearly fails. Expect to tune them once real authored lessons exist.
+
+Added with the August 2026 amendments:
+
+- **Much of the new evidence comes from abstracts and meta-analytic summaries, not full
+  texts.** The 2025 prequestion meta-analysis is paywalled. Treat directions as reliable and
+  magnitudes as indicative — the same standard already applied to §1.13's effect sizes.
+- **The factual/conceptual distinction driving the §3.1 PREDICT correction has not been
+  checked against the actual cards.** It is possible more of them are factual than assumed.
+  Worth auditing before the correction is acted on further.
+- **Effect sizes across different outcome measures are not comparable.** d = 1.21 for
+  computer-mediated feedback and g = 0.248 for handwriting measure different things on
+  different populations. Do not rank interventions by these numbers.
+- **Successive relearning's headline result is from factual material** — course concepts and
+  vocabulary pairs. Grammar rules are conceptual. The technique should transfer; the "more
+  than twice" figure probably does not.
+- **The corpus has not been used.** The soWaC recommendation rests on its published
+  description. It is also a 2016 web crawl skewed to news, politics and religious sites, so
+  it contains the same non-standard spellings it would be used to adjudicate, and its
+  Universal-Dependencies parse of a morphologically rich language should be treated as
+  approximate. Absence in it is a strong negative signal; presence is a weak positive one.
+- **§2.0's scope statement is a judgement, not a finding.** The research constrains what is
+  achievable; it does not decide what this project is for. That was the learner's call.

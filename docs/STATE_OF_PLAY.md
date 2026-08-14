@@ -473,6 +473,61 @@ constraint bites harder here than it has so far.
 consolidation. All flat-cost, none of it gets worse by waiting, and it should
 not displace A–D.
 
+### Revision, August 2026 — evaluate before authoring
+
+A research review of COURSE_DESIGN (git `28ce3566`, folded into that document)
+reordered this. The short version: **no new lesson content until the method that
+produced the existing eight lessons has been evaluated.** Sequence A–E above
+stays, behind the following.
+
+**P1 — Correct the design document.** Done in this pass. Five pieces of
+COURSE_DESIGN were unvalidated and one — the justification for PREDICT before
+EXPLAIN — was contradicted outright by the pretesting literature. All amended in
+place, with `Correction` and `Tension` blocks rather than silent edits.
+
+**P2 — Make the code match.** No content. Five changes, all to existing
+features:
+- Delete the worksheet — `pages/Worksheet.tsx`, `lib/worksheet.ts`, the route,
+  the `LessonMenu` entry, the print block in `index.css`. It was justified by a
+  finding about prose comprehension that does not apply to a recall grid, and it
+  has never once been printed.
+- Homework stops presenting its score as a verdict; recording is unchanged.
+- Carry-back draws from the due-review queue instead of selecting
+  independently — one mechanism, not two (COURSE_DESIGN §1.17).
+- The interval ladder extends for permanent retention (§2.0b) and no item
+  graduates out.
+- The unit-test lock goes; the 85% criterion and the correctives stay.
+
+**P3 — Evaluate the method against Lessons 5–8, which already exist.** This
+phase originally read "build Lesson 5 as a method prototype," on the strength of
+a stale scope claim in COURSE_DESIGN. **Lesson 5 shipped long ago.** The
+prototype is not missing — it is unexamined. Write the kill criteria first, then
+read the lessons and drive them, against the four questions under Open Questions
+below. Cost: a reading and a browser session, not an authoring cycle.
+
+**P4 — Then, and only then, decide Unit 3.** Build it, change the method, or
+stop.
+
+**S — Sourcing, running alongside P1–P2.** Six dictionaries arrived in `docs/`
+in August 2026, which discharges the debt named in rule 1 above — *"for
+vocabulary you need a dictionary... no amount of re-reading Nilsson will fix
+it."* Order matters here:
+- **The independence policy comes first**, and is now written in
+  [SOMALI_SOURCES.md](./SOMALI_SOURCES.md). Six books make it *feel* as though
+  everything has two sources; one contains Orwin, two share a publisher, one has
+  no traceable provenance. Adding sources faster than the policy hollows out the
+  two-source rule.
+- Then register the clean ones, quarantine the untraceable one, and close `S3`
+  (52 vocabulary entries) and `S4` (11 thin registry forms). **This is repair of
+  material already on screen, not new content** — which is why it is not blocked
+  behind P3.
+- The Jiddu mini-dictionary was rejected outright: Jiiddu is a separate
+  language, not a dialect.
+
+**Still not planned:** the vocabulary *track* (Phase 5). Dictionaries make
+sourcing cheaper; they do not make the case for a 500-word track stronger.
+COURSE_DESIGN §1.18's lexical arithmetic is unchanged.
+
 ### Deliberately not planned
 
 Nothing from the original Layer 2 / SRS gap remains — both landed (debt 3). The
@@ -499,15 +554,46 @@ and audience, not a fact to look up.*
 **Delete `COURSE.md` and the generator?** See debt item 4. Nothing depends on
 them. Kept pending a decision on whether the prose has value.
 
-**Deepen four lessons, or extend to five and beyond?** The four cover the WHO box
-of the sentence formula. The natural next unit is the signal system
-(`waa`/`baa`/`waxa`/`ma`) — the original motivation for the redesign, since those
-markers had been stranded at lesson 20. Either is defensible; extending costs
-sourcing effort per lesson.
+**~~Deepen four lessons, or extend to five and beyond?~~ — the question was
+stale when asked.** Lessons 5–8 already exist (see "What exists" above), so
+there was never a fork here. What is real: **the method has never been
+evaluated**, and the material to evaluate it with is already written.
 
-**Is the four-box blueprint (`WHO | SIGNAL | WHAT | DO`) still the right spine?**
-It currently only ever highlights WHO, since Unit 1 is entirely about that slot.
-It pays off from Lesson 5 onward, and is unproven until then.
+**~~Is the four-box blueprint still the right spine?~~ — ANSWERED (Aug 2026):
+the premise was wrong, and the evidence is already on disk.** This question used
+to read "it currently only ever highlights WHO... it pays off from Lesson 5
+onward, and is unproven until then." It does not only highlight WHO.
+`blueprintSlot` across the authored course runs **WHO (L2–4) → SIGNAL (L5–6) →
+DO (L7–8)**. The device has been advancing through three of its four slots for
+as long as Unit 2 has existed.
+
+So the blueprint is not waiting on new content to be tested. **It is waiting on
+somebody opening it.** Same for the other three method questions:
+
+1. Does the blueprint pay off once a second slot lights up? — L5 and L6 light
+   SIGNAL. Drive them.
+2. Does structured input where the particle is the **only** disambiguator defeat
+   the First-Noun default (COURSE_DESIGN §1.10)? This is the most
+   Somali-specific claim in the whole design, and Lesson 5 is precisely the test
+   of it. Never checked.
+3. Does NOTICE carry more weight than EXPLAIN (§3.1, the recorded tension)?
+   **This one already has a number.** Card counts across the eight lessons run
+   23 `teach` to 21 `notice` — near parity. If the processing-instruction
+   literature is right that structured input does the work and explanation adds
+   little, that ratio is wrong and should tilt toward `notice`. Lesson 5 alone
+   is 4 `teach` to 3 `notice`.
+4. Does the lesson loop survive a concept with no English analogue? — the signal
+   system *is* that concept, and it shipped. Read it and judge.
+
+**Kill criteria still get written first.** The change is that the thing being
+judged already exists, so this costs a reading and a browser session rather than
+an authoring cycle.
+
+**What Unit 3 will need, and six new dictionaries do not provide.** Grammar, not
+lexis. §7 below records that Nilsson and Orwin **disagree** about `waa`. A
+dictionary attests that a word exists; it cannot adjudicate classifier versus
+declarative particle. What would help is a **third grammar** — Saeed or
+Puglielli — not a seventh dictionary.
 
 ---
 
@@ -519,7 +605,10 @@ It pays off from Lesson 5 onward, and is unproven until then.
     [LESSON_CONVENTIONS.md](./LESSON_CONVENTIONS.md) — how a lesson is written
 3. [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) — the linguistic facts and citations
 4. [POSTMORTEM.md](./POSTMORTEM.md) — why the rules exist
-5. [COURSE_DESIGN.md](./COURSE_DESIGN.md) — the pedagogical design target
+5. [COURSE_DESIGN.md](./COURSE_DESIGN.md) — the pedagogical design target.
+   **Amended August 2026**; read the `Correction` and `Tension` blocks in §1.16,
+   §3.1 and §3.2 before trusting anything older than them. The full research
+   review and the options behind each decision are in git at `28ce3566`.
 
 Then read `src/data/authored-lessons.ts`. It is the course.
 

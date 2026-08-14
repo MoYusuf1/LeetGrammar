@@ -32,6 +32,56 @@ a form to the registry only after recording its sources here.
 | **W-gram** | Wikipedia, *Somali grammar*. https://en.wikipedia.org/wiki/Somali_grammar |
 | **Wikt** | Wiktionary, Somali entries. https://en.wiktionary.org/ |
 
+**Pending registration** (added to `docs/` Aug 2026, not yet usable — see
+"What counts as two sources" below):
+
+| Key | Source | Status |
+| --- | --- | --- |
+| `JF` | Jawahir Abdulla Farah, *Somali Learner's Dictionary / Qaamuuska Barashada Ingiriis-Soomaali*, HAAN Associates, 1992 | Ready. Clean text layer, learner-oriented, has a pronunciation guide. **Best of the batch.** |
+| `SA` | Suleiman Mohamoud Adam, *New Student Dictionary / Dikshaneeriga Cusub ee Ardayda*, HAAN Publishing, 1999 | Ready. Same publisher as `JF` — see rule 3. |
+| `AW` | Nicholas Awde, Cabdulqaadir Xaaji Cali Xaaji Axmed & **Martin Orwin**, *Somali–English / English–Somali Dictionary & Phrasebook*, Hippocrene, 1999 | Usable, but **counts as `O`** — see rule 2. |
+| — | Abdirahman Farah, *Somali–English Dictionary*, 1995 | Image-only scan, 248pp. Needs OCR before it can be cited. Only SO→EN full dictionary here. |
+| — | "Trebor Hog", *Somali English Lexicon*, Truth Ltd, 2018 | **Quarantined.** No lexicographic footprint for author or publisher; EPUB metadata carries no date, rights or source; its grammatical codes (`mg`, `fk`, `s`, `f`) are absent from its own abbreviation table. Shape suggests a database export. Establish provenance and notation first. |
+| — | ~~Salim Alio Ibro, *English — Jiddu — Somali Mini-dictionary*, 1998~~ | **Rejected and removed.** See below. |
+
+### Jiddu is not Standard Somali
+
+The Ibro mini-dictionary was deleted from `docs/` rather than shelved.
+**Jiiddu is classified as a separate language**, not a dialect — it sits in the
+Digil cluster, and of the Digil varieties it is the [most incomprehensible to
+Benadir and Northern speakers](https://en.wikipedia.org/wiki/Jiiddu_language).
+This course teaches Standard Somali, which is Northern (Maxaa-tiri), and is
+what Nilsson and Orwin describe.
+
+A Jiddu form taught as Somali would be wrong in the way COURSE_DESIGN §1.12
+says is unrecoverable: entrenched, with nothing downstream to catch it. A file
+that must never be cited is safer absent than present.
+
+### What counts as two sources
+
+The rule was always "two independent sources." With six dictionaries in `docs/`
+it became possible to satisfy the letter of that and not the substance, so the
+test is written down:
+
+1. **Two citations of one author are one source.** Already enforced as check
+   `S5`, which currently flags nine forms citing Nilsson twice.
+2. **Shared authorship across works is shared authorship.** `AW` lists Martin
+   Orwin as a co-author, so `AW` + `O` is one source, not two. This is `S5`
+   extended from "same citation key" to "same person."
+3. **Same publisher is a caution, not a disqualifier.** `JF` and `SA` are both
+   HAAN. Prefer a pairing that crosses publishers where one is available.
+4. **Unknown provenance is not a source.** A work that cannot be traced cannot
+   be shown to be independent of the works it may have been compiled from —
+   including Wiktionary, which is already `Wikt`. This is why the Trebor Hog
+   lexicon is quarantined rather than used.
+5. **Somali lexicography descends from few root works.** Agreement between two
+   dictionaries is weaker evidence than it looks. Where a form matters, prefer
+   a *grammar* plus a *dictionary* over two dictionaries.
+6. **Machine translation is never a source.** See
+   [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md).
+
+**Nothing gets registered above until it has been checked against this list.**
+
 ### Why a second grammar was necessary
 
 For a long stretch this project effectively had **one** substantive source.

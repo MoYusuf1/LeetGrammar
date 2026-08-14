@@ -109,11 +109,39 @@ a lint error is yours, and there is no pre-existing noise to hide it.
 ## Adding lesson content
 
 1. **Source it first.** Two independent sources. Record them in
-   [SOMALI_SOURCES.md](./SOMALI_SOURCES.md).
+   [SOMALI_SOURCES.md](./SOMALI_SOURCES.md). Read the independence rules there
+   before counting two — "two books" and "two sources" are not the same thing.
 2. **Add to the registry** — `src/data/verified-forms.ts`, with the source keys.
 3. **Write the lesson** in `src/data/authored-lessons.ts`.
 4. **Run the three gates.**
 5. **Open the browser and complete the lesson**, including every new exercise.
+
+### Machine translation is never a source
+
+**Do not verify a Somali form with Google Translate, a translation app, or an
+LLM — including the one you are talking to.** Not as a first source, not as a
+tiebreak, not "just to sanity-check."
+
+Three reasons, any one sufficient:
+
+- **It is not independent.** Somali is low-resource. Translation systems train
+  on the same small pool this project already draws from, so citing one is
+  circular — it *defeats* the two-source rule rather than failing it.
+- **The training data for these languages is known to be bad.** An audit of 205
+  web-crawled language corpora found at least 15 with no usable text at all and
+  a significant fraction under 50% acceptable quality, concentrated in exactly
+  this tier of language.
+- **A translator cannot say no.** Feed it something malformed and it returns
+  fluent English with no signal anything was wrong. The one thing a checker must
+  do is decline, and this is the one thing it structurally cannot do.
+
+An LLM will also produce plausible *citations* for its plausible Somali. That is
+not hypothetical here — it is [how the invented citations in this project's
+history got there](./SOMALI_SOURCES.md), and it is what
+[POSTMORTEM.md](./POSTMORTEM.md) exists to record.
+
+Corpora are different and are allowed: a concordance shows attested usage rather
+than generating text. See COURSE_DESIGN's "The learner" section.
 
 ### Exercise authoring rules
 

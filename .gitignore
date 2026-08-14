@@ -9,6 +9,7 @@ dist
 
 # Large binaries and intermediate extraction artifacts
 docs/**/*.pdf
+docs/**/*.epub
 docs/**/*.png
 docs/**/*.txt
 docs/**/extracted_text.json
