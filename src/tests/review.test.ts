@@ -25,7 +25,7 @@ describe('review: the schedule follows fixed intervals', () => {
     expect(dueLessons({ 3: e }, [3], T0)).toEqual([]);
   });
 
-  it('intervals widen 1 → 3 → 7 → 14 as reviews are done', () => {
+  it('intervals widen 1 → 3 → 7 → 21 as reviews are done', () => {
     let e = seedReview(3, T0);
     const gaps: number[] = [daysUntilDue(e, T0)];
     let t = T0;
@@ -34,13 +34,20 @@ describe('review: the schedule follows fixed intervals', () => {
       e = advanceReview(e, t);
       gaps.push(daysUntilDue(e, t));
     }
-    expect(gaps).toEqual([1, 3, 7, 14]);
+    expect(gaps).toEqual([1, 3, 7, 21]);
   });
 
   /**
-   * REGRESSION GUARD: the intervals must stop widening rather than run off the
-   * end of the table. `getNextReviewDate` clamps at the last interval, so a
-   * long-retained lesson keeps coming back every 90 days instead of never.
+   * REGRESSION GUARD: nothing graduates.
+   *
+   * The retention target is permanent (COURSE_DESIGN §2.0b), so the ladder tops
+   * out at a year and stays there rather than running off the end of the table
+   * or widening without limit. A lesson answered correctly fifty times is still
+   * owed an annual return — the alternative is an exit state, and a permanent
+   * target does not have one.
+   *
+   * This guarded 90 days until Aug 2026. Ninety days is the right tail for
+   * "know this next summer"; it is the wrong one for "know this for good".
    */
   it('keeps returning forever once the intervals top out', () => {
     let e = seedReview(3, T0);
@@ -49,7 +56,16 @@ describe('review: the schedule follows fixed intervals', () => {
       t = e.nextReview;
       e = advanceReview(e, t);
     }
-    expect(daysUntilDue(e, t)).toBe(90);
+    expect(daysUntilDue(e, t)).toBe(365);
+    expect(Number.isFinite(e.nextReview)).toBe(true);
+
+    // Still finite and still a year out fifty reviews later — the clamp holds
+    // and the lesson never falls out of the rota.
+    for (let i = 0; i < 50; i++) {
+      t = e.nextReview;
+      e = advanceReview(e, t);
+    }
+    expect(daysUntilDue(e, t)).toBe(365);
     expect(Number.isFinite(e.nextReview)).toBe(true);
   });
 });

@@ -13,12 +13,18 @@
  *    sizes) found equal and expanding intervals statistically equivalent, so
  *    the design says plainly: use simple fixed intervals, because expanding
  *    ones cost far more to build and are not better. The intervals live in
- *    `getNextReviewDate` and run 1, 3, 7, 14, 30, 60, 90 days.
+ *    `getNextReviewDate` and run 1, 3, 7, 21, 60, 180, 365 days — and then 365
+ *    forever, because §2.0b sets the retention target at *permanent* and a
+ *    ladder that terminates encodes a target that does not.
  *
- *    The repo also carries an SM-2 implementation in `lib/srs.ts` with ease
- *    factors and quality ratings. It is deliberately **not** used here. SM-2 is
- *    an expanding schedule, which is the thing §1.4 rules out, and it needs a
- *    self-rated quality score per item that this course has nowhere to collect.
+ *    Note that the shape and the span are separate questions. §1.4 settles the
+ *    shape (fixed beats expanding, or at least ties it); §2.0b settles the span.
+ *    Lengthening the tail is not a move back towards SM-2.
+ *
+ *    An SM-2 implementation used to live in `lib/srs.ts`, unused, and has been
+ *    deleted. It was an expanding schedule — the thing §1.4 rules out — and it
+ *    needed a self-rated quality score per item that this course has nowhere to
+ *    collect.
  *
  * 2. **The unit of review is the lesson**, not the item or the objective.
  *    Homework is already composed per lesson and already carries earlier

@@ -216,16 +216,27 @@ export function isUnitComplete(unitId: number, completedLessons: number[]): bool
 }
 
 /**
- * Spaced review scheduling — returns when a word/item should next be reviewed
- * Per Phase 1.4: use fixed intervals (not expanding schedules)
+ * Spaced review scheduling — when a lesson should next come back.
  *
- * @param lastReviewDate timestamp of last review
- * @param reviewCount how many times this item has been reviewed
- * @returns timestamp when next review is due
+ * Fixed intervals, per §1.4: Kim & Webb found equal and expanding schedules
+ * statistically equivalent, so there is no reason to build the expensive one.
+ *
+ * THE LADDER RUNS TO A YEAR AND THEN STAYS THERE, BECAUSE THE RETENTION TARGET
+ * IS PERMANENT (§2.0b). It used to be 1, 3, 7, 14, 30, 60, 90 — which quietly
+ * encoded a target of about a year, since Cepeda et al. put the optimal gap at
+ * roughly 20% of the retention interval at a few weeks, falling to 5–10% at a
+ * year. A 90-day terminal interval is the right tail for "know this next
+ * summer", not for "know this for good".
+ *
+ * The clamp at the end is the load-bearing part: `Math.min` means review 7, 20
+ * and 200 all schedule a year out. **Nothing graduates.** A lesson answered
+ * correctly fifty times is still owed an annual return, because the alternative
+ * is an exit state, and an exit state is exactly what a permanent target does
+ * not have.
  */
 export function getNextReviewDate(lastReviewDate: number, reviewCount: number): number {
-  // Fixed intervals (in days): 1, 3, 7, 14, 30, 60, 90
-  const intervals = [1, 3, 7, 14, 30, 60, 90];
+  // Days: 1, 3, 7, 21, 60, 180, then annually forever.
+  const intervals = [1, 3, 7, 21, 60, 180, 365];
   const daysUntilNext = intervals[Math.min(reviewCount, intervals.length - 1)];
   const nextDate = new Date(lastReviewDate);
   nextDate.setDate(nextDate.getDate() + daysUntilNext);

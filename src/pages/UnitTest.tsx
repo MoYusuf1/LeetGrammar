@@ -3,11 +3,21 @@
  *
  * Route: /unit-test/:id  (HashRouter, so #/unit-test/1)
  *
- * Four phases:
- *   locked   — the unit's lessons are not finished yet
+ * Three phases:
  *   intro    — what the test covers and what passing takes
  *   test     — one item at a time, no hints and no feedback until the end
  *   results  — score, per-objective breakdown, every missed item, correctives
+ *
+ * THERE IS NO LOCKED PHASE ANY MORE. The 85% criterion and the correctives
+ * routing are both kept — the mastery literature identifies those as the active
+ * ingredients — but the block on *taking* the test is gone. That evidence comes
+ * from gated classroom designs, and this is one adult studying alone who can
+ * simply stop using the app; being locked out of your own software is a
+ * different proposition from being held back by a teacher. COURSE_DESIGN §3.2
+ * records this as a deliberate deviation from the evidence rather than an
+ * improvement on it.
+ *
+ * Sitting a test for unfinished lessons is now allowed and merely noted.
  *
  * The test deliberately shows less than the lesson player does. A hint on a
  * test item measures the hint; feedback between items lets a learner correct a
@@ -76,24 +86,6 @@ export default function UnitTestPage() {
     return <Centered>No test exists for that unit yet.</Centered>;
   }
 
-  if (!unlocked) {
-    return (
-      <Centered>
-        <p className="mb-1 text-body font-semibold text-label">{bank.name} is locked</p>
-        <p className="mb-4">
-          Finish lessons {unit.lessonIds[0]}–{unit.lessonIds.at(-1)} first — the test only asks
-          about what they teach.
-        </p>
-        <Link
-          to="/learn"
-          className="inline-block rounded-xl bg-accent px-5 py-3 text-footnote font-semibold text-accent-ink"
-        >
-          Back to lessons
-        </Link>
-      </Centered>
-    );
-  }
-
   const answer = current ? responses[current.id] ?? null : null;
 
   const setAnswer = (value: string) => {
@@ -141,6 +133,14 @@ export default function UnitTestPage() {
           Miss too much of one topic and you will be sent back through a short set of
           questions on that topic alone — not the whole test again.
         </p>
+
+        {/* Stated, not enforced. The criterion is real; the lock is not. */}
+        {!unlocked && (
+          <p className="mt-3 text-footnote text-label-3">
+            You have not finished lessons {unit.lessonIds[0]}–{unit.lessonIds.at(-1)} yet. The
+            test only asks about what they teach, so expect to miss what you have not met.
+          </p>
+        )}
 
         <button
           onClick={() => setPhase('test')}

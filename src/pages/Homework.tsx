@@ -7,9 +7,18 @@
  *
  *   Layer 1, in-lesson practice — blocked on one point, unlimited attempts,
  *     not scored. Learning.
- *   Layer 2, this — mixed across lessons, ~30% carried back from earlier ones,
- *     scored and recorded, **gates nothing**. Retention.
- *   Layer 3, the unit test — cumulative, 85%, gates the next unit. Measurement.
+ *   Layer 2, this — mixed across lessons, ~30% carried back from whatever the
+ *     review schedule says is due, recorded but **not scored at the learner**.
+ *     Retention.
+ *   Layer 3, the unit test — cumulative, 85% criterion, routes to correctives.
+ *     Measurement.
+ *
+ * NO GRADE IS SHOWN HERE. The learner writes these items, so the percentage
+ * measures how well they remember their own authoring, not how well they know
+ * Somali — and self-assessment bias runs the wrong way at this proficiency
+ * (COURSE_DESIGN §3.2). The score is still recorded, because the review schedule
+ * needs something to move on; it is simply not reported back as a verdict. What
+ * the learner sees instead is what to look at again.
  *
  * Feedback is immediate here, unlike the unit test. Homework is still learning,
  * and §1.7 wants metalinguistic feedback every time; withholding it until the
@@ -24,9 +33,10 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router';
 import { motion } from 'framer-motion';
-import { X, RotateCcw, Printer } from 'lucide-react';
+import { X, RotateCcw } from 'lucide-react';
 import { getLessonContent } from '@/data/authored-lessons';
 import { composeHomework, carryBackCount } from '@/lib/homework';
+import { dueLessons } from '@/lib/review';
 import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { useProgressStore } from '@/stores/progress-store';
 import AnswerInput from '@/components/lesson/AnswerInput';
@@ -54,15 +64,26 @@ export default function HomeworkPage() {
   const [checked, setChecked] = useState(false);
   const [correct, setCorrect] = useState(0);
 
-  const items = useMemo(() => composeHomework(lessonId, attempt), [lessonId, attempt]);
+  // Carry-back is drawn from the review queue rather than from "any earlier
+  // lesson" — one mechanism instead of two (lib/homework.ts, COURSE_DESIGN
+  // §1.17). Read once at mount so the set cannot reshuffle mid-attempt when
+  // finishing changes what is due.
+  const [due] = useState(() => {
+    const s = useProgressStore.getState();
+    return dueLessons(s.reviewSchedule ?? {}, s.completedLessons ?? []);
+  });
+
+  const items = useMemo(
+    () => composeHomework(lessonId, attempt, undefined, due),
+    [lessonId, attempt, due],
+  );
   const current = items[index];
   const carried = useMemo(() => carryBackCount(lessonId, items), [lessonId, items]);
+  const [missed, setMissed] = useState<string[]>([]);
 
   if (!lesson || items.length === 0) {
     return <Centered>There is no homework for that lesson.</Centered>;
   }
-
-  const best = store.practiceScores?.[lessonId];
 
   const start = () => {
     setPhase('working');
@@ -70,6 +91,7 @@ export default function HomeworkPage() {
     setAnswer(null);
     setChecked(false);
     setCorrect(0);
+    setMissed([]);
   };
 
   const next = () => {
@@ -89,7 +111,14 @@ export default function HomeworkPage() {
 
   const check = () => {
     if (!answer || !current) return;
-    if (isAnswerCorrect(current, answer)) setCorrect((c) => c + 1);
+    if (isAnswerCorrect(current, answer)) {
+      setCorrect((c) => c + 1);
+    } else {
+      // Kept so the end of the set can say what to look at again. This is the
+      // replacement for a score: a list of things to do something about beats a
+      // number the learner cannot act on.
+      setMissed((m) => [...m, displayAnswer(current)]);
+    }
     setChecked(true);
   };
 
@@ -106,10 +135,9 @@ export default function HomeworkPage() {
 
         <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
-          <Row label="From earlier lessons" value={`${carried}`} />
+          <Row label="Due for review" value={`${carried}`} />
           <Row label="Hints" value="On — this is practice" />
-          <Row label="Unlocking" value="Nothing is gated by this" />
-          {best !== undefined && <Row label="Your best" value={`${best}%`} />}
+          <Row label="Scoring" value="Not marked" />
         </dl>
 
         <p className="mt-4 text-footnote text-label-3">
@@ -123,17 +151,6 @@ export default function HomeworkPage() {
         >
           Start
         </button>
-
-        {/* The only way into the worksheet now that it is not a nav destination.
-            It sits here because offline practice is the same intent as this
-            screen, one step further out. */}
-        <button
-          onClick={() => navigate(`/worksheet/${lessonId}`)}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-4 text-body font-medium text-label transition-colors hover:bg-fill"
-        >
-          <Printer className="h-4 w-4" />
-          Print a worksheet instead
-        </button>
       </Shell>
     );
   }
@@ -141,18 +158,35 @@ export default function HomeworkPage() {
   /* ─── Done ─────────────────────────────────────────────────────────────── */
 
   if (phase === 'done') {
-    const pct = Math.round((correct / items.length) * 100);
     return (
       <Shell onClose={() => navigate('/learn')} title="Practice">
-        <div className="pt-6 text-center">
-          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-fill">
-            <span className="text-title1 font-semibold tabular-nums text-accent">{pct}%</span>
-          </div>
-          <h1 className="mt-5 text-title1 font-semibold text-label">Practice done</h1>
+        {/* No percentage, no badge, no ring. The learner wrote these questions;
+            a score here would measure recall of their own authoring and would be
+            read as a verdict on their Somali. What replaces it is the only part
+            they can act on — the forms they did not produce. See the file
+            header and COURSE_DESIGN §3.2. */}
+        <div className="pt-6">
+          <h1 className="text-title1 font-semibold text-label">Practice done</h1>
           <p className="mt-1 text-body text-label-2">
-            {correct} of {items.length} correct — nothing is gated by this
+            {items.length} questions. This lesson goes back into the review rota.
           </p>
         </div>
+
+        {missed.length > 0 && (
+          <div className="mt-6">
+            <p className="text-footnote text-label-2">Worth another look</p>
+            <ul className="mt-2 overflow-hidden rounded-xl bg-elevated">
+              {missed.map((form, i) => (
+                <li
+                  key={`${form}-${i}`}
+                  className={`px-4 py-3 ${i === 0 ? '' : 'border-t border-separator'}`}
+                >
+                  <Somali>{form}</Somali>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="mt-8 space-y-3">
           <button

@@ -30,7 +30,6 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
 import { UNITS, getUnitTest } from '@/data/unit-tests';
-import { isUnitComplete } from '@/lib/assessment';
 import { dueLessons } from '@/lib/review';
 import { useProgressStore } from '@/stores/progress-store';
 
@@ -63,7 +62,6 @@ export default function LearnPage() {
         <main className="pb-[calc(4rem+var(--safe-b))]">
           {grouped.map(({ unit, lessons }) => {
             const bank = getUnitTest(unit.id);
-            const unlocked = isUnitComplete(unit.id, completed);
             return (
               <section key={unit.id} className="mb-12">
                 {/* A part title in a contents page. No rule beside it — the
@@ -89,9 +87,12 @@ export default function LearnPage() {
                   ))}
                 </ol>
 
-                {/* Only once it can be taken. A line you cannot press is
-                    furniture, and this page has no room for furniture. */}
-                {bank && unlocked && (
+                {/* Always shown now. It used to appear only once the unit's
+                    lessons were done, back when the test was gated; the gate is
+                    gone (see UnitTest.tsx) and a row that appears from nowhere
+                    is worse than one that was always there. The test's own
+                    intro says if the lessons are unfinished. */}
+                {bank && (
                   <button
                     onClick={() => navigate(`/unit-test/${unit.id}`)}
                     className="mt-1 grid w-full grid-cols-[2.75rem_1fr] items-baseline gap-3 py-3 text-left active:opacity-50"

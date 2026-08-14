@@ -79,6 +79,72 @@ describe('homework: it carries earlier lessons forward', () => {
 });
 
 /**
+ * CARRY-BACK IS THE REVIEW QUEUE.
+ *
+ * §1.17 (successive relearning) is the reason these stopped being two
+ * mechanisms: retrieval spread across spaced sessions more than doubles recall
+ * against the same retrievals massed, and carry-back drawing from "any earlier
+ * lesson" while the schedule separately tracked what was *due* meant neither
+ * half was doing the job properly.
+ *
+ * The risk this guards is subtle. `productionFirst` used to be applied to the
+ * whole carry-back list, which would hoist every production item to the front
+ * and undo the due ordering — a lesson that is not due outranking one that is.
+ * Production weighting (§1.8) is a preference within what is owed, not above it.
+ */
+describe('homework: carry-back is drawn from the review queue', () => {
+  const objectivesOf = (id: number) =>
+    new Set(AUTHORED_LESSONS.find((l) => l.id === id)!.objectives);
+
+  const carriedFrom = (lessonId: number, due: number[]) => {
+    const own = objectivesOf(lessonId);
+    return composeHomework(lessonId, 0, undefined, due).filter(
+      (i) => !i.objectiveIds.some((o) => own.has(o)),
+    );
+  };
+
+  it('prefers a due lesson over an earlier one that is not due', () => {
+    // L8 can carry back from 1–7. Say only L2 is owed.
+    const carried = carriedFrom(8, [2]);
+    expect(carried.length, 'nothing carried back at all').toBeGreaterThan(0);
+
+    const l2 = objectivesOf(2);
+    expect(
+      carried.some((i) => i.objectiveIds.some((o) => l2.has(o))),
+      'the one due lesson contributed nothing',
+    ).toBe(true);
+  });
+
+  it('respects due order — most overdue contributes before least', () => {
+    const first = carriedFrom(8, [2, 6]);
+    const second = carriedFrom(8, [6, 2]);
+    expect(
+      first.map((i) => i.id),
+      'reversing the queue changed nothing, so order is being ignored',
+    ).not.toEqual(second.map((i) => i.id));
+  });
+
+  it('still carries back when nothing is due — an empty queue must not switch interleaving off', () => {
+    const carried = carriedFrom(8, []);
+    expect(carried.length, 'an empty due queue produced no carry-back').toBeGreaterThan(0);
+  });
+
+  it('never carries back the lesson being practised, even if it is due', () => {
+    const own = objectivesOf(8);
+    const carried = carriedFrom(8, [8, 2]);
+    for (const item of carried) {
+      expect(item.objectiveIds.some((o) => own.has(o)), `${item.id} is from L8 itself`).toBe(false);
+    }
+  });
+
+  it('omitting the queue keeps the original behaviour', () => {
+    expect(composeHomework(5, 0, undefined, []).map((i) => i.id)).toEqual(
+      composeHomework(5, 0).map((i) => i.id),
+    );
+  });
+});
+
+/**
  * §3.2 asks homework to be "retryable with fresh items". This is also the
  * mechanism that answers the unit-test complaint — a retry that serves the same
  * questions lets a learner pass by recalling the answer screen.

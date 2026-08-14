@@ -19,15 +19,14 @@
 
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookA, Printer } from 'lucide-react';
+import { BookA } from 'lucide-react';
 
 export interface LessonMenuProps {
   onClose: () => void;
   onGlossary: () => void;
-  onWorksheet: () => void;
 }
 
-export default function LessonMenu({ onClose, onGlossary, onWorksheet }: LessonMenuProps) {
+export default function LessonMenu({ onClose, onGlossary }: LessonMenuProps) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     document.addEventListener('keydown', onKey);
@@ -53,9 +52,10 @@ export default function LessonMenu({ onClose, onGlossary, onWorksheet }: LessonM
       >
         {/* No "Leave lesson". The X in the top-left already does it, and a
             menu item duplicating a visible control is the kind of furniture
-            this app keeps removing. */}
+            this app keeps removing. "Print a worksheet" went the same way when
+            the worksheet did — see App.tsx. One item is a short menu, not a
+            broken one. */}
         <Item icon={<BookA className="h-[18px] w-[18px]" />} label="Glossary" onClick={onGlossary} first />
-        <Item icon={<Printer className="h-[18px] w-[18px]" />} label="Print a worksheet" onClick={onWorksheet} />
       </motion.div>
     </div>
   );

@@ -10,9 +10,14 @@
  *
  * RETIRED: Landing, Profile and Glossary as routes. Their function is folded
  * in — progress into the /learn header, the glossary into a drawer opened from
- * inside a lesson, where a learner actually meets the term. /worksheet stays
- * reachable because a printable sheet is genuinely a separate document, but it
- * is entered from a lesson rather than listed anywhere.
+ * inside a lesson, where a learner actually meets the term.
+ *
+ * RETIRED: /worksheet. It was justified by the screen-inferiority research as
+ * "the deep-reading channel", but that finding is about comprehension of
+ * continuous prose and the worksheet was a vocabulary recall grid — the result
+ * never applied to it. It had also never once been printed. See COURSE_DESIGN
+ * §1.16 for the retraction and §1.17b for what a handwriting channel would have
+ * to be built on instead.
  */
 
 import { lazy, Suspense } from 'react';
@@ -23,7 +28,6 @@ const Learn = lazy(() => import('@/pages/Learn'));
 const Lesson = lazy(() => import('@/pages/Lesson'));
 const Homework = lazy(() => import('@/pages/Homework'));
 const UnitTest = lazy(() => import('@/pages/UnitTest'));
-const Worksheet = lazy(() => import('@/pages/Worksheet'));
 
 function PageLoader() {
   return (
@@ -46,7 +50,6 @@ export default function App() {
             <Route path="/lesson/:id" element={<Lesson />} />
             <Route path="/homework/:id" element={<Homework />} />
             <Route path="/unit-test/:id" element={<UnitTest />} />
-            <Route path="/worksheet/:id" element={<Worksheet />} />
 
             {/* Everything else lands on the one page, including the routes the
                 old LeetCode-shaped UI used to have. */}

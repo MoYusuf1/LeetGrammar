@@ -298,7 +298,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
             setShowMenu(false);
             setShowGlossary(true);
           }}
-          onWorksheet={() => navigate(`/worksheet/${lessonId}`)}
         />
       )}
 

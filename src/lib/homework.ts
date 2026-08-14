@@ -22,11 +22,27 @@
  * same decision for carry-back and it has held up. Nothing to forget, nothing
  * to source, and it scales to Unit 3 with no new code.
  *
+ * CARRY-BACK IS THE SPACED-REVIEW QUEUE, NOT A SECOND MECHANISM
+ *
+ * These used to be two systems saying similar things: carry-back pulled from
+ * "any earlier lesson", while `lib/review.ts` separately tracked which lessons
+ * were actually *due*. §1.17 (successive relearning) is the argument for making
+ * them one — retrieval to criterion across spaced sessions more than doubles
+ * recall against the same retrievals massed, and it is the union of the only two
+ * high-utility techniques §1.2 names. Two half-implementations of it are worth
+ * less than one.
+ *
+ * So `composeHomework` takes an optional `due` list. When it is supplied,
+ * carry-back is drawn from lessons the schedule says are owed, most overdue
+ * first, and falls back to any earlier lesson only if that runs short. Passing
+ * nothing keeps the old behaviour, which is what the validator and the tests do.
+ *
  * WHAT IT IS NOT
  *
- * It does not gate. Failing homework blocks nothing; only the unit test does
- * (§1.9). It is scored and recorded so the learner can see movement, and that
- * is all.
+ * It does not gate, and it is **not measurement** — the learner authors these
+ * items, so an item whose answer and distractors they chose is not an effortful
+ * retrieval. COURSE_DESIGN §3.2 has the full argument. The score is recorded so
+ * the schedule has something to move on; it is not shown as a verdict.
  */
 
 import type { PracticeExercise } from '../data/types';
@@ -98,12 +114,18 @@ function productionFirst(items: PracticeExercise[]): PracticeExercise[] {
  * serve identical questions. Rotation is deterministic: attempt 2 always gives
  * the same set as attempt 2.
  *
+ * `due` is the spaced-review queue from `dueLessons()`, most overdue first. When
+ * given, carry-back prefers those lessons — the material the schedule says has
+ * decayed — rather than whatever happens to sit earliest in the course. Omit it
+ * and carry-back behaves as it always did.
+ *
  * Returns fewer than `size` items only when the pool genuinely has fewer.
  */
 export function composeHomework(
   lessonId: number,
   attempt = 0,
   size = HOMEWORK_SIZE,
+  due: number[] = [],
 ): PracticeExercise[] {
   // A lesson that does not exist gets nothing. Without this the carry-back
   // filter (`lessonId < 99`) matches the entire course and happily composes a
@@ -116,7 +138,31 @@ export function composeHomework(
   const current = productionFirst(
     all.filter((p) => p.lessonId === lessonId && p.item.objectiveIds.some((o) => own.includes(o))).map((p) => p.item),
   );
-  const earlier = productionFirst(all.filter((p) => p.lessonId < lessonId).map((p) => p.item));
+  // Carry-back candidates, due-first. `due` is already ordered most-overdue-first
+  // by dueLessons(), and that order is preserved here so the lesson decaying
+  // longest contributes before one that came due this morning. The lesson being
+  // practised is excluded — it is the `current` half of the set, not carry-back.
+  const dueEarlier = due.filter((id) => id !== lessonId);
+  const isDue = new Set(dueEarlier);
+  const rank = new Map(dueEarlier.map((id, i) => [id, i]));
+
+  const anyEarlier = all.filter((p) => p.lessonId < lessonId);
+  // productionFirst is applied to each group separately, not to the concatenation.
+  // Run over the whole list it would hoist every production item to the front and
+  // undo the due ordering — a not-due production item would outrank a due one,
+  // which is the opposite of what drawing from the queue is for. Production
+  // weighting (§1.8) is a preference *within* what is owed, not above it.
+  const earlier = [
+    ...productionFirst(
+      anyEarlier
+        .filter((p) => isDue.has(p.lessonId))
+        .sort((a, b) => (rank.get(a.lessonId) ?? 0) - (rank.get(b.lessonId) ?? 0))
+        .map((p) => p.item),
+    ),
+    // Anything not due, as filler. Without this a learner with an empty queue
+    // gets no carry-back at all, which would silently switch interleaving off.
+    ...productionFirst(anyEarlier.filter((p) => !isDue.has(p.lessonId)).map((p) => p.item)),
+  ];
 
   const wantBack = earlier.length ? Math.max(1, Math.round(size * CARRY_BACK_SHARE)) : 0;
   const wantCurrent = size - wantBack;
