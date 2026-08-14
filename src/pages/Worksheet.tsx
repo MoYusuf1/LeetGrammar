@@ -1,17 +1,25 @@
 /**
- * Worksheet Page — per-lesson practice sheet.
+ * Worksheet — per-lesson practice sheet.
  *
  * Route: /worksheet/:id
- * One page, two modes:
- *   • On screen — interactive: type answers, toggle the answer key.
- *   • Printed   — clean black-on-white worksheet (browser Print → Save as PDF).
  *
- * Content is derived from the lesson's vocab + authored practice exercises,
- * so there is nothing extra to maintain (see lib/worksheet.ts).
+ * TWO PRESENTATIONS OF THE SAME CONTENT, AND THEY ARE NOW ACTUALLY SEPARATE.
  *
- * NOT A NAV DESTINATION. A printable sheet is genuinely a separate document, so
- * it kept its route when the UI collapsed onto /learn — but it is entered from a
- * lesson's practice screen rather than listed anywhere.
+ *   On screen — an iOS page: grouped lists, real headings, nothing else.
+ *   Printed   — a worksheet: black on white, ruled answer blanks, name and date.
+ *
+ * Previously the screen version WAS the printed one. A phone got a Name/Date
+ * rule that wrapped onto two lines, a SOMALI | ENGLISH table header, all-caps
+ * section titles and rows of underscores — a sheet of A4 squeezed onto a 390px
+ * screen. Everything that only makes sense on paper is `hidden print:block`
+ * now, and everything that only makes sense on screen is `print:hidden`.
+ *
+ * IT IS NOT INTERACTIVE, despite what the previous docstring claimed. There are
+ * no inputs; the eye toggles the answer key. Typing happens in the lesson.
+ *
+ * NOT A NAV DESTINATION — reached from a lesson's menu. A printable sheet is
+ * genuinely a separate document, which is why it kept a route when the rest of
+ * the UI collapsed onto /learn.
  */
 
 import { useState } from 'react';
@@ -19,6 +27,7 @@ import { useParams, useNavigate } from 'react-router';
 import { X, Printer, Eye, EyeOff } from 'lucide-react';
 import { MAX_LESSON_ID } from '@/data/authored-lessons';
 import { buildWorksheet } from '@/lib/worksheet';
+import { ToolbarGroup, ToolbarButton } from '@/components/lesson/LessonToolbar';
 import Somali from '@/components/Somali';
 
 export default function WorksheetPage() {
@@ -35,155 +44,124 @@ export default function WorksheetPage() {
   if (!worksheet) {
     return (
       <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4">
-        <p className="text-body text-label-2">Worksheet not found.</p>
+        <p className="text-callout text-label-2">Worksheet not found.</p>
       </div>
     );
   }
 
   return (
     <div className="min-h-[100dvh] bg-bg print:bg-white">
-      {/* Action bar — hidden when printing */}
-      <header className="glass glass-top sticky top-0 z-20 px-4 pt-safe-t print:hidden">
-        <div className="mx-auto flex max-w-2xl items-center gap-2 py-2.5">
-          <button
-            onClick={() => navigate(-1)}
-            aria-label="Close"
-            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
-          >
-            <X className="h-[18px] w-[18px]" />
-          </button>
-          <span className="flex-1 text-footnote font-medium text-label">Worksheet</span>
-          <button
-            onClick={() => setShowAnswers((s) => !s)}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-footnote font-medium text-label-2 transition-colors hover:bg-fill"
-          >
-            {showAnswers ? <EyeOff size={15} /> : <Eye size={15} />}
-            <span className="hidden sm:inline">{showAnswers ? 'Hide answers' : 'Show answers'}</span>
-          </button>
-          <button
-            onClick={() => window.print()}
-            className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-footnote font-semibold text-accent-ink transition-colors hover:opacity-90"
-          >
-            <Printer size={15} />
-            <span className="hidden sm:inline">Print</span>
-          </button>
-        </div>
-      </header>
+      {/* The same floating glass control the lesson uses, so closing is in the
+          same place everywhere. */}
+      <button
+        onClick={() => navigate(-1)}
+        aria-label="Close"
+        className="glass pressable fixed left-4 z-30 flex h-10 w-10 items-center justify-center rounded-full text-label print:hidden"
+        style={{ top: 'calc(var(--safe-t) + 14px)' }}
+      >
+        <X className="h-[18px] w-[18px]" />
+      </button>
 
-      <div className="mx-auto max-w-2xl px-4 py-6 print:px-0 print:py-0">
-        {/* Worksheet header */}
-        <header className="mb-6 pb-4 print:border-black">
-          <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3 print:text-black">
-            Lesson {worksheet.lessonId} · Worksheet
-          </p>
-          <h1 className="mt-1 text-title1 font-semibold text-label print:text-black">
-            {worksheet.title}
-          </h1>
-          <p className="mt-2 text-footnote text-label-2 print:text-black">
-            Name: ______________________________&nbsp;&nbsp;&nbsp;Date: ____________________
-          </p>
-        </header>
+      <div className="mx-auto max-w-column px-5 pb-[calc(7rem+var(--safe-b))] pt-[calc(var(--safe-t)+74px)] print:max-w-none print:px-0 print:pb-0 print:pt-0">
+        <h1 className="text-title1 font-bold text-label print:text-black">{worksheet.title}</h1>
 
-        {/* Section A — Vocabulary */}
-        <section className="mb-8">
-          <h2 className="mb-3 text-footnote font-semibold uppercase tracking-wider text-label print:text-black">
-            A. Vocabulary — write the English meaning
+        {/* Paper only. */}
+        <p className="mt-6 hidden text-black print:block">
+          Name: ______________________________&nbsp;&nbsp;&nbsp;Date: ____________________
+        </p>
+
+        <section className="mt-8">
+          <h2 className="mb-2 px-1 text-footnote text-label-2 print:mb-3 print:px-0 print:text-black">
+            Vocabulary — write the English meaning
           </h2>
-          <div className="overflow-hidden rounded-xl print:rounded-none print:border-black">
-            <table className="w-full text-footnote">
-              <thead>
-                <tr className="bg-fill print:bg-white">
-                  <th className="px-4 py-2.5 text-left text-caption2 font-semibold uppercase tracking-wider text-label-3 print:text-black">
-                    Somali
-                  </th>
-                  <th className="px-4 py-2.5 text-left text-caption2 font-semibold uppercase tracking-wider text-label-3 print:text-black">
-                    English
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-separator print:divide-black">
-                {worksheet.vocab.map((w) => (
-                  <tr key={w.rank}>
-                    <td className="px-4 py-2.5">
-                      <Somali className="print:text-black">{w.somali}</Somali>
-                    </td>
-                    <td className="px-4 py-2.5 print:text-black">
-                      {showAnswers ? (
-                        <span className="text-green print:text-black">{w.english}</span>
-                      ) : (
-                        <span className="text-label-3 print:text-black">
-                          ______________________
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+          <div className="list-group print:rounded-none print:bg-transparent">
+            {worksheet.vocab.map((w) => (
+              <div
+                key={w.rank}
+                className="list-row flex items-baseline justify-between gap-4 px-4 py-3 print:border-black print:px-0"
+              >
+                <Somali size="lg" className="print:text-black">
+                  {w.somali}
+                </Somali>
+
+                {showAnswers ? (
+                  <span className="text-right text-callout text-label-2 print:text-black">
+                    {w.english}
+                  </span>
+                ) : (
+                  /* Nothing on screen — the empty right-hand side IS the
+                     question. On paper it needs a line to write on. */
+                  <span className="hidden text-black print:inline">______________________</span>
+                )}
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* Section B — Practice */}
         {worksheet.practice.length > 0 && (
-          <section className="mb-8 break-before-page">
-            <h2 className="mb-3 text-footnote font-semibold uppercase tracking-wider text-label print:text-black">
-              B. Practice — circle the correct answer
+          <section className="mt-10 print:break-before-page">
+            <h2 className="mb-2 px-1 text-footnote text-label-2 print:mb-3 print:px-0 print:text-black">
+              Practice
             </h2>
-            <ol className="space-y-5">
+
+            <ol className="space-y-7 print:space-y-5">
               {worksheet.practice.map((ex, i) => {
                 const hasOptions =
-                  ex.type === 'multiple_choice' || ex.type === 'fill_blank' || ex.type === 'matching';
+                  ex.type === 'multiple_choice' ||
+                  ex.type === 'fill_blank' ||
+                  ex.type === 'matching';
                 const answerText =
                   ex.correctAnswer ?? (Array.isArray(ex.answer) ? ex.answer.join(' · ') : ex.answer);
+
                 return (
-                  <li key={i} className="text-footnote">
-                    <p className="mb-2 font-medium text-label print:text-black">
-                      {i + 1}. <Bold text={ex.question} />
+                  <li key={i} className="space-y-3">
+                    <p className="text-callout text-label print:text-black">
+                      <span className="text-label-3 print:text-black">{i + 1}. </span>
+                      <Bold text={ex.question} />
                     </p>
+
                     {ex.somali && (
-                      <p className="mb-2 pl-4">
-                        <Somali size="lg" className="print:text-black">
-                          {ex.somali}
-                        </Somali>
-                      </p>
+                      <Somali size="lg" as="p" className="print:text-black">
+                        {ex.somali}
+                      </Somali>
                     )}
+
                     {ex.type === 'unscramble' && ex.words && (
-                      <p className="mb-2 pl-4">
-                        <Somali className="print:text-black">{ex.words.join(' / ')}</Somali>
-                      </p>
+                      <Somali as="p" className="print:text-black">
+                        {ex.words.join('  ·  ')}
+                      </Somali>
                     )}
+
                     {hasOptions ? (
-                      <div className="space-y-1.5 pl-4">
+                      <div className="list-group print:rounded-none print:bg-transparent">
                         {(ex.options ?? []).map((opt, j) => {
                           const isAnswer = showAnswers && opt === ex.correctAnswer;
                           return (
                             <p
                               key={j}
-                              className={`print:text-black ${
-                                isAnswer ? 'font-semibold text-green' : 'text-label-2'
+                              className={`list-row px-4 py-2.5 text-callout print:border-black print:px-0 print:text-black ${
+                                isAnswer ? 'font-semibold text-label' : 'text-label-2'
                               }`}
                             >
-                              {String.fromCharCode(65 + j)}. {opt}
+                              {opt}
                               {isAnswer ? '  ✓' : ''}
                             </p>
                           );
                         })}
                       </div>
+                    ) : showAnswers ? (
+                      <p className="text-callout font-semibold text-label print:text-black">
+                        {answerText}
+                      </p>
                     ) : (
-                      <p className="pl-4 print:text-black">
-                        {showAnswers ? (
-                          <span className="text-green print:text-black">{answerText}</span>
-                        ) : (
-                          <span className="text-label-3 print:text-black">
-                            ______________________________
-                          </span>
-                        )}
+                      <p className="hidden text-black print:block">
+                        ______________________________________
                       </p>
                     )}
+
                     {showAnswers && (
-                      <p className="mt-1.5 pl-4 text-caption2 text-label-2 print:text-black">
-                        {ex.explanation}
-                      </p>
+                      <p className="text-footnote text-label-2 print:text-black">{ex.explanation}</p>
                     )}
                   </li>
                 );
@@ -191,12 +169,33 @@ export default function WorksheetPage() {
             </ol>
           </section>
         )}
+      </div>
 
-        {/* Footer note — screen only */}
-        <p className="mt-8 text-footnote text-label-3 print:hidden">
-          Tip: toggle <span className="text-label">Show answers</span> to print an answer key, or
-          leave it off to print a blank worksheet.
-        </p>
+      {/* Notes-style: a capsule for the toggle, a pill for the action. Adding a
+          third control is one more ToolbarButton. */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 px-3 pb-[calc(0.5rem+var(--safe-b))] pt-2 print:hidden">
+        <div className="pointer-events-none mx-auto flex max-w-column items-center justify-between gap-2">
+          <ToolbarGroup>
+            <ToolbarButton
+              label={showAnswers ? 'Hide answers' : 'Show answers'}
+              onClick={() => setShowAnswers((s) => !s)}
+            >
+              {showAnswers ? (
+                <EyeOff className="h-[20px] w-[20px]" />
+              ) : (
+                <Eye className="h-[20px] w-[20px]" />
+              )}
+            </ToolbarButton>
+          </ToolbarGroup>
+
+          <button
+            onClick={() => window.print()}
+            className="pressable pointer-events-auto flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-callout font-semibold text-accent-ink"
+          >
+            <Printer className="h-[18px] w-[18px]" />
+            Print
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -206,11 +205,11 @@ export default function WorksheetPage() {
  * Renders the `**bold**` markup the authored questions use.
  *
  * Without this the worksheet printed the asterisks literally — every lesson
- * uses the markup to mark the Somali form under discussion, so every printed
- * sheet since the course was built showed `**Sahra baa...**`. The print channel
- * is the deep-reading half of the design, so it cannot show raw markup.
+ * uses the markup to mark the form under discussion, so every printed sheet
+ * since the course was built showed `**Sahra baa...**`. The print channel is
+ * the deep-reading half of the design, so it cannot show raw markup.
  *
- * Kept separate from components/RichText because that one colors with a theme
+ * Kept separate from components/RichText because that one colours with a theme
  * token; on a printed page the emphasis has to be plain black.
  */
 function Bold({ text }: { text: string }) {

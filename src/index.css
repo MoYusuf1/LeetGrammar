@@ -305,3 +305,46 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   PRINT. Only the worksheet is ever printed, and it has to come out as black
+   on white regardless of the theme the learner is using.
+
+   This lives here rather than as print: utilities on the elements because the
+   things that need overriding are set by compound selectors — `.list-row +
+   .list-row` out-specifies a single utility class, so a `print:border-black`
+   on the row loses and the separators print as 15%-alpha white, which is to
+   say invisible.
+   --------------------------------------------------------------------------- */
+@media print {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Chrome — floating controls and glass capsules have no business on paper. */
+  .glass {
+    display: none !important;
+  }
+
+  .list-group {
+    background: transparent !important;
+    border-radius: 0 !important;
+  }
+
+  .list-row + .list-row {
+    border-top-color: #000 !important;
+  }
+
+  /* Somali keeps its serif on paper but loses the theme ink. */
+  .so,
+  .so-lg,
+  .so-hero {
+    color: #000 !important;
+  }
+}
