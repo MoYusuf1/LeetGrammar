@@ -21,19 +21,29 @@ accounts, or a graph engine to do that.
 | Router | React Router | 7.6 | SPA navigation |
 | State | Zustand | 5.0 | Progress store, persisted to `localStorage` |
 | Styling | Tailwind CSS | 3.4 | CSS |
-| Components | shadcn/ui + Radix | latest | UI primitives |
 | Animation | Framer Motion | 12.38 | Transitions |
-| Forms/validation | react-hook-form + Zod | latest | Forms |
 | Testing | Vitest | 4.1 | Unit tests |
 | Icons | Lucide React | 0.562 | Icons |
+| Class merging | clsx + tailwind-merge | latest | `cn()` helper |
+
+That table is the whole runtime dependency list — six packages plus React. There
+is **no component library**. shadcn/ui and its 27 Radix packages were vendored in
+at scaffold time and deleted once it turned out nothing imported a single one of
+the 53 components; every control in the app is hand-written in
+`src/components/lesson/`. There is also no form library — the app has no forms,
+only answer inputs. Do not reach for a primitive package to add a button.
 
 ## Data model
 
-All lesson content is static TypeScript data, generated from `COURSE.md` by
-`scripts/course-to-app.cjs` into `src/data/teaching-content.ts`, plus hand-curated
-`src/data/vocabulary.ts`. There is no database and no network call in the learning
-flow. Progress (completed lessons, streak, XP, SRS cards, card position) lives in
-one Zustand store (`src/stores/progress-store.ts`) persisted to `localStorage`.
+All lesson content is static TypeScript data, hand-authored in
+`src/data/authored-lessons.ts` plus `src/data/vocabulary.ts`. It used to be
+generated from `COURSE.md` by `scripts/course-to-app.cjs`; both the generator and
+its output (`teaching-content.ts`) are deleted, and `COURSE.md` is now
+unreferenced reference material. There is no database and no network call in the
+learning flow. Progress (completed lessons, streak, homework scores, unit-test
+results, review schedule, card position) lives in one Zustand store
+(`src/stores/progress-store.ts`) persisted to `localStorage`. XP and SM-2 SRS
+cards were in that store and are gone — see STATE_OF_PLAY §9.
 
 ## Removed (formerly "Tier 2 Pragmatic Hypergraph")
 

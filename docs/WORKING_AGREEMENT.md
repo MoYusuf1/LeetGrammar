@@ -100,9 +100,9 @@ Run all three before saying anything is done.
 | `npx vitest run` | exercise shape, grading, placeholders, course structure |
 | `npm run validate:course` | sourcing, jargon, exercise mix, objective coverage |
 
-`npm run lint` currently reports ~10 errors, all pre-existing shadcn `ui/*`
-boilerplate. Nothing in `src/data`, `src/lib`, `src/pages` or
-`src/components/lesson` should add to that count.
+`npm run lint` reports **zero** errors. It used to report ~10, all in vendored
+shadcn `ui/*` boilerplate; that directory is gone. Zero is now the baseline —
+a lint error is yours, and there is no pre-existing noise to hide it.
 
 ---
 

@@ -26,23 +26,6 @@ const SLOTS = ['WHO', 'SIGNAL', 'WHAT', 'DO'] as const;
 
 export type BlueprintSlot = (typeof SLOTS)[number];
 
-/** True if a line is box-drawing art rather than prose. */
-function isBoxArt(line: string): boolean {
-  return /[┌│└─┬┴┐┘├┤┼]/.test(line);
-}
-
-/**
- * Splits blueprint card content into the art (discarded) and the prose.
- * Returns the prose with the leading box removed and blank edges trimmed.
- */
-export function stripBoxArt(content: string): string {
-  return content
-    .split('\n')
-    .filter((line) => !isBoxArt(line))
-    .join('\n')
-    .trim();
-}
-
 export default function Blueprint({ slot }: { slot?: BlueprintSlot }) {
   return (
     <div

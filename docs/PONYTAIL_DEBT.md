@@ -98,13 +98,17 @@ docs describing the hypergraph vision (`ARCHITECTURE.md`, `DATA_MODEL.md`,
 `INTEGRATION_PLAN_v2.md`, `SUPABASE_SETUP.md`, ADRs 001–005, RFC-001,
 `docs/data/v2/*`).
 
-**Kept:** `createCard`/`reviewCard` (SM-2 primitives) extracted from
-`src/engine/srs.ts` into `src/lib/srs.ts` — no graph dependency, harmless, and
-plausibly useful for a future vocab spaced-review feature. `reviewConcept`/
-`getSrsCard`/`initSrsCard` on `progress-store.ts` are currently **orphaned**
-(their only caller, `Quiz.tsx`, is gone) — flagging here rather than silently
-letting them rot. Revisit when/if a vocab review feature is built; delete them
-if it isn't.
+**Since deleted:** `createCard`/`reviewCard` (SM-2 primitives) were extracted
+from `src/engine/srs.ts` into `src/lib/srs.ts` and kept — no graph dependency,
+harmless, and plausibly useful for a future vocab spaced-review feature. Their
+store methods `reviewConcept`/`getSrsCard`/`initSrsCard` were flagged **orphaned**
+here (their only caller, `Quiz.tsx`, was gone) with the note: delete them if the
+vocab feature isn't built.
+
+That call was taken. `src/lib/srs.ts`, the three store methods and the `srsCards`
+map are all gone; spaced review uses the fixed intervals in `lib/review.ts`. The
+flag worked exactly as intended — it kept a dead engine from rotting quietly for
+another year. See STATE_OF_PLAY §9.
 
 The app is now fully local: no accounts, no network calls, progress in
 `localStorage` only. See `docs/TECH_STACK.md`.

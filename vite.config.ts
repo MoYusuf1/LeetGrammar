@@ -29,21 +29,8 @@ export default defineConfig(({ command }) => ({
     // Pre-bundle React and its consumers together so they share one instance.
     include: ['react', 'react-dom', 'react-dom/client', 'react-router'],
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor-radix': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-select',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-tooltip',
-          ],
-        },
-      },
-    },
-  },
+  /* No manualChunks. There used to be a 'vendor-radix' chunk naming seven
+     Radix packages; none of them are dependencies any more, and a manual chunk
+     listing a module that does not exist fails the build outright rather than
+     being ignored. Rollup's default splitting is fine for an app this size. */
 }));

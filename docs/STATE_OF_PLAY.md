@@ -74,15 +74,18 @@ What it is now, and the reasoning that is not recoverable from the code:
   glyph and the wording carry the verdict. This is better for a colourblind
   learner than the green/red it replaced; do not "restore" colour without saying
   what it buys.
-- **Glass appears exactly twice per screen** — the nav bar and the action bar —
-  and it is a mimic: blur, saturation, a specular top edge. Real Liquid Glass
-  needs an SVG displacement map fed into `backdrop-filter`, which Chromium
-  supports and **Firefox and Safari do not**. Safari is every iPhone, so the
-  real version would be invisible to the audience it is for.
-- **A lesson is a swipe deck.** Consecutive passive cards merge into one step
-  (`src/components/lesson/steps.ts`); a passive step has **no button at all**.
-  A button appears only where the lesson demands something. Course-wide this
-  took button presses from 179 to 62.
+- **Glass is on floating chrome only** — the ⋯/close circles and the toolbar
+  capsules, never on cards. It is a mimic: blur, saturation, a specular top
+  edge. Real Liquid Glass needs an SVG displacement map fed into
+  `backdrop-filter`, which Chromium supports and **Firefox and Safari do not**.
+  Safari is every iPhone, so the real version would be invisible to the audience
+  it is for.
+- **A lesson is a deck of steps, paged from a Safari-style toolbar.**
+  Consecutive passive cards merge into one step
+  (`src/components/lesson/steps.ts`), and a passive step has **no button at
+  all** — a button appears only where the lesson demands something, which took
+  the course from 179 button presses to 62. Swipe was built and then removed;
+  see UI_CONVENTIONS for why.
 - **Home is a contents page** — no cards, chevrons, containers or fills. State
   is carried by ink weight: done recedes, current is full ink and marked.
 
@@ -90,6 +93,10 @@ Routes: `/learn` is home; lesson, homework, unit test and worksheet are
 full-screen task views entered and closed. Landing, Profile, Glossary and the
 lesson index were deleted — the glossary became a sheet opened from inside a
 lesson, where a learner actually meets a term.
+
+Full visual conventions, and the list of things already tried and rejected, are
+in [UI_CONVENTIONS.md](./UI_CONVENTIONS.md). Read it before changing anything
+visual.
 
 **The blueprint is drawn, not typeset.** `blueprintSlot` had been a typed field
 on every card since the beginning and nothing ever read it, so the sentence
@@ -266,21 +273,23 @@ highest-value human check available". It is now a required step in
 [LESSON_CONVENTIONS.md](./LESSON_CONVENTIONS.md) §3.1b: **answer every notice
 item using only the wrong heuristic, and confirm you get it wrong.**
 
-### 6. `COURSE.md` and `scripts/course-to-app.cjs` are orphaned ⚪
+### 6. `COURSE.md` is orphaned ⚪
 
 `COURSE.md` is 9,399 lines and was the source for the deleted
 `teaching-content.ts`. Its Somali has the same class of problems as the content
 generated from it — e.g. `Walaalkaa xaal iska kuule?` glossed as "My name is
 Amina. How is your brother?", where the Somali and English do not correspond.
 
-Both are **untouched** and were deliberately excluded from deletion: `COURSE.md`
-may be hand-written and is the only prose record of the wider course plan. It is
-not wired to anything.
+`scripts/course-to-app.cjs`, the generator, is **deleted** — it was code with no
+caller. `COURSE.md` is **kept**, deliberately: it may be hand-written and is the
+only prose record of the wider course plan. It is not wired to anything, and
+deleting a prose record is the one call worth leaving to a human.
 
-### 7. ~10 lint errors ⚪
+### 7. Lint errors — resolved ✅
 
-All in `src/components/ui/*` shadcn boilerplate, all pre-existing. No file under
-`src/data`, `src/lib`, `src/pages` or `src/components/lesson` contributes.
+Was ~10, all in vendored `src/components/ui/*` shadcn boilerplate. That
+directory is deleted (nothing imported any of its 53 components), and
+`npm run lint` now reports **zero errors**. Keep it there.
 
 ### 8. Test banks sit at 47% / 46% production against a 60% target ⚪
 
@@ -514,17 +523,21 @@ It pays off from Lesson 5 onward, and is unproven until then.
 
 Then read `src/data/authored-lessons.ts`. It is the course.
 
-### 9. `lib/srs.ts` is unused by design ⚪
+### 9. `lib/srs.ts` — deleted ✅
 
 An SM-2 implementation with ease factors and quality ratings, wired to
-`srsCards` in the store, called by nothing. Spaced review deliberately uses the
-fixed intervals in `getNextReviewDate` instead, because §1.4 found expanding
-schedules no better and more expensive, and SM-2 needs a self-rated quality per
-item that this course never collects.
+`srsCards` in the store and called by nothing. The open question was whether the
+vocabulary track (Phase 5) would want per-word scheduling; the answer taken was
+no — spaced review uses the fixed intervals in `lib/review.ts`, because §1.4
+found expanding schedules no better and more expensive, and SM-2 needs a
+self-rated quality per item this course never collects.
 
-Keep it only if the vocabulary track (Phase 5) will genuinely want per-word
-scheduling; otherwise delete it and `srsCards` together. An engine with no
-callers that looks finished is what [POSTMORTEM.md](./POSTMORTEM.md) is about.
+Deleted along with `srsCards` and its three store methods. An engine with no
+callers that looks finished is exactly what [POSTMORTEM.md](./POSTMORTEM.md) is
+about, so it went rather than lingering as a decision nobody would make.
+
+If per-word scheduling is ever wanted, write it against the real requirement
+then; it is in git history.
 
 ### 10. The whole interface is unverified in a browser 🔴
 

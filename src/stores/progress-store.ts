@@ -1,12 +1,22 @@
 /**
- * Zustand store for user progress + SRS (Spaced Repetition).
+ * Zustand store for learner progress.
+ *
+ * WHAT IS NOT HERE ANY MORE. It used to carry an SM-2 spaced-repetition engine
+ * (`srsCards`, `reviewConcept`, `getSrsCard`, `initSrsCard`, backed by
+ * `lib/srs.ts`), an XP counter, a daily goal, and topic/prerequisite helpers
+ * for a lesson graph that no longer exists. None of it had a caller. Spaced
+ * review uses the fixed intervals in `lib/review.ts` instead — §1.4 found
+ * expanding schedules no better and more expensive, and SM-2 needs a per-item
+ * quality rating this course never collects.
+ *
+ * `streak`, `lastStudyDate` and `activityLog` are kept despite having no UI
+ * today, on a different principle: they are *history*, and a streak cannot be
+ * recomputed later from anything else. Dead code goes; cheap accumulated
+ * record stays.
  */
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { SrsCard } from '@/lib/srs';
-import { createCard, reviewCard } from '@/lib/srs';
-import { MAX_LESSON_ID } from '@/data/authored-lessons';
 import type { UnitTestResult } from '@/lib/assessment';
 import { seedReview, advanceReview, type ReviewSchedule } from '@/lib/review';
 
@@ -31,11 +41,8 @@ export interface UserProgress {
   completedLessons: number[];
   streak: number;
   lastStudyDate: string;
-  xp: number;
   practiceScores: Record<number, number>;
-  srsCards: Record<string, SrsCard>;
   activityLog: string[]; // Array of YYYY-MM-DD strings
-  dailyGoal: number; // XP target per day (15, 30, or 50)
 
   // Lesson card positions (resume where you left off)
   lessonCardPositions: Record<number, number>;
@@ -55,11 +62,8 @@ const defaultProgress: UserProgress = {
   completedLessons: [],
   streak: 0,
   lastStudyDate: '',
-  xp: 0,
   practiceScores: {},
-  srsCards: {},
   activityLog: [],
-  dailyGoal: 30,
   lessonCardPositions: {},
   unitTestResults: {},
   reviewSchedule: {},
@@ -93,19 +97,8 @@ function addActivity(state: UserProgress): UserProgress {
 interface ProgressState extends UserProgress {
   completeLesson: (lessonId: number) => void;
   isLessonCompleted: (lessonId: number) => boolean;
-  getLessonStatus: (lessonId: number) => 'completed' | 'current' | 'locked';
+  /** Homework score for a lesson. Kept — Homework.tsx records and shows it. */
   recordPracticeScore: (lessonId: number, score: number) => void;
-  resetProgress: () => void;
-  isTopicCompleted: (lessonIds: number[]) => boolean;
-  getTopicStatus: (lessonIds: number[]) => 'completed' | 'in-progress' | 'locked';
-  getTopicProgress: (lessonIds: number[]) => { completed: number; total: number };
-  arePrerequisitesMet: (prereqLessonIds: number[]) => boolean;
-  completionPercentage: number;
-
-  // SRS
-  reviewConcept: (conceptId: string, quality: number) => void;
-  getSrsCard: (conceptId: string) => SrsCard | undefined;
-  initSrsCard: (conceptId: string) => void;
 
   // Lesson card positions (resume where you left off)
   setLessonCardPosition: (lessonId: number, cardIndex: number) => void;
@@ -135,7 +128,6 @@ export const useProgressStore = create<ProgressState>()(
             completedLessons: [...state.completedLessons, lessonId],
             streak: newStreak,
             lastStudyDate: getToday(),
-            xp: state.xp + 10,
             // Finishing a lesson puts it into the review rota. Without this the
             // schedule would only ever contain lessons someone happened to
             // revisit, which is the wrong way round.
@@ -148,85 +140,17 @@ export const useProgressStore = create<ProgressState>()(
         return get().completedLessons.includes(lessonId);
       },
 
-      getLessonStatus: (lessonId: number) => {
-        const state = get();
-        if (state.completedLessons.includes(lessonId)) return 'completed';
-        return 'current';
-      },
-
       recordPracticeScore: (lessonId: number, score: number) => {
         set((state) => {
           const existing = state.practiceScores[lessonId] || 0;
-          const bonus = score > existing ? (score - existing) * 5 : 0;
           return addActivity({
             ...state,
             practiceScores: {
               ...state.practiceScores,
               [lessonId]: Math.max(score, existing),
             },
-            xp: state.xp + bonus,
             lastStudyDate: getToday(),
           });
-        });
-      },
-
-      resetProgress: () => {
-        set({ ...defaultProgress });
-      },
-
-      isTopicCompleted: (lessonIds: number[]) => {
-        return lessonIds.every((id) => get().completedLessons.includes(id));
-      },
-
-      getTopicStatus: (lessonIds: number[]): 'completed' | 'in-progress' | 'locked' => {
-        const state = get();
-        const allCompleted = lessonIds.every((id) => state.completedLessons.includes(id));
-        if (allCompleted) return 'completed';
-        const someCompleted = lessonIds.some((id) => state.completedLessons.includes(id));
-        if (someCompleted) return 'in-progress';
-        return 'locked';
-      },
-
-      getTopicProgress: (lessonIds: number[]) => {
-        const completed = lessonIds.filter((id) =>
-          get().completedLessons.includes(id)
-        ).length;
-        return { completed, total: lessonIds.length };
-      },
-
-      arePrerequisitesMet: (prereqLessonIds: number[]) => {
-        return prereqLessonIds.every((id) => get().completedLessons.includes(id));
-      },
-
-      get completionPercentage() {
-        return Math.round((get().completedLessons.length / MAX_LESSON_ID) * 100);
-      },
-
-      // SRS
-      reviewConcept: (conceptId: string, quality: number) => {
-        set((state) => {
-          const existing = state.srsCards[conceptId];
-          const card = existing ? reviewCard(existing, quality) : reviewCard(createCard(conceptId), quality);
-          return addActivity({
-            ...state,
-            srsCards: { ...state.srsCards, [conceptId]: card },
-            lastStudyDate: getToday(),
-            xp: state.xp + quality * 2,
-          });
-        });
-      },
-
-      getSrsCard: (conceptId: string) => {
-        return get().srsCards[conceptId];
-      },
-
-      initSrsCard: (conceptId: string) => {
-        set((state) => {
-          if (state.srsCards[conceptId]) return state;
-          return {
-            ...state,
-            srsCards: { ...state.srsCards, [conceptId]: createCard(conceptId) },
-          };
         });
       },
 
@@ -250,12 +174,11 @@ export const useProgressStore = create<ProgressState>()(
         });
       },
 
-      // Unit tests — a pass is worth XP once; retries never lower a best score.
+      // Unit tests — retries never lower a best score.
       recordUnitTestResult: (result: UnitTestResult) => {
         set((state) => {
           const results = state.unitTestResults ?? {};
           const previous = results[result.unitId];
-          const firstPass = result.passed && !previous?.passed;
           const record: UnitTestRecord = {
             unitId: result.unitId,
             attempts: (previous?.attempts ?? 0) + 1,
@@ -266,7 +189,6 @@ export const useProgressStore = create<ProgressState>()(
           return addActivity({
             ...state,
             unitTestResults: { ...results, [result.unitId]: record },
-            xp: state.xp + (firstPass ? 25 : 0),
             lastStudyDate: getToday(),
           });
         });
@@ -292,11 +214,8 @@ export const useProgressStore = create<ProgressState>()(
         completedLessons: state.completedLessons,
         streak: state.streak,
         lastStudyDate: state.lastStudyDate,
-        xp: state.xp,
         practiceScores: state.practiceScores,
-        srsCards: state.srsCards,
         activityLog: state.activityLog,
-        dailyGoal: state.dailyGoal,
         lessonCardPositions: state.lessonCardPositions,
         unitTestResults: state.unitTestResults,
         reviewSchedule: state.reviewSchedule,

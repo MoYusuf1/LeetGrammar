@@ -225,9 +225,15 @@ So: **grammar and vocabulary run as two interlocking tracks.**
 | **Vocabulary** | ~500 words | Spaced-repetition track, ~8–10 new words per session, independent of lesson position |
 
 They interlock rather than nest: lesson examples draw only on vocabulary already
-introduced, but finishing a lesson doesn't require finishing a word batch. This also
-finally uses the SM-2 `srsCards` primitives kept in `progress-store.ts` (currently flagged
-orphaned in `PONYTAIL_DEBT.md` item 4).
+introduced, but finishing a lesson doesn't require finishing a word batch.
+
+Per-word scheduling has **no engine waiting for it**. This paragraph used to
+promise that the vocabulary track would finally use the SM-2 `srsCards`
+primitives in `progress-store.ts`; that engine was deleted instead, because
+keeping a finished-looking implementation alive on the strength of a future
+phase is the exact failure `POSTMORTEM.md` records. If this track is built,
+write its scheduling against what it actually needs — starting from the
+fixed intervals in `lib/review.ts`, which is what lesson review already uses.
 
 ## 2.2 Vocabulary sourcing
 
@@ -754,7 +760,7 @@ per lesson; all Somali 2-source verified.
 **Goal.** Make Layers 2 and 3 real.
 
 **Deliverables.** Homework runner; unit-test runner; mastery gating at 85%; correctives
-routing; fixed-interval spaced review using existing `srsCards`.
+routing; fixed-interval spaced review via `lib/review.ts`.
 
 **Definition of Done**
 1. `A1`–`A6` pass.
