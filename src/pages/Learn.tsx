@@ -1,26 +1,33 @@
 /**
- * Home — the lessons, and nothing else.
+ * Home — a contents page.
  *
- * HOW THIS SETTLED. It first listed everything: every lesson, both unit tests,
- * a practice button per row, a progress bar and a review banner. That was too
- * much to read before starting. Then it swung the other way — one card and an
- * "All lessons" row — and there was nothing on the screen.
+ * WHY IT LOOKS LIKE A BOOK AND NOT LIKE SETTINGS. Everything else in this app
+ * is deliberately iOS furniture: grouped lists, glass bars, system greys. Home
+ * is the one screen that should say what the thing IS, and what it is, is a
+ * course — so it borrows from a table of contents instead of a settings list.
  *
- * There is genuinely only one kind of thing to show here, so it shows that:
- * the lessons, grouped by unit, with the one you are on lifted to the top.
- * No separate index screen, no progress bar, no locked rows.
+ * No cards. No chevrons. No rounded rectangles, no fills, no borders. Type sits
+ * directly on the background and the numerals do the structuring. That is the
+ * whole design; if you find yourself adding a container here, it has stopped
+ * being this.
  *
- * A locked unit test is not rendered. A row you cannot press is furniture.
+ * STATE IS CARRIED BY WEIGHT, NOT BY ICONS. The palette is black and white, so
+ * there is nothing to color-code with:
  *
- * REGRESSION GUARD: a hardcoded table naming lesson ranges used to live in this
- * file's predecessor. Authoring a new lesson would have left it invisible while
- * build, tests and validator all stayed green. Everything derives from
- * LESSON_LIST and UNITS. NOTHING HERE MAY NAME A LESSON NUMBER.
+ *   done      — recedes to the faintest ink, because it is behind you
+ *   current   — full ink, and the only line that gets a marker
+ *   upcoming  — normal ink, light numeral
+ *
+ * REGRESSION GUARD, INHERITED AND STILL LOAD-BEARING: a hardcoded table naming
+ * lesson ranges used to live in this file's predecessor. Authoring a new lesson
+ * would have left it invisible on this page while build, tests and validator all
+ * stayed green. Units and lessons derive from UNITS and LESSON_LIST. NO LESSON
+ * NUMBER MAY BE WRITTEN AS A LITERAL HERE — the numerals below are formatted
+ * from lesson.lessonId.
  */
 
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronRight, Check } from 'lucide-react';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
 import { UNITS, getUnitTest } from '@/data/unit-tests';
 import { isUnitComplete } from '@/lib/assessment';
@@ -45,15 +52,16 @@ export default function LearnPage() {
   const total = LESSON_LIST.length;
   const doneCount = completed.filter((id) => id >= 1 && id <= total).length;
 
-  const next = LESSON_LIST.find((l) => !completed.includes(l.lessonId));
-  const resumeAt = next ? (store.getLessonCardPosition?.(next.lessonId) ?? 0) : 0;
+  /* "You are here" marks the first unfinished lesson — the one tap that
+     matters, which is why there is no separate continue button. */
+  const current = LESSON_LIST.find((l) => !completed.includes(l.lessonId))?.lessonId;
 
   return (
     <div className="min-h-[100dvh] bg-bg">
-      <div className="mx-auto max-w-column px-4 pt-safe-t">
-        <header className="pb-3 pt-4">
-          <h1 className="text-large font-bold text-label">Somali</h1>
-          <p className="mt-0.5 text-subhead text-label-2">
+      <div className="mx-auto max-w-column px-5 pt-safe-t">
+        <header className="pb-10 pt-12">
+          <h1 className="text-large font-bold tracking-tight text-label">Somali</h1>
+          <p className="mt-1 text-subhead text-label-2">
             {doneCount === 0
               ? `${total} lessons`
               : doneCount === total
@@ -62,64 +70,46 @@ export default function LearnPage() {
           </p>
         </header>
 
-        <main className="pb-[calc(2.5rem+var(--safe-b))]">
-          {/* The one you are on, lifted out of the list so the app opens on a
-              thing to do rather than a decision to make. */}
-          {next && (
-            <button
-              onClick={() => navigate(`/lesson/${next.lessonId}`)}
-              className="pressable mb-7 flex w-full items-center gap-3 rounded-xl bg-elevated px-4 py-4 text-left"
-            >
-              <span className="min-w-0 flex-1">
-                <span className="block text-caption2 font-semibold uppercase tracking-wide text-label-3">
-                  {resumeAt > 0 ? 'Continue' : doneCount === 0 ? 'Start' : 'Up next'}
-                </span>
-                <span className="mt-0.5 block truncate text-title2 font-semibold text-label">
-                  {next.title}
-                </span>
-                <span className="mt-0.5 block text-footnote text-label-2">
-                  {resumeAt > 0
-                    ? `Card ${resumeAt + 1} of ${next.cardCount}`
-                    : `${next.cardCount} cards`}
-                </span>
-              </span>
-              <ChevronRight className="h-5 w-5 flex-shrink-0 text-label-3" />
-            </button>
-          )}
-
+        <main className="pb-[calc(4rem+var(--safe-b))]">
           {grouped.map(({ unit, lessons }) => {
             const bank = getUnitTest(unit.id);
             const unlocked = isUnitComplete(unit.id, completed);
             return (
-              <section key={unit.id} className="mb-7">
-                <h2 className="px-1 pb-1.5 text-footnote text-label-2">
-                  {unit.name ?? `Unit ${unit.id}`}
-                </h2>
+              <section key={unit.id} className="mb-12">
+                {/* A part title in a contents page: a rule and a small label. */}
+                <div className="mb-5 flex items-center gap-3">
+                  <span className="text-caption2 font-semibold uppercase tracking-[0.14em] text-label-3">
+                    {unit.name ?? `Unit ${unit.id}`}
+                  </span>
+                  <span className="h-px flex-1 bg-separator" />
+                </div>
 
-                <div className="list-group">
+                <ol>
                   {lessons.map((lesson) => (
-                    <LessonRow
+                    <Entry
                       key={lesson.lessonId}
                       lesson={lesson}
                       done={completed.includes(lesson.lessonId)}
+                      current={lesson.lessonId === current}
                       due={due.has(lesson.lessonId)}
                       onOpen={() => navigate(`/lesson/${lesson.lessonId}`)}
                     />
                   ))}
+                </ol>
 
-                  {/* Only once it can actually be taken. */}
-                  {bank && unlocked && (
-                    <button
-                      onClick={() => navigate(`/unit-test/${unit.id}`)}
-                      className="list-row flex min-h-[52px] w-full items-center gap-3 px-4 py-3 text-left active:bg-fill"
-                    >
-                      <span className="min-w-0 flex-1 truncate text-body text-label">
-                        {bank.name}
-                      </span>
-                      <ChevronRight className="h-4 w-4 flex-shrink-0 text-label-3" />
-                    </button>
-                  )}
-                </div>
+                {/* Only once it can be taken. A line you cannot press is
+                    furniture, and this page has no room for furniture. */}
+                {bank && unlocked && (
+                  <button
+                    onClick={() => navigate(`/unit-test/${unit.id}`)}
+                    className="mt-1 grid w-full grid-cols-[2.75rem_1fr] items-baseline gap-3 py-3 text-left active:opacity-50"
+                  >
+                    <span aria-hidden className="text-title2 font-light text-label-3">
+                      ·
+                    </span>
+                    <span className="text-title3 text-label">{bank.name}</span>
+                  </button>
+                )}
               </section>
             );
           })}
@@ -129,28 +119,55 @@ export default function LearnPage() {
   );
 }
 
-function LessonRow({
+function Entry({
   lesson,
   done,
+  current,
   due,
   onOpen,
 }: {
   lesson: LessonSummary;
   done: boolean;
+  current: boolean;
   due: boolean;
   onOpen: () => void;
 }) {
+  /* Zero-padded so the numeral column stays optically even at 01 and at 10.
+     Derived from the id — never written as a literal. */
+  const numeral = String(lesson.lessonId).padStart(2, '0');
+
   return (
-    <button
-      onClick={onOpen}
-      className="list-row flex min-h-[52px] w-full items-center gap-3 px-4 py-3 text-left active:bg-fill"
-    >
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-body text-label">{lesson.title}</span>
-        {due && <span className="block text-footnote text-label-2">Due for review</span>}
-      </span>
-      {done && <Check className="h-4 w-4 flex-shrink-0 text-label-2" />}
-      <ChevronRight className="h-4 w-4 flex-shrink-0 text-label-3" />
-    </button>
+    <li>
+      <button
+        onClick={onOpen}
+        aria-current={current ? 'step' : undefined}
+        className="grid w-full grid-cols-[2.75rem_1fr] items-baseline gap-3 py-3.5 text-left active:opacity-50"
+      >
+        <span
+          aria-hidden
+          className={`text-title1 font-light tabular-nums leading-none ${
+            current ? 'text-label' : 'text-label-3'
+          }`}
+        >
+          {numeral}
+        </span>
+
+        <span className="min-w-0">
+          <span
+            className={`block text-title3 ${
+              current ? 'font-semibold text-label' : done ? 'text-label-3' : 'text-label'
+            }`}
+          >
+            {lesson.title}
+          </span>
+
+          {(current || due) && (
+            <span className="mt-0.5 block text-footnote text-label-2">
+              {current ? 'you are here' : 'due for review'}
+            </span>
+          )}
+        </span>
+      </button>
+    </li>
   );
 }
