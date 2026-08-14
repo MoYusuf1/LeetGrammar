@@ -18,14 +18,15 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, BookA } from 'lucide-react';
+import { X, MoreHorizontal } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent } from '@/data/authored-lessons';
 import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
 import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
-import CardProgressDots from './CardProgressDots';
 import AnswerInput from './AnswerInput';
+import Blueprint, { stripBoxArt } from './Blueprint';
+import LessonMenu from './LessonMenu';
 import Somali from '@/components/Somali';
 import RichText from '@/components/RichText';
 import GlossarySheet from '@/components/GlossarySheet';
@@ -85,6 +86,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const [practiceChecked, setPracticeChecked] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showGlossary, setShowGlossary] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const [noMotion] = useState(prefersNoMotion);
 
   /* Persist position to the progress store. */
@@ -194,44 +196,45 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
 
   return (
     <div className="lesson-container flex min-h-[100dvh] flex-col bg-bg">
-      {/* Top bar */}
-      <header className="glass glass-top sticky top-0 z-20 flex-shrink-0 px-4 pt-safe-t">
-        <div className="mx-auto flex max-w-column items-center gap-3 py-2.5">
-          <button
-            onClick={handleExit}
-            aria-label="Close lesson"
-            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
-          >
-            <X className="h-[18px] w-[18px]" />
-          </button>
+      {/* NO TOP BAR. It used to hold a close button, progress dots, a counter
+          and a glossary icon — four controls competing with the one card the
+          screen exists to show. What is left is a hairline of progress at the
+          very edge and two floating glass circles; everything else moved into
+          the ⋯ menu. */}
+      <div
+        className="fixed inset-x-0 top-0 z-30 h-[3px] bg-fill"
+        role="progressbar"
+        aria-valuenow={cardIndex + 1}
+        aria-valuemin={1}
+        aria-valuemax={cards.length}
+        aria-label={`Card ${cardIndex + 1} of ${cards.length}`}
+      >
+        <div
+          className="h-full bg-accent transition-[width] duration-300"
+          style={{ width: `${((cardIndex + 1) / cards.length) * 100}%` }}
+        />
+      </div>
 
-          <div className="min-w-0 flex-1">
-            <CardProgressDots
-              total={cards.length}
-              current={cardIndex}
-              completed={completedCards}
-              onDotClick={goToCard}
-            />
-          </div>
+      <button
+        onClick={handleExit}
+        aria-label="Close lesson"
+        className="glass pressable fixed left-4 z-30 flex h-10 w-10 items-center justify-center rounded-full text-label"
+        style={{ top: 'calc(var(--safe-t) + 14px)' }}
+      >
+        <X className="h-[18px] w-[18px]" />
+      </button>
 
-          <span className="flex-shrink-0 text-caption2 font-medium tabular-nums text-label-3">
-            {cardIndex + 1}/{cards.length}
-          </span>
+      <button
+        onClick={() => setShowMenu(true)}
+        aria-label="Lesson options"
+        className="glass pressable fixed right-4 z-30 flex h-10 w-10 items-center justify-center rounded-full text-label"
+        style={{ top: 'calc(var(--safe-t) + 14px)' }}
+      >
+        <MoreHorizontal className="h-[18px] w-[18px]" />
+      </button>
 
-          {/* The glossary lives here rather than in a nav, because the moment a
-              learner wants it is the moment they are mid-lesson. */}
-          <button
-            onClick={() => setShowGlossary(true)}
-            aria-label="Open glossary"
-            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
-          >
-            <BookA className="h-[18px] w-[18px]" />
-          </button>
-        </div>
-      </header>
-
-      {/* Card content */}
-      <div className="flex-1 px-4 pb-4">
+      {/* Card content — padded clear of the floating controls. */}
+      <div className="flex-1 px-4 pb-4 pt-[calc(var(--safe-t)+68px)]">
         <div className="mx-auto max-w-column">
           {/* With motion off the card renders directly. `AnimatePresence
               mode="wait"` holds the outgoing card until its exit animation
@@ -285,6 +288,31 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
           />
         </div>
       </div>
+
+      {showMenu && (
+        <LessonMenu
+          onClose={() => setShowMenu(false)}
+          /* Stepping back was only possible via the progress dots, which are
+             gone. Preserved here rather than dropped. */
+          onBackACard={
+            cardIndex > 0
+              ? () => {
+                  setShowMenu(false);
+                  goToCard(cardIndex - 1);
+                }
+              : undefined
+          }
+          onGlossary={() => {
+            setShowMenu(false);
+            setShowGlossary(true);
+          }}
+          onWorksheet={() => navigate(`/worksheet/${lessonId}`)}
+          onLeave={() => {
+            setShowMenu(false);
+            handleExit();
+          }}
+        />
+      )}
 
       {showGlossary && <GlossarySheet onClose={() => setShowGlossary(false)} />}
 
@@ -412,15 +440,41 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
         </motion.div>
       )}
 
-      {/* Blueprint diagrams are drawn with box characters and must stay
-          monospaced — the alignment is the diagram. */}
+      {/* The blueprint is drawn, not typeset. The content string still carries
+          the old box-drawing art, so it is stripped here and replaced with real
+          segments that can highlight the slot this lesson fills — see
+          Blueprint.tsx. Everything else renders as ordinary prose; it used to
+          go into a monospace <pre> that overflowed the screen on a phone and
+          cut the sentence in half. */}
+      {card.type === 'blueprint' && <Blueprint slot={card.blueprintSlot} />}
+
       {card.content && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <pre className="overflow-auto rounded-xl bg-elevated p-4 font-mono text-caption2 text-label-2">
-            {card.content}
-          </pre>
+          <Prose text={stripBoxArt(card.content)} />
         </motion.div>
       )}
+    </div>
+  );
+}
+
+/**
+ * Body copy. Blank-line-separated paragraphs, single newlines preserved as
+ * line breaks — matching how the lesson content is authored.
+ */
+function Prose({ text, className = '' }: { text: string; className?: string }) {
+  const paragraphs = text.split('\n\n').filter((p) => p.trim().length > 0);
+  return (
+    <div className={`space-y-4 text-title3 text-label-2 ${className}`}>
+      {paragraphs.map((para, i) => (
+        <p key={i}>
+          {para.split('\n').map((line, j, all) => (
+            <span key={j}>
+              <RichText text={line} />
+              {j < all.length - 1 && <br />}
+            </span>
+          ))}
+        </p>
+      ))}
     </div>
   );
 }
@@ -477,23 +531,10 @@ function TeachCard({ card }: { card: TeachingCard }) {
       )}
 
       {card.content && (
-        <motion.div
-          custom={1}
-          variants={contentStagger}
-          initial="hidden"
-          animate="visible"
-          className="text-title3 text-label"
-        >
-          {card.content.split('\n\n').map((para, i) => (
-            <p key={i} className="mb-4">
-              {para.split('\n').map((line, j) => (
-                <span key={j}>
-                  <RichText text={line} />
-                  <br />
-                </span>
-              ))}
-            </p>
-          ))}
+        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
+          {/* Was rendering a <br /> after every line including the last, which
+              padded the gap between paragraphs unevenly. */}
+          <Prose text={card.content} className="text-label" />
         </motion.div>
       )}
     </div>
