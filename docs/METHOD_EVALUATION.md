@@ -10,7 +10,8 @@
 > **This document has a lifespan.** Criteria now, findings next, then a verdict
 > folded into COURSE_DESIGN / STATE_OF_PLAY and this file deleted.
 >
-> **Status:** criteria set. No evidence gathered.
+> **Status:** complete. **4 / 4 pass. No method-level failures.** Four
+> lesson-level findings, none blocking. See Part 2.
 
 ---
 
@@ -173,3 +174,166 @@ Recorded so it cannot be softened later:
 - Whether the lessons are engaging.
 - Whether four lessons are enough to learn the signal system. That is a scope
   question answered in §2.0.
+
+---
+
+# Part 2 — Findings
+
+Evidence gathered after the criteria above were committed (`44c0771b`). Method
+under test: Lessons 5–8, read in full plus driven in the browser.
+
+## Verdict table
+
+| | Question | Verdict | Findings |
+|---|---|---|---|
+| Q1 | Blueprint pays off | **PASS** | 2, both component/content-level |
+| Q2 | Structured input defeats First-Noun | **PASS, strongly** | 1 minor |
+| Q3 | NOTICE outweighs EXPLAIN | **PASS on the criterion** | the stronger question is unanswerable here |
+| Q4 | Survives a concept with no English analogue | **PASS** | 1, and it matters |
+
+**No method-level failure.** COURSE_DESIGN Part 3 stands. Phase 4 proceeds.
+
+---
+
+## Q2 — the heuristic test, run item by item
+
+This is the one that decides whether anything else matters, and the criteria
+required it be *run* rather than asserted. Every focus-position item in Lessons
+5–8, answered using only "the first noun is what the sentence is about":
+
+| Item | Sentence | Heuristic says | Correct | Heuristic |
+|---|---|---|---|---|
+| `l5-n1` | `Gabadhu bariiska baa cuntay` | Gabadhu (the girl) | **bariiska** (the rice) | **fails ✓** |
+| `l5-n3` | `Sahra waxa ay salaamaysaa saaxiibkeed` | Sahra | **saaxiibkeed** | **fails ✓** |
+| `l5-n2` | `Sahra baa salaamaysa saaxiibkeed` | Sahra | **baa** | fails, but see F4 |
+
+`l5-n1` is the design's §1.10 example made into an item, and its explanation
+names the trap outright: *"the girl is the first thing in the sentence and the
+one doing the eating, and she is **not** the spotlight. Reaching for the first
+noun is the habit to break."*
+
+**The over-correction is guarded too**, which I did not expect. An item set where
+the answer is never the first noun would teach "never pick the first noun" —
+wrong in the opposite direction, and §1.12 says it would entrench just as hard.
+But `5-complete-1`, `5-produce-2` and `5-payoff` all put the spotlight **on**
+Sahra, the first noun, via `Sahra baa …`. Both errors are broken.
+
+And the minimal pair at the centre of the lesson:
+
+```
+Sahra baa salaamaysa saaxiibkeed.      → SAHRA is greeting her friend.
+Sahra waxa ay salaamaysaa saaxiibkeed. → Sahra is greeting her FRIEND.
+```
+
+Identical words. Opposite meaning. Nothing but the particle distinguishes them.
+That is *literally* the design's prescription — "structured input where the
+particle is the only disambiguator, engineered so word-order guessing fails" —
+and it is the promise, the payoff and the final production item.
+
+**§1.10 is not an aspiration in this course. It is implemented.**
+
+## Q1 — the blueprint
+
+All three pass conditions met. The L5 card is not the L2 card reshaded: it
+positions the new slot against the old (*"The SIGNAL sits right after WHO"*), and
+L6 explicitly says *"Same box as last time."* `connect` names the specific prior
+gain with actual forms (*"You can fill the WHO box — wiil, wiilka, Wiilku,
+isaga"*), and L6's names the exact sentence L5 ended on. The `promise` is
+concrete and `payoff` closes it in as many words: *"That was the promise, and you
+just did it."*
+
+Rendering verified in the browser: at L5, SIGNAL is white-on-black
+(`bg-accent`/`text-accent-ink`) against the other three at 8% fill and 30% label.
+The advance is real and legible.
+
+## Q3 — NOTICE vs EXPLAIN
+
+The criterion asked whether `notice` items *could* carry the form-meaning mapping
+without a prior rule statement. `l5-n1` demonstrably could: it presents a
+sentence, invites a wrong answer, and builds the mapping in the feedback rather
+than restating a rule already given. So the criterion passes, and the
+method-level failure condition (that such items are unauthorable for this
+material) does not hold.
+
+**But the stronger question cannot be answered by inspection, and it is honest to
+say so.** Lesson 5 follows §3.1's loop exactly — teach, then notice — so it never
+withholds explanation. Whether the explanation *adds* anything, which is what the
+processing-instruction replication puts in doubt, would need an A/B this project
+cannot run at n = 1 with the author as learner. **Q3's tension stays recorded and
+open.** The practical guidance in §3.1 (cut explanation before structured input)
+stands as the right default, unproven.
+
+On the raw ratio: L5's 4 `teach` to 3 `notice` is not padding. The four are a
+framing card plus one each for `waa`, `baa`, `waxa` — which is exactly §1.14's
+cap of ≤4 new items. There is nothing to cut.
+
+## Q4 — a concept with no English analogue
+
+Passes. The framing card **contrasts** rather than equates:
+
+> *"English emphasises a word by saying it louder… Somali does not do this.
+> Volume carries no meaning here. Instead a small word — the signal — goes into
+> the sentence… The signal does a job English hands to your tone of voice."*
+
+That is a *functional* mapping — both languages mark focus, by different means —
+which is true cross-linguistically, not a false form equation. It is the
+permitted form under the criterion. No jargon anywhere; D4 holds.
+
+---
+
+# Part 3 — The four findings
+
+All lesson- or component-level. None blocks Phase 4.
+
+**F1 — The blueprint has no "completed" state.** At Lesson 5, `WHO` renders
+identically to `WHAT` and `DO`: 8% fill, 30% label. But WHO is *finished* and
+WHAT has never been touched. The organizer distinguishes current from
+not-current, and nothing else. The `connect` prose carries the completion
+("You can fill the WHO box"), but §1.13 rates graphic organizers at 1.24 against
+prose at 0.80 — the information is in the weaker channel. Three states are
+needed where there are two. *Component fix, `Blueprint.tsx`, no content.*
+
+**F2 — `WHAT` never lights, in any lesson.** Across the eight authored lessons
+`blueprintSlot` is WHO ×3, SIGNAL ×2, DO ×2, **WHAT ×0**. The spine shows a
+four-part formula and the course fills three parts of it. Either Unit 3 or 4
+claims WHAT, or the blueprint is promising a box that does not exist. Worth
+settling before more lessons are written on top of it. *Content/scope decision.*
+
+**F3 — `waa` is only ever exemplified copularly, and that is the risky one.**
+Its sole Lesson 5 example is `Wiilku waa macallin` — "The boy is a teacher."
+Nothing in the lesson says `waa` is not the verb "to be", and a learner has every
+reason to conclude it. The card is careful (*"use waa when you would say the
+English sentence evenly"* — prosody, not copula), but careful is not the same as
+closed. `SOMALI_SOURCES §7` already records that Nilsson and Orwin **disagree**
+about `waa`'s analysis, which is exactly the kind of ambiguity a learner will
+resolve wrongly and permanently (§1.12). The first non-copular `waa` a learner
+meets is `way keentaa` in Lesson 7, two lessons later and not flagged as a
+correction. *Content fix: one non-copular `waa` example in Lesson 5, sourced.*
+
+**F4 — `l5-n2`'s hint gives it away positionally.** *"It is not the name and not
+the long word. It is the short one sitting second."* That answers the item
+without any knowledge of what `baa` does. The item is form-recognition wearing a
+`notice` label — legitimate as a step, but it contributes nothing to the §1.10
+defence while occupying one of the three notice slots. *Minor. Rewrite the hint.*
+
+---
+
+# Part 4 — What this means
+
+The method survives its own test. Against the standard set before looking:
+**Q2 did not fail at method level**, so new content is not blocked; **fewer than
+two method-level failures**, so §3.1's loop is not rewritten.
+
+The comfortable outcome, and the criteria anticipated that — so, for the record:
+the Q2 heuristic test was run item by item and the table above is the working,
+not a summary of an impression. The strongest evidence is the thing I expected to
+find missing and did not: the over-correction guard in F-Q2. Content that breaks
+*both* the First-Noun default and its mirror image is a stronger implementation
+of §1.10 than the design document actually asks for.
+
+The honest weakness is Q3. It passes its criterion and the criterion turns out to
+be the weaker half of the question. Nothing available at n = 1 fixes that.
+
+**Recommended order:** F3 first — it is the only finding that can entrench a
+wrong model. Then F1, then F4. F2 is a scope decision for Phase 4 rather than a
+repair.
