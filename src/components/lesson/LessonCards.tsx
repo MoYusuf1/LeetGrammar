@@ -238,7 +238,9 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
 
       {/* The step area is a fixed pane that scrolls internally, so the toolbar
           never moves between a short step and a long one. */}
-      <div className="flex-1 overflow-y-auto overscroll-contain px-5 pb-8 pt-[calc(var(--safe-t)+74px)]">
+      {/* Bottom padding clears the floating toolbar, which no longer occupies
+          layout space now that it is fixed. */}
+      <div className="flex-1 overflow-y-auto overscroll-contain px-5 pb-[calc(6rem+var(--safe-b))] pt-[calc(var(--safe-t)+74px)]">
         <div className="mx-auto max-w-column">
           {noMotion ? (
             deck
