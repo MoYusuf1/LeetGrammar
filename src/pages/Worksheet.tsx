@@ -8,13 +8,18 @@
  *
  * Content is derived from the lesson's vocab + authored practice exercises,
  * so there is nothing extra to maintain (see lib/worksheet.ts).
+ *
+ * NOT A NAV DESTINATION. A printable sheet is genuinely a separate document, so
+ * it kept its route when the UI collapsed onto /learn — but it is entered from a
+ * lesson's practice screen rather than listed anywhere.
  */
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { ArrowLeft, Printer, Eye, EyeOff } from 'lucide-react';
+import { X, Printer, Eye, EyeOff } from 'lucide-react';
 import { MAX_LESSON_ID } from '@/data/authored-lessons';
 import { buildWorksheet } from '@/lib/worksheet';
+import Somali from '@/components/Somali';
 
 export default function WorksheetPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,81 +34,86 @@ export default function WorksheetPage() {
 
   if (!worksheet) {
     return (
-      <div className="h-full flex items-center justify-center px-4 bg-[#0f0f0f]">
-        <p className="text-[#8c8c8c] text-sm">Worksheet not found.</p>
+      <div className="flex min-h-[100dvh] items-center justify-center bg-surface px-4">
+        <p className="text-body text-ink-muted">Worksheet not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-full bg-[#0f0f0f] print:bg-white">
-      <div className="max-w-[760px] mx-auto px-4 py-6 print:py-0 print:px-0">
-        {/* Action bar — hidden when printing */}
-        <div className="flex items-center justify-between mb-6 print:hidden">
+    <div className="min-h-[100dvh] bg-surface print:bg-white">
+      {/* Action bar — hidden when printing */}
+      <header className="sticky top-0 z-20 border-b border-border bg-surface px-4 pt-safe-t print:hidden">
+        <div className="mx-auto flex max-w-2xl items-center gap-2 py-2.5">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-sm text-[#8c8c8c] hover:text-[#eff1f6] transition-colors"
+            aria-label="Close"
+            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
           >
-            <ArrowLeft size={16} />
-            Back
+            <X className="h-[18px] w-[18px]" />
           </button>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowAnswers((s) => !s)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#ffffff08] text-[#c8c8c8] text-sm font-medium hover:bg-[#ffffff15] transition-colors"
-            >
-              {showAnswers ? <EyeOff size={15} /> : <Eye size={15} />}
-              {showAnswers ? 'Hide answers' : 'Show answers'}
-            </button>
-            <button
-              onClick={() => window.print()}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#ffa116] text-[#0f0f0f] text-sm font-bold hover:bg-[#ffa116d0] transition-colors"
-            >
-              <Printer size={15} />
-              Print / PDF
-            </button>
-          </div>
+          <span className="flex-1 text-small font-medium text-ink">Worksheet</span>
+          <button
+            onClick={() => setShowAnswers((s) => !s)}
+            className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-small font-medium text-ink-muted transition-colors hover:bg-surface-sunken"
+          >
+            {showAnswers ? <EyeOff size={15} /> : <Eye size={15} />}
+            <span className="hidden sm:inline">{showAnswers ? 'Hide answers' : 'Show answers'}</span>
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-1.5 rounded-lg bg-accent-strong px-3 py-2 text-small font-semibold text-white transition-colors hover:bg-accent-hover"
+          >
+            <Printer size={15} />
+            <span className="hidden sm:inline">Print</span>
+          </button>
         </div>
+      </header>
 
+      <div className="mx-auto max-w-2xl px-4 py-6 print:px-0 print:py-0">
         {/* Worksheet header */}
-        <header className="mb-6 pb-4 border-b border-[#ffffff10] print:border-black">
-          <p className="text-xs font-semibold text-[#ffa116] uppercase tracking-wider print:text-black">
+        <header className="mb-6 border-b border-border pb-4 print:border-black">
+          <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint print:text-black">
             Lesson {worksheet.lessonId} · Worksheet
           </p>
-          <h1 className="text-2xl font-bold text-[#eff1f6] mt-1 print:text-black">{worksheet.title}</h1>
-          <p className="text-sm text-[#8c8c8c] mt-2 print:text-black">
+          <h1 className="mt-1 text-title font-semibold text-ink print:text-black">
+            {worksheet.title}
+          </h1>
+          <p className="mt-2 text-small text-ink-muted print:text-black">
             Name: ______________________________&nbsp;&nbsp;&nbsp;Date: ____________________
           </p>
         </header>
 
         {/* Section A — Vocabulary */}
         <section className="mb-8">
-          <h2 className="text-sm font-bold text-[#eff1f6] uppercase tracking-wider mb-3 print:text-black">
+          <h2 className="mb-3 text-small font-semibold uppercase tracking-wider text-ink print:text-black">
             A. Vocabulary — write the English meaning
           </h2>
-          <div className="rounded-xl border border-[#ffffff10] overflow-hidden print:border-black print:rounded-none">
-            <table className="w-full text-sm">
+          <div className="overflow-hidden rounded-xl border border-border print:rounded-none print:border-black">
+            <table className="w-full text-small">
               <thead>
-                <tr className="bg-[#0f0f0f] print:bg-white">
-                  <th className="text-left px-4 py-2.5 text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider print:text-black">
+                <tr className="bg-surface-sunken print:bg-white">
+                  <th className="px-4 py-2.5 text-left text-micro font-semibold uppercase tracking-wider text-ink-faint print:text-black">
                     Somali
                   </th>
-                  <th className="text-left px-4 py-2.5 text-[10px] font-bold text-[#5c5c5c] uppercase tracking-wider print:text-black">
+                  <th className="px-4 py-2.5 text-left text-micro font-semibold uppercase tracking-wider text-ink-faint print:text-black">
                     English
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#ffffff08] print:divide-black/30">
+              <tbody className="divide-y divide-border print:divide-black">
                 {worksheet.vocab.map((w) => (
                   <tr key={w.rank}>
-                    <td className="px-4 py-2.5 text-[#eff1f6] font-medium font-mono print:text-black">
-                      {w.somali}
+                    <td className="px-4 py-2.5">
+                      <Somali className="print:text-black">{w.somali}</Somali>
                     </td>
                     <td className="px-4 py-2.5 print:text-black">
                       {showAnswers ? (
-                        <span className="text-[#00b8a3] print:text-black">{w.english}</span>
+                        <span className="text-success print:text-black">{w.english}</span>
                       ) : (
-                        <span className="text-[#3c3c3c] print:text-black">______________________</span>
+                        <span className="text-ink-faint print:text-black">
+                          ______________________
+                        </span>
                       )}
                     </td>
                   </tr>
@@ -116,24 +126,30 @@ export default function WorksheetPage() {
         {/* Section B — Practice */}
         {worksheet.practice.length > 0 && (
           <section className="mb-8 break-before-page">
-            <h2 className="text-sm font-bold text-[#eff1f6] uppercase tracking-wider mb-3 print:text-black">
+            <h2 className="mb-3 text-small font-semibold uppercase tracking-wider text-ink print:text-black">
               B. Practice — circle the correct answer
             </h2>
             <ol className="space-y-5">
               {worksheet.practice.map((ex, i) => {
-                const hasOptions = ex.type === 'multiple_choice' || ex.type === 'fill_blank' || ex.type === 'matching';
-                const answerText = ex.correctAnswer ?? (Array.isArray(ex.answer) ? ex.answer.join(' · ') : ex.answer);
+                const hasOptions =
+                  ex.type === 'multiple_choice' || ex.type === 'fill_blank' || ex.type === 'matching';
+                const answerText =
+                  ex.correctAnswer ?? (Array.isArray(ex.answer) ? ex.answer.join(' · ') : ex.answer);
                 return (
-                  <li key={i} className="text-sm">
-                    <p className="text-[#eff1f6] font-medium mb-2 print:text-black">
+                  <li key={i} className="text-small">
+                    <p className="mb-2 font-medium text-ink print:text-black">
                       {i + 1}. <Bold text={ex.question} />
                     </p>
                     {ex.somali && (
-                      <p className="text-[#eff1f6] font-mono mb-2 pl-4 print:text-black">{ex.somali}</p>
+                      <p className="mb-2 pl-4">
+                        <Somali size="lg" className="print:text-black">
+                          {ex.somali}
+                        </Somali>
+                      </p>
                     )}
                     {ex.type === 'unscramble' && ex.words && (
-                      <p className="text-[#c8c8c8] mb-2 pl-4 print:text-black">
-                        {ex.words.join(' / ')}
+                      <p className="mb-2 pl-4">
+                        <Somali className="print:text-black">{ex.words.join(' / ')}</Somali>
                       </p>
                     )}
                     {hasOptions ? (
@@ -144,7 +160,7 @@ export default function WorksheetPage() {
                             <p
                               key={j}
                               className={`print:text-black ${
-                                isAnswer ? 'text-[#00b8a3] font-semibold' : 'text-[#c8c8c8]'
+                                isAnswer ? 'font-semibold text-success' : 'text-ink-muted'
                               }`}
                             >
                               {String.fromCharCode(65 + j)}. {opt}
@@ -156,14 +172,16 @@ export default function WorksheetPage() {
                     ) : (
                       <p className="pl-4 print:text-black">
                         {showAnswers ? (
-                          <span className="text-[#00b8a3] print:text-black">{answerText}</span>
+                          <span className="text-success print:text-black">{answerText}</span>
                         ) : (
-                          <span className="text-[#3c3c3c] print:text-black">______________________________</span>
+                          <span className="text-ink-faint print:text-black">
+                            ______________________________
+                          </span>
                         )}
                       </p>
                     )}
                     {showAnswers && (
-                      <p className="text-xs text-[#8c8c8c] mt-1.5 pl-4 print:text-black">
+                      <p className="mt-1.5 pl-4 text-micro text-ink-muted print:text-black">
                         {ex.explanation}
                       </p>
                     )}
@@ -175,8 +193,8 @@ export default function WorksheetPage() {
         )}
 
         {/* Footer note — screen only */}
-        <p className="text-xs text-[#5c5c5c] mt-8 print:hidden">
-          Tip: toggle <span className="text-[#c8c8c8]">Show answers</span> to print a teacher answer key, or
+        <p className="mt-8 text-small text-ink-faint print:hidden">
+          Tip: toggle <span className="text-ink">Show answers</span> to print an answer key, or
           leave it off to print a blank worksheet.
         </p>
       </div>
@@ -191,6 +209,9 @@ export default function WorksheetPage() {
  * uses the markup to mark the Somali form under discussion, so every printed
  * sheet since the course was built showed `**Sahra baa...**`. The print channel
  * is the deep-reading half of the design, so it cannot show raw markup.
+ *
+ * Kept separate from components/RichText because that one colors with a theme
+ * token; on a printed page the emphasis has to be plain black.
  */
 function Bold({ text }: { text: string }) {
   return (

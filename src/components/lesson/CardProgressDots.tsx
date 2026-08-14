@@ -1,9 +1,11 @@
 /**
  * Card Progress Dots — Shows position in the lesson card stack.
  * Mobile-first: small dots, touch-friendly tap targets.
+ *
+ * Completed dots are tappable to step back; upcoming ones are not, because
+ * skipping ahead past a retrieval card would defeat the point of it being there
+ * (design rule S5).
  */
-
-import { Check } from 'lucide-react';
 
 interface CardProgressDotsProps {
   total: number;
@@ -14,7 +16,10 @@ interface CardProgressDotsProps {
 
 export default function CardProgressDots({ total, current, completed, onDotClick }: CardProgressDotsProps) {
   return (
-    <div className="flex items-center gap-1.5 overflow-x-auto hide-scrollbar py-1">
+    <div
+      className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-2"
+      aria-label={`Card ${current + 1} of ${total}`}
+    >
       {Array.from({ length: total }, (_, i) => {
         const isCompleted = completed.has(i);
         const isCurrent = i === current;
@@ -23,20 +28,22 @@ export default function CardProgressDots({ total, current, completed, onDotClick
           <button
             key={i}
             onClick={() => isCompleted && onDotClick?.(i)}
-            disabled={!isCompleted && i !== current}
-            className={`flex-shrink-0 w-2 h-2 rounded-full transition-all duration-300 ${
-              isCurrent
-                ? 'bg-[#ffa116] w-5 h-2 rounded-full'
-                : isCompleted
-                ? 'bg-[#22c55e]'
-                : 'bg-[#ffffff15]'
-            } ${isCompleted ? 'cursor-pointer hover:bg-[#22c55e80]' : 'cursor-default'}`}
+            disabled={!isCompleted && !isCurrent}
+            aria-label={`Card ${i + 1}${isCompleted ? ', done' : ''}`}
+            /* The hit area is the button; the visible mark is the inner span.
+               A 6px dot is not a tap target — this keeps the row slim while
+               staying tappable on a phone. */
+            className="group flex h-6 flex-shrink-0 items-center px-[1px]"
           >
-            {isCompleted && (
-              <div className="w-full h-full flex items-center justify-center">
-                <Check size={6} className="text-[#0f0f0f]" />
-              </div>
-            )}
+            <span
+              className={`block h-1.5 rounded-full transition-all duration-300 ${
+                isCurrent
+                  ? 'w-5 bg-accent'
+                  : isCompleted
+                    ? 'w-1.5 bg-accent'
+                    : 'w-1.5 bg-border-strong'
+              }`}
+            />
           </button>
         );
       })}

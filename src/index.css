@@ -2,104 +2,252 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===========================================================================
+   WARM PAPER — the design system.
+   ---------------------------------------------------------------------------
+   Replaces the inherited LeetCode dark theme (orange #ffa116 on near-black,
+   difficulty tokens, .lc-row, .node-glow). That palette came from the template
+   this project started as; it was never chosen for a language course.
+
+   TWO RULES THAT ARE LOAD-BEARING, NOT DECORATIVE:
+
+   1. ONE SOURCE FOR EVERY COLOR. The old stylesheet declared each color twice —
+      once as a custom property (--bg-card) and once as shadcn HSL (--card).
+      They happened to agree, and nothing made them. Here the semantic tokens
+      below are the source, and the shadcn compatibility block at the bottom is
+      DERIVED from them with var() rather than restated.
+
+   2. SERIF IS ONLY EVER SOMALI. This course is about noticing forms — doubled
+      vowels, and c/x/q/dh/kh. So the target language gets one consistent
+      treatment everywhere it appears (lesson prose, word chips, feedback,
+      glossary) and English never borrows it. See <Somali> in
+      src/components/Somali.tsx; do not hand-roll this styling per page.
+   =========================================================================== */
+
 @layer base {
   :root {
-    /* LeetCode Dark Theme */
-    --bg-primary: #0f0f0f;
-    --bg-secondary: #1a1a1a;
-    --bg-tertiary: #282828;
-    --bg-hover: #ffffff0d;
-    --bg-card: #282828;
-    --bg-input: #3e3e3e;
-    --bg-tooltip: #3e3e3e;
-    
-    --text-primary: #eff1f6;
-    --text-secondary: #8c8c8c;
-    --text-tertiary: #5c5c5c;
-    --text-link: #ffa116;
-    
-    --accent: #ffa116;
-    --accent-light: #ffa11620;
-    --accent-dark: #e69115;
-    
-    --success: #00b8a3;
-    --success-light: #00b8a320;
-    --error: #ff375f;
-    --error-light: #ff375f20;
-    --warning: #ffc01e;
-    --warning-light: #ffc01e20;
-    
-    --easy: #00b8a3;
-    --medium: #ffc01e;
-    --hard: #ff375f;
-    
-    --ios-border: #3e3e3e;
-    --border-light: #ffffff1a;
-    --border-focus: #ffa116;
-    
-    --path-gold: #ffc01e;
-    --path-current: #ffa116;
-    --path-locked: #5c5c5c;
+    color-scheme: light;
 
-    /* shadcn compatibility */
-    --background: 0 0% 10%;
-    --foreground: 220 13% 95%;
-    --card: 0 0% 16%;
-    --card-foreground: 220 13% 95%;
-    --popover: 0 0% 16%;
-    --popover-foreground: 220 13% 95%;
-    --primary: 35 100% 55%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 20%;
-    --secondary-foreground: 220 13% 95%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 55%;
-    --destructive: 348 100% 62%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 24%;
-    --input: 0 0% 24%;
-    --ring: 35 100% 55%;
-    --radius: 0.5rem;
+    /* Surfaces — warm off-white, not pure white. Pure white on a phone at
+       night is a flashlight; the paper cast also makes the accent read warm. */
+    --surface: #fbf7f0;
+    --surface-sunken: #f3ede3;
+    --card: #ffffff;
+    --card-raised: #ffffff;
+
+    /* Lines. Hairlines carry the layout here instead of shadows, which is why
+       there are two weights rather than one. */
+    --border: #e8dfd2;
+    --border-strong: #d8cbb8;
+
+    /* Ink */
+    --ink: #1c1a17;
+    --ink-muted: #6b635a;
+    --ink-faint: #9a9085;
+    --ink-inverse: #fbf7f0;
+
+    /* Accent — henna / burnt sienna.
+       Two values on purpose: --accent is for text and icons on a paper
+       background (~6.9:1). --accent-strong is for filled buttons, darkened so
+       white label text clears 4.5:1 — --accent alone does not. */
+    --accent: #b5451b;
+    --accent-strong: #9b3a15;
+    --accent-hover: #8a3312;
+    --accent-wash: #b5451b14;
+    --accent-line: #b5451b33;
+
+    /* State. Muted rather than signal-bright, so a wrong answer corrects
+       without scolding. */
+    --success: #2f6f4e;
+    --success-wash: #2f6f4e14;
+    --success-line: #2f6f4e33;
+    --error: #a8322b;
+    --error-wash: #a8322b14;
+    --error-line: #a8322b33;
+    --info: #3c5a78;
+    --info-wash: #3c5a7814;
+    --info-line: #3c5a7833;
+
+    /* Type */
+    --font-sans: 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont,
+      'Segoe UI', sans-serif;
+    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+    /* Layout. Mobile-first: this is a reading column, not a page width. */
+    --app-column: 34rem;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+
+    --radius: 0.75rem;
+  }
+
+  /* Dark counterpart. Warm-shifted so it reads as the same system after dark
+     rather than as a second theme — the greys carry the paper hue, and the
+     accent lifts because henna on near-black is muddy at full saturation. */
+  :root.dark {
+    color-scheme: dark;
+
+    --surface: #17140f;
+    --surface-sunken: #100e0a;
+    --card: #221e18;
+    --card-raised: #2a251d;
+
+    --border: #322c24;
+    --border-strong: #453d32;
+
+    --ink: #f2ede4;
+    --ink-muted: #a29685;
+    --ink-faint: #7a6f60;
+    --ink-inverse: #17140f;
+
+    --accent: #e8734a;
+    --accent-strong: #e8734a;
+    --accent-hover: #f08a66;
+    --accent-wash: #e8734a1a;
+    --accent-line: #e8734a3d;
+
+    --success: #5fbe8c;
+    --success-wash: #5fbe8c1a;
+    --success-line: #5fbe8c3d;
+    --error: #f0796d;
+    --error-wash: #f0796d1a;
+    --error-line: #f0796d3d;
+    --info: #8fb0cf;
+    --info-wash: #8fb0cf1a;
+    --info-line: #8fb0cf3d;
+  }
+
+  /* Follow the OS unless the learner has explicitly chosen. An explicit choice
+     adds .light or .dark to <html>; see src/lib/theme.ts. */
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light):not(.dark) {
+      color-scheme: dark;
+
+      --surface: #17140f;
+      --surface-sunken: #100e0a;
+      --card: #221e18;
+      --card-raised: #2a251d;
+
+      --border: #322c24;
+      --border-strong: #453d32;
+
+      --ink: #f2ede4;
+      --ink-muted: #a29685;
+      --ink-faint: #7a6f60;
+      --ink-inverse: #17140f;
+
+      --accent: #e8734a;
+      --accent-strong: #e8734a;
+      --accent-hover: #f08a66;
+      --accent-wash: #e8734a1a;
+      --accent-line: #e8734a3d;
+
+      --success: #5fbe8c;
+      --success-wash: #5fbe8c1a;
+      --success-line: #5fbe8c3d;
+      --error: #f0796d;
+      --error-wash: #f0796d1a;
+      --error-line: #f0796d3d;
+      --info: #8fb0cf;
+      --info-wash: #8fb0cf1a;
+      --info-line: #8fb0cf3d;
+    }
+  }
+
+  /* Tailwind's preflight defaults every border to currentColor, which makes an
+     unstyled border take the text color. shadcn normally sets this; keep it. */
+  * {
+    border-color: var(--border);
   }
 
   html {
     min-height: -webkit-fill-available;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    /* Was 14px. This app is paragraphs of explanation wrapped around Somali
+       examples — that is reading, not scanning, and 14px on a phone is dense
+       for it. */
+    font-size: 1rem;
+    line-height: 1.6;
+    background-color: var(--surface);
+    color: var(--ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 14px;
-    line-height: 1.5;
     overscroll-behavior: none;
     -webkit-tap-highlight-color: transparent;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  /* Selection color */
   ::selection {
-    background-color: rgba(255, 161, 22, 0.3);
-    color: #eff1f6;
+    background-color: var(--accent-wash);
+    color: var(--ink);
   }
 
-  * {
-    @apply border-[#3e3e3e];
-  }
-
-  button, a, input, select, textarea {
-    min-height: 0;
+  button,
+  a,
+  input,
+  select,
+  textarea {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
 
-  /* Prevent pull-to-refresh in lesson pages */
+  /* Every interactive element gets a visible ring. The old theme relied on
+     hover, which a touch device never fires. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   .lesson-container {
     overscroll-behavior-y: none;
+  }
+}
+
+@layer components {
+  /* -------------------------------------------------------------------------
+     THE SOMALI PRIMITIVE.
+     Prefer the <Somali> component over this class — it exists so the treatment
+     is defined once, in CSS, for the component to apply.
+     Serif + a little tracking + accent ink. The tracking is the point: the
+     course turns on seeing that `guri` became `guriga` and that `aa` is two
+     letters, and default sans tracking closes those up.
+     ------------------------------------------------------------------------- */
+  .somali {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: 0.015em;
+    color: var(--accent);
+    font-feature-settings: 'liga' 0;
+  }
+
+  .somali-lg {
+    font-size: 1.5rem;
+    line-height: 1.35;
+    letter-spacing: 0.03em;
+  }
+
+  .somali-block {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1.75rem;
+    line-height: 1.3;
+    letter-spacing: 0.035em;
+    color: var(--accent);
+  }
+
+  /* Bottom-anchored primary action. Mobile-first means the main button lives
+     in the thumb zone, clear of the home indicator. */
+  .action-bar {
+    padding-bottom: calc(0.75rem + var(--safe-bottom));
+    background: linear-gradient(
+      to top,
+      var(--surface) 60%,
+      color-mix(in srgb, var(--surface) 0%, transparent)
+    );
   }
 }
 
@@ -112,141 +260,72 @@
   display: none;
 }
 
-/* Custom scrollbar for dark theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-tertiary);
+  background: var(--border-strong);
   border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
-/* Confetti */
-.confetti {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  top: -10px;
-  animation: confetti-fall 3s ease-in forwards;
-}
-
-@keyframes confetti-fall {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(720deg);
-    opacity: 0;
-  }
-}
-
-/* Path step entrance */
-.path-step-enter {
-  animation: slide-up 0.4s ease-out forwards;
-  opacity: 0;
-}
-
-@keyframes slide-up {
+/* ---------------------------------------------------------------------------
+   Motion. Every animation here is also gated at runtime by lg-motion (see
+   src/lib/reduced-motion.ts) because a headless browser never fires
+   requestAnimationFrame, and a frozen card transition looks exactly like a
+   softlock. That cost real debugging time — see docs/WORKING_AGREEMENT.md.
+   --------------------------------------------------------------------------- */
+@keyframes fade-in {
   from {
-    transform: translateY(20px);
     opacity: 0;
+    transform: translateY(6px);
   }
   to {
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Current step pulse */
-.current-ring {
-  animation: pulse-ring 2s ease-in-out infinite;
-}
-
-@keyframes pulse-ring {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 161, 22, 0.4);
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
   }
   50% {
-    box-shadow: 0 0 0 12px rgba(255, 161, 22, 0);
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-4px);
   }
 }
 
-/* Page transition */
-.page-transition {
-  animation: fade-in 0.3s ease-out;
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Option shake for wrong answer */
 .option-shake {
   animation: shake 0.4s ease-in-out;
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-}
-
-/* Word chip animation */
-.word-chip {
-  transition: all 0.2s ease;
-}
-.word-chip:active {
-  transform: scale(0.95);
-}
-
-/* Tap feedback */
 .tap-scale {
   transition: transform 0.1s ease-out;
 }
 .tap-scale:active {
-  transform: scale(0.95);
-}
-
-/* CTA button shadow */
-.cta-button {
-  box-shadow: 0 4px 12px rgba(255, 161, 22, 0.3);
-  transition: all 0.15s ease-out;
-}
-.cta-button:active {
   transform: scale(0.97);
-  background-color: var(--accent-dark);
 }
 
-/* Completion ring animation */
-@keyframes ring-fill {
-  from { stroke-dashoffset: 283; }
-  to { stroke-dashoffset: var(--ring-offset, 0); }
-}
-
-.ring-animate {
-  animation: ring-fill 0.6s ease-out forwards;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.2s ease-out;
-}
-
-/* LeetCode-style table row hover */
-.lc-row:hover {
-  background-color: var(--bg-hover);
-}
-
-/* NeetCode node glow */
-.node-glow {
-  box-shadow: 0 0 20px rgba(255, 161, 22, 0.15);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

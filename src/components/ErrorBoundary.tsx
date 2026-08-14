@@ -26,20 +26,22 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center px-4">
-          <div className="text-center max-w-sm">
-            <div className="w-12 h-12 rounded-xl bg-[#ef4444]15 border border-[#ef4444]25 flex items-center justify-center mx-auto mb-4">
-              <span className="text-[#ef4444] text-xl">!</span>
+        <div className="flex min-h-[100dvh] items-center justify-center bg-surface px-4">
+          <div className="max-w-sm text-center">
+            {/* Was `bg-[#ef4444]15` — a malformed arbitrary value that Tailwind
+                never compiled, so this badge had no background at all. */}
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-error-line bg-error-wash">
+              <span className="text-heading text-error">!</span>
             </div>
-            <h1 className="text-lg font-bold text-[#eff1f6] mb-2">Something went wrong</h1>
-            <p className="text-sm text-[#8c8c8c] mb-6">
+            <h1 className="mb-2 text-heading font-semibold text-ink">Something went wrong</h1>
+            <p className="mb-6 text-small text-ink-muted">
               {this.state.error?.message || 'An unexpected error occurred.'}
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 rounded-lg bg-[#ffa116] text-[#0f0f0f] text-sm font-semibold hover:bg-[#ffb800] transition-colors"
+              className="rounded-xl bg-accent-strong px-5 py-3 text-small font-semibold text-white transition-colors hover:bg-accent-hover"
             >
-              Reload Page
+              Reload page
             </button>
           </div>
         </div>

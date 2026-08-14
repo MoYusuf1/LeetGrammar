@@ -8,12 +8,17 @@
  *   - Card position persistence (resume where you left off)
  *   - Lesson completion tracking
  *   - XP and streak updates
+ *
+ * Presentation is the warm-paper system (see src/index.css). Only styling
+ * changed in the rewrite — the flow, the vocab-injection point, the AnswerInput
+ * key and the motion fallback are all load-bearing and are unchanged. Read the
+ * comments before touching any of them.
  */
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, BookA } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent } from '@/data/authored-lessons';
 import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
@@ -21,6 +26,9 @@ import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import CardProgressDots from './CardProgressDots';
 import AnswerInput from './AnswerInput';
+import Somali from '@/components/Somali';
+import RichText from '@/components/RichText';
+import GlossarySheet from '@/components/GlossarySheet';
 import { contentStagger } from './motion';
 import { prefersNoMotion } from '@/lib/reduced-motion';
 
@@ -38,32 +46,6 @@ interface VocabFlowCard {
 }
 
 type FlowCard = TeachingCard | VocabFlowCard;
-
-/* ─── Rich text ──────────────────────────────────────────────────────────── */
-
-/**
- * Renders `**bold**` segments as <strong>, everything else as plain text.
- *
- * Authored lesson content uses `**` to mark the Somali form under discussion,
- * which is the single most important thing on the card. Without this the
- * learner reads literal asterisks. Deliberately not a full markdown parser —
- * `**` is the only markup the content uses, and text is never dangerously set.
- */
-function RichText({ text }: { text: string }) {
-  return (
-    <>
-      {text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
-        seg.startsWith('**') && seg.endsWith('**') && seg.length > 4 ? (
-          <strong key={i} className="font-semibold text-[#eff1f6]">
-            {seg.slice(2, -2)}
-          </strong>
-        ) : (
-          seg
-        ),
-      )}
-    </>
-  );
-}
 
 /* ─── Card Animation Variants ────────────────────────────────────────────── */
 
@@ -102,6 +84,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const [practiceAnswer, setPracticeAnswer] = useState<string | null>(null);
   const [practiceChecked, setPracticeChecked] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showGlossary, setShowGlossary] = useState(false);
   const [noMotion] = useState(prefersNoMotion);
 
   /* Persist position to the progress store. */
@@ -175,13 +158,11 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   /* All hooks are declared above — safe to bail out for a missing lesson now. */
   if (!content) {
     return (
-      <div className="min-h-full bg-[#0f0f0f] flex items-center justify-center px-4">
-        <p className="text-[#8c8c8c] text-sm">Lesson content not found.</p>
+      <div className="flex min-h-[100dvh] items-center justify-center bg-surface px-4">
+        <p className="text-small text-ink-muted">Lesson content not found.</p>
       </div>
     );
   }
-
-  /* ─── Swipe handlers ───────────────────────────────────────────────────── */
 
   /* ─── Practice handlers ────────────────────────────────────────────────── */
 
@@ -212,18 +193,19 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   /* ─── Render ───────────────────────────────────────────────────────────── */
 
   return (
-    <div className="h-full flex flex-col bg-[#0f0f0f]">
-      {/* Top Bar */}
-      <div className="flex-shrink-0 px-4 pt-3 pb-2">
-        <div className="max-w-[600px] mx-auto flex items-center gap-3">
+    <div className="lesson-container flex min-h-[100dvh] flex-col bg-surface">
+      {/* Top bar */}
+      <header className="sticky top-0 z-20 flex-shrink-0 border-b border-border bg-surface px-4 pt-safe-t">
+        <div className="mx-auto flex max-w-column items-center gap-3 py-2.5">
           <button
             onClick={handleExit}
-            className="w-9 h-9 rounded-full bg-[#ffffff08] flex items-center justify-center hover:bg-[#ffffff15] transition-colors flex-shrink-0"
+            aria-label="Close lesson"
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
           >
-            <X size={18} className="text-[#8c8c8c]" />
+            <X className="h-[18px] w-[18px]" />
           </button>
 
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <CardProgressDots
               total={cards.length}
               current={cardIndex}
@@ -232,15 +214,25 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
             />
           </div>
 
-          <span className="text-xs text-[#5c5c5c] font-medium flex-shrink-0 tabular-nums">
+          <span className="flex-shrink-0 text-micro font-medium tabular-nums text-ink-faint">
             {cardIndex + 1}/{cards.length}
           </span>
-        </div>
-      </div>
 
-      {/* Card Content */}
-      <div className="flex-1 overflow-y-auto hide-scrollbar px-4 pb-4">
-        <div className="max-w-[600px] mx-auto">
+          {/* The glossary lives here rather than in a nav, because the moment a
+              learner wants it is the moment they are mid-lesson. */}
+          <button
+            onClick={() => setShowGlossary(true)}
+            aria-label="Open glossary"
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
+          >
+            <BookA className="h-[18px] w-[18px]" />
+          </button>
+        </div>
+      </header>
+
+      {/* Card content */}
+      <div className="flex-1 px-4 pb-4">
+        <div className="mx-auto max-w-column">
           {/* With motion off the card renders directly. `AnimatePresence
               mode="wait"` holds the outgoing card until its exit animation
               finishes, and that animation needs requestAnimationFrame — which
@@ -279,9 +271,9 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
         </div>
       </div>
 
-      {/* Bottom Action Bar */}
-      <div className="flex-shrink-0 px-4 pb-5 pt-2 safe-bottom bg-gradient-to-t from-[#0f0f0f] via-[#0f0f0f] to-transparent">
-        <div className="max-w-[600px] mx-auto">
+      {/* Bottom action — in the thumb zone, clear of the home indicator. */}
+      <div className="action-bar sticky bottom-0 z-10 flex-shrink-0 px-4 pt-3">
+        <div className="mx-auto max-w-column">
           <BottomAction
             card={currentCard}
             isLastCard={isLastCard}
@@ -294,33 +286,31 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
         </div>
       </div>
 
-      {/* Exit Confirmation Modal */}
+      {showGlossary && <GlossarySheet onClose={() => setShowGlossary(false)} />}
+
+      {/* Exit confirmation */}
       {showExitConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-[#141414] border border-[#ffffff10] rounded-2xl p-6 max-w-sm w-full"
-          >
-            <h3 className="text-base font-bold text-[#eff1f6] mb-2">Leave Lesson?</h3>
-            <p className="text-sm text-[#8c8c8c] mb-5">
-              Your progress is saved. You can resume where you left off.
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-[2px]">
+          <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-raised animate-fade-in">
+            <h3 className="mb-1.5 text-heading font-semibold text-ink">Leave this lesson?</h3>
+            <p className="mb-5 text-small text-ink-muted">
+              Your place is saved — you will come back to this card.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowExitConfirm(false)}
-                className="flex-1 py-2.5 rounded-xl bg-[#ffffff08] text-[#eff1f6] text-sm font-medium hover:bg-[#ffffff15] transition-colors"
+                className="flex-1 rounded-xl bg-accent-strong py-3 text-small font-semibold text-white transition-colors hover:bg-accent-hover"
               >
                 Stay
               </button>
               <button
                 onClick={() => navigate(-1)}
-                className="flex-1 py-2.5 rounded-xl bg-[#ef444420] text-[#ef4444] text-sm font-medium hover:bg-[#ef444430] transition-colors"
+                className="flex-1 rounded-xl border border-border-strong py-3 text-small font-semibold text-ink-muted transition-colors hover:bg-surface-sunken"
               >
                 Leave
               </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
     </div>
@@ -383,17 +373,24 @@ function RenderCard({
   }
 }
 
+/** Small caps label above a card. One shape for every card role. */
+function CardLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">
+      {children}
+    </p>
+  );
+}
+
 /* ─── Intro Card ─────────────────────────────────────────────────────────── */
 
 function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: string }) {
   return (
-    <div className="space-y-5 pt-4">
-      {/* Title */}
+    <div className="space-y-5 pt-6">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
-        <h1 className="text-2xl font-bold text-[#eff1f6]">{lessonTitle}</h1>
-        <p className="text-sm text-[#8c8c8c] mt-1">
+        <CardLabel>
           {card.type === 'promise'
-            ? 'By lesson end, you\'ll:'
+            ? "By lesson end, you'll:"
             : card.type === 'blueprint'
               ? 'Learn about:'
               : card.type === 'payoff'
@@ -403,25 +400,27 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
                   : card.type === 'predict'
                     ? 'Have a guess first:'
                     : 'In this lesson you will learn:'}
-        </p>
+        </CardLabel>
+        <h1 className="mt-1.5 text-title font-semibold text-ink">{lessonTitle}</h1>
       </motion.div>
 
-      {/* Prompt/content (show as text) */}
       {card.prompt && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <p className="text-sm text-[#c8c8c8] leading-relaxed whitespace-pre-wrap"><RichText text={card.prompt} /></p>
+          <p className="whitespace-pre-wrap text-lead text-ink-muted">
+            <RichText text={card.prompt} />
+          </p>
         </motion.div>
       )}
 
-      {/* Content (for blueprint ASCII diagrams or longer text) */}
+      {/* Blueprint diagrams are drawn with box characters and must stay
+          monospaced — the alignment is the diagram. */}
       {card.content && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <pre className="bg-[#141414] border border-[#ffffff08] rounded-xl p-4 text-xs text-[#c8c8c8] font-mono whitespace-pre-wrap overflow-auto">
+          <pre className="overflow-auto rounded-xl border border-border bg-card p-4 font-mono text-micro text-ink-muted">
             {card.content}
           </pre>
         </motion.div>
       )}
-
     </div>
   );
 }
@@ -430,13 +429,11 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
 
 function VocabCard({ words }: { words: VocabWord[] }) {
   return (
-    <div className="space-y-5 pt-4">
+    <div className="space-y-5 pt-6">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
-        <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#00b8a315] border border-[#00b8a330] text-xs font-semibold text-[#00b8a3]">
-          Vocabulary · {words.length} words
-        </span>
-        <p className="text-sm text-[#8c8c8c] mt-3 leading-relaxed">
-          Key high-frequency words for this lesson. You&apos;ll meet these again in the practice and worksheet.
+        <CardLabel>Vocabulary · {words.length} words</CardLabel>
+        <p className="mt-1.5 text-lead text-ink-muted">
+          Words for this lesson. You will meet them again in the practice.
         </p>
       </motion.div>
 
@@ -445,15 +442,22 @@ function VocabCard({ words }: { words: VocabWord[] }) {
         variants={contentStagger}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+        className="overflow-hidden rounded-xl border border-border bg-card"
       >
-        {words.map((w) => (
-          <div key={w.rank} className="bg-[#141414] border border-[#ffffff08] rounded-xl p-3.5">
-            <div className="flex items-baseline justify-between gap-2">
-              <p className="text-base font-semibold text-[#eff1f6] font-mono">{w.somali}</p>
-              <span className="text-[9px] uppercase tracking-wider text-[#5c5c5c] flex-shrink-0">{w.pos}</span>
+        {words.map((w, i) => (
+          <div
+            key={w.rank}
+            className={`flex items-baseline justify-between gap-3 px-4 py-3 ${
+              i === 0 ? '' : 'border-t border-border'
+            }`}
+          >
+            <div className="min-w-0">
+              <Somali size="lg">{w.somali}</Somali>
+              <p className="mt-0.5 text-small text-ink-muted">{w.english}</p>
             </div>
-            <p className="text-sm text-[#8c8c8c] mt-0.5">{w.english}</p>
+            <span className="flex-shrink-0 text-micro uppercase tracking-wider text-ink-faint">
+              {w.pos}
+            </span>
           </div>
         ))}
       </motion.div>
@@ -465,19 +469,21 @@ function VocabCard({ words }: { words: VocabWord[] }) {
 
 function TeachCard({ card }: { card: TeachingCard }) {
   return (
-    <div className="space-y-5 pt-4">
-      {/* Title / Badge */}
+    <div className="space-y-5 pt-6">
       {card.title && (
         <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
-          <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#ffa11615] border border-[#ffa11630] text-xs font-semibold text-[#ffa116]">
-            {card.title}
-          </span>
+          <CardLabel>{card.title}</CardLabel>
         </motion.div>
       )}
 
-      {/* Content — formatted text (markdown-style) */}
       {card.content && (
-        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="text-sm text-[#c8c8c8] leading-relaxed whitespace-pre-wrap">
+        <motion.div
+          custom={1}
+          variants={contentStagger}
+          initial="hidden"
+          animate="visible"
+          className="text-lead text-ink"
+        >
           {card.content.split('\n\n').map((para, i) => (
             <p key={i} className="mb-4">
               {para.split('\n').map((line, j) => (
@@ -490,7 +496,6 @@ function TeachCard({ card }: { card: TeachingCard }) {
           ))}
         </motion.div>
       )}
-
     </div>
   );
 }
@@ -509,16 +514,17 @@ function PracticeCard({
   onSelect: (a: string) => void;
 }) {
   return (
-    <div className="space-y-5 pt-4">
-      {/* Question */}
+    <div className="space-y-5 pt-6">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#3b82f615] border border-[#3b82f630] text-[10px] font-bold text-[#3b82f6] uppercase tracking-wider mb-3">
-          Practice
-        </span>
-        <p className="text-lg font-medium text-[#eff1f6] leading-relaxed"><RichText text={exercise.question} /></p>
+        <CardLabel>Practice</CardLabel>
+        <p className="mt-1.5 text-lead font-medium text-ink">
+          <RichText text={exercise.question} />
+        </p>
+        {/* A typed field on the exercise, so this is guaranteed Somali — safe
+            to give the serif treatment. */}
         {exercise.somali && (
-          <div className="bg-[#141414] border border-[#ffffff08] rounded-xl p-4 mt-3">
-            <p className="text-xl font-semibold text-[#eff1f6] font-mono">{exercise.somali}</p>
+          <div className="mt-3 rounded-xl border border-border bg-card px-4 py-4 text-center">
+            <Somali size="block">{exercise.somali}</Somali>
           </div>
         )}
       </motion.div>
@@ -536,24 +542,24 @@ function PracticeCard({
       {/* Typed answers are self-graded here. The unit test grades them instead,
           which is why its items are single words with one spelling. */}
       {(exercise.type === 'translate' || exercise.type === 'marker_identification') && (
-        <p className="text-[10px] text-[#5c5c5c] -mt-3">
+        <p className="-mt-3 text-micro text-ink-faint">
           Type your best answer, then check — you grade yourself against the explanation below.
         </p>
       )}
 
-      {/* Hint (always visible) */}
       <motion.div
         custom={2}
         variants={contentStagger}
         initial="hidden"
         animate="visible"
-        className="rounded-xl bg-[#22d3ee08] border border-[#22d3ee20] p-4"
+        className="rounded-xl border border-border bg-surface-sunken p-4"
       >
-        <p className="text-[10px] font-bold text-[#22d3ee] uppercase tracking-wider mb-1">Hint</p>
-        <p className="text-sm text-[#8c8c8c]"><RichText text={exercise.hint} /></p>
+        <CardLabel>Hint</CardLabel>
+        <p className="mt-1 text-small text-ink-muted">
+          <RichText text={exercise.hint} />
+        </p>
       </motion.div>
 
-      {/* Feedback (after check) */}
       {checked && <PracticeFeedback exercise={exercise} answer={answer} />}
     </div>
   );
@@ -562,25 +568,33 @@ function PracticeCard({
 function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; answer: string | null }) {
   const isCorrect = isAnswerCorrect(exercise, answer);
   const isSelfGraded = exercise.type === 'translate' || exercise.type === 'marker_identification';
+  const positive = isCorrect || isSelfGraded;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className={`rounded-xl border p-4 ${
-        isCorrect || isSelfGraded
-          ? 'bg-[#22c55e10] border-[#22c55e30]'
-          : 'bg-[#ef444410] border-[#ef444430]'
+        positive ? 'border-success-line bg-success-wash' : 'border-error-line bg-error-wash'
       }`}
     >
-      <p className={`text-sm font-bold mb-1 ${isCorrect || isSelfGraded ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
-        {isSelfGraded
-          ? `Answer: ${displayAnswer(exercise)}`
-          : isCorrect
-          ? 'Correct! Great job!'
-          : `Not quite! The answer is: ${displayAnswer(exercise)}`}
+      <p className={`mb-1 text-small font-semibold ${positive ? 'text-success' : 'text-error'}`}>
+        {isSelfGraded ? (
+          <>
+            Answer: <Somali tone="inherit">{displayAnswer(exercise)}</Somali>
+          </>
+        ) : isCorrect ? (
+          'Correct'
+        ) : (
+          <>
+            Not quite — the answer is{' '}
+            <Somali tone="inherit">{displayAnswer(exercise)}</Somali>
+          </>
+        )}
       </p>
-      <p className="text-sm text-[#c8c8c8] leading-relaxed"><RichText text={exercise.explanation} /></p>
+      <p className="text-small leading-relaxed text-ink">
+        <RichText text={exercise.explanation} />
+      </p>
     </motion.div>
   );
 }
@@ -590,22 +604,19 @@ function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; an
 
 function SummaryCard({ card }: { card: TeachingCard }) {
   return (
-    <div className="space-y-5 pt-4 text-center">
-      {/* Celebration */}
+    <div className="space-y-5 pt-6">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
-        <div className="w-16 h-16 rounded-full bg-[#22c55e15] border border-[#22c55e30] flex items-center justify-center mx-auto mb-4">
-          <span className="text-3xl">🎉</span>
-        </div>
-        <h2 className="text-xl font-bold text-[#eff1f6]">{card.title}</h2>
+        <CardLabel>Lesson complete</CardLabel>
+        <h2 className="mt-1.5 text-title font-semibold text-ink">{card.title}</h2>
       </motion.div>
 
-      {/* Content summary */}
       {card.content && (
-        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="text-left">
-          <p className="text-sm text-[#c8c8c8] leading-relaxed whitespace-pre-wrap"><RichText text={card.content} /></p>
+        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
+          <p className="whitespace-pre-wrap text-lead text-ink-muted">
+            <RichText text={card.content} />
+          </p>
         </motion.div>
       )}
-
     </div>
   );
 }
@@ -634,47 +645,43 @@ function BottomAction({
   const isPracticeCard =
     cardType === 'notice' || cardType === 'complete' || cardType === 'produce';
 
-  if (!isPracticeCard) {
-    const label = isLastCard ? 'Complete Lesson' : 'Got it!';
-    const bgColor = isLastCard ? 'bg-[#22c55e] hover:bg-[#22c55ed0]' : 'bg-[#ffa116] hover:bg-[#ffa116d0]';
+  const base =
+    'tap-scale w-full rounded-xl py-4 text-body font-semibold transition-colors min-h-[52px]';
 
+  if (!isPracticeCard) {
     return (
       <button
         onClick={onPrimary}
-        className={`w-full py-3.5 rounded-2xl text-sm font-bold text-[#0f0f0f] transition-all active:scale-[0.98] touch-target ${bgColor}`}
+        className={`${base} bg-accent-strong text-white hover:bg-accent-hover`}
       >
-        {label}
+        {isLastCard ? 'Finish lesson' : 'Got it'}
       </button>
     );
   }
 
   /* Practice cards: Check → Continue */
-  {
-    if (!practiceChecked) {
-      return (
-        <button
-          onClick={onCheck}
-          disabled={!practiceAnswer}
-          className={`w-full py-3.5 rounded-2xl text-sm font-bold transition-all active:scale-[0.98] touch-target ${
-            practiceAnswer
-              ? 'bg-[#3b82f6] hover:bg-[#3b82f6d0] text-white'
-              : 'bg-[#ffffff08] text-[#5c5c5c] cursor-not-allowed'
-          }`}
-        >
-          Check Answer
-        </button>
-      );
-    }
-
+  if (!practiceChecked) {
     return (
       <button
-        onClick={onContinue}
-        className="w-full py-3.5 rounded-2xl text-sm font-bold text-[#0f0f0f] bg-[#22c55e] hover:bg-[#22c55ed0] transition-all active:scale-[0.98] touch-target"
+        onClick={onCheck}
+        disabled={!practiceAnswer}
+        className={`${base} ${
+          practiceAnswer
+            ? 'bg-accent-strong text-white hover:bg-accent-hover'
+            : 'cursor-not-allowed bg-surface-sunken text-ink-faint'
+        }`}
       >
-        {isLastCard ? 'Complete Lesson' : 'Continue'}
+        Check answer
       </button>
     );
   }
 
-  return null;
+  return (
+    <button
+      onClick={onContinue}
+      className={`${base} bg-accent-strong text-white hover:bg-accent-hover`}
+    >
+      {isLastCard ? 'Finish lesson' : 'Continue'}
+    </button>
+  );
 }

@@ -14,11 +14,15 @@
  *
  * Nothing in this file knows whether it is inside a lesson or a test. Framing
  * (hints, feedback, self-grading notes) belongs to the caller.
+ *
+ * The warm-paper rewrite changed presentation only. Every piece of state
+ * handling below carries a comment explaining a bug it fixed — leave it alone.
  */
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { PracticeExercise } from '@/data/types';
+import Somali from '@/components/Somali';
 import { contentStagger } from './motion';
 
 export interface AnswerInputProps {
@@ -54,6 +58,12 @@ export default function AnswerInput(props: AnswerInputProps) {
 
 /* ─── Choice Exercise (multiple_choice / fill_blank / matching) ─────────────── */
 
+/*
+ * Options are NOT rendered with <Somali>. Some are Somali forms and some are
+ * English propositions ("gender is a grammar label, not a fact about the
+ * object") — nothing in the data distinguishes them, and marking an English
+ * sentence as Somali is worse than marking neither.
+ */
 function ChoiceExercise({ exercise, answer, checked, onSelect }: AnswerInputProps) {
   const isCorrect = checked && answer === exercise.correctAnswer;
   return (
@@ -63,36 +73,39 @@ function ChoiceExercise({ exercise, answer, checked, onSelect }: AnswerInputProp
         const isCorrectOption = checked && option === exercise.correctAnswer;
         const isWrongOption = checked && isSelected && !isCorrect;
 
-        let borderColor = 'border-[#ffffff08]';
-        let bgColor = 'bg-[#141414]';
-        if (isCorrectOption) { borderColor = 'border-[#22c55e]'; bgColor = 'bg-[#22c55e15]'; }
-        else if (isWrongOption) { borderColor = 'border-[#ef4444]'; bgColor = 'bg-[#ef444415]'; }
-        else if (isSelected && !checked) { borderColor = 'border-[#ffa116]'; bgColor = 'bg-[#ffa11610]'; }
+        let tone = 'border-border bg-card';
+        if (isCorrectOption) tone = 'border-success-line bg-success-wash';
+        else if (isWrongOption) tone = 'border-error-line bg-error-wash';
+        else if (isSelected && !checked) tone = 'border-accent bg-accent-wash';
 
         return (
           <button
             key={i}
             onClick={() => onSelect(option)}
             disabled={checked}
-            className={`w-full p-4 rounded-xl border ${borderColor} ${bgColor} text-left transition-all duration-200 ${
-              checked ? 'cursor-default' : 'cursor-pointer hover:border-[#ffffff15] active:scale-[0.98]'
+            className={`w-full rounded-xl border p-4 text-left transition-colors ${tone} ${
+              checked ? 'cursor-default' : 'tap-scale cursor-pointer hover:border-border-strong'
             }`}
           >
             <div className="flex items-center gap-3">
-              <span className={`w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                isCorrectOption
-                  ? 'border-[#22c55e] bg-[#22c55e] text-[#0f0f0f]'
-                  : isWrongOption
-                  ? 'border-[#ef4444] bg-[#ef4444] text-[#0f0f0f]'
-                  : isSelected
-                  ? 'border-[#ffa116] text-[#ffa116]'
-                  : 'border-[#ffffff15] text-[#5c5c5c]'
-              }`}>
+              <span
+                className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border text-micro font-bold ${
+                  isCorrectOption
+                    ? 'border-success bg-success text-white'
+                    : isWrongOption
+                      ? 'border-error bg-error text-white'
+                      : isSelected
+                        ? 'border-accent text-accent'
+                        : 'border-border-strong text-ink-faint'
+                }`}
+              >
                 {isCorrectOption ? '✓' : isWrongOption ? '✕' : String.fromCharCode(65 + i)}
               </span>
-              <span className={`text-sm font-medium ${
-                isCorrectOption ? 'text-[#22c55e]' : isWrongOption ? 'text-[#ef4444]' : 'text-[#eff1f6]'
-              }`}>
+              <span
+                className={`text-body font-medium ${
+                  isCorrectOption ? 'text-success' : isWrongOption ? 'text-error' : 'text-ink'
+                }`}
+              >
                 {option}
               </span>
             </div>
@@ -144,14 +157,18 @@ function UnscrambleExercise({ exercise, answer, checked, onSelect }: AnswerInput
 
   return (
     <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-3">
-      {/* Assembled sentence */}
-      <div className="min-h-[52px] rounded-xl bg-[#141414] border border-[#ffffff08] p-3 flex flex-wrap gap-2 items-center">
+      {/* The sentence being assembled. Words here are always Somali — an
+          unscramble reorders a Somali sentence — so the serif applies. */}
+      <div className="flex min-h-[60px] flex-wrap items-center gap-2 rounded-xl border border-dashed border-border-strong bg-card p-3">
         {placed.length === 0 ? (
-          <span className="text-sm text-[#5c5c5c]">Tap words below in order…</span>
+          <span className="text-small text-ink-faint">Tap the words below, in order…</span>
         ) : (
           placed.map((w, i) => (
-            <span key={i} className="px-2.5 py-1 rounded-lg bg-[#ffa11615] border border-[#ffa11630] text-sm font-medium text-[#eff1f6]">
-              {w}
+            <span
+              key={i}
+              className="rounded-lg border border-accent-line bg-accent-wash px-2.5 py-1"
+            >
+              <Somali>{w}</Somali>
             </span>
           ))
         )}
@@ -164,19 +181,22 @@ function UnscrambleExercise({ exercise, answer, checked, onSelect }: AnswerInput
             key={i}
             onClick={() => tap(word, i)}
             disabled={checked || used[i]}
-            className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+            className={`rounded-lg border px-3 py-2 transition-colors ${
               used[i]
-                ? 'opacity-30 border-[#ffffff08] bg-[#0f0f0f] text-[#5c5c5c] cursor-not-allowed'
-                : 'border-[#ffffff15] bg-[#1a1a1a] text-[#eff1f6] hover:border-[#ffffff25] active:scale-[0.95]'
+                ? 'cursor-not-allowed border-border bg-surface-sunken opacity-40'
+                : 'tap-scale border-border-strong bg-card hover:border-accent'
             }`}
           >
-            {word}
+            <Somali>{word}</Somali>
           </button>
         ))}
       </div>
 
       {!checked && placed.length > 0 && (
-        <button onClick={reset} className="text-xs text-[#5c5c5c] hover:text-[#8c8c8c] transition-colors">
+        <button
+          onClick={reset}
+          className="text-small text-ink-faint underline underline-offset-4 transition-colors hover:text-ink"
+        >
           Reset
         </button>
       )}
@@ -189,13 +209,21 @@ function UnscrambleExercise({ exercise, answer, checked, onSelect }: AnswerInput
 function FreeResponseExercise({ exercise, answer, checked, onSelect }: AnswerInputProps) {
   return (
     <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
+      {/* What gets typed here is Somali in both cases — a translation into
+          Somali, or the marker itself — so the field uses the serif. It also
+          reinforces that the learner is producing the target language rather
+          than talking about it. */}
       <input
         type="text"
         value={answer ?? ''}
         disabled={checked}
         onChange={(e) => onSelect(e.target.value)}
+        lang="so"
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
         placeholder={exercise.type === 'marker_identification' ? 'Type the marker…' : 'Type your answer in Somali…'}
-        className="w-full p-4 rounded-xl bg-[#141414] border border-[#ffffff08] text-[#eff1f6] text-sm placeholder:text-[#5c5c5c] focus:outline-none focus:border-[#ffa11640]"
+        className="somali somali-lg w-full rounded-xl border border-border bg-card p-4 placeholder:font-sans placeholder:text-body placeholder:font-normal placeholder:tracking-normal placeholder:text-ink-faint focus:border-accent focus:outline-none disabled:opacity-70"
       />
     </motion.div>
   );

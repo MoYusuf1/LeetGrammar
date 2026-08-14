@@ -24,12 +24,14 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, X, RotateCcw, Target } from 'lucide-react';
+import { X, RotateCcw, Printer } from 'lucide-react';
 import { getLessonContent } from '@/data/authored-lessons';
 import { composeHomework, carryBackCount } from '@/lib/homework';
 import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { useProgressStore } from '@/stores/progress-store';
 import AnswerInput from '@/components/lesson/AnswerInput';
+import RichText from '@/components/RichText';
+import Somali from '@/components/Somali';
 
 type Phase = 'intro' | 'working' | 'done';
 
@@ -95,34 +97,45 @@ export default function HomeworkPage() {
 
   if (phase === 'intro') {
     return (
-      <Shell onBack={() => navigate('/learn')}>
-        <p className="text-xs font-semibold text-[#22d3ee] uppercase tracking-wider">
-          Lesson {lessonId} · Homework
+      <Shell onClose={() => navigate('/learn')} title="Practice">
+        <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">
+          Lesson {lessonId}
         </p>
-        <h1 className="text-2xl font-bold text-[#eff1f6] mt-1">{lesson.title}</h1>
-        <p className="text-sm text-[#8c8c8c] mt-2 leading-relaxed">
-          A mixed set — most of it from this lesson, some of it from earlier ones so the older
+        <h1 className="mt-1.5 text-title font-semibold text-ink">{lesson.title}</h1>
+        <p className="mt-2 text-lead text-ink-muted">
+          A mixed set — most of it from this lesson, some from earlier ones so the older
           material does not go quiet.
         </p>
 
-        <div className="mt-6 rounded-xl border border-[#ffffff10] bg-[#141414] p-4 space-y-2.5 text-sm text-[#c8c8c8]">
-          <Row label="Questions" value={`${items.length}`} />
+        <dl className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
+          <Row label="Questions" value={`${items.length}`} first />
           <Row label="From earlier lessons" value={`${carried}`} />
           <Row label="Hints" value="On — this is practice" />
           <Row label="Unlocking" value="Nothing is gated by this" />
           {best !== undefined && <Row label="Your best" value={`${best}%`} />}
-        </div>
+        </dl>
 
-        <p className="text-xs text-[#5c5c5c] mt-4 leading-relaxed">
+        <p className="mt-4 text-small text-ink-faint">
           Come back to this a few days after finishing the lesson rather than straight away.
           Spacing it out is most of where the value is.
         </p>
 
         <button
           onClick={start}
-          className="w-full mt-6 py-3.5 rounded-2xl bg-[#22d3ee] text-[#0f0f0f] text-sm font-bold hover:bg-[#22d3eed0] transition-colors active:scale-[0.98]"
+          className="tap-scale mt-6 w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
         >
           Start
+        </button>
+
+        {/* The only way into the worksheet now that it is not a nav destination.
+            It sits here because offline practice is the same intent as this
+            screen, one step further out. */}
+        <button
+          onClick={() => navigate(`/worksheet/${lessonId}`)}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border-strong py-4 text-body font-medium text-ink transition-colors hover:bg-surface-sunken"
+        >
+          <Printer className="h-4 w-4" />
+          Print a worksheet instead
         </button>
       </Shell>
     );
@@ -133,33 +146,33 @@ export default function HomeworkPage() {
   if (phase === 'done') {
     const pct = Math.round((correct / items.length) * 100);
     return (
-      <Shell onBack={() => navigate('/learn')}>
-        <div className="text-center">
-          <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center border bg-[#22d3ee15] border-[#22d3ee40]">
-            <span className="text-2xl font-bold tabular-nums text-[#22d3ee]">{pct}%</span>
+      <Shell onClose={() => navigate('/learn')} title="Practice">
+        <div className="pt-6 text-center">
+          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-accent-line bg-accent-wash">
+            <span className="text-title font-semibold tabular-nums text-accent">{pct}%</span>
           </div>
-          <h1 className="text-xl font-bold text-[#eff1f6] mt-4">Homework done</h1>
-          <p className="text-sm text-[#8c8c8c] mt-1">
-            {correct} of {items.length} correct · nothing is gated by this
+          <h1 className="mt-5 text-title font-semibold text-ink">Practice done</h1>
+          <p className="mt-1 text-body text-ink-muted">
+            {correct} of {items.length} correct — nothing is gated by this
           </p>
         </div>
 
-        <div className="flex gap-3 mt-8">
+        <div className="mt-8 space-y-3">
+          <button
+            onClick={() => navigate('/learn')}
+            className="tap-scale w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+          >
+            Done
+          </button>
           <button
             onClick={() => {
               setAttempt((a) => a + 1);
               start();
             }}
-            className="flex-1 py-3 rounded-2xl bg-[#ffffff08] text-[#eff1f6] text-sm font-bold hover:bg-[#ffffff15] transition-colors flex items-center justify-center gap-2"
+            className="tap-scale flex w-full items-center justify-center gap-2 rounded-xl border border-border-strong py-4 text-body font-semibold text-ink transition-colors hover:bg-surface-sunken"
           >
-            <RotateCcw size={15} />
+            <RotateCcw className="h-4 w-4" />
             Again, fresh questions
-          </button>
-          <button
-            onClick={() => navigate('/learn')}
-            className="flex-1 py-3 rounded-2xl bg-[#22c55e] text-[#0f0f0f] text-sm font-bold hover:bg-[#22c55ed0] transition-colors"
-          >
-            Done
           </button>
         </div>
       </Shell>
@@ -174,26 +187,23 @@ export default function HomeworkPage() {
   const fromEarlier = !lesson.objectives.some((o) => current.objectiveIds.includes(o));
 
   return (
-    <Shell onBack={() => setPhase('intro')}>
-      <div className="flex items-center justify-between mb-5">
-        {fromEarlier ? (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#a78bfa15] border border-[#a78bfa30] text-[10px] font-bold text-[#a78bfa] uppercase tracking-wider">
-            <Target size={11} /> From earlier
-          </span>
-        ) : (
-          <span className="text-[10px] font-bold text-[#22d3ee] uppercase tracking-wider">Homework</span>
-        )}
-        <span className="text-xs text-[#5c5c5c] tabular-nums">
-          {index + 1}/{items.length}
-        </span>
-      </div>
+    <Shell
+      onClose={() => setPhase('intro')}
+      title="Practice"
+      progress={`${index + 1}/${items.length}`}
+    >
+      {/* Naming a carried-back item is deliberate: §1.5 wants the learner to
+          notice that practice is interleaved, not to be quietly surprised. */}
+      <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">
+        {fromEarlier ? 'From an earlier lesson' : 'This lesson'}
+      </p>
 
-      <p className="text-lg font-medium text-[#eff1f6] leading-relaxed">
+      <p className="mt-1.5 text-lead font-medium text-ink">
         <RichText text={current.question} />
       </p>
       {current.somali && (
-        <div className="bg-[#141414] border border-[#ffffff08] rounded-xl p-4 mt-3">
-          <p className="text-xl font-semibold text-[#eff1f6] font-mono">{current.somali}</p>
+        <div className="mt-3 rounded-xl border border-border bg-card px-4 py-4 text-center">
+          <Somali size="block">{current.somali}</Somali>
         </div>
       )}
 
@@ -208,9 +218,9 @@ export default function HomeworkPage() {
         />
       </div>
 
-      <div className="rounded-xl bg-[#22d3ee08] border border-[#22d3ee20] p-4 mt-5">
-        <p className="text-[10px] font-bold text-[#22d3ee] uppercase tracking-wider mb-1">Hint</p>
-        <p className="text-sm text-[#8c8c8c]">
+      <div className="mt-5 rounded-xl border border-border bg-surface-sunken p-4">
+        <p className="text-micro font-semibold uppercase tracking-wider text-ink-faint">Hint</p>
+        <p className="mt-1 text-small text-ink-muted">
           <RichText text={current.hint} />
         </p>
       </div>
@@ -219,85 +229,102 @@ export default function HomeworkPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`rounded-xl border p-4 mt-4 ${
-            isRight ? 'bg-[#22c55e10] border-[#22c55e30]' : 'bg-[#ef444410] border-[#ef444430]'
+          className={`mt-4 rounded-xl border p-4 ${
+            isRight ? 'border-success-line bg-success-wash' : 'border-error-line bg-error-wash'
           }`}
         >
-          <p className={`text-sm font-bold mb-1 flex items-center gap-1.5 ${isRight ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
-            {isRight ? <Check size={15} /> : <X size={15} />}
-            {isRight ? 'Correct.' : `Not quite — the answer is: ${displayAnswer(current)}`}
+          <p className={`mb-1 text-small font-semibold ${isRight ? 'text-success' : 'text-error'}`}>
+            {isRight ? (
+              'Correct'
+            ) : (
+              <>
+                Not quite — the answer is{' '}
+                <Somali tone="inherit">{displayAnswer(current)}</Somali>
+              </>
+            )}
           </p>
-          <p className="text-sm text-[#c8c8c8] leading-relaxed">
+          <p className="text-small leading-relaxed text-ink">
             <RichText text={current.explanation} />
           </p>
         </motion.div>
       )}
 
-      {checked ? (
-        <button
-          onClick={next}
-          className="w-full mt-6 py-3.5 rounded-2xl bg-[#22c55e] text-[#0f0f0f] text-sm font-bold hover:bg-[#22c55ed0] transition-colors active:scale-[0.98]"
-        >
-          {index === items.length - 1 ? 'Finish' : 'Continue'}
-        </button>
-      ) : (
-        <button
-          onClick={check}
-          disabled={!answer}
-          className={`w-full mt-6 py-3.5 rounded-2xl text-sm font-bold transition-all active:scale-[0.98] ${
-            answer ? 'bg-[#3b82f6] text-white hover:bg-[#3b82f6d0]' : 'bg-[#ffffff08] text-[#5c5c5c] cursor-not-allowed'
-          }`}
-        >
-          Check Answer
-        </button>
-      )}
+      <div className="action-bar sticky bottom-0 mt-6 pt-3">
+        {checked ? (
+          <button
+            onClick={next}
+            className="tap-scale w-full rounded-xl bg-accent-strong py-4 text-body font-semibold text-white transition-colors hover:bg-accent-hover"
+          >
+            {index === items.length - 1 ? 'Finish' : 'Continue'}
+          </button>
+        ) : (
+          <button
+            onClick={check}
+            disabled={!answer}
+            className={`tap-scale w-full rounded-xl py-4 text-body font-semibold transition-colors ${
+              answer
+                ? 'bg-accent-strong text-white hover:bg-accent-hover'
+                : 'cursor-not-allowed bg-surface-sunken text-ink-faint'
+            }`}
+          >
+            Check answer
+          </button>
+        )}
+      </div>
     </Shell>
   );
 }
 
 /* ─── Shared bits ────────────────────────────────────────────────────────── */
 
-/** Same `**bold**` handling the lesson cards use. */
-function RichText({ text }: { text: string }) {
+/**
+ * A task view: full-screen over /learn, closed rather than navigated back from.
+ * The X is the affordance because this is a thing you finish or abandon, not a
+ * page in a hierarchy.
+ */
+function Shell({
+  children,
+  onClose,
+  title,
+  progress,
+}: {
+  children: React.ReactNode;
+  onClose: () => void;
+  title: string;
+  progress?: string;
+}) {
   return (
-    <>
-      {text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
-        seg.startsWith('**') && seg.endsWith('**') && seg.length > 4 ? (
-          <strong key={i} className="font-semibold text-[#eff1f6]">
-            {seg.slice(2, -2)}
-          </strong>
-        ) : (
-          seg
-        ),
-      )}
-    </>
-  );
-}
+    <div className="flex min-h-[100dvh] flex-col bg-surface">
+      <header className="sticky top-0 z-20 border-b border-border bg-surface px-4 pt-safe-t">
+        <div className="mx-auto flex max-w-column items-center gap-3 py-2.5">
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-surface-sunken hover:text-ink"
+          >
+            <X className="h-[18px] w-[18px]" />
+          </button>
+          <span className="flex-1 text-small font-medium text-ink">{title}</span>
+          {progress && (
+            <span className="text-micro tabular-nums text-ink-faint">{progress}</span>
+          )}
+        </div>
+      </header>
 
-function Shell({ children, onBack }: { children: React.ReactNode; onBack: () => void }) {
-  return (
-    <div className="min-h-full bg-[#0f0f0f]">
-      <div className="max-w-[600px] mx-auto px-4 py-6">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-sm text-[#8c8c8c] hover:text-[#eff1f6] transition-colors mb-5"
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
+      <main className="mx-auto w-full max-w-column flex-1 px-4 pb-[calc(1.5rem+var(--safe-bottom))] pt-5">
         {children}
-      </div>
+      </main>
     </div>
   );
 }
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-full flex items-center justify-center px-4 bg-[#0f0f0f]">
-      <div className="text-center text-sm text-[#8c8c8c] max-w-sm">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-surface px-4">
+      <div className="max-w-sm text-center text-body text-ink-muted">
         {children}
         <div className="mt-4">
-          <Link to="/learn" className="text-[#ffa116] hover:underline text-sm">
+          <Link to="/learn" className="text-body font-medium text-accent hover:underline">
             Back to lessons
           </Link>
         </div>
@@ -306,11 +333,15 @@ function Centered({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function Row({ label, value, first }: { label: string; value: string; first?: boolean }) {
   return (
-    <div className="flex items-baseline justify-between gap-3">
-      <span className="text-[#8c8c8c]">{label}</span>
-      <span className="text-[#eff1f6] font-medium text-right">{value}</span>
+    <div
+      className={`flex items-baseline justify-between gap-3 px-4 py-3 ${
+        first ? '' : 'border-t border-border'
+      }`}
+    >
+      <dt className="text-small text-ink-muted">{label}</dt>
+      <dd className="text-right text-small font-medium text-ink">{value}</dd>
     </div>
   );
 }
