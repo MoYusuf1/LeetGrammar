@@ -1,24 +1,39 @@
 /**
- * LessonCards — Card-based teaching engine.
+ * LessonCards — the teaching engine.
  *
- * Teaches Somali grammar one card at a time:
- *   Intro → Teach cards → Practice cards → Summary
+ * A lesson is a horizontally-paged deck of STEPS. You swipe through it.
  *
- * Integrates with the existing progress store for:
- *   - Card position persistence (resume where you left off)
- *   - Lesson completion tracking
- *   - XP and streak updates
+ * WHY IT IS NOT A STACK OF CARDS WITH A BUTTON UNDER EACH. It used to be, and
+ * finishing a lesson meant pressing "Got it" thirteen times. Two changes fix
+ * that, and they work together:
  *
- * Presentation is the warm-paper system (see src/index.css). Only styling
- * changed in the rewrite — the flow, the vocab-injection point, the AnswerInput
- * key and the motion fallback are all load-bearing and are unchanged. Read the
- * comments before touching any of them.
+ *   1. Consecutive passive cards MERGE into one step (see steps.ts), so a
+ *      13-card lesson is roughly 6 screens.
+ *   2. A passive step has NO BUTTON AT ALL. You swipe. A button appears only
+ *      where the lesson actually demands something — an exercise, or the end.
+ *
+ * So a button on screen now means "you have to do something", which is what a
+ * button is supposed to mean.
+ *
+ * THINGS THAT WILL BREAK IF YOU CHANGE THEM CARELESSLY:
+ *
+ *   • Swipe is DISABLED on exercise steps. Unscramble renders a horizontal row
+ *     of tappable word chips, and a drag handler over it eats the taps.
+ *   • The deck is inset from the screen edge and drag starts there, because iOS
+ *     Safari claims edge swipes for back-navigation. A full-bleed drag surface
+ *     means the first swipe leaves the lesson.
+ *   • Card POSITION is what gets persisted, not step position. Learn.tsx reports
+ *     "Card 4 of 17" from it and existing saved progress predates steps.
+ *   • The reduced-motion path renders real Next/Back buttons. Correctness cannot
+ *     depend on a gesture or an animation completing — a headless browser fires
+ *     neither, and that is how three softlocks reached production. See
+ *     lib/reduced-motion.ts and docs/WORKING_AGREEMENT.md.
  */
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MoreHorizontal } from 'lucide-react';
+import { X, MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent } from '@/data/authored-lessons';
 import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
@@ -27,72 +42,39 @@ import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import AnswerInput from './AnswerInput';
 import Blueprint, { stripBoxArt } from './Blueprint';
 import LessonMenu from './LessonMenu';
+import FeedbackSheet from './FeedbackSheet';
+import { buildSteps, stepForCard, isRetrieval, type FlowCard, type VocabFlowCard } from './steps';
 import Somali from '@/components/Somali';
 import RichText from '@/components/RichText';
 import GlossarySheet from '@/components/GlossarySheet';
 import { contentStagger } from './motion';
 import { prefersNoMotion } from '@/lib/reduced-motion';
 
-
-/* ─── Types ──────────────────────────────────────────────────────────────── */
-
 interface LessonCardsProps {
   lessonId: number;
 }
 
-/** A vocab deck injected into the lesson flow (not part of the authored cards). */
-interface VocabFlowCard {
-  type: 'vocab';
-  words: VocabWord[];
-}
+/** Past this many pixels of drag, the swipe counts. */
+const SWIPE_THRESHOLD = 55;
 
-type FlowCard = TeachingCard | VocabFlowCard;
-
-/* ─── Card Animation Variants ────────────────────────────────────────────── */
-
-const cardVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 300 : -300,
-    opacity: 0,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction: number) => ({
-    x: direction < 0 ? 300 : -300,
-    opacity: 0,
-  }),
+const deckVariants = {
+  enter: (direction: number) => ({ x: direction > 0 ? 260 : -260, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (direction: number) => ({ x: direction < 0 ? 260 : -260, opacity: 0 }),
 };
-
-/* ─── Main Component ─────────────────────────────────────────────────────── */
 
 export default function LessonCards({ lessonId }: LessonCardsProps) {
   const navigate = useNavigate();
   const progress = useProgressStore();
   const content = getLessonContent(lessonId);
 
-  /* Local state. Resume position is read once from the store on mount; Lesson.tsx
-     keys this component by lessonId, so switching lessons remounts and re-reads. */
-  const [cardIndex, setCardIndex] = useState(
-    () => useProgressStore.getState().getLessonCardPosition(lessonId),
-  );
   const [direction, setDirection] = useState(1);
-  const [completedCards, setCompletedCards] = useState<Set<number>>(() => {
-    const pos = useProgressStore.getState().getLessonCardPosition(lessonId);
-    return new Set(Array.from({ length: pos }, (_, i) => i));
-  });
   const [practiceAnswer, setPracticeAnswer] = useState<string | null>(null);
   const [practiceChecked, setPracticeChecked] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showGlossary, setShowGlossary] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [noMotion] = useState(prefersNoMotion);
-
-  /* Persist position to the progress store. */
-  useEffect(() => {
-    useProgressStore.getState().setLessonCardPosition(lessonId, cardIndex);
-  }, [cardIndex, lessonId]);
 
   /*
    * Card flow = the authored cards plus an injected vocabulary deck.
@@ -117,7 +99,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     if (!content || words.length === 0) return base;
     const vocabCard: VocabFlowCard = { type: 'vocab', words };
 
-    const isRetrieval = (c: FlowCard) => Boolean((c as TeachingCard).exercise) || c.type === 'predict';
     let seen = 0;
     let insertAt = base.length; // no retrieval cards at all: park it at the end
     for (let i = 0; i < base.length; i++) {
@@ -129,36 +110,73 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     return [...base.slice(0, insertAt), vocabCard, ...base.slice(insertAt)];
   }, [content, lessonId]);
 
-  const currentCard = cards[cardIndex];
-  const isLastCard = cardIndex === cards.length - 1;
+  const steps = useMemo(() => buildSteps(cards), [cards]);
+
+  /* Resume position is read once on mount; Lesson.tsx keys this component by
+     lessonId, so switching lessons remounts and re-reads. The stored value is a
+     CARD index, mapped back onto whichever step contains it. */
+  const [stepIndex, setStepIndex] = useState(() =>
+    stepForCard(buildSteps(cards), useProgressStore.getState().getLessonCardPosition(lessonId)),
+  );
+
+  const step = steps[stepIndex];
+  const isLastStep = stepIndex === steps.length - 1;
+  const exercise = step?.exercise;
+
+  /* Persist the card index this step starts at, not the step index. */
+  useEffect(() => {
+    const start = steps[stepIndex]?.startIndex ?? 0;
+    useProgressStore.getState().setLessonCardPosition(lessonId, start);
+  }, [stepIndex, steps, lessonId]);
 
   /* ─── Navigation ───────────────────────────────────────────────────────── */
 
-  const goNext = useCallback(() => {
-    if (isLastCard) {
-      /* Complete the lesson */
-      progress.completeLesson(lessonId);
-      progress.clearLessonCardPosition(lessonId);
-      navigate('/learn');
-      return;
-    }
-    setDirection(1);
-    setCompletedCards((prev) => new Set(prev).add(cardIndex));
-    setCardIndex((i) => i + 1);
-    setPracticeAnswer(null);
-    setPracticeChecked(false);
-  }, [isLastCard, cardIndex, lessonId, navigate, progress]);
+  const finish = useCallback(() => {
+    progress.completeLesson(lessonId);
+    progress.clearLessonCardPosition(lessonId);
+    navigate('/learn');
+  }, [lessonId, navigate, progress]);
 
-  const goToCard = useCallback((index: number) => {
-    if (index >= cardIndex) return;
-    setDirection(index < cardIndex ? -1 : 1);
-    setCardIndex(index);
+  const goNext = useCallback(() => {
+    if (isLastStep) return finish();
+    setDirection(1);
+    setStepIndex((i) => i + 1);
     setPracticeAnswer(null);
     setPracticeChecked(false);
-  }, [cardIndex]);
+  }, [isLastStep, finish]);
+
+  const goPrev = useCallback(() => {
+    setStepIndex((i) => {
+      if (i === 0) return i;
+      setDirection(-1);
+      return i - 1;
+    });
+    setPracticeAnswer(null);
+    setPracticeChecked(false);
+  }, []);
+
+  /* An exercise step will not let you past it until it has been answered and
+     checked — that gate is the whole point of a retrieval card. */
+  const canSwipeForward = !exercise || practiceChecked;
+  /* Drag is off while an exercise is live, because a drag handler over the
+     unscramble word chips eats their taps. Once the answer is checked those
+     inputs are disabled, so there is nothing left to steal and swiping can
+     carry the learner on — which is what removes the second tap per exercise. */
+  const canSwipe = !exercise || practiceChecked;
+
+  /* Arrow keys, for anyone on a keyboard. */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (showMenu || showGlossary || showExitConfirm) return;
+      if (e.key === 'ArrowRight' && canSwipeForward) goNext();
+      if (e.key === 'ArrowLeft') goPrev();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [goNext, goPrev, canSwipeForward, showMenu, showGlossary, showExitConfirm]);
 
   /* All hooks are declared above — safe to bail out for a missing lesson now. */
-  if (!content) {
+  if (!content || !step) {
     return (
       <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4">
         <p className="text-footnote text-label-2">Lesson content not found.</p>
@@ -166,52 +184,36 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     );
   }
 
-  /* ─── Practice handlers ────────────────────────────────────────────────── */
-
-  const handlePracticeSelect = (answer: string) => {
-    if (practiceChecked) return;
-    setPracticeAnswer(answer);
-  };
-
-  const handlePracticeCheck = () => {
-    if (!practiceAnswer) return;
-    setPracticeChecked(true);
-  };
-
-  const handlePracticeContinue = () => {
-    goNext();
-  };
-
-  /* ─── Exit ─────────────────────────────────────────────────────────────── */
-
   const handleExit = () => {
-    if (completedCards.size > 0) {
-      setShowExitConfirm(true);
-    } else {
-      navigate(-1);
-    }
+    if (stepIndex > 0) setShowExitConfirm(true);
+    else navigate(-1);
   };
 
-  /* ─── Render ───────────────────────────────────────────────────────────── */
+  const deck = (
+    <StepView
+      step={step}
+      lessonTitle={content.title}
+      practiceAnswer={practiceAnswer}
+      practiceChecked={practiceChecked}
+      onPracticeSelect={(a) => !practiceChecked && setPracticeAnswer(a)}
+    />
+  );
 
   return (
-    <div className="lesson-container flex min-h-[100dvh] flex-col bg-bg">
-      {/* NO TOP BAR. It used to hold a close button, progress dots, a counter
-          and a glossary icon — four controls competing with the one card the
-          screen exists to show. What is left is a hairline of progress at the
-          very edge and two floating glass circles; everything else moved into
-          the ⋯ menu. */}
+    <div className="lesson-container flex min-h-[100dvh] flex-col overflow-x-hidden bg-bg">
+      {/* A hairline of progress, and two floating glass circles. Nothing else
+          competes with the card. */}
       <div
         className="fixed inset-x-0 top-0 z-30 h-[3px] bg-fill"
         role="progressbar"
-        aria-valuenow={cardIndex + 1}
+        aria-valuenow={stepIndex + 1}
         aria-valuemin={1}
-        aria-valuemax={cards.length}
-        aria-label={`Card ${cardIndex + 1} of ${cards.length}`}
+        aria-valuemax={steps.length}
+        aria-label={`Step ${stepIndex + 1} of ${steps.length}`}
       >
         <div
           className="h-full bg-accent transition-[width] duration-300"
-          style={{ width: `${((cardIndex + 1) / cards.length) * 100}%` }}
+          style={{ width: `${((stepIndex + 1) / steps.length) * 100}%` }}
         />
       </div>
 
@@ -233,72 +235,108 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
         <MoreHorizontal className="h-[18px] w-[18px]" />
       </button>
 
-      {/* Card content — padded clear of the floating controls. */}
+      {/* The deck. px-4 keeps the drag surface off the screen edge, where iOS
+          Safari would claim the gesture for back-navigation. */}
       <div className="flex-1 px-4 pb-4 pt-[calc(var(--safe-t)+68px)]">
         <div className="mx-auto max-w-column">
-          {/* With motion off the card renders directly. `AnimatePresence
-              mode="wait"` holds the outgoing card until its exit animation
-              finishes, and that animation needs requestAnimationFrame — which
-              a hidden or headless browser never fires, leaving the counter
-              advancing over frozen content. Correctness cannot depend on an
-              animation completing. See lib/reduced-motion.ts. */}
           {noMotion ? (
-            <RenderCard
-              card={currentCard}
-              lessonTitle={content.title}
-              practiceAnswer={practiceAnswer}
-              practiceChecked={practiceChecked}
-              onPracticeSelect={handlePracticeSelect}
-            />
+            deck
           ) : (
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
-                key={cardIndex}
+                key={stepIndex}
                 custom={direction}
-                variants={cardVariants}
+                variants={deckVariants}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+                drag={canSwipe ? 'x' : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.16}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -SWIPE_THRESHOLD && canSwipeForward) goNext();
+                  else if (info.offset.x > SWIPE_THRESHOLD && stepIndex > 0) goPrev();
+                }}
+                className={canSwipe ? 'cursor-grab active:cursor-grabbing' : ''}
               >
-                <RenderCard
-                  card={currentCard}
-                  lessonTitle={content.title}
-                  practiceAnswer={practiceAnswer}
-                  practiceChecked={practiceChecked}
-                  onPracticeSelect={handlePracticeSelect}
-                />
+                {deck}
               </motion.div>
             </AnimatePresence>
           )}
         </div>
       </div>
 
-      {/* Bottom action — in the thumb zone, clear of the home indicator. */}
+      {/* A button appears ONLY where the lesson demands something. Passive steps
+          get a quiet hint instead — except under reduced motion, where the
+          gesture cannot be relied on and real controls are required. */}
       <div className="glass glass-bottom sticky bottom-0 z-10 flex-shrink-0 px-4 pt-3">
         <div className="mx-auto max-w-column">
-          <BottomAction
-            card={currentCard}
-            isLastCard={isLastCard}
-            practiceAnswer={practiceAnswer}
-            practiceChecked={practiceChecked}
-            onPrimary={goNext}
-            onCheck={handlePracticeCheck}
-            onContinue={handlePracticeContinue}
-          />
+          {exercise && !practiceChecked ? (
+            <button
+              onClick={() => practiceAnswer && setPracticeChecked(true)}
+              disabled={!practiceAnswer}
+              className={`pressable min-h-[52px] w-full rounded-xl py-4 text-body font-semibold ${
+                practiceAnswer
+                  ? 'bg-accent text-accent-ink'
+                  : 'cursor-not-allowed bg-fill text-label-3'
+              }`}
+            >
+              Check answer
+            </button>
+          ) : isLastStep ? (
+            <button
+              onClick={finish}
+              className="pressable min-h-[52px] w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink"
+            >
+              Finish lesson
+            </button>
+          ) : noMotion ? (
+            <div className="flex gap-3">
+              <button
+                onClick={goPrev}
+                disabled={stepIndex === 0}
+                aria-label="Previous"
+                className="flex min-h-[52px] w-14 items-center justify-center rounded-xl bg-fill text-label disabled:opacity-30"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={goNext}
+                className="pressable min-h-[52px] flex-1 rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink"
+              >
+                Next
+              </button>
+            </div>
+          ) : (
+            <p className="flex min-h-[52px] items-center justify-center gap-1.5 text-footnote text-label-3">
+              Swipe to continue
+              <ChevronRight className="h-4 w-4" />
+            </p>
+          )}
         </div>
       </div>
+
+      {/* Feedback rises over the card rather than pushing it down. */}
+      {exercise && practiceChecked && (
+        <FeedbackSheet
+          correct={verdictOf(exercise, practiceAnswer)}
+          heading={<FeedbackHeading exercise={exercise} answer={practiceAnswer} />}
+          explanation={<RichText text={exercise.explanation} />}
+          continueLabel={isLastStep ? 'Finish lesson' : 'Continue'}
+          onContinue={goNext}
+        />
+      )}
 
       {showMenu && (
         <LessonMenu
           onClose={() => setShowMenu(false)}
-          /* Stepping back was only possible via the progress dots, which are
-             gone. Preserved here rather than dropped. */
+          /* Swiping back exists, but it is invisible; this makes it findable. */
           onBackACard={
-            cardIndex > 0
+            stepIndex > 0
               ? () => {
                   setShowMenu(false);
-                  goToCard(cardIndex - 1);
+                  goPrev();
                 }
               : undefined
           }
@@ -316,10 +354,9 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
 
       {showGlossary && <GlossarySheet onClose={() => setShowGlossary(false)} />}
 
-      {/* Exit confirmation */}
       {showExitConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-[2px]">
-          <div className="w-full max-w-sm rounded-2xl bg-elevated p-6  animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="animate-fade-up w-full max-w-sm rounded-2xl bg-elevated p-6">
             <h3 className="mb-1.5 text-title3 font-semibold text-label">Leave this lesson?</h3>
             <p className="mb-5 text-footnote text-label-2">
               Your place is saved — you will come back to this card.
@@ -327,13 +364,13 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowExitConfirm(false)}
-                className="flex-1 rounded-xl bg-accent py-3 text-footnote font-semibold text-accent-ink transition-colors hover:opacity-90"
+                className="pressable flex-1 rounded-xl bg-accent py-3 text-footnote font-semibold text-accent-ink"
               >
                 Stay
               </button>
               <button
                 onClick={() => navigate(-1)}
-                className="flex-1 rounded-xl bg-fill py-3 text-footnote font-semibold text-label-2 transition-colors hover:bg-fill"
+                className="flex-1 rounded-xl bg-fill py-3 text-footnote font-semibold text-label-2"
               >
                 Leave
               </button>
@@ -345,38 +382,105 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   );
 }
 
-/* ─── Card Renderer ──────────────────────────────────────────────────────── */
+/* ─── Feedback helpers ───────────────────────────────────────────────────── */
+
+/** Typed answers are self-graded, so there is no verdict to assert. */
+function isSelfGraded(exercise: PracticeExercise): boolean {
+  return exercise.type === 'translate' || exercise.type === 'marker_identification';
+}
+
+function verdictOf(exercise: PracticeExercise, answer: string | null): boolean | null {
+  if (isSelfGraded(exercise)) return null;
+  return isAnswerCorrect(exercise, answer);
+}
+
+function FeedbackHeading({
+  exercise,
+  answer,
+}: {
+  exercise: PracticeExercise;
+  answer: string | null;
+}) {
+  if (isSelfGraded(exercise)) {
+    return (
+      <>
+        Answer: <Somali inherit>{displayAnswer(exercise)}</Somali>
+      </>
+    );
+  }
+  if (isAnswerCorrect(exercise, answer)) return <>Correct</>;
+  return (
+    <>
+      Not quite — the answer is <Somali inherit>{displayAnswer(exercise)}</Somali>
+    </>
+  );
+}
+
+/* ─── Step Renderer ──────────────────────────────────────────────────────── */
+
+/** A step is one screen: either a merged run of passive cards, or one exercise. */
+function StepView({
+  step,
+  lessonTitle,
+  practiceAnswer,
+  practiceChecked,
+  onPracticeSelect,
+}: {
+  step: { cards: FlowCard[]; exercise?: TeachingCard['exercise'] };
+  lessonTitle: string;
+  practiceAnswer: string | null;
+  practiceChecked: boolean;
+  onPracticeSelect: (a: string) => void;
+}) {
+  return (
+    <div className="space-y-8">
+      {step.cards.map((card, i) => (
+        <RenderCard
+          key={i}
+          card={card}
+          lessonTitle={lessonTitle}
+          /* Only the first card of a merged step carries the lesson title, or
+             it repeats three times down one screen. */
+          showTitle={i === 0}
+          practiceAnswer={practiceAnswer}
+          practiceChecked={practiceChecked}
+          onPracticeSelect={onPracticeSelect}
+        />
+      ))}
+    </div>
+  );
+}
 
 function RenderCard({
   card,
   lessonTitle,
+  showTitle,
   practiceAnswer,
   practiceChecked,
   onPracticeSelect,
 }: {
   card: FlowCard;
   lessonTitle: string;
+  showTitle: boolean;
   practiceAnswer: string | null;
   practiceChecked: boolean;
   onPracticeSelect: (a: string) => void;
 }) {
   switch (card.type) {
-    // Intro-like cards
     case 'blueprint':
     case 'connect':
     case 'promise':
     case 'payoff':
-      return <IntroCard card={card} lessonTitle={lessonTitle} />;
+    case 'predict':
+      return <IntroCard card={card} lessonTitle={lessonTitle} showTitle={showTitle} />;
 
     case 'vocab':
-      return card.type === 'vocab' ? <VocabCard words={(card as VocabFlowCard).words} /> : null;
+      return <VocabCard words={(card as VocabFlowCard).words} />;
 
-    // Teach cards
     case 'teach':
     case 'example':
       return <TeachCard card={card} />;
 
-    // Practice cards
     case 'notice':
     case 'complete':
     case 'produce':
@@ -391,10 +495,6 @@ function RenderCard({
 
     case 'summary':
       return <SummaryCard card={card} />;
-
-    // Predict card (also shows content/prompt)
-    case 'predict':
-      return <IntroCard card={card} lessonTitle={lessonTitle} />;
 
     default:
       return null;
@@ -412,9 +512,17 @@ function CardLabel({ children }: { children: React.ReactNode }) {
 
 /* ─── Intro Card ─────────────────────────────────────────────────────────── */
 
-function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: string }) {
+function IntroCard({
+  card,
+  lessonTitle,
+  showTitle,
+}: {
+  card: TeachingCard;
+  lessonTitle: string;
+  showTitle: boolean;
+}) {
   return (
-    <div className="space-y-5 pt-6">
+    <div className="space-y-4">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
         <CardLabel>
           {card.type === 'promise'
@@ -429,23 +537,22 @@ function IntroCard({ card, lessonTitle }: { card: TeachingCard; lessonTitle: str
                     ? 'Have a guess first:'
                     : 'In this lesson you will learn:'}
         </CardLabel>
-        <h1 className="mt-1.5 text-title1 font-semibold text-label">{lessonTitle}</h1>
+        {showTitle && (
+          <h1 className="mt-1.5 text-title1 font-semibold text-label">{lessonTitle}</h1>
+        )}
       </motion.div>
 
       {card.prompt && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <p className="whitespace-pre-wrap text-title3 text-label-2">
-            <RichText text={card.prompt} />
-          </p>
+          <Prose text={card.prompt} />
         </motion.div>
       )}
 
       {/* The blueprint is drawn, not typeset. The content string still carries
           the old box-drawing art, so it is stripped here and replaced with real
-          segments that can highlight the slot this lesson fills — see
-          Blueprint.tsx. Everything else renders as ordinary prose; it used to
-          go into a monospace <pre> that overflowed the screen on a phone and
-          cut the sentence in half. */}
+          segments that highlight the slot this lesson fills — see Blueprint.tsx.
+          It used to render in a monospace <pre> that overflowed a phone screen
+          and cut the sentence beside it in half. */}
       {card.type === 'blueprint' && <Blueprint slot={card.blueprintSlot} />}
 
       {card.content && (
@@ -483,7 +590,7 @@ function Prose({ text, className = '' }: { text: string; className?: string }) {
 
 function VocabCard({ words }: { words: VocabWord[] }) {
   return (
-    <div className="space-y-5 pt-6">
+    <div className="space-y-4">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
         <CardLabel>Vocabulary · {words.length} words</CardLabel>
         <p className="mt-1.5 text-title3 text-label-2">
@@ -496,14 +603,12 @@ function VocabCard({ words }: { words: VocabWord[] }) {
         variants={contentStagger}
         initial="hidden"
         animate="visible"
-        className="overflow-hidden rounded-xl bg-elevated"
+        className="list-group"
       >
-        {words.map((w, i) => (
+        {words.map((w) => (
           <div
             key={w.rank}
-            className={`flex items-baseline justify-between gap-3 px-4 py-3 ${
-              i === 0 ? '' : 'border-t border-separator'
-            }`}
+            className="list-row flex items-baseline justify-between gap-3 px-4 py-3"
           >
             <div className="min-w-0">
               <Somali size="lg">{w.somali}</Somali>
@@ -523,7 +628,7 @@ function VocabCard({ words }: { words: VocabWord[] }) {
 
 function TeachCard({ card }: { card: TeachingCard }) {
   return (
-    <div className="space-y-5 pt-6">
+    <div className="space-y-4">
       {card.title && (
         <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
           <CardLabel>{card.title}</CardLabel>
@@ -532,8 +637,6 @@ function TeachCard({ card }: { card: TeachingCard }) {
 
       {card.content && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          {/* Was rendering a <br /> after every line including the last, which
-              padded the gap between paragraphs unevenly. */}
           <Prose text={card.content} className="text-label" />
         </motion.div>
       )}
@@ -555,7 +658,7 @@ function PracticeCard({
   onSelect: (a: string) => void;
 }) {
   return (
-    <div className="space-y-5 pt-6">
+    <div className="space-y-5">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
         <CardLabel>Practice</CardLabel>
         <p className="mt-1.5 text-title3 font-medium text-label">
@@ -564,7 +667,7 @@ function PracticeCard({
         {/* A typed field on the exercise, so this is guaranteed Somali — safe
             to give the serif treatment. */}
         {exercise.somali && (
-          <div className="mt-3 rounded-xl bg-elevated px-4 py-4 text-center">
+          <div className="mt-3 rounded-xl bg-elevated px-4 py-5 text-center">
             <Somali size="hero">{exercise.somali}</Somali>
           </div>
         )}
@@ -584,7 +687,7 @@ function PracticeCard({
           which is why its items are single words with one spelling. */}
       {(exercise.type === 'translate' || exercise.type === 'marker_identification') && (
         <p className="-mt-3 text-caption2 text-label-3">
-          Type your best answer, then check — you grade yourself against the explanation below.
+          Type your best answer, then check — you grade yourself against the explanation.
         </p>
       )}
 
@@ -600,50 +703,15 @@ function PracticeCard({
           <RichText text={exercise.hint} />
         </p>
       </motion.div>
-
-      {checked && <PracticeFeedback exercise={exercise} answer={answer} />}
     </div>
   );
 }
-
-function PracticeFeedback({ exercise, answer }: { exercise: PracticeExercise; answer: string | null }) {
-  const isCorrect = isAnswerCorrect(exercise, answer);
-  const isSelfGraded = exercise.type === 'translate' || exercise.type === 'marker_identification';
-  const positive = isCorrect || isSelfGraded;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl bg-elevated p-4"
-    >
-      <p className={`mb-1 text-footnote font-semibold ${positive ? 'text-green' : 'text-red'}`}>
-        {isSelfGraded ? (
-          <>
-            Answer: <Somali inherit>{displayAnswer(exercise)}</Somali>
-          </>
-        ) : isCorrect ? (
-          'Correct'
-        ) : (
-          <>
-            Not quite — the answer is{' '}
-            <Somali inherit>{displayAnswer(exercise)}</Somali>
-          </>
-        )}
-      </p>
-      <p className="text-footnote leading-relaxed text-label">
-        <RichText text={exercise.explanation} />
-      </p>
-    </motion.div>
-  );
-}
-
 
 /* ─── Summary Card ───────────────────────────────────────────────────────── */
 
 function SummaryCard({ card }: { card: TeachingCard }) {
   return (
-    <div className="space-y-5 pt-6">
+    <div className="space-y-4">
       <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
         <CardLabel>Lesson complete</CardLabel>
         <h2 className="mt-1.5 text-title1 font-semibold text-label">{card.title}</h2>
@@ -651,76 +719,9 @@ function SummaryCard({ card }: { card: TeachingCard }) {
 
       {card.content && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <p className="whitespace-pre-wrap text-title3 text-label-2">
-            <RichText text={card.content} />
-          </p>
+          <Prose text={card.content} />
         </motion.div>
       )}
     </div>
-  );
-}
-
-/* ─── Bottom Action Button ───────────────────────────────────────────────── */
-
-function BottomAction({
-  card,
-  isLastCard,
-  practiceAnswer,
-  practiceChecked,
-  onPrimary,
-  onCheck,
-  onContinue,
-}: {
-  card: FlowCard;
-  isLastCard: boolean;
-  practiceAnswer: string | null;
-  practiceChecked: boolean;
-  onPrimary: () => void;
-  onCheck: () => void;
-  onContinue: () => void;
-}) {
-  /* Practice-role cards gate on Check/Continue; everything else just advances. */
-  const cardType = card.type;
-  const isPracticeCard =
-    cardType === 'notice' || cardType === 'complete' || cardType === 'produce';
-
-  const base =
-    'pressable w-full rounded-xl py-4 text-body font-semibold transition-colors min-h-[52px]';
-
-  if (!isPracticeCard) {
-    return (
-      <button
-        onClick={onPrimary}
-        className={`${base} bg-accent text-accent-ink hover:opacity-90`}
-      >
-        {isLastCard ? 'Finish lesson' : 'Got it'}
-      </button>
-    );
-  }
-
-  /* Practice cards: Check → Continue */
-  if (!practiceChecked) {
-    return (
-      <button
-        onClick={onCheck}
-        disabled={!practiceAnswer}
-        className={`${base} ${
-          practiceAnswer
-            ? 'bg-accent text-accent-ink hover:opacity-90'
-            : 'cursor-not-allowed bg-fill text-label-3'
-        }`}
-      >
-        Check answer
-      </button>
-    );
-  }
-
-  return (
-    <button
-      onClick={onContinue}
-      className={`${base} bg-accent text-accent-ink hover:opacity-90`}
-    >
-      {isLastCard ? 'Finish lesson' : 'Continue'}
-    </button>
   );
 }
