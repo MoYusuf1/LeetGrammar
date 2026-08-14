@@ -4,6 +4,13 @@
 [docs/WORKING_AGREEMENT.md](docs/WORKING_AGREEMENT.md).** It is short, and every
 rule in it exists because its absence shipped a specific bug.
 
+**Before changing anything visual, read
+[docs/UI_CONVENTIONS.md](docs/UI_CONVENTIONS.md).** It records the settled taste
+of this app — iOS, black and white, flat, nothing on screen that is not needed —
+and, more usefully, a list of what has already been tried and rejected. Do not
+re-propose a gradient, a coloured accent, a swipe gesture or a bento grid
+without reading why they went.
+
 The three things most likely to bite you:
 
 1. **A green build does not mean the app works.** The worst bug in this project's

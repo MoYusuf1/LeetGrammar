@@ -19,23 +19,15 @@
 
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, BookA, Printer, LogOut } from 'lucide-react';
+import { BookA, Printer } from 'lucide-react';
 
 export interface LessonMenuProps {
   onClose: () => void;
-  onBackACard?: () => void;
   onGlossary: () => void;
   onWorksheet: () => void;
-  onLeave: () => void;
 }
 
-export default function LessonMenu({
-  onClose,
-  onBackACard,
-  onGlossary,
-  onWorksheet,
-  onLeave,
-}: LessonMenuProps) {
+export default function LessonMenu({ onClose, onGlossary, onWorksheet }: LessonMenuProps) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     document.addEventListener('keydown', onKey);
@@ -59,12 +51,11 @@ export default function LessonMenu({
         style={{ transformOrigin: 'top right', top: 'calc(var(--safe-t) + 60px)' }}
         className="glass absolute right-4 w-60 overflow-hidden rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.35)]"
       >
-        {onBackACard && (
-          <Item icon={<ChevronLeft className="h-[18px] w-[18px]" />} label="Back a card" onClick={onBackACard} first />
-        )}
-        <Item icon={<BookA className="h-[18px] w-[18px]" />} label="Glossary" onClick={onGlossary} first={!onBackACard} />
+        {/* No "Leave lesson". The X in the top-left already does it, and a
+            menu item duplicating a visible control is the kind of furniture
+            this app keeps removing. */}
+        <Item icon={<BookA className="h-[18px] w-[18px]" />} label="Glossary" onClick={onGlossary} first />
         <Item icon={<Printer className="h-[18px] w-[18px]" />} label="Print a worksheet" onClick={onWorksheet} />
-        <Item icon={<LogOut className="h-[18px] w-[18px]" />} label="Leave lesson" onClick={onLeave} />
       </motion.div>
     </div>
   );

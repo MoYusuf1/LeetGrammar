@@ -57,7 +57,7 @@ export default function LearnPage() {
     <div className="min-h-[100dvh] bg-bg">
       <div className="mx-auto max-w-column px-5 pt-safe-t">
         <header className="pb-10 pt-12">
-          <h1 className="text-large font-bold tracking-tight text-label">LeetGrammar</h1>
+          <h1 className="text-large font-bold tracking-tight text-label">Somali</h1>
         </header>
 
         <main className="pb-[calc(4rem+var(--safe-b))]">
@@ -66,17 +66,15 @@ export default function LearnPage() {
             const unlocked = isUnitComplete(unit.id, completed);
             return (
               <section key={unit.id} className="mb-12">
-                {/* A part title in a contents page: a rule and a small label.
-                    The unit's own name is not shown — "Filling the WHO box"
-                    means nothing before you have done it, whereas the number is
-                    what a contents page uses. Derived from unit.id, never a
-                    literal. */}
-                <div className="mb-5 flex items-center gap-3">
-                  <span className="text-caption2 font-semibold uppercase tracking-[0.14em] text-label-3">
-                    Unit {unit.id}
-                  </span>
-                  <span className="h-px flex-1 bg-separator" />
-                </div>
+                {/* A part title in a contents page. No rule beside it — the
+                    whitespace between sections already separates them, and the
+                    line was one more mark doing a job nothing needed doing.
+                    The unit's own name is not shown either: "Filling the WHO
+                    box" means nothing before you have done it. Derived from
+                    unit.id, never a literal. */}
+                <p className="mb-5 text-caption2 font-semibold uppercase tracking-[0.14em] text-label-3">
+                  Unit {unit.id}
+                </p>
 
                 <ol>
                   {lessons.map((lesson) => (
