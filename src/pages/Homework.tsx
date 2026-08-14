@@ -98,10 +98,7 @@ export default function HomeworkPage() {
   if (phase === 'intro') {
     return (
       <Shell onClose={() => navigate('/learn')} title="Practice">
-        <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">
-          Lesson {lessonId}
-        </p>
-        <h1 className="mt-1.5 text-title1 font-semibold text-label">{lesson.title}</h1>
+        <h1 className="text-title1 font-bold text-label">{lesson.title}</h1>
         <p className="mt-2 text-title3 text-label-2">
           A mixed set — most of it from this lesson, some from earlier ones so the older
           material does not go quiet.
@@ -194,9 +191,12 @@ export default function HomeworkPage() {
     >
       {/* Naming a carried-back item is deliberate: §1.5 wants the learner to
           notice that practice is interleaved, not to be quietly surprised. */}
-      <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">
-        {fromEarlier ? 'From an earlier lesson' : 'This lesson'}
-      </p>
+      {/* Naming a carried-back item stays, because §1.5 wants the learner to
+          notice that practice is interleaved rather than be quietly surprised.
+          It is a quiet line now rather than a small-caps eyebrow. */}
+      {fromEarlier && (
+        <p className="text-footnote text-label-2">From an earlier lesson</p>
+      )}
 
       <p className="mt-1.5 text-title3 font-medium text-label">
         <RichText text={current.question} />
@@ -219,8 +219,7 @@ export default function HomeworkPage() {
       </div>
 
       <div className="mt-5 rounded-xl bg-fill p-4">
-        <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">Hint</p>
-        <p className="mt-1 text-footnote text-label-2">
+        <p className="text-subhead text-label">
           <RichText text={current.hint} />
         </p>
       </div>

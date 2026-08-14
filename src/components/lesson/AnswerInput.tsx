@@ -21,6 +21,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Check, X } from 'lucide-react';
 import type { PracticeExercise } from '@/data/types';
 import Somali from '@/components/Somali';
 import { contentStagger } from './motion';
@@ -67,49 +68,42 @@ export default function AnswerInput(props: AnswerInputProps) {
 function ChoiceExercise({ exercise, answer, checked, onSelect }: AnswerInputProps) {
   const isCorrect = checked && answer === exercise.correctAnswer;
   return (
-    <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-2.5">
+    <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="list-group">
       {(exercise.options ?? []).map((option, i) => {
         const isSelected = answer === option;
         const isCorrectOption = checked && option === exercise.correctAnswer;
         const isWrongOption = checked && isSelected && !isCorrect;
 
-        /* Flat: no borders anywhere. State is carried by the badge and the
-           label color alone, which is how a grouped iOS list shows selection. */
+        /* An iOS picker row: the option reads as itself, and the mark sits on
+           the right. The lettered A/B/C/D badges are gone — they were a
+           multiple-choice exam convention, and nothing in the question ever
+           referred to an option by its letter. */
         return (
           <button
             key={i}
             onClick={() => onSelect(option)}
             disabled={checked}
-            className={`w-full rounded-xl bg-elevated p-4 text-left ${
-              checked ? 'cursor-default' : 'pressable cursor-pointer'
+            className={`list-row flex min-h-[54px] w-full items-center gap-3 px-4 py-3 text-left ${
+              checked ? 'cursor-default' : 'cursor-pointer active:bg-fill'
             }`}
           >
-            <div className="flex items-center gap-3">
-              <span
-                className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-caption2 font-semibold ${
-                  isCorrectOption
-                    ? 'bg-green text-accent-ink'
-                    : isWrongOption
-                      ? 'bg-red text-accent-ink'
-                      : isSelected
-                        ? 'bg-accent text-accent-ink'
-                        : 'bg-fill text-label-3'
-                }`}
-              >
-                {isCorrectOption ? '✓' : isWrongOption ? '✕' : String.fromCharCode(65 + i)}
-              </span>
-              <span
-                className={`text-body ${
-                  isCorrectOption
-                    ? 'font-semibold text-green'
-                    : isWrongOption
-                      ? 'font-semibold text-red'
-                      : 'text-label'
-                }`}
-              >
-                {option}
-              </span>
-            </div>
+            <span
+              className={`min-w-0 flex-1 text-body ${
+                isCorrectOption || isSelected ? 'font-semibold text-label' : 'text-label'
+              } ${isWrongOption ? 'line-through decoration-label-3' : ''}`}
+            >
+              {option}
+            </span>
+
+            <span aria-hidden className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
+              {isCorrectOption ? (
+                <Check className="h-[18px] w-[18px] text-label" strokeWidth={2.5} />
+              ) : isWrongOption ? (
+                <X className="h-[18px] w-[18px] text-label-3" strokeWidth={2.5} />
+              ) : isSelected ? (
+                <span className="h-2.5 w-2.5 rounded-full bg-accent" />
+              ) : null}
+            </span>
           </button>
         );
       })}

@@ -121,10 +121,7 @@ export default function UnitTestPage() {
     const record = store.getUnitTestRecord?.(unitId);
     return (
       <Shell onClose={() => navigate('/learn')} title={bank.name}>
-        <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">
-          Unit {unit.id} · {unit.name}
-        </p>
-        <h1 className="mt-1.5 text-title1 font-semibold text-label">{bank.name}</h1>
+        <h1 className="text-title1 font-bold text-label">{bank.name}</h1>
         <p className="mt-2 text-title3 text-label-2">{bank.description}</p>
 
         <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
@@ -429,8 +426,7 @@ function Correctives({
       </div>
 
       <div className="mt-5 rounded-xl bg-fill p-4">
-        <p className="text-caption2 font-semibold uppercase tracking-wider text-label-3">Hint</p>
-        <p className="mt-1 text-footnote text-label-2">
+        <p className="text-subhead text-label">
           <RichText text={current.hint} />
         </p>
       </div>
