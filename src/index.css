@@ -34,22 +34,33 @@
   :root {
     color-scheme: light dark;
 
-    /* Apple's system greys. Light. */
-    --bg: #f2f2f7; /* systemGroupedBackground */
-    --bg-elevated: #ffffff; /* secondarySystemGroupedBackground */
-    --fill: #78788014; /* tertiarySystemFill — inputs, inactive */
-    --separator: #3c3c4349; /* separator, non-opaque */
+    /* Apple's grouped-background structure, but with the blue cast taken out —
+       systemGroupedBackground is #F2F2F7 and secondaryLabel is #3C3C43, both
+       of which are subtly blue. Neutral greys instead, so the palette really is
+       black and white rather than nearly. */
+    --bg: #f2f2f2;
+    --bg-elevated: #ffffff;
+    --fill: rgba(0, 0, 0, 0.05);
+    --separator: rgba(0, 0, 0, 0.12);
 
     --label: #000000;
-    --label-2: #3c3c4399; /* secondaryLabel */
-    --label-3: #3c3c434d; /* tertiaryLabel */
+    --label-2: rgba(0, 0, 0, 0.55);
+    --label-3: rgba(0, 0, 0, 0.3);
 
-    /* The one accent. Used for a primary action and essentially nothing else. */
-    --accent: #0a84ff;
+    /* MONOCHROME. There is no hue anywhere in this app.
+       The accent is simply ink — a filled button is black with white text in
+       light mode and inverts in dark. */
+    --accent: #000000;
     --accent-ink: #ffffff;
 
-    --green: #34c759;
-    --red: #ff3b30;
+    /* Right and wrong are NOT carried by color. Both resolve to full-strength
+       ink; the ✓/✕ glyph and the wording ("Correct" / "Not quite — the answer
+       is …") do the work. That is strictly better for a colorblind learner
+       than green-vs-red was, and it is the only way to keep the palette to
+       black and white. Do not reintroduce a hue here without saying what it
+       buys that the glyph does not. */
+    --green: #000000;
+    --red: #000000;
 
     /* Glass. Tuned per mode: a light-mode bar is a white haze, a dark-mode bar
        is a black one. Same construction, inverted. */
@@ -76,21 +87,21 @@
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #000000;
-      --bg-elevated: #1c1c1e;
-      --fill: #7676805c;
-      --separator: #54545899;
+      --bg-elevated: #1c1c1c;
+      --fill: rgba(255, 255, 255, 0.08);
+      --separator: rgba(255, 255, 255, 0.15);
 
       --label: #ffffff;
-      --label-2: #ebebf599;
-      --label-3: #ebebf54d;
+      --label-2: rgba(255, 255, 255, 0.6);
+      --label-3: rgba(255, 255, 255, 0.3);
 
-      --accent: #0a84ff;
-      --accent-ink: #ffffff;
+      --accent: #ffffff;
+      --accent-ink: #000000;
 
-      --green: #30d158;
-      --red: #ff453a;
+      --green: #ffffff;
+      --red: #ffffff;
 
-      --glass-bg: rgba(30, 30, 32, 0.72);
+      --glass-bg: rgba(28, 28, 28, 0.72);
       --glass-sheen: rgba(255, 255, 255, 0.14);
       --glass-rim: rgba(255, 255, 255, 0.08);
       --glass-edge: rgba(255, 255, 255, 0.06);
@@ -132,8 +143,10 @@
     outline-offset: 2px;
   }
 
+  /* Not the accent: the accent is now pure ink, so a tinted selection would be
+     black-on-black. */
   ::selection {
-    background-color: color-mix(in srgb, var(--accent) 25%, transparent);
+    background-color: var(--fill);
   }
 }
 
