@@ -49,25 +49,15 @@ export default function LearnPage() {
 
   const completed = (store.completedLessons as number[] | undefined) ?? [];
   const due = new Set(dueLessons(store.reviewSchedule ?? {}, completed));
-  const total = LESSON_LIST.length;
-  const doneCount = completed.filter((id) => id >= 1 && id <= total).length;
-
-  /* "You are here" marks the first unfinished lesson — the one tap that
-     matters, which is why there is no separate continue button. */
+  /* The first unfinished lesson. It is marked by ink weight rather than by a
+     label, and it is why there is no separate continue button. */
   const current = LESSON_LIST.find((l) => !completed.includes(l.lessonId))?.lessonId;
 
   return (
     <div className="min-h-[100dvh] bg-bg">
       <div className="mx-auto max-w-column px-5 pt-safe-t">
         <header className="pb-10 pt-12">
-          <h1 className="text-large font-bold tracking-tight text-label">Somali</h1>
-          <p className="mt-1 text-subhead text-label-2">
-            {doneCount === 0
-              ? `${total} lessons`
-              : doneCount === total
-                ? 'All lessons done'
-                : `${doneCount} of ${total} done`}
-          </p>
+          <h1 className="text-large font-bold tracking-tight text-label">LeetGrammar</h1>
         </header>
 
         <main className="pb-[calc(4rem+var(--safe-b))]">
@@ -76,10 +66,14 @@ export default function LearnPage() {
             const unlocked = isUnitComplete(unit.id, completed);
             return (
               <section key={unit.id} className="mb-12">
-                {/* A part title in a contents page: a rule and a small label. */}
+                {/* A part title in a contents page: a rule and a small label.
+                    The unit's own name is not shown — "Filling the WHO box"
+                    means nothing before you have done it, whereas the number is
+                    what a contents page uses. Derived from unit.id, never a
+                    literal. */}
                 <div className="mb-5 flex items-center gap-3">
                   <span className="text-caption2 font-semibold uppercase tracking-[0.14em] text-label-3">
-                    {unit.name ?? `Unit ${unit.id}`}
+                    Unit {unit.id}
                   </span>
                   <span className="h-px flex-1 bg-separator" />
                 </div>
@@ -138,14 +132,17 @@ function Entry({
 
   return (
     <li>
+      {/* Numeral and title share one line-height so their baselines actually
+          meet — with mismatched leading, items-baseline still aligns them but
+          the numeral reads as floating above the title. */}
       <button
         onClick={onOpen}
         aria-current={current ? 'step' : undefined}
-        className="grid w-full grid-cols-[2.75rem_1fr] items-baseline gap-3 py-3.5 text-left active:opacity-50"
+        className="grid w-full grid-cols-[2.5rem_1fr] items-baseline gap-4 py-3.5 text-left active:opacity-50"
       >
         <span
           aria-hidden
-          className={`text-title1 font-light tabular-nums leading-none ${
+          className={`text-title1 font-light leading-[1.3] tabular-nums ${
             current ? 'text-label' : 'text-label-3'
           }`}
         >
@@ -153,18 +150,19 @@ function Entry({
         </span>
 
         <span className="min-w-0">
+          {/* The current lesson is marked by ink and weight alone. A label
+              saying so was one more thing to read on a page whose point is
+              that there is almost nothing to read. */}
           <span
-            className={`block text-title3 ${
+            className={`block text-title3 leading-[1.3] ${
               current ? 'font-semibold text-label' : done ? 'text-label-3' : 'text-label'
             }`}
           >
             {lesson.title}
           </span>
 
-          {(current || due) && (
-            <span className="mt-0.5 block text-footnote text-label-2">
-              {current ? 'you are here' : 'due for review'}
-            </span>
+          {due && (
+            <span className="mt-0.5 block text-footnote text-label-2">due for review</span>
           )}
         </span>
       </button>

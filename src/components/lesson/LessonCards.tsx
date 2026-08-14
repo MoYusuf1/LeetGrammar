@@ -17,8 +17,13 @@
  *
  * THINGS THAT WILL BREAK IF YOU CHANGE THEM CARELESSLY:
  *
- *   • Swipe is DISABLED on exercise steps. Unscramble renders a horizontal row
- *     of tappable word chips, and a drag handler over it eats the taps.
+ *   • Swipe is disabled over a LIVE UNSCRAMBLE only. That is the one input made
+ *     of a horizontal row of tappable chips, which a drag handler would eat.
+ *     Everywhere else drag stays on so the learner can swipe back out of a
+ *     question they have not answered.
+ *   • The gesture is taught by HINT MOTION, once ever (lib/swipe-hint.ts), not
+ *     by a permanent "swipe to continue" label. A hint that replays on every
+ *     card stops being a hint.
  *   • The deck is inset from the screen edge and drag starts there, because iOS
  *     Safari claims edge swipes for back-navigation. A full-bleed drag surface
  *     means the first swipe leaves the lesson.
@@ -33,7 +38,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, MoreHorizontal, ChevronLeft } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent } from '@/data/authored-lessons';
 import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
@@ -44,6 +49,7 @@ import Blueprint, { stripBoxArt } from './Blueprint';
 import LessonMenu from './LessonMenu';
 import FeedbackSheet from './FeedbackSheet';
 import { buildSteps, stepForCard, isRetrieval, type FlowCard, type VocabFlowCard } from './steps';
+import { hasSwipedBefore, rememberSwipe } from '@/lib/swipe-hint';
 import Somali from '@/components/Somali';
 import RichText from '@/components/RichText';
 import GlossarySheet from '@/components/GlossarySheet';
@@ -71,10 +77,13 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const [direction, setDirection] = useState(1);
   const [practiceAnswer, setPracticeAnswer] = useState<string | null>(null);
   const [practiceChecked, setPracticeChecked] = useState(false);
-  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showGlossary, setShowGlossary] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [noMotion] = useState(prefersNoMotion);
+
+  /* Hint motion, shown once ever. See lib/swipe-hint.ts for why it is not a
+     label and why it retires itself. */
+  const [needsHint, setNeedsHint] = useState(() => !hasSwipedBefore());
 
   /*
    * Card flow = the authored cards plus an injected vocabulary deck.
@@ -158,22 +167,34 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   /* An exercise step will not let you past it until it has been answered and
      checked — that gate is the whole point of a retrieval card. */
   const canSwipeForward = !exercise || practiceChecked;
-  /* Drag is off while an exercise is live, because a drag handler over the
-     unscramble word chips eats their taps. Once the answer is checked those
-     inputs are disabled, so there is nothing left to steal and swiping can
-     carry the learner on — which is what removes the second tap per exercise. */
-  const canSwipe = !exercise || practiceChecked;
+
+  /* Drag is off only over an UNSCRAMBLE that is still live, because that is the
+     one input made of a horizontal row of tappable chips, which a drag handler
+     would eat. Every other exercise type is buttons or a text field, where a
+     drag that never moves still delivers its tap — so swiping back out of an
+     unanswered question works there, which is what "make sure we can go back"
+     needs. Once an answer is checked the inputs are disabled and nothing can be
+     stolen, so drag is always on from then. */
+  const liveUnscramble = Boolean(exercise) && exercise?.type === 'unscramble' && !practiceChecked;
+  const canSwipe = !liveUnscramble;
+
+  /* Demonstrate the gesture only where it would actually work, and never when
+     the learner has asked for reduced motion. */
+  const showHint = needsHint && !noMotion && canSwipe && canSwipeForward;
+
+  /* No button, no bar. An empty glass strip is furniture. */
+  const hasBottomAction = Boolean((exercise && !practiceChecked) || isLastStep || noMotion);
 
   /* Arrow keys, for anyone on a keyboard. */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (showMenu || showGlossary || showExitConfirm) return;
+      if (showMenu || showGlossary) return;
       if (e.key === 'ArrowRight' && canSwipeForward) goNext();
       if (e.key === 'ArrowLeft') goPrev();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [goNext, goPrev, canSwipeForward, showMenu, showGlossary, showExitConfirm]);
+  }, [goNext, goPrev, canSwipeForward, showMenu, showGlossary]);
 
   /* All hooks are declared above — safe to bail out for a missing lesson now. */
   if (!content || !step) {
@@ -184,10 +205,10 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     );
   }
 
-  const handleExit = () => {
-    if (stepIndex > 0) setShowExitConfirm(true);
-    else navigate(-1);
-  };
+  /* No confirmation. Position is persisted on every step change, so leaving
+     costs the learner nothing and asking them to confirm a free action is just
+     a dialog in the way. */
+  const handleExit = () => navigate('/learn');
 
   const deck = (
     <StepView
@@ -255,21 +276,43 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.16}
                 onDragEnd={(_, info) => {
+                  const swiped =
+                    (info.offset.x < -SWIPE_THRESHOLD && canSwipeForward) ||
+                    (info.offset.x > SWIPE_THRESHOLD && stepIndex > 0);
+                  if (swiped) {
+                    /* They know the gesture now. Retire the hint for good. */
+                    rememberSwipe();
+                    setNeedsHint(false);
+                  }
                   if (info.offset.x < -SWIPE_THRESHOLD && canSwipeForward) goNext();
                   else if (info.offset.x > SWIPE_THRESHOLD && stepIndex > 0) goPrev();
                 }}
                 className={canSwipe ? 'cursor-grab active:cursor-grabbing' : ''}
               >
-                {deck}
+                {/* Hint motion lives on an inner element so it cannot fight the
+                    drag transform on the parent. */}
+                <motion.div
+                  animate={showHint ? { x: [0, -26, 0, -18, 0] } : { x: 0 }}
+                  transition={
+                    showHint
+                      ? { delay: 1, duration: 1.5, times: [0, 0.22, 0.45, 0.7, 1], ease: 'easeInOut' }
+                      : { duration: 0 }
+                  }
+                >
+                  {deck}
+                </motion.div>
               </motion.div>
             </AnimatePresence>
           )}
         </div>
       </div>
 
-      {/* A button appears ONLY where the lesson demands something. Passive steps
-          get a quiet hint instead — except under reduced motion, where the
-          gesture cannot be relied on and real controls are required. */}
+      {/* A button appears ONLY where the lesson demands something, and when
+          there is no button the bar itself is not rendered — an empty glass
+          strip along the bottom is furniture. Passive steps are taught by hint
+          motion instead, except under reduced motion, where the gesture cannot
+          be relied on and real controls are required. */}
+      {hasBottomAction && (
       <div className="glass glass-bottom sticky bottom-0 z-10 flex-shrink-0 px-4 pt-3">
         <div className="mx-auto max-w-column">
           {exercise && !practiceChecked ? (
@@ -308,14 +351,10 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
                 Next
               </button>
             </div>
-          ) : (
-            <p className="flex min-h-[52px] items-center justify-center gap-1.5 text-footnote text-label-3">
-              Swipe to continue
-              <ChevronRight className="h-4 w-4" />
-            </p>
-          )}
+          ) : null}
         </div>
       </div>
+      )}
 
       {/* Feedback rises over the card rather than pushing it down. */}
       {exercise && practiceChecked && (
@@ -354,30 +393,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
 
       {showGlossary && <GlossarySheet onClose={() => setShowGlossary(false)} />}
 
-      {showExitConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="animate-fade-up w-full max-w-sm rounded-2xl bg-elevated p-6">
-            <h3 className="mb-1.5 text-title3 font-semibold text-label">Leave this lesson?</h3>
-            <p className="mb-5 text-footnote text-label-2">
-              Your place is saved — you will come back to this card.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowExitConfirm(false)}
-                className="pressable flex-1 rounded-xl bg-accent py-3 text-footnote font-semibold text-accent-ink"
-              >
-                Stay
-              </button>
-              <button
-                onClick={() => navigate(-1)}
-                className="flex-1 rounded-xl bg-fill py-3 text-footnote font-semibold text-label-2"
-              >
-                Leave
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
