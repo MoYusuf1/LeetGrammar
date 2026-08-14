@@ -1,7 +1,8 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-12, after spaced review completed the retention layer.
+> comes next. **Last updated:** 2026-08-14, after the interface was rebuilt from
+> scratch.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -52,17 +53,61 @@ real typed text. The commit that made those conversions could not check this —
 worth knowing that the routine exists and is documented in
 [ADDING_CONTENT.md](./ADDING_CONTENT.md).
 
+### The interface
+
+Rebuilt from scratch on 2026-08-13/14. The previous UI was inherited from the
+template this project started as — LeetCode's orange `#ffa116` on near-black,
+`--easy`/`--medium`/`--hard` difficulty tokens, `.lc-row`, `.node-glow`, and a
+Novice→Grandmaster rank ladder. None of it was chosen for a language course.
+
+What it is now, and the reasoning that is not recoverable from the code:
+
+- **iOS, monochrome, system theme only.** Black and white with neutral greys —
+  Apple's own `#F2F2F7`/`#3C3C43` were dropped because they carry a blue cast.
+  No theme toggle: `prefers-color-scheme` decides, the way an iOS app does.
+- **Type is Apple's scale under Apple's names** (11/12/13/15/16/17/20/22/28/34,
+  body at 17). `-apple-system` first, so real SF Pro on Apple hardware and Inter
+  elsewhere — Apple does not license SF as a webfont. Somali is set in **New
+  York**, Apple's system serif, so the target language has its own voice while
+  still being an iPhone font.
+- **Right and wrong are not colour-coded.** The palette has no hue, so the ✓/✕
+  glyph and the wording carry the verdict. This is better for a colourblind
+  learner than the green/red it replaced; do not "restore" colour without saying
+  what it buys.
+- **Glass appears exactly twice per screen** — the nav bar and the action bar —
+  and it is a mimic: blur, saturation, a specular top edge. Real Liquid Glass
+  needs an SVG displacement map fed into `backdrop-filter`, which Chromium
+  supports and **Firefox and Safari do not**. Safari is every iPhone, so the
+  real version would be invisible to the audience it is for.
+- **A lesson is a swipe deck.** Consecutive passive cards merge into one step
+  (`src/components/lesson/steps.ts`); a passive step has **no button at all**.
+  A button appears only where the lesson demands something. Course-wide this
+  took button presses from 179 to 62.
+- **Home is a contents page** — no cards, chevrons, containers or fills. State
+  is carried by ink weight: done recedes, current is full ink and marked.
+
+Routes: `/learn` is home; lesson, homework, unit test and worksheet are
+full-screen task views entered and closed. Landing, Profile, Glossary and the
+lesson index were deleted — the glossary became a sheet opened from inside a
+lesson, where a learner actually meets a term.
+
+**The blueprint is drawn, not typeset.** `blueprintSlot` had been a typed field
+on every card since the beginning and nothing ever read it, so the sentence
+shape rendered as box-drawing ASCII in a `<pre>` that overflowed a phone screen.
+It is now four real segments that highlight the slot from the data.
+
 ### Supporting state
 
 | | |
 | --- | --- |
-| Verified-form registry | **106** forms (97 with 2+ sources; 4 rule-derived) |
+| Verified-form registry | **109** forms (98 with 2+ sources; 11 single-source) |
 | Vocabulary entries | 95, of which **43** are 2-source verified |
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
-| Tests | 92, across 5 files |
+| Tests | 98, across 6 files |
 | Validator | 21 checks passing, 0 errors, 4 open warnings |
 | Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
+| Deployment | Vercel, auto-deploys from `main` |
 
 ---
 
@@ -101,18 +146,25 @@ Wiktionary is already a source key and is the obvious next step. `fadlan`,
 `ilmo` and `masjid` appear in neither grammar under any spelling and need
 either a dictionary citation or cutting.
 
-### 2. 9 registry forms rest on a single source ⚪
+### 2. 11 registry forms rest on a single source ⚪
 
 Down from 18. Orwin's fusion tables on p.21 and p.93 were read on the page and
 resolved eight forms in one pass — `waad`, `baan`, `baad`, `buu`, `bay`,
 `ayaan`, `ayaad`, `ayuu` — on top of `nabad`, `subax`, `waan`, `ayay` earlier.
 Under **S6** those are now producible rather than read-only.
 
-Of the nine left, **seven genuinely cannot be resolved** with the two grammars
-in hand: four come from Nilsson's focus example and are absent from Orwin, three
-come from Orwin's word-order examples and are absent from Nilsson. They need a
-third source, not more searching. The two winnable ones (`waxaan`, `waxaad`)
-have their exact leads recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §9.
+Run `npm run validate:course` for the live list; check **S4** prints it. As of
+this writing: `waxaan`, `waxaad`, `saaxiibkeed`, `saaxiibteed`, `salaamaysa`,
+`salaamaysaa`, `gabadhu`, `bariiska`, `tegey`, `cabbay`, `koob`.
+
+Most **genuinely cannot be resolved** with the two grammars in hand: some come
+from Nilsson's focus example and are absent from Orwin, others from Orwin's
+word-order examples and are absent from Nilsson. They need a third source, not
+more searching. The two winnable ones (`waxaan`, `waxaad`) have their exact
+leads recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §9.
+
+> This count said "9" for a while after `gabadhu` and `bariiska` arrived with
+> the Lesson 5 R6 fix. Trust the validator over this file.
 
 ### 3. Retention layer — built ✅
 
@@ -310,8 +362,8 @@ Measured against the Phase 3 "Assessment engine" Definition of Done in
 | Gating not bypassable by direct URL | ✅ page checks `isUnitComplete()` |
 | **Retake serves *different* items** | ❌ identical items, same order |
 | **`E9` ≥60% production in test banks** | 🟡 47% / 46%, now measured by check `E9` |
-| **`A3` homework layer (Layer 2)** | ❌ not built at all |
-| **SRS / spaced review no longer orphaned** | ❌ still no callers |
+| **`A3` homework layer (Layer 2)** | ✅ built — see debt 3 |
+| **SRS / spaced review no longer orphaned** | ✅ scheduled review is wired; `lib/srs.ts` stays unused *by design* — debt 9 |
 
 The two that matter pedagogically:
 
@@ -367,13 +419,19 @@ Four more rules fall out of the same experience:
 | --- | --- | --- |
 | 1 | Data model + glossary + validator | ✅ |
 | 2 | Unit 2 — Lessons 5–8 | ✅ |
-| 3 | Assessment engine | 🟡 tests, gating, correctives, cumulative done; **retake pool, homework, SRS open** |
+| 3 | Assessment engine | 🟡 tests, gating, correctives, cumulative, homework and spaced review all done; **retake pool still open** |
 | 4 | Unit 1 — Lessons 1–4 | ✅ |
 | 5 | Vocabulary track | ❌ blocked on a dictionary, not on effort |
 | 6 | Units 3–4 — Lessons 9–14 | ❌ Unit 3 sourced and ready; Unit 4 unverified |
 | 7 | Retire `COURSE.md` + generator | ❌ trivial, deferred on purpose |
 
 ### Sequence from here
+
+**0 — Drive the new UI in a real browser.** Ahead of everything else, and
+cheap. The entire interface was rebuilt without a single screen being opened
+(debt 10). Until someone does this, every claim about the app working rests on a
+green build — which is exactly the state the project was in when its first
+lesson was impossible to complete. Settle debt 11 in the same pass.
 
 **A — Unit 3 (Lessons 9–11).** The next real gain, and sourcing is confirmed
 rather than assumed: both grammars cover past tense, negation and questions
@@ -408,10 +466,8 @@ not displace A–D.
 
 ### Deliberately not planned
 
-The homework layer (design Layer 2) and SRS wiring remain unbuilt. Both are real
-gaps against the design, and both are flat-cost: they read from banks that will
-exist anyway, so building them earlier buys nothing. Revisit once Unit 3 has
-landed and there is more material for them to work on.
+Nothing from the original Layer 2 / SRS gap remains — both landed (debt 3). The
+open items are all in "Known debt" below; there is no separate unplanned pile.
 
 ## Open questions — these need a human decision
 
@@ -469,3 +525,78 @@ item that this course never collects.
 Keep it only if the vocabulary track (Phase 5) will genuinely want per-word
 scheduling; otherwise delete it and `srsCards` together. An engine with no
 callers that looks finished is what [POSTMORTEM.md](./POSTMORTEM.md) is about.
+
+### 10. The whole interface is unverified in a browser 🔴
+
+**This is the largest open risk in the project.** The UI was rebuilt end to end
+— shell, home, lesson player, homework, unit test, worksheet — and none of it
+has been driven in a real browser. The session that built it had no Playwright
+and no browser automation available, so working-agreement **rule 1 is unmet**
+for every screen.
+
+Build, 98 tests, 21 validator checks and `tsc` all pass, and every new utility
+class was confirmed to compile into the CSS. That is precisely the kind of green
+that shipped the Lesson 1 softlock. The things a real device will decide and
+nothing else can:
+
+- whether the 55px swipe threshold feels right, and whether the gesture fights
+  iOS Safari's edge-back despite the deck being inset from the screen edge
+- whether the feedback sheet obscures the answer on a short screen
+- whether the floating glass circles clear the Dynamic Island
+- the localStorage hydration question in debt 11
+
+Drive `/#/learn`, then a full lesson, at a phone viewport, with
+`localStorage.setItem('lg-motion','off')` first. Routine in
+[ADDING_CONTENT.md](./ADDING_CONTENT.md).
+
+### 11. localStorage hydration was never confirmed end to end ⚪
+
+Carried over unresolved. While testing spaced review, the app overwrote seeded
+`completedLessons` and `reviewSchedule` with empties — it hydrated from defaults
+and persisted those back. `partialize` in `src/stores/progress-store.ts` does
+list all three of `completedLessons`, `lessonCardPositions` and `reviewSchedule`,
+so the configuration is right and this is *probably* a test-harness race
+(seeding localStorage after the store had already hydrated) rather than a real
+bug. That is inference, not evidence. If it is genuine, a learner's progress
+vanishes on reload, which would matter more than anything else in this file.
+
+### 12. The service worker used to pin devices to a dead build ✅ fixed
+
+Recorded because it cost two deploys and will be tempting to "simplify" back.
+`public/sw.js` was cache-first over everything with a constant cache name, and
+it precached `/index.html`. Since that HTML names the content-hashed asset
+bundles, any device that cached it once kept loading the old JS and CSS forever;
+the activate handler only deleted caches whose name differed from `CACHE_NAME`,
+which never changed, so nothing was ever purged.
+
+The rule now: **HTML is network-first, hashed `/assets/*` are cache-first**,
+nothing is precached, and `CACHE_VERSION` is bumped when the file changes. This
+is the production form of the stale-bundle trap in
+[WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md).
+
+### 13. `**` in lesson content means two different things ⚪
+
+Blocks the strongest available typographic signal. `authored-lessons.ts` uses
+`**` both to mark a Somali form (`**waxa**`, `**guriga**`, `**-ka**`) and for
+ordinary English emphasis (`**not**`, `**WHO**`, `**SIGNAL**`, `**DO**` — the
+blueprint labels). Since the serif is reserved for Somali, rendering all bold in
+it would teach that "not" is a Somali word, so `<Somali>` is applied only where
+the data structurally guarantees it: the `somali` field, unscramble word banks,
+vocab entries and answer keys.
+
+Fixing it means giving the content its own marker for Somali plus a validator
+check that `**` never wraps a registry form. Content work — not to be done
+casually.
+
+### 14. Lessons have no signature form ⚪
+
+Wanted for a language-forward home screen (each lesson fronted by its key Somali
+word, set large). **It cannot be derived** — most lessons' `correctAnswer` is an
+English proposition, so picking the most frequent value yields "It is
+masculine", "Hold the vowel longer", `v`, `x`; only Lesson 5 (`baa`) and Lesson
+6 (`wuxuu`) produce anything usable. It needs a hand-authored field per lesson
+plus a check that each form is registry-verified.
+
+`blueprintSlot` is the reliable alternative and is already populated
+(— / WHO / WHO / WHO / SIGNAL / SIGNAL / DO / DO), so a sentence-shaped home is
+buildable today at no content cost.
