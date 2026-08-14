@@ -33,8 +33,8 @@ import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MoreHorizontal, Lightbulb } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
-import { getLessonContent } from '@/data/authored-lessons';
-import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
+import { getLessonContent, slotsCompletedBefore } from '@/data/authored-lessons';
+import type { Card as TeachingCard, PracticeExercise, BlueprintSlot } from '@/data/types';
 import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import AnswerInput from './AnswerInput';
@@ -65,6 +65,9 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const navigate = useNavigate();
   const progress = useProgressStore();
   const content = getLessonContent(lessonId);
+  // Which blueprint boxes earlier lessons already filled. Derived from the
+  // course, so it stays true as lessons are added or retagged.
+  const doneSlots = useMemo(() => slotsCompletedBefore(lessonId), [lessonId]);
 
   const [direction, setDirection] = useState(1);
   const [practiceAnswer, setPracticeAnswer] = useState<string | null>(null);
@@ -174,6 +177,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     <StepView
       step={step}
       lessonTitle={content.title}
+      doneSlots={doneSlots}
       practiceAnswer={practiceAnswer}
       practiceChecked={practiceChecked}
       showHint={showHint}
@@ -344,6 +348,7 @@ function FeedbackHeading({
 function StepView({
   step,
   lessonTitle,
+  doneSlots,
   practiceAnswer,
   practiceChecked,
   showHint,
@@ -351,6 +356,8 @@ function StepView({
 }: {
   step: { cards: FlowCard[]; exercise?: TeachingCard['exercise'] };
   lessonTitle: string;
+  /** Blueprint boxes filled by earlier lessons. */
+  doneSlots: BlueprintSlot[];
   practiceAnswer: string | null;
   practiceChecked: boolean;
   showHint: boolean;
@@ -364,6 +371,7 @@ function StepView({
           card={card}
           lessonTitle={lessonTitle}
           showTitle={i === 0}
+          doneSlots={doneSlots}
           practiceAnswer={practiceAnswer}
           practiceChecked={practiceChecked}
           showHint={showHint}
@@ -378,6 +386,7 @@ function RenderCard({
   card,
   lessonTitle,
   showTitle,
+  doneSlots,
   practiceAnswer,
   practiceChecked,
   showHint,
@@ -386,6 +395,7 @@ function RenderCard({
   card: FlowCard;
   lessonTitle: string;
   showTitle: boolean;
+  doneSlots: BlueprintSlot[];
   practiceAnswer: string | null;
   practiceChecked: boolean;
   showHint: boolean;
@@ -397,7 +407,14 @@ function RenderCard({
     case 'promise':
     case 'payoff':
     case 'predict':
-      return <IntroCard card={card} lessonTitle={lessonTitle} showTitle={showTitle} />;
+      return (
+        <IntroCard
+          card={card}
+          lessonTitle={lessonTitle}
+          showTitle={showTitle}
+          doneSlots={doneSlots}
+        />
+      );
 
     case 'vocab':
       return <VocabCard words={(card as VocabFlowCard).words} />;
@@ -433,10 +450,12 @@ function IntroCard({
   card,
   lessonTitle,
   showTitle,
+  doneSlots,
 }: {
   card: TeachingCard;
   lessonTitle: string;
   showTitle: boolean;
+  doneSlots: BlueprintSlot[];
 }) {
   return (
     <div className="space-y-5">
@@ -460,7 +479,9 @@ function IntroCard({
 
       {/* Drawn, not typeset — the content still carries the old box-drawing art,
           which is stripped here. See Blueprint.tsx. */}
-      {card.type === 'blueprint' && <Blueprint slot={card.blueprintSlot} />}
+      {card.type === 'blueprint' && (
+        <Blueprint slot={card.blueprintSlot} done={doneSlots} />
+      )}
 
       {card.content && (
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">

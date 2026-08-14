@@ -91,19 +91,36 @@ export interface PracticeExercise {
 // CARD — a single "page" in a lesson
 // ============================================================================
 
+/**
+ * The four boxes of the sentence blueprint, in the order they are drawn.
+ *
+ * Declared here rather than in the component because the *data* is what says
+ * which boxes a lesson fills; the component only draws them.
+ */
+export const BLUEPRINT_SLOTS = ['WHO', 'SIGNAL', 'WHAT', 'DO'] as const;
+export type BlueprintSlot = (typeof BLUEPRINT_SLOTS)[number];
+
 export interface Card {
   id: string;
   type: CardType;
 
   // Content — exactly one per card
+  // (see BlueprintSlot below for the sentence-shape boxes)
   title?: string;               // for teach/example/summary cards
   prompt?: string;              // for blueprint/connect/promise/predict
   content?: string;             // long-form for teach/example cards
   exercise?: PracticeExercise;  // for practice cards (notice/complete/produce)
   vocab?: string[];             // for vocab cards (list of Somali words)
 
-  // Blueprint state — used in blueprint card only
-  blueprintSlot?: 'WHO' | 'SIGNAL' | 'WHAT' | 'DO';  // Which box to highlight
+  // Blueprint state — used in blueprint card only.
+  //
+  // A LESSON MAY FILL MORE THAN ONE BOX, which is why this takes a list as well
+  // as a single value. COURSE_DESIGN §4B.1's own progression table says Lesson 2
+  // adds "WHO / WHAT can hold a noun" and Lesson 3 "those boxes can be made
+  // definite" — both plural. The field used to be a single slot, so those
+  // lessons could only claim WHO, `WHAT` was never lit by anything, and Lesson
+  // 8's blueprint card asserted "Every box is filled" while one never had been.
+  blueprintSlot?: BlueprintSlot | BlueprintSlot[];
 
   // Metadata
   isNew?: boolean;              // This card introduces new grammar

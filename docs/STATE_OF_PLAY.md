@@ -498,15 +498,36 @@ features:
   graduates out.
 - The unit-test lock goes; the 85% criterion and the correctives stay.
 
-**P3 — Evaluate the method against Lessons 5–8, which already exist.** This
-phase originally read "build Lesson 5 as a method prototype," on the strength of
-a stale scope claim in COURSE_DESIGN. **Lesson 5 shipped long ago.** The
-prototype is not missing — it is unexamined. Write the kill criteria first, then
-read the lessons and drive them, against the four questions under Open Questions
-below. Cost: a reading and a browser session, not an authoring cycle.
+**P3 — Evaluate the method against Lessons 5–8. ✅ DONE.** This phase originally
+read "build Lesson 5 as a method prototype," on the strength of a stale scope
+claim in COURSE_DESIGN. Lesson 5 had shipped long ago; the prototype was not
+missing, it was unexamined.
+
+Kill criteria were committed first, in their own commit (`44c0771b`), ahead of
+looking at anything — the author of the lessons and the judge of them being the
+same person is the §3.2 bias at full strength. Findings at `db065b87`.
+
+**Result: 4 / 4 pass, no method-level failure.** COURSE_DESIGN Part 3 stands.
+
+- **The First-Noun defence is real.** The heuristic test from LESSON_CONVENTIONS
+  §3.1b was run item by item: `Gabadhu bariiska baa cuntay` answers "Gabadhu" on
+  the wrong heuristic and "bariiska" in fact. The over-correction is guarded too
+  — `Sahra baa …` puts the spotlight *on* the first noun — so both the default
+  and its mirror image are broken. That is a stronger implementation of §1.10
+  than the design asks for.
+- **The honest weakness is the EXPLAIN/NOTICE question**, which passes its
+  criterion and then turns out to be the weaker half of the question. Lesson 5
+  follows the loop and never withholds explanation, so whether explanation adds
+  anything cannot be settled by reading. It needs an A/B unavailable at n = 1.
+  The tension in §3.1 stays open.
+
+Four lesson-level findings came out of it, **all now fixed**: `waa` implying
+"is" (`4c44cf7d`), the blueprint's missing completed state and unclaimed `WHAT`
+box, and a hint that answered its own item. The evaluation document was folded
+into this file and deleted, per its own terms.
 
 **P4 — Then, and only then, decide Unit 3.** Build it, change the method, or
-stop.
+stop. Nothing now blocks this.
 
 **S — Sourcing, running alongside P1–P2.** Six dictionaries arrived in `docs/`
 in August 2026, which discharges the debt named in rule 1 above — *"for
@@ -560,12 +581,29 @@ there was never a fork here. What is real: **the method has never been
 evaluated**, and the material to evaluate it with is already written.
 
 **~~Is the four-box blueprint still the right spine?~~ — ANSWERED (Aug 2026):
-the premise was wrong, and the evidence is already on disk.** This question used
-to read "it currently only ever highlights WHO... it pays off from Lesson 5
-onward, and is unproven until then." It does not only highlight WHO.
-`blueprintSlot` across the authored course runs **WHO (L2–4) → SIGNAL (L5–6) →
-DO (L7–8)**. The device has been advancing through three of its four slots for
-as long as Unit 2 has existed.
+yes, and it is now telling the truth.** This question used to read "it currently
+only ever highlights WHO... it pays off from Lesson 5 onward, and is unproven
+until then." That premise was wrong — the device had been advancing since Unit 2
+shipped — but investigating it turned up a real defect underneath.
+
+`blueprintSlot` was a *single* value, so a lesson could claim exactly one box.
+COURSE_DESIGN §4B.1's own progression table says Lesson 2 adds "**WHO / WHAT**
+can hold a noun" and Lesson 3 "those **boxes** can be made definite", both
+plural — so the data model could not express what the design specified.
+Consequence: **`WHAT` was never claimed by any lesson**, while Lesson 8's
+blueprint card told the learner "Every box is filled." The spine asserted
+something false, on the highest-effect device in the design (§1.13, 1.24).
+
+Fixed: the field takes a list, Lessons 2 and 3 claim `WHO` and `WHAT` as the
+design always said they did, and the progression is now
+
+```
+ L2–3  WHO + WHAT      L5–6  SIGNAL      L7–8  DO
+```
+
+with nothing unclaimed at the end. `src/tests/blueprint.test.ts` guards both
+properties: every box is filled by something, and Lesson 8's claim is true by
+the time it is made.
 
 So the blueprint is not waiting on new content to be tested. **It is waiting on
 somebody opening it.** Same for the other three method questions:

@@ -18,7 +18,7 @@
  * the next box, not taught here.
  */
 
-import type { Lesson } from './types';
+import type { Lesson, BlueprintSlot } from './types';
 
 // ============================================================================
 // LESSON SUMMARY — for listing lessons in navigation/UI
@@ -210,7 +210,7 @@ const LESSON_2: Lesson = {
     {
       id: '2-blueprint',
       type: 'blueprint',
-      blueprintSlot: 'WHO',
+      blueprintSlot: ['WHO', 'WHAT'],
       content: `${BOX}\n\nToday: the WHO box. Nouns, and the one property of them you cannot see.`,
     },
     {
@@ -391,7 +391,7 @@ const LESSON_3: Lesson = {
     {
       id: '3-blueprint',
       type: 'blueprint',
-      blueprintSlot: 'WHO',
+      blueprintSlot: ['WHO', 'WHAT'],
       content: `${BOX}\n\nStill the WHO box. Last lesson: which gender a noun has. Today: the ending that shows it.`,
     },
     {
@@ -920,7 +920,11 @@ const LESSON_5: Lesson = {
         question: 'Which word here is the signal: the one doing the spotlighting?',
         somali: 'Sahra baa salaamaysa saaxiibkeed',
         answer: 'baa',
-        hint: 'It is not the name and not the long word. It is the short one sitting second.',
+        // Was "It is not the name and not the long word. It is the short one
+        // sitting second." — which answers the item by position, so a learner
+        // who knows nothing about signals still gets it right. A hint should
+        // narrow the search, not end it.
+        hint: 'The signal is the word that carries no meaning of its own. Every other word here could be translated on its own; one cannot.',
         explanation:
           '**baa** is the signal. It carries no meaning you could translate on its own: its whole job is to mark that the word before it, **Sahra**, is the one being spotlighted.',
       },
@@ -1741,4 +1745,30 @@ export const LESSON_LIST: LessonSummary[] = AUTHORED_LESSONS.map((lesson) => ({
 
 export function getLessonContent(lessonId: number): Lesson | undefined {
   return AUTHORED_LESSONS.find((l) => l.id === lessonId);
+}
+
+/** Every blueprint box a lesson fills. Normalises the single-or-list field. */
+export function slotsFilledBy(lesson: Lesson): BlueprintSlot[] {
+  const raw = lesson.cards.find((c) => c.type === 'blueprint')?.blueprintSlot;
+  if (!raw) return [];
+  return Array.isArray(raw) ? raw : [raw];
+}
+
+/**
+ * Boxes filled by lessons *before* this one — the blueprint's "done" state.
+ *
+ * Derived from the course rather than stored, so it cannot drift from what the
+ * lessons actually teach. This is what lets the diagram show three states
+ * instead of two: before this, `WHO` at Lesson 5 rendered identically to
+ * `WHAT`, which no lesson had touched — the organizer distinguished only
+ * current from not-current, and §1.13 rates the graphic channel (1.24) above
+ * the prose (0.80) that was carrying the difference.
+ */
+export function slotsCompletedBefore(lessonId: number): BlueprintSlot[] {
+  const done = new Set<BlueprintSlot>();
+  for (const lesson of AUTHORED_LESSONS) {
+    if (lesson.id >= lessonId) continue;
+    for (const s of slotsFilledBy(lesson)) done.add(s);
+  }
+  return [...done];
 }
