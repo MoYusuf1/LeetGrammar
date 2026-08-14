@@ -3,8 +3,11 @@
 > **Start here.** LeetGrammar is a local-only Somali grammar course — no
 > accounts, no backend, progress in `localStorage`.
 >
-> **Current state: 4 lessons, all source-verified.** See
+> **Current state: 8 lessons in 2 units, all source-verified.** See
 > [STATE_OF_PLAY.md](./STATE_OF_PLAY.md) for exact numbers and what is next.
+>
+> For the teaching method and the research behind it, see the
+> [root README](../README.md).
 
 ## Navigation
 
