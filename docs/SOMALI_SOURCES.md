@@ -53,17 +53,21 @@ Two lookup strategies were tried. **Only one of them is safe, and the difference
 is not obvious**, so it is written down here rather than rediscovered.
 
 **Parsing Somali headwords out of `AW`'s two-column layout is contaminated.** An
-automated pass produced `habeen → "badh midnight"`, `reer → "guuraa nomads"`,
-`ilmo → "uur ku jira fetus"` and `dal → "country; pestle"`. The first three are
-*compound* entries — `habeen badh` is midnight, `reer guuraa` is nomads — which
-sort alphabetically ahead of the bare headword, so a first-match parse grabs the
-compound. The fourth is a bleed across the column gutter. Worst of the four:
-`salaan → "ladder; stairs"`, which is **`sallaan`, a different word.**
+automated pass produced `habeen → "badh midnight"`, `reer → "guuraa nomads"` and
+`ilmo → "uur ku jira fetus"`. All three are *compound* entries — `habeen badh` is
+midnight, `reer guuraa` is nomads — which sort alphabetically ahead of the bare
+headword, so a first-match parse grabs the compound. Worse: `salaan → "ladder;
+stairs"`, which is **`sallaan`, a different word.**
 
-The real headwords are all present (`habeen night; evening`, `ilmo baby; child;
-tears`, verified on printed pp.33 and 35). The parse was not inventing, it was
-mis-ordering — but four wrong glosses would have entered the registry looking
-exactly like the right ones.
+The real headwords are all present (`habeen night; evening` on printed p.33,
+`ilmo baby; child; tears` on p.35, both verified). The parse was not inventing,
+it was mis-ordering — but the wrong glosses would have entered the registry
+looking exactly like the right ones.
+
+**And the check cuts both ways.** `dal → "country; pestle"` was also written off
+here as a gutter bleed. It is not — printed p.27 has exactly that entry, both
+senses. A suspicion about an automated extraction is not evidence either;
+the page settles it in both directions.
 
 **Anchoring on the English headword in `SA` / `JF` is reliable**, because those
 are EN→SO and each entry carries a phonetic respelling and a part-of-speech
