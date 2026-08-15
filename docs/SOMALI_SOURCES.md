@@ -32,17 +32,48 @@ a form to the registry only after recording its sources here.
 | **W-gram** | Wikipedia, *Somali grammar*. https://en.wikipedia.org/wiki/Somali_grammar |
 | **Wikt** | Wiktionary, Somali entries. https://en.wiktionary.org/ |
 
-**Pending registration** (added to `docs/` Aug 2026, not yet usable — see
-"What counts as two sources" below):
+**Dictionaries** (added Aug 2026). Cited as `s.v. "headword"` rather than by
+page: the folios are not in either scan's text layer, and a headword is
+unambiguous and checkable without knowing whether a page number is printed or
+PDF-index. (They differ: in `SA`, *door* is printed p.62 and PDF p.74; in `JF`
+the offset is 18.)
 
 | Key | Source | Status |
 | --- | --- | --- |
-| `JF` | Jawahir Abdulla Farah, *Somali Learner's Dictionary / Qaamuuska Barashada Ingiriis-Soomaali*, HAAN Associates, 1992 | Ready. Clean text layer, learner-oriented, has a pronunciation guide. **Best of the batch.** |
-| `SA` | Suleiman Mohamoud Adam, *New Student Dictionary / Dikshaneeriga Cusub ee Ardayda*, HAAN Publishing, 1999 | Ready. Same publisher as `JF` — see rule 3. |
-| `AW` | Nicholas Awde, Cabdulqaadir Xaaji Cali Xaaji Axmed & **Martin Orwin**, *Somali–English / English–Somali Dictionary & Phrasebook*, Hippocrene, 1999 | Usable, but **counts as `O`** — see rule 2. |
-| — | Abdirahman Farah, *Somali–English Dictionary*, 1995 | Image-only scan, 248pp. Needs OCR before it can be cited. Only SO→EN full dictionary here. |
+| `JF` | Jawahir Abdulla Farah, *Somali Learner's Dictionary / Qaamuuska Barashada Ingiriis-Soomaali*, HAAN Associates, 1992 | **In use.** EN→SO, learner-oriented, definitions in Somali. Verified on the page (`brother (broo tho) Walaal`, printed p.9). |
+| `SA` | Suleiman Mohamoud Adam, *New Student Dictionary / Dikshaneeriga Cusub ee Ardayda*, HAAN Publishing, 1999 | **In use.** EN→SO. Verified on the page (`door (doo) n. Irrid, albaab.`, printed p.62). Same publisher as `JF` — see rule 3. |
+| `AW` | Nicholas Awde, Cabdulqaadir Xaaji Cali Xaaji Axmed & **Martin Orwin**, *Somali–English / English–Somali Dictionary & Phrasebook*, Hippocrene, 1999 | **In use, but counts as `O`** — see rule 2. The only SO→EN index available, so it is what confirms a Somali headword directly. |
+| — | Abdirahman Farah, *Somali–English Dictionary*, 1995 | Image-only scan, 248pp, no text layer. Needs OCR before it can be cited. |
 | — | "Trebor Hog", *Somali English Lexicon*, Truth Ltd, 2018 | **Quarantined.** No lexicographic footprint for author or publisher; EPUB metadata carries no date, rights or source; its grammatical codes (`mg`, `fk`, `s`, `f`) are absent from its own abbreviation table. Shape suggests a database export. Establish provenance and notation first. |
 | — | ~~Salim Alio Ibro, *English — Jiddu — Somali Mini-dictionary*, 1998~~ | **Rejected and removed.** See below. |
+
+### How a dictionary citation is arrived at, and why the method matters
+
+Two lookup strategies were tried. **Only one of them is safe, and the difference
+is not obvious**, so it is written down here rather than rediscovered.
+
+**Parsing Somali headwords out of `AW`'s two-column layout is contaminated.** An
+automated pass produced `habeen → "badh midnight"`, `reer → "guuraa nomads"`,
+`ilmo → "uur ku jira fetus"` and `dal → "country; pestle"`. The first three are
+*compound* entries — `habeen badh` is midnight, `reer guuraa` is nomads — which
+sort alphabetically ahead of the bare headword, so a first-match parse grabs the
+compound. The fourth is a bleed across the column gutter. Worst of the four:
+`salaan → "ladder; stairs"`, which is **`sallaan`, a different word.**
+
+The real headwords are all present (`habeen night; evening`, `ilmo baby; child;
+tears`, verified on printed pp.33 and 35). The parse was not inventing, it was
+mis-ordering — but four wrong glosses would have entered the registry looking
+exactly like the right ones.
+
+**Anchoring on the English headword in `SA` / `JF` is reliable**, because those
+are EN→SO and each entry carries a phonetic respelling and a part-of-speech
+marker: `mouth (mawth) n. Af.` The surrounding structure validates the match, so
+a stray occurrence of the Somali form elsewhere in a definition cannot
+masquerade as an entry.
+
+**The rule that follows:** find candidates by English-headword anchor, then
+**confirm on the page before citing**, exactly as `Working with O` already
+requires. The dump locates; the page decides.
 
 ### Jiddu is not Standard Somali
 
