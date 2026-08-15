@@ -229,8 +229,8 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // These four occur only inside the minimal pair at N §12.3. They are shown
   // to the learner as whole sentences, never built from parts — the verb
   // endings belong to Lesson 7 and the possessive to a later unit.
-  saaxiibkeed: { gloss: 'her friend', sources: ['N §12.3'], confidence: 'single' },
-  saaxiibteed: { gloss: 'her friend (feminine form)', sources: ['N §12.3'], confidence: 'single' },
+  saaxiibkeed: { gloss: 'her friend', sources: ['N §12.3', 'SA p.76 (stem saaxiib)'] },
+  saaxiibteed: { gloss: 'her friend (feminine form)', sources: ['N §12.3', 'SA p.76 (stem saaxiib)'] },
   salaamaysa: { gloss: 'is greeting', sources: ['N §12.3'], confidence: 'single' },
   salaamaysaa: { gloss: 'is greeting', sources: ['N §12.3'], confidence: 'single' },
 
@@ -270,11 +270,11 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // spotlight falls on the SECOND noun: an item built on it cannot be answered
   // by the first-noun habit §1.10 warns about.
   gabadhu: { gloss: 'the girl (subject form)', gender: 'f', sources: ['O p.93'], confidence: 'single' },
-  bariiska: { gloss: 'the rice', gender: 'm', sources: ['O p.93'], confidence: 'single' },
+  bariiska: { gloss: 'the rice', gender: 'm', sources: ['O p.93', 'SA p.165 (stem bariis)'] },
   cuntay: { gloss: 'ate', sources: ['N §11.1', 'O p.93'] },
   tegey: { gloss: 'went', sources: ['O p.41'], confidence: 'single' },
   cabbay: { gloss: 'drank', sources: ['O p.41'], confidence: 'single' },
-  koob: { gloss: 'cup', sources: ['O p.42'], confidence: 'single' },
+  koob: { gloss: 'cup', sources: ['O p.42', 'SA p.51'] },
 };
 
 /** Proper nouns that appear in sourced example sentences. */

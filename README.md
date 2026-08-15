@@ -322,8 +322,9 @@ Kept in the design document too, and worth stating up front:
   structure, density, language, format ratios and sourcing — all necessary, none
   sufficient. A lesson can pass every check and still explain badly.
 - **Thresholds are calibrated to known defects**, not derived from research.
-- **52 of 95 vocabulary entries still lack a second source.** Known, tracked,
-  and the next piece of work.
+- **5 of 95 vocabulary entries still lack a second source**, down from 52.
+  Known, tracked, and each remaining one is a specific problem rather than an
+  undone lookup — see `docs/SOMALI_SOURCES.md`.
 
 ---
 

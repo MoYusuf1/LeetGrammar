@@ -107,13 +107,13 @@ It is now four real segments that highlight the slot from the data.
 
 | | |
 | --- | --- |
-| Verified-form registry | **109** forms (98 with 2+ sources; 11 single-source) |
-| Vocabulary entries | 95, of which **43** are 2-source verified |
+| Verified-form registry | **109** forms (**102** with 2+ independent sources; 7 single-source) |
+| Vocabulary entries | 95, of which **90** are 2-source verified |
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
-| Tests | 98, across 6 files |
+| Tests | 109, across 7 files |
 | Validator | 21 checks passing, 0 errors, 4 open warnings |
-| Sources | 5 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary |
+| Sources | 8 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary, + 3 dictionaries (`JF`, `SA`, `AW`) |
 | Deployment | Vercel, auto-deploys from `main` |
 
 ---
@@ -135,12 +135,15 @@ broad and decorative**. See [POSTMORTEM.md](./POSTMORTEM.md).
 
 ## Known debt
 
-### 1. 52 of 95 vocabulary entries lack two sources 🔴
+### 1. 5 of 95 vocabulary entries lack two sources 🟡
 
-Was 60 with *no* citation at all. A pass against Orwin's Somali-English
-glossary and Nilsson's wordlists took fully-verified entries from 35 to 43 and
-gave most of the rest a real single-source citation instead of nothing. Method,
-traps and findings: [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §10.
+Was 60 with *no* citation at all, then 52. Three dictionaries arrived in August
+2026 and the pass against them, both grammars and Wiktionary took it to **5**.
+Registry: 109 forms, 102 with two or more independent sources. Method, traps and
+findings: [SOMALI_SOURCES.md](./SOMALI_SOURCES.md).
+
+What remains is listed under the plan below; none of the five is a lookup that
+simply has not been done yet.
 
 **It found a real error.** The deck taught `aabo` for "father". Neither grammar
 contains that spelling — both have `aabbe`, which our own registry already
@@ -410,8 +413,9 @@ Four more rules fall out of the same experience:
 1. **For morphology, source the rule; for vocabulary, you need a dictionary.**
    Grammars illustrate rules with a handful of example words. That is enough to
    license a whole paradigm (the `derived` tier, check `S7`) and nowhere near
-   enough for breadth — which is why 52 vocabulary entries still lack a second
-   source and no amount of re-reading Nilsson will fix it.
+   enough for breadth — which is why 52 vocabulary entries lacked a second
+   source until three dictionaries arrived, and no amount of re-reading Nilsson
+   would have fixed it. The dictionary pass took that to 5.
 2. **A target the content cannot reach gets measured, not chased.** Unit 1's
    production ceiling is structural: its objectives are facts *about* the
    language, with nothing to type. `E9` reports the number every run and warns.
@@ -459,9 +463,8 @@ retake serves the same items. Fixing it needs roughly double the items per
 objective — content, not code — so it is cheapest to do *while* authoring Unit 3
 rather than after.
 
-**C — The dictionary pass.** 52 vocabulary entries, plus the seven registry
-forms that two grammars cannot resolve. Wiktionary is already a source key.
-This is mechanical and can run in the background of anything else.
+**C — The dictionary pass. ✅ done**, see phase S below. 52 vocabulary entries
+to 5, and the registry's independence problem from 9 forms to 1.
 
 **D — Unit 4 (Lessons 12–14), sourcing pass first.** Adjectives and prepositions
 are well covered in both grammars. **Numerals are the thin spot** — Orwin
@@ -529,17 +532,47 @@ into this file and deleted, per its own terms.
 **P4 — Then, and only then, decide Unit 3.** Build it, change the method, or
 stop. Nothing now blocks this.
 
-**S — Sourcing, running alongside P1–P2.** Six dictionaries arrived in `docs/`
-in August 2026, which discharges the debt named in rule 1 above — *"for
-vocabulary you need a dictionary... no amount of re-reading Nilsson will fix
-it."* Order matters here:
+**S — Sourcing. ✅ SUBSTANTIALLY DONE (Aug 2026).**
+
+| Check | Before | After |
+|---|---|---|
+| `S3` vocabulary entries lacking 2 sources | **52** | **5** |
+| `S4` registry forms on a single source | 11 | **7** |
+| `S5` forms citing one author twice | 9 | **1** |
+
+Registry now at 109 forms, **102 with two or more independent sources**. Every
+citation added was confirmed on the page, not in a text dump — about twenty page
+reads across the three dictionaries and Orwin. The method, and the two ways it
+can go wrong, are written up in
+[SOMALI_SOURCES.md](./SOMALI_SOURCES.md).
+
+**One shipped error was found and fixed:** Lesson 1's vocabulary listed `xarf`
+for "letter of the alphabet". Nilsson §4.3 gives the singular as `xáraf` —
+`xarf` is root notation and is unpronounceable under the syllable rule the same
+section states. No check could have caught it: `S1` and `S2` cover Somali in
+answers and prose, and a vocabulary gloss is neither.
+
+**What is left, and why each is not a lookup:**
+
+- `salaan` — single-sourced *and* its part of speech is unconfirmed. Orwin's
+  other mention is a verb entry, Wiktionary has no Somali section, and Awde's
+  entry is contaminated with `sallaan` (ladder). Needs a page.
+- `been`, `masjid` — one verified source each; genuinely absent elsewhere.
+- `gabar` — a variant of `gabadh`, in neither dictionary.
+- `waxaan`, `waxaad`, `gabadhu`, `salaamaysa`, `salaamaysaa` — fusion, subject
+  and progressive forms. Compositional, not lexical.
+- `tegey`, `cabbay` — past tenses. **Both stems are confirmed** (`tag` and `cab`,
+  Awde pp.48 and 25); what is missing is a double-attested past-tense rule, at
+  which point they join the derived tier like `keentaa`.
+
+The ordering below was the plan, and it held:
 - **The independence policy comes first**, and is now written in
   [SOMALI_SOURCES.md](./SOMALI_SOURCES.md). Six books make it *feel* as though
   everything has two sources; one contains Orwin, two share a publisher, one has
   no traceable provenance. Adding sources faster than the policy hollows out the
   two-source rule.
 - Then register the clean ones, quarantine the untraceable one, and close `S3`
-  (52 vocabulary entries) and `S4` (11 thin registry forms). **This is repair of
+  (then 52 vocabulary entries) and `S4` (then 11 thin registry forms). **This is repair of
   material already on screen, not new content** — which is why it is not blocked
   behind P3.
 - The Jiddu mini-dictionary was rejected outright: Jiiddu is a separate
