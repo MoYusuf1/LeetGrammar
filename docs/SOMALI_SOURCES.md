@@ -104,6 +104,30 @@ is already a registered key and is compiled from a different lineage than the
 print dictionaries — a better pairing under rule 5 than two of these three
 would be.
 
+### `xarf` was not a word. The vocabulary deck now says `xaraf`.
+
+Lesson 1's vocabulary listed **`xarf`** for "letter (of the alphabet)". That form
+does not occur. Nilsson **§4.3, "Vowel insertion"**, exists to explain exactly
+this:
+
+> A Somali syllable can only begin and end with a single consonant. If the root
+> or stem of a word ends with two consonants, an extra supportive vowel must be
+> inserted into the form of the word that lacks an ending.
+
+and gives the paradigm directly — plural `xarfó`, root `/xar_f/`, **singular
+`xáraf`**. `xarf` is the *root notation*, not a citation form; written as a word
+it is unpronounceable under the rule the same grammar states.
+
+Independently confirmed in `JF`, printed p.41, s.v. *letter*: `Warqad. Xaraf.`
+with the gloss *"Xarfaha alfabeetadu ka koobanto mid ah"* — one of the letters
+the alphabet is made of. Note `Xarfaha`, the definite plural, which matches
+Nilsson's `xarfó`.
+
+Corrected to `xaraf`, now double-sourced. It reached the learner only through the
+Lesson 1 vocabulary deck — no lesson prose or exercise used it, which is why no
+check caught it: `S1` and `S2` verify Somali in answers and prose, and a
+vocabulary gloss is neither.
+
 ### Two near-misses worth not repeating
 
 **`mahadnaq` is not `mahadsanid`.** `SA` has `thank (thaank) v. Mahadnaq`, which
@@ -115,6 +139,26 @@ does not attest it.
 stairs; to greet`, and `sallaan` is the ladder word. Until the page settles
 which of the two senses belongs to which spelling, `AW` is **not** usable for
 `salaan`, and Orwin — its current single source — stands alone.
+
+Orwin's other mention does not help: at the Lesson 1 glossary it lists
+`salaan (1) (salaamaa)` **to greet** — a verb entry with a conjugation class,
+not the noun "greeting" the vocabulary deck claims. Wiktionary has no Somali
+section for it at all. So `salaan` is single-sourced *and* its part of speech is
+unconfirmed; it needs a page, not another grep.
+
+### Where the five remaining entries stand
+
+| Word | Has | Needs |
+|---|---|---|
+| `salaan` greeting | Orwin (as a **verb**) | A page settling noun-vs-verb and `salaan`/`sallaan`. |
+| `been` lie | Wiktionary (noun, f) | A second source. Absent from all three dictionaries and both grammars. |
+| `masjid` mosque | — (`AW` has it, unverified) | Verify `AW` printed p.41, then a second source. |
+| `tegey` went | Orwin p.41 | Not a lookup. Derived tier: stem `tag` is confirmed in `AW` p.48, so what is missing is a double-attested **past-tense rule**. |
+| `cabbay` drank | Orwin p.41 | Same. Stem `cab` confirmed in `AW` p.25. |
+
+Wiktionary's Somali coverage was checked for all seven of the dictionary-resistant
+words and carries only three (`been`, `galab`, `mahadsanid`). It is thin enough
+that it should be treated as a bonus channel, not a fallback.
 
 ### Jiddu is not Standard Somali
 
