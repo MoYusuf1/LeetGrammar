@@ -79,6 +79,43 @@ masquerade as an entry.
 **confirm on the page before citing**, exactly as `Working with O` already
 requires. The dump locates; the page decides.
 
+### What these three dictionaries cannot reach
+
+The pass took S3 from 52 under-sourced vocabulary entries to 22. The remainder
+is not more of the same work, and knowing which kind each one is saves the next
+person a wasted search.
+
+**Ten were never dictionary problems.**
+
+- **Eight possessives and demonstratives** — `kan`, `kaas`, `kuwan`, `kuwaas`,
+  `tan`, `taas`, plus `kayga`, `kaaga`, `keeda`, `kiisa`, `keenna`, `kooda`,
+  `kee`. No dictionary lists these; they are paradigm cells. They want Nilsson
+  §5 / §8 plus `W-gram`, which is a *grammar* pairing.
+- **`cabbay` and `tegey`** are inflected past tenses, and dictionaries carry only
+  the stem. They belong in the derived tier against a double-attested past-tense
+  rule. **Both stems are now confirmed in `AW`:** `cab drink` (printed p.25) and
+  `tag go; leave` (printed p.48). What is still missing is the rule, not the stem.
+
+**Seven are genuinely absent** from all three: `been` (lie), `galab`
+(afternoon), `masjid` (mosque), `maya` (no), `mahadsanid` (thank you), `salaan`
+(greeting), `xarf` (letter of the alphabet). `galab` and `masjid` appear in `AW`
+alone, which is one source, not two. The next channel for these is `Wikt`, which
+is already a registered key and is compiled from a different lineage than the
+print dictionaries — a better pairing under rule 5 than two of these three
+would be.
+
+### Two near-misses worth not repeating
+
+**`mahadnaq` is not `mahadsanid`.** `SA` has `thank (thaank) v. Mahadnaq`, which
+is the verb "to thank". `mahadsanid` is the fixed phrase "thank you". An
+English-headword anchor will surface the first as a hit for the second, and it
+does not attest it.
+
+**`salaan` is not `sallaan`.** `AW`'s entry at that point reads `salaan ladder;
+stairs; to greet`, and `sallaan` is the ladder word. Until the page settles
+which of the two senses belongs to which spelling, `AW` is **not** usable for
+`salaan`, and Orwin — its current single source — stands alone.
+
 ### Jiddu is not Standard Somali
 
 The Ibro mini-dictionary was deleted from `docs/` rather than shelved.
