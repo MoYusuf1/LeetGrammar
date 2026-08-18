@@ -1,8 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-14, after the interface was rebuilt from
-> scratch.
+> comes next. **Last updated:** 2026-08-18, after the sourcing pass (phase S).
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
 > rules), then [ADDING_CONTENT.md](./ADDING_CONTENT.md) (how to grow the
@@ -156,7 +155,7 @@ Wiktionary is already a source key and is the obvious next step. `fadlan`,
 `ilmo` and `masjid` appear in neither grammar under any spelling and need
 either a dictionary citation or cutting.
 
-### 2. 11 registry forms rest on a single source ⚪
+### 2. 7 registry forms rest on a single source ⚪
 
 Down from 18. Orwin's fusion tables on p.21 and p.93 were read on the page and
 resolved eight forms in one pass — `waad`, `baan`, `baad`, `buu`, `bay`,
@@ -440,154 +439,93 @@ Four more rules fall out of the same experience:
 
 ### Sequence from here
 
-**0 — Drive the new UI in a real browser.** Ahead of everything else, and
-cheap. The entire interface was rebuilt without a single screen being opened
-(debt 10). Until someone does this, every claim about the app working rests on a
-green build — which is exactly the state the project was in when its first
-lesson was impossible to complete. Settle debt 11 in the same pass.
+Everything through the sourcing pass is done. What follows is ordered by what
+unblocks what, not by what is most interesting.
 
-**A — Unit 3 (Lessons 9–11).** The next real gain, and sourcing is confirmed
-rather than assumed: both grammars cover past tense, negation and questions
-substantially. This is also where `ma` finally gets taught, closing the promise
-Lesson 5's docstring made when it cut it.
+**0 — Drive the UI at a phone viewport, and settle debt 10.** Partly done: the
+lesson player, homework, unit test, blueprint states and every route have now
+been driven in a real browser, and several defects came out of it that no gate
+caught — an item that printed its own answer, `*italic*` rendering as literal
+asterisks, a blueprint box no lesson filled. **But all of that was at a desktop
+viewport.** The specific things only a phone decides are still open: whether the
+feedback sheet obscures the answer on a short screen, and whether the floating
+glass circles clear the Dynamic Island. Set `localStorage.setItem('lg-motion','off')`
+first; routine in [ADDING_CONTENT.md](./ADDING_CONTENT.md).
 
-One decision to make before authoring, recorded under Open Questions below:
-**which comes first, negation or questions.** The design says negation (10) then
-questions (11); Orwin introduces `ma` the other way round, as the interrogative
-classifier long before the negative. Since the same written word does both jobs,
-the order decides which meaning the learner meets first.
+**1 — Take four decisions that cost nothing now and get expensive later.** All
+four are under Open Questions below; three are judgement calls and one is a
+purchase.
 
-**B — Close the retake hole.** Unit 3 makes this worse rather than better: every
-new unit is another test whose results screen shows all the answers and whose
-retake serves the same items. Fixing it needs roughly double the items per
-objective — content, not code — so it is cheapest to do *while* authoring Unit 3
-rather than after.
+- **Negation before questions, or the reverse?** `ma` is written identically for
+  both, so whichever is taught first becomes the learner's default reading.
+  Blocking for Lesson 10/11.
+- **Get a third grammar** — Saeed or Puglielli. This is the real Unit 3 blocker
+  and it is *not* lexical: Nilsson and Orwin disagree about `waa`, and no
+  dictionary adjudicates a grammar dispute. Six dictionaries did not shorten the
+  path to Unit 3 by a day.
+- `haweeney` vs `naag`, and whether `COURSE.md` (9,399 orphaned lines) is
+  deleted. Both low-stakes, neither blocking.
 
-**C — The dictionary pass. ✅ done**, see phase S below. 52 vocabulary entries
-to 5, and the registry's independence problem from 9 forms to 1.
+**2 — Unit 3 (Lessons 9–11): past tense, negation, questions.** Sourcing pass
+first, and let its outcome reshape the lessons — that rule has already changed
+two lessons after they were planned. This is where `ma` finally gets taught,
+closing the promise Lesson 5's docstring made when it cut it.
 
-**D — Unit 4 (Lessons 12–14), sourcing pass first.** Adjectives and prepositions
-are well covered in both grammars. **Numerals are the thin spot** — Orwin
-mentions them barely, so check that before planning Lesson 13, not after.
-Expect Unit 4 to be more lexical than Unit 2 or 3, which means the vocabulary
-constraint bites harder here than it has so far.
+Two things fall out of that sourcing pass for free:
 
-**E — Cleanup.** `COURSE.md` retirement, the ten vendored lint errors, doc
-consolidation. All flat-cost, none of it gets worse by waiting, and it should
-not displace A–D.
+- **The past-tense rule closes `tegey` and `cabbay`.** Both stems are already
+  confirmed (`tag` at Awde p.48, `cab` at p.25); the only missing piece is a
+  double-attested rule, which Lesson 9 has to establish anyway. They then join
+  the derived tier like `keentaa`, taking the vocabulary gap from 5 to 3.
+- **Orwin's own past-tense `waa` examples are already located** and recorded in
+  [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §7: `Ninku waa toosay`, `Bariisku waa
+  karay`, `Gabadhu waa tagtay`. They were deliberately not used in Lesson 5
+  because Unit 2 teaches only the present. Unit 3 is where they belong — verify
+  on the page first, the Orwin dump is OCR and damaged nearby.
 
-### Revision, August 2026 — evaluate before authoring
+**3 — Close the retake hole while authoring Unit 3, not after.** Every test
+shows all answers on its results screen and then serves identical items on
+retake. The fix is roughly double the items per objective — content, not code —
+so it is cheapest written alongside the Unit 3 bank.
 
-A research review of COURSE_DESIGN (git `28ce3566`, folded into that document)
-reordered this. The short version: **no new lesson content until the method that
-produced the existing eight lessons has been evaluated.** Sequence A–E above
-stays, behind the following.
+**4 — Unit 4 (Lessons 12–14), sourcing pass first.** Adjectives and prepositions
+are well covered in both grammars. **Numerals are the flagged thin spot** —
+Orwin barely mentions them, so check before planning Lesson 13, not after.
+Expect Unit 4 to be the most lexical unit yet, which is where the three new
+dictionaries finally earn their place in content rather than repair.
 
-**P1 — Correct the design document.** Done in this pass. Five pieces of
-COURSE_DESIGN were unvalidated and one — the justification for PREDICT before
-EXPLAIN — was contradicted outright by the pretesting literature. All amended in
-place, with `Correction` and `Tension` blocks rather than silent edits.
+**5 — Standing debt. Opportunistic, never scheduled ahead of 1–4.**
 
-**P2 — Make the code match.** No content. Five changes, all to existing
-features:
-- Delete the worksheet — `pages/Worksheet.tsx`, `lib/worksheet.ts`, the route,
-  the `LessonMenu` entry, the print block in `index.css`. It was justified by a
-  finding about prose comprehension that does not apply to a recall grid, and it
-  has never once been printed.
-- Homework stops presenting its score as a verdict; recording is unchanged.
-- Carry-back draws from the due-review queue instead of selecting
-  independently — one mechanism, not two (COURSE_DESIGN §1.17).
-- The interval ladder extends for permanent retention (§2.0b) and no item
-  graduates out.
-- The unit-test lock goes; the 85% criterion and the correctives stay.
-
-**P3 — Evaluate the method against Lessons 5–8. ✅ DONE.** This phase originally
-read "build Lesson 5 as a method prototype," on the strength of a stale scope
-claim in COURSE_DESIGN. Lesson 5 had shipped long ago; the prototype was not
-missing, it was unexamined.
-
-Kill criteria were committed first, in their own commit (`44c0771b`), ahead of
-looking at anything — the author of the lessons and the judge of them being the
-same person is the §3.2 bias at full strength. Findings at `db065b87`.
-
-**Result: 4 / 4 pass, no method-level failure.** COURSE_DESIGN Part 3 stands.
-
-- **The First-Noun defence is real.** The heuristic test from LESSON_CONVENTIONS
-  §3.1b was run item by item: `Gabadhu bariiska baa cuntay` answers "Gabadhu" on
-  the wrong heuristic and "bariiska" in fact. The over-correction is guarded too
-  — `Sahra baa …` puts the spotlight *on* the first noun — so both the default
-  and its mirror image are broken. That is a stronger implementation of §1.10
-  than the design asks for.
-- **The honest weakness is the EXPLAIN/NOTICE question**, which passes its
-  criterion and then turns out to be the weaker half of the question. Lesson 5
-  follows the loop and never withholds explanation, so whether explanation adds
-  anything cannot be settled by reading. It needs an A/B unavailable at n = 1.
-  The tension in §3.1 stays open.
-
-Four lesson-level findings came out of it, **all now fixed**: `waa` implying
-"is" (`4c44cf7d`), the blueprint's missing completed state and unclaimed `WHAT`
-box, and a hint that answered its own item. The evaluation document was folded
-into this file and deleted, per its own terms.
-
-**P4 — Then, and only then, decide Unit 3.** Build it, change the method, or
-stop. Nothing now blocks this.
-
-**S — Sourcing. ✅ SUBSTANTIALLY DONE (Aug 2026).**
-
-| Check | Before | After |
-|---|---|---|
-| `S3` vocabulary entries lacking 2 sources | **52** | **5** |
-| `S4` registry forms on a single source | 11 | **7** |
-| `S5` forms citing one author twice | 9 | **1** |
-
-Registry now at 109 forms, **102 with two or more independent sources**. Every
-citation added was confirmed on the page, not in a text dump — about twenty page
-reads across the three dictionaries and Orwin. The method, and the two ways it
-can go wrong, are written up in
-[SOMALI_SOURCES.md](./SOMALI_SOURCES.md).
-
-**One shipped error was found and fixed:** Lesson 1's vocabulary listed `xarf`
-for "letter of the alphabet". Nilsson §4.3 gives the singular as `xáraf` —
-`xarf` is root notation and is unpronounceable under the syllable rule the same
-section states. No check could have caught it: `S1` and `S2` cover Somali in
-answers and prose, and a vocabulary gloss is neither.
-
-**What is left, and why each is not a lookup:**
-
-- `salaan` — single-sourced *and* its part of speech is unconfirmed. Orwin's
-  other mention is a verb entry, Wiktionary has no Somali section, and Awde's
-  entry is contaminated with `sallaan` (ladder). Needs a page.
-- `been`, `masjid` — one verified source each; genuinely absent elsewhere.
-- `gabar` — a variant of `gabadh`, in neither dictionary.
-- `waxaan`, `waxaad`, `gabadhu`, `salaamaysa`, `salaamaysaa` — fusion, subject
-  and progressive forms. Compositional, not lexical.
-- `tegey`, `cabbay` — past tenses. **Both stems are confirmed** (`tag` and `cab`,
-  Awde pp.48 and 25); what is missing is a double-attested past-tense rule, at
-  which point they join the derived tier like `keentaa`.
-
-The ordering below was the plan, and it held:
-- **The independence policy comes first**, and is now written in
-  [SOMALI_SOURCES.md](./SOMALI_SOURCES.md). Six books make it *feel* as though
-  everything has two sources; one contains Orwin, two share a publisher, one has
-  no traceable provenance. Adding sources faster than the policy hollows out the
-  two-source rule.
-- Then register the clean ones, quarantine the untraceable one, and close `S3`
-  (then 52 vocabulary entries) and `S4` (then 11 thin registry forms). **This is repair of
-  material already on screen, not new content** — which is why it is not blocked
-  behind P3.
-- The Jiddu mini-dictionary was rejected outright: Jiiddu is a separate
-  language, not a dialect.
-
-**Still not planned:** the vocabulary *track* (Phase 5). Dictionaries make
-sourcing cheaper; they do not make the case for a 500-word track stronger.
-COURSE_DESIGN §1.18's lexical arithmetic is unchanged.
-
+- **A free `E9` win is available now.** `koob` gained its second source in
+  `4389ceb3`, so the Unit 2 bank's `koob` imperative item is convertible to
+  production immediately.
+- The remaining 5 vocabulary and 7 registry thin forms: none is an undone
+  lookup. Two want the past-tense rule, five are compositional, three are absent
+  from every source consulted.
+- Debt 13 (`**` meaning both "Somali" and "emphasis") needs a content marker
+  plus a validator check, and unblocks debt 14 and the language-forward home
+  screen.
+- `E9` production targets: Unit 1 is structurally capped near 47% and should be
+  measured rather than chased; Unit 2 reaches ~58% once the fusion forms resolve.
 ### Deliberately not planned
 
 Nothing from the original Layer 2 / SRS gap remains — both landed (debt 3). The
 open items are all in "Known debt" below; there is no separate unplanned pile.
 
 ## Open questions — these need a human decision
+
+**Should a third grammar be acquired before Unit 3 is authored?** Saeed's
+*Somali Reference Grammar* or Puglielli. This is the one open question with a
+price tag rather than a judgement, and it is the actual Unit 3 blocker.
+
+The August 2026 dictionary pass made the shape of the problem clear: three new
+dictionaries took the vocabulary gap from 52 to 5 and did **nothing** for Unit 3,
+because Unit 3's content is grammar. §7 below records that Nilsson and Orwin
+disagree about what `waa` even is, and a dictionary cannot adjudicate that. Where
+the two grammars are the only sources, "two independent sources" means "both of
+them agree" — with no tiebreak when they do not, and no third opinion when one is
+silent. Nilsson's §12.3 entry for `waa` ends with the author's own note, *"Add
+examples!"*.
 
 **Does Unit 3 teach negation before questions, or the other way round?**
 `ma` is written identically in both roles, because tone is not written, so
@@ -701,37 +639,49 @@ then; it is in git history.
 
 ### 10. The whole interface is unverified in a browser 🔴
 
-**This is the largest open risk in the project.** The UI was rebuilt end to end
-— shell, home, lesson player, homework, unit test, worksheet — and none of it
-has been driven in a real browser. The session that built it had no Playwright
-and no browser automation available, so working-agreement **rule 1 is unmet**
-for every screen.
+**Downgraded from 🔴 in August 2026: most of it has now been driven**, in the
+in-app browser, at a **desktop viewport (1280×720)**. The lesson player, the
+homework flow end to end, the unit test, the blueprint's three states across
+Lessons 2/5/8, and every route were all exercised.
 
-Build, 98 tests, 21 validator checks and `tsc` all pass, and every new utility
-class was confirmed to compile into the CSS. That is precisely the kind of green
-that shipped the Lesson 1 softlock. The things a real device will decide and
-nothing else can:
+It was worth doing exactly as rule 1 predicts. Things that passed build, 109
+tests and 21 validator checks and were still broken on screen: an exercise that
+printed its own answer in the question, `*italic*` rendering as literal
+asterisks across 47 spans, and a blueprint box no lesson ever filled while
+Lesson 8 told the learner "every box is filled".
 
-- whether the 55px swipe threshold feels right, and whether the gesture fights
-  iOS Safari's edge-back despite the deck being inset from the screen edge
+**What is still unverified is specifically the phone.** Those need a narrow
+viewport and nothing else will settle them:
+
 - whether the feedback sheet obscures the answer on a short screen
 - whether the floating glass circles clear the Dynamic Island
-- the localStorage hydration question in debt 11
+- whether the toolbar's tap targets are reachable one-handed
+
+The swipe-threshold question that used to sit here is **gone, not unanswered**:
+swipe was built and then removed (see UI_CONVENTIONS), so there is no gesture to
+fight iOS Safari's edge-back. The worksheet named above is deleted.
 
 Drive `/#/learn`, then a full lesson, at a phone viewport, with
 `localStorage.setItem('lg-motion','off')` first. Routine in
 [ADDING_CONTENT.md](./ADDING_CONTENT.md).
 
-### 11. localStorage hydration was never confirmed end to end ⚪
+### 11. localStorage hydration ✅ confirmed
 
-Carried over unresolved. While testing spaced review, the app overwrote seeded
-`completedLessons` and `reviewSchedule` with empties — it hydrated from defaults
-and persisted those back. `partialize` in `src/stores/progress-store.ts` does
-list all three of `completedLessons`, `lessonCardPositions` and `reviewSchedule`,
-so the configuration is right and this is *probably* a test-harness race
-(seeding localStorage after the store had already hydrated) rather than a real
-bug. That is inference, not evidence. If it is genuine, a learner's progress
-vanishes on reload, which would matter more than anything else in this file.
+**Settled in August 2026, and it was the test harness, not the app.** The
+suspicion was that the store hydrated from defaults and persisted empties back
+over seeded state — which, if real, would mean a learner's progress vanished on
+reload.
+
+It does not. Across the sourcing and verification work, state was seeded into
+`leet-somali-progress-v7` and the page reloaded many times, and every field
+survived: `completedLessons`, `lessonCardPositions`, `reviewSchedule`,
+`practiceScores`. A homework run recorded 8% and a lesson advanced to its
+three-day review rung, both of which were still there after a hard reload. The
+persisted shape also matched `partialize` exactly after the store was slimmed —
+no `xp`, no `srsCards`, no `dailyGoal`.
+
+The original symptom was a race: seeding `localStorage` *after* the store had
+already hydrated. Seed first, then load the page.
 
 ### 12. The service worker used to pin devices to a dead build ✅ fixed
 
