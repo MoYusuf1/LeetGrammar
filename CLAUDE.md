@@ -23,10 +23,10 @@ The three things most likely to bite you:
 3. **Cut what you cannot source.** Do not soften it, do not stub it. Placeholder
    markers (`[VERIFY]`, `[TODO]`) fail a test.
 
-Gates — all three, every time:
+Gates — all four, every time:
 
 ```bash
-npm run build && npx vitest run && npm run validate:course
+npm run build && npx vitest run && npm run validate:course && npm run lint
 ```
 
 Current state, known debt and open questions:
@@ -35,12 +35,15 @@ Why the rules exist: [docs/POSTMORTEM.md](docs/POSTMORTEM.md).
 
 `src/data/authored-lessons.ts` is the course — the only source of lesson content.
 
-## graphify
+## Looking up a Somali form
 
-This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+**Don't hand-roll a grep-and-regex search over `sources/*.txt`.** Run
+`node scripts/lookup.mjs <word>` — it searches all extracted sources at once and
+resolves printed folios per book, so you don't have to compute a PDF↔printed
+offset by hand (it drifts within a single book; see
+[docs/SOMALI_SOURCES.md](docs/SOMALI_SOURCES.md)). Full method, traps, and what
+still needs a page read: `docs/SOMALI_SOURCES.md`.
 
-Rules:
-- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
-- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+This repo is small (44 files, ~9k lines) — `rg`/`grep` are the right tool for
+everything else. There is no codebase graph here; a prior one existed and was
+removed because it silently went stale for 68 commits before anyone noticed.

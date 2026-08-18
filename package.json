@@ -13,13 +13,8 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "validate:course": "node scripts/validate-course.mjs",
-    "graphify": ".venv/bin/graphify . --no-viz",
-    "graphify:update": ".venv/bin/graphify update . --no-cluster",
-    "graphify:report": ".venv/bin/graphify cluster-only . --no-label --no-viz",
-    "graphify:query": ".venv/bin/graphify query",
-    "graphify:path": ".venv/bin/graphify path",
-    "graphify:explain": ".venv/bin/graphify explain",
-    "fetch:sources": "node scripts/fetch-sources.mjs"
+    "fetch:sources": "node scripts/fetch-sources.mjs",
+    "lookup": "node scripts/lookup.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
