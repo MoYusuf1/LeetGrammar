@@ -35,15 +35,10 @@ Why the rules exist: [docs/POSTMORTEM.md](docs/POSTMORTEM.md).
 
 `src/data/authored-lessons.ts` is the course — the only source of lesson content.
 
-## Looking up a Somali form
+Sourcing a Somali form is a procedure, not a fact — it lives in the
+`source-a-form` skill, which loads on demand. Start with
+`node scripts/lookup.mjs <word>`; never hand-roll a grep over `sources/*.txt`.
 
-**Don't hand-roll a grep-and-regex search over `sources/*.txt`.** Run
-`node scripts/lookup.mjs <word>` — it searches all extracted sources at once and
-resolves printed folios per book, so you don't have to compute a PDF↔printed
-offset by hand (it drifts within a single book; see
-[docs/SOMALI_SOURCES.md](docs/SOMALI_SOURCES.md)). Full method, traps, and what
-still needs a page read: `docs/SOMALI_SOURCES.md`.
-
-This repo is small (44 files, ~9k lines) — `rg`/`grep` are the right tool for
-everything else. There is no codebase graph here; a prior one existed and was
-removed because it silently went stale for 68 commits before anyone noticed.
+`rg`/`grep` are the right tools for everything else here — the repo is 44 files.
+There is no codebase graph; one existed and was removed after it went stale for
+68 commits without anyone noticing.
