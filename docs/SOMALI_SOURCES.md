@@ -47,6 +47,47 @@ the offset is 18.)
 | — | "Trebor Hog", *Somali English Lexicon*, Truth Ltd, 2018 | **Quarantined.** No lexicographic footprint for author or publisher; EPUB metadata carries no date, rights or source; its grammatical codes (`mg`, `fk`, `s`, `f`) are absent from its own abbreviation table. Shape suggests a database export. Establish provenance and notation first. |
 | — | ~~Salim Alio Ibro, *English — Jiddu — Somali Mini-dictionary*, 1998~~ | **Rejected and removed.** See below. |
 
+### START HERE: which source for which problem
+
+Most wasted time on this project has been searching the wrong book. The kind of
+form decides the source, and the mapping is not intuitive — **six dictionaries
+arrived in August 2026 and did nothing whatsoever for Unit 3**, because Unit 3 is
+grammar.
+
+| If the form is… | Reach for | Not |
+|---|---|---|
+| A **content word** (noun, adjective, everyday verb stem) | `SA` or `JF`, anchored on the **English** headword | The grammars. They illustrate rules with a handful of words and were never a breadth source. |
+| A **paradigm cell** — possessive, demonstrative, pronoun, interrogative | `N` + `O`, both of which tabulate them (N §9.2–9.4, O pp.125/134/216) | Any dictionary. None lists `kayga` or `kuwaas`; they are not headwords. |
+| An **inflected form** (past tense, definite, subject case, fused signal) | A **double-attested rule** plus a registered stem → the `derived` tier, check `S7` | A lookup. Dictionaries carry `cab`, never `cabbay`. |
+| A **grammatical claim** ("`waa` marks X", "Somali is SOV") | `N` + `O`, and expect them to disagree | Dictionaries, absolutely. See §7. |
+| A **Somali headword you need to confirm directly** | `AW` — the only SO→EN index here | — |
+| Anything the above misses | `Wikt`, but its Somali coverage is thin: of seven words checked, it had three | Treating it as a fallback that will usually work. |
+
+**Then confirm on the page.** Every source here except `Wikt` and the two
+Wikipedia pages is a scan. The text dumps in `sources/*.txt` are for *locating*;
+the page is what you cite. This is not ceremony — the traps below are all real
+finds from following it.
+
+### Page numbers: three separate gotchas
+
+1. **Printed ≠ PDF index.** `SA` is offset 12 (printed p.62 = PDF p.74), `JF` is
+   offset 18.
+2. **The offset drifts inside a book.** `O` is +10 around printed p.125 and +12
+   by p.214. Take the folio from the text dump, never from arithmetic.
+3. **Some scans have no folios in the text layer at all** (`SA`). That is why
+   dictionary citations use `s.v. "headword"` — unambiguous, and immune to all of
+   the above.
+
+### The independence rule, and what it actually costs
+
+`AW` lists **Martin Orwin** as a co-author, so it **counts as `O`** and cannot be
+a second source for anything Orwin already attests. This has cost real work three
+times (`koob`, `bariiska`, and the `salaan` dead end) and was worth holding each
+time. Relaxing a rule at the moment it becomes inconvenient is how two-source
+verification quietly becomes one-source verification.
+
+The full test is under *What counts as two sources* below.
+
 ### How a dictionary citation is arrived at, and why the method matters
 
 Two lookup strategies were tried. **Only one of them is safe, and the difference
@@ -81,11 +122,13 @@ requires. The dump locates; the page decides.
 
 ### What these three dictionaries cannot reach
 
-The pass took S3 from 52 under-sourced vocabulary entries to 22. The remainder
-is not more of the same work, and knowing which kind each one is saves the next
-person a wasted search.
+The pass took S3 from 52 under-sourced vocabulary entries to **5** (the
+dictionaries got it to 22; the grammars and Wiktionary did the rest). The
+remainder is not more of the same work, and knowing which kind each one is saves
+the next person a wasted search.
 
-**Ten were never dictionary problems.**
+**Ten were never dictionary problems** — and eight of those were closed from the
+grammars afterwards, exactly as the table above predicts.
 
 - **Eight possessives and demonstratives** — `kan`, `kaas`, `kuwan`, `kuwaas`,
   `tan`, `taas`, plus `kayga`, `kaaga`, `keeda`, `kiisa`, `keenna`, `kooda`,
@@ -96,13 +139,12 @@ person a wasted search.
   rule. **Both stems are now confirmed in `AW`:** `cab drink` (printed p.25) and
   `tag go; leave` (printed p.48). What is still missing is the rule, not the stem.
 
-**Seven are genuinely absent** from all three: `been` (lie), `galab`
-(afternoon), `masjid` (mosque), `maya` (no), `mahadsanid` (thank you), `salaan`
-(greeting), `xarf` (letter of the alphabet). `galab` and `masjid` appear in `AW`
-alone, which is one source, not two. The next channel for these is `Wikt`, which
-is already a registered key and is compiled from a different lineage than the
-print dictionaries — a better pairing under rule 5 than two of these three
-would be.
+**Seven were absent from all three dictionaries** — `been`, `galab`, `masjid`,
+`maya`, `mahadsanid`, `salaan`, `xarf`. Four of those were then closed from other
+channels: `galab` and `mahadsanid` from `O` + `Wikt`, `maya` from both grammars,
+and `xarf` turned out to be the wrong form entirely (see below). `been`, `masjid`
+and `salaan` remain, and the table at *Where the entries stand* says why each
+one is stuck.
 
 ### `xarf` was not a word. The vocabulary deck now says `xaraf`.
 
@@ -410,7 +452,7 @@ uses only confirmed vocabulary, and previews `waa` for the signal lessons.
 
 ---
 
-## 7. Sentences to delete
+## 6b. Sentences to delete
 
 Currently in `authored-lessons.ts`, unsourced and wrong:
 
@@ -425,7 +467,7 @@ Currently in `authored-lessons.ts`, unsourced and wrong:
 
 ---
 
-## 8. Additional attested forms
+## 6c. Additional attested forms
 
 | Form | Gloss | Source |
 | --- | --- | --- |

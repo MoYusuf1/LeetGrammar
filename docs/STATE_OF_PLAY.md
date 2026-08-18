@@ -88,9 +88,9 @@ What it is now, and the reasoning that is not recoverable from the code:
 - **Home is a contents page** — no cards, chevrons, containers or fills. State
   is carried by ink weight: done recedes, current is full ink and marked.
 
-Routes: `/learn` is home; lesson, homework, unit test and worksheet are
-full-screen task views entered and closed. Landing, Profile, Glossary and the
-lesson index were deleted — the glossary became a sheet opened from inside a
+Routes: `/learn` is home; lesson, homework and unit test are full-screen task
+views entered and closed. (`/worksheet` was deleted in Aug 2026.) Landing,
+Profile, Glossary and the lesson index were deleted — the glossary became a sheet opened from inside a
 lesson, where a learner actually meets a term.
 
 Full visual conventions, and the list of things already tried and rejected, are

@@ -679,7 +679,7 @@ follow from the structure rather than being imposed on it.
 | Screen size | Blueprint must be legible at **360 px wide** — a compact stacked row, never a wide tree or table | practical |
 | Interaction | All actions thumb-reachable at the bottom; no horizontal scroll, no pinch-zoom, no hover-dependent UI | practical |
 | Typing | Production items must accept **short** typed answers; long free-text is punishing on a phone keyboard — prefer word-tap assembly (`unscramble`) where the target is a full sentence | §1.8 (keep production) + practical |
-| Reading depth | Screens comprehend worse than paper (§1.16) — so **the app is the retrieval channel, and print/worksheets are the deep-reading channel.** Keep the existing worksheet/print feature; it's now pedagogically load-bearing, not a nicety | §1.16 |
+| Reading depth | Screens comprehend worse than paper (§1.16) — so **the app is the retrieval channel**. ~~Print/worksheets are the deep-reading channel~~ — **retracted, see the §1.16 correction**: that finding is about continuous prose and the worksheet was a recall grid. The worksheet is deleted; §1.17b has the case for a handwriting channel if one is ever built | §1.16, §1.17b |
 | Interruption | Assume every session can be interrupted at any card — never lose state, never require finishing a lesson in one sitting | practical (existing resume feature) |
 
 ---

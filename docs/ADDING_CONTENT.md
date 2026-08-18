@@ -233,15 +233,48 @@ With motion off the player renders the current card directly. Remove the key
 (`localStorage.removeItem('lg-motion')`) to get the animations back. The same
 switch honours the OS "reduce motion" setting — see `src/lib/reduced-motion.ts`.
 
-Clicks driven by automation may not register even so; calling `.click()` on the
-element works. React also ignores programmatic `input.value` — set it through
-the native property descriptor and dispatch an `input` event.
+React ignores programmatic `input.value` — set it through the native property
+descriptor and dispatch an `input` event:
+
+```js
+const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+set.call(field, 'answer');
+field.dispatchEvent(new Event('input', { bubbles: true }));
+```
+
+**`.click()` on the Forward button does not drive the player, and the way it
+fails is misleading.** The store position advances but the rendered card does
+not, so the counter and the content disagree and Forward eventually goes
+`disabled` while screen one is still showing. It looks exactly like a softlock
+and is not one. Two consequences:
+
+- **Reload after clicking.** The store persisted the new position, so a reload
+  renders where you actually are. This is the reliable way to walk a lesson.
+- **Do not diagnose a softlock from a synthetic click run.** Reproduce it with
+  real input first.
+
+**Card position is a card index, not a step index, and the vocabulary deck
+shifts it.** `lessonCardPositions` stores the index into the *flat card array*,
+consecutive passive cards merge into one step (`steps.ts`), and a vocab deck is
+injected at runtime — so jumping to a specific card means counting authored
+cards and then adding one wherever the deck lands. Setting a position that is
+not a step boundary silently falls back to the start of the lesson:
+
+```js
+const s = JSON.parse(localStorage.getItem('leet-somali-progress-v7'));
+s.state.lessonCardPositions = { 5: 4 };   // then reload
+localStorage.setItem('leet-somali-progress-v7', JSON.stringify(s));
+```
 
 To reset progress between runs:
 
 ```js
 localStorage.removeItem('leet-somali-progress-v7');
 ```
+
+**Seed `localStorage` before loading the page, never after.** Seeding after the
+store has hydrated gets overwritten by the persisted defaults, which is what
+made debt 11 look like a hydration bug for months. It was the harness.
 
 If the browser shows stale content after an edit, it is the service worker:
 
@@ -252,8 +285,17 @@ If the browser shows stale content after an edit, it is the service worker:
 
 Then open a **new tab** — reloading the existing one is not always enough.
 
-`/worksheet/:id` renders every one of a lesson's exercises on one static page
-with no animation, which makes it the fastest way to eyeball new content.
+**Console and network logs survive a dev-server restart.** A tool reading them
+will happily show you errors from a build that no longer exists — after deleting
+a file, expect `Failed to reload /src/…` and `X is not defined` to keep
+appearing. Confirm against a **fresh tab** before believing any of it. Twice now
+that has looked like a live crash and been an HMR ghost.
+
+There is no `/worksheet/:id` route. It was deleted in August 2026 — the
+screen-reading research that justified it is about continuous prose and the
+worksheet was a recall grid, and it had never once been printed. To eyeball a
+lesson's exercises quickly, drive `/#/homework/:id` instead: it composes items
+from the same pool onto one screen.
 
 ---
 
