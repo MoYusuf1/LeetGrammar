@@ -898,13 +898,52 @@ function checkObjectiveLabels() {
  * is that nobody has to notice.
  */
 function checkDocClaims() {
-  const twoPlus = Object.values(VERIFIED_FORMS).filter((v) => (v.sources ?? []).length >= 2).length;
-  const cardCount = AUTHORED_LESSONS.reduce((n, l) => n + l.cards.length, 0);
+  const registry = Object.entries(VERIFIED_FORMS);
+  const twoPlus = registry.filter(([, v]) => (v.sources ?? []).length >= 2).length;
+  const derived = registry.filter(([, v]) => v.confidence === 'derived').length;
+  const single = registry.filter(([, v]) => v.confidence === 'single').length;
+  const cards = AUTHORED_LESSONS.reduce((n, l) => n + l.cards.length, 0);
+  const vocabTwoPlus = TOP_500_WORDS.filter((w) => (w.sources ?? []).length >= 2).length;
+  const choice = allExercises.filter((e) => CHOICE_TYPES.has(e.ex.type)).length;
+  const prodPct = Math.round(((allExercises.length - choice) / allExercises.length) * 100);
+  // Self-referential: at this point `passes` holds every check but this one,
+  // and D1 is the last to run, so a green D1 makes the final tally one higher.
+  const checksPassing = passes.length + 1;
 
-  // Each claim: a regex with one capture group, and the number it must equal.
+  // Each claim: a file, a regex whose capture groups are numbers, and what
+  // those numbers must equal. Keep the regex anchored on enough surrounding
+  // prose that an unrelated edit does not silently stop matching.
   const claims = [
-    ['README.md', /(\d+) registry forms, (\d+) with two or more/, [Object.keys(VERIFIED_FORMS).length, twoPlus]],
-    ['README.md', /\*\*(\d+) lessons in \d+ units\*\*, (\d+) cards/, [AUTHORED_LESSONS.length, cardCount]],
+    [
+      'README.md',
+      /\*\*(\d+) lessons in \d+ units\*\*, (\d+) cards, (\d+) exercises, (\d+) unit-test items,\s*\n(\d+) source-verified forms/,
+      [AUTHORED_LESSONS.length, cards, allExercises.length, allBankItems.length, registry.length],
+    ],
+    [
+      'README.md',
+      /(\d+) registry forms, (\d+) with two or more citations/,
+      [registry.length, twoPlus],
+    ],
+    [
+      'docs/STATE_OF_PLAY.md',
+      /\*\*(\d+)\*\* forms \(\*\*(\d+)\*\* with 2\+ citations; (\d+) derived on a rule; (\d+) single-source\)/,
+      [registry.length, twoPlus, derived, single],
+    ],
+    [
+      'docs/STATE_OF_PLAY.md',
+      /Vocabulary entries \| (\d+), of which \*\*(\d+)\*\* are 2-source verified/,
+      [TOP_500_WORDS.length, vocabTwoPlus],
+    ],
+    [
+      'docs/STATE_OF_PLAY.md',
+      /\*\*Totals:\*\* (\d+) authored cards · (\d+) exercises · (\d+)% production/,
+      [cards, allExercises.length, prodPct],
+    ],
+    [
+      'docs/STATE_OF_PLAY.md',
+      /\| Validator \| (\d+) checks passing/,
+      [checksPassing],
+    ],
   ];
 
   const stale = [];
@@ -917,19 +956,21 @@ function checkDocClaims() {
     }
     const m = re.exec(text);
     if (!m) {
-      stale.push(`${file}: claim not found (pattern changed?) — ${re}`);
+      stale.push(`${file}: claim no longer matches its pattern — check it by hand, then fix the regex in D1`);
       continue;
     }
     expected.forEach((want, i) => {
       const got = Number(m[i + 1]);
-      if (got !== want) stale.push(`${file}: claims ${got}, actual is ${want}  (in "${m[0].trim()}")`);
+      if (got !== want) {
+        stale.push(`${file}: claims ${got}, actual is ${want}  (in "${m[0].replace(/\s+/g, ' ').trim().slice(0, 70)}")`);
+      }
     });
   }
 
   if (stale.length) {
     warn('D1', `Doc claims out of date:\n      ${stale.join('\n      ')}`);
   } else {
-    pass('D1', `Doc claims match the code (${claims.length} checked)`);
+    pass('D1', `Doc claims match the code (${claims.length} claims across 2 files)`);
   }
 }
 

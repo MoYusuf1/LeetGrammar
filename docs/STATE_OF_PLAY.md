@@ -111,7 +111,7 @@ It is now four real segments that highlight the slot from the data.
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
 | Tests | 109, across 7 files |
-| Validator | 21 checks passing, 0 errors, 4 open warnings |
+| Validator | 22 checks passing, 0 errors, 4 open warnings |
 | Sources | 8 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary, + 3 dictionaries (`JF`, `SA`, `AW`) |
 | Deployment | Vercel, auto-deploys from `main` |
 
