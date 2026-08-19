@@ -1,0 +1,24 @@
+#!/bin/sh
+# Agent-agnostic gate enforcement.
+#
+# Binds every commit regardless of what made it — Claude Code, Kimi, Codex, a
+# human, or CI. Claude Code's Stop hook is a nicety; this is the actual floor.
+#
+# Enabled per clone with:  git config core.hooksPath .githooks
+# (AGENTS.md documents this; it is not automatic on clone by design — git will
+# not run hooks from a fresh checkout without the operator opting in.)
+#
+# Skip deliberately with:  git commit --no-verify
+
+# Only pay for the gates when shippable code changed.
+if git diff --cached --quiet -- src scripts 2>/dev/null; then
+  exit 0
+fi
+
+echo "pre-commit: running gates (src/ or scripts/ changed)..."
+if ! npm run gates --silent; then
+  echo ""
+  echo "pre-commit: BLOCKED — gates failed. Fix them, or commit with --no-verify"
+  echo "            and say in the message why the tree is being left red."
+  exit 1
+fi

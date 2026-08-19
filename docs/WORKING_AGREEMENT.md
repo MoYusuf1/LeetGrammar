@@ -92,7 +92,8 @@ harder to catch, because it looks like diligence.
 ## The gates
 
 Run `npm run gates` before saying anything is done. One command, so no agent
-has to remember the list:
+has to remember the list. It prints a single line when green, and only the
+failing gate's output when not:
 
 | Command | Catches |
 | --- | --- |

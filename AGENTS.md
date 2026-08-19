@@ -40,8 +40,26 @@ Run all four before calling any change done:
 npm run gates
 ```
 
-That is `build && vitest && validate:course && lint`. Run it as one command so
-no agent has to remember the list.
+That is `build && vitest && validate:course && lint`, wrapped in
+`scripts/gates.mjs`. It prints **one line** when green and the failing gate's
+full output when not — so it is cheap to run often, which is the point. Add
+`--verbose` if you want everything.
+
+**One-time setup per clone**, so the gates bind regardless of which agent or
+human is committing:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+That enables `.githooks/pre-commit`, which runs the gates whenever a commit
+touches `src/` or `scripts/` and blocks the commit if they fail. Git will not
+enable hooks from a fresh checkout on its own, so this step is manual by
+design. Bypass deliberately with `git commit --no-verify`, and say in the
+message why the tree is being left red.
+
+Do not reimplement the gate list anywhere else. If a gate is added, it is added
+to `scripts/gates.mjs` and everything else picks it up.
 
 ## Sourcing a Somali form
 
