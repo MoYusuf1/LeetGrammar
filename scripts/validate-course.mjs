@@ -28,6 +28,7 @@ import { VERIFIED_FORMS, DERIVATION_RULES, isVerifiedForm } from '../src/data/ve
 import { TEST_BANKS, UNITS, getUnitObjectives, composeUnitTest } from '../src/data/unit-tests.ts';
 import { describeObjective, labelledObjectives, objectiveLabels } from '../src/data/objectives.ts';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -974,6 +975,70 @@ function checkDocClaims() {
   }
 }
 
+/**
+ * D2: a "Last updated" header must not be older than the file's last commit.
+ *
+ * WHY THIS EXISTS. A dated header is a claim, and this project's whole position
+ * is that a claim a human maintains is a claim that rots. STATE_OF_PLAY carried
+ * "Last updated: 2026-08-14, after the interface was rebuilt" through a week of
+ * substantial change, which is exactly how a reader ends up trusting a stale
+ * inventory.
+ *
+ * The rule is one-directional on purpose: the header may be NEWER than the last
+ * commit (you updated the date in the same edit you are about to commit), but it
+ * must never be older, because that means the file changed and the date did not.
+ *
+ * Opt-in: only files that already carry the header are checked. Files with
+ * uncommitted changes are skipped, since their next commit date is unknowable.
+ */
+function checkDocFreshness() {
+  const DATED = ['docs/STATE_OF_PLAY.md', 'docs/PLAN.md', 'docs/DEBT.md'];
+  const stale = [];
+  let checked = 0;
+
+  for (const file of DATED) {
+    let text;
+    try {
+      text = readFileSync(resolve(ROOT, file), 'utf8');
+    } catch {
+      continue;
+    }
+    const m = /\*\*Last updated:\*\*\s*(\d{4}-\d{2}-\d{2})/.exec(text);
+    if (!m) {
+      stale.push(`${file}: no "**Last updated:** YYYY-MM-DD" header`);
+      continue;
+    }
+
+    let lastCommit, dirty;
+    try {
+      lastCommit = execFileSync('git', ['log', '-1', '--format=%cs', '--', file], {
+        cwd: ROOT,
+        encoding: 'utf8',
+      }).trim();
+      dirty = execFileSync('git', ['status', '--porcelain', '--', file], {
+        cwd: ROOT,
+        encoding: 'utf8',
+      }).trim();
+    } catch {
+      continue; // no git, or not a repo — not this check's problem
+    }
+
+    // Uncommitted: the header is about to be committed alongside the change.
+    if (dirty || !lastCommit) continue;
+
+    checked++;
+    if (m[1] < lastCommit) {
+      stale.push(`${file}: header says ${m[1]}, last commit was ${lastCommit}`);
+    }
+  }
+
+  if (stale.length) {
+    warn('D2', `Doc freshness:\n      ${stale.join('\n      ')}`);
+  } else {
+    pass('D2', `Dated docs are current (${checked} checked, ${DATED.length - checked} uncommitted)`);
+  }
+}
+
 // ============================================================================
 // REPORT
 // ============================================================================
@@ -1009,6 +1074,7 @@ checkBankLanguage();
 checkBankObjectiveCoverage();
 checkObjectiveLabels();
 checkDocClaims();
+checkDocFreshness();
 
 for (const p of passes) console.log(`  \x1b[32m✓\x1b[0m ${p.id}  ${p.msg}`);
 if (warnings.length) console.log('');

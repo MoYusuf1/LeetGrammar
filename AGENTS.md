@@ -77,6 +77,7 @@ commits without anyone noticing.
 
 `src/data/authored-lessons.ts` is the course — the only source of lesson content.
 
-Current state, known debt and open questions:
-[docs/STATE_OF_PLAY.md](docs/STATE_OF_PLAY.md).
+What exists: [docs/STATE_OF_PLAY.md](docs/STATE_OF_PLAY.md).
+What is next: [docs/PLAN.md](docs/PLAN.md).
+What is broken: [docs/DEBT.md](docs/DEBT.md).
 Why the rules exist: [docs/POSTMORTEM.md](docs/POSTMORTEM.md).

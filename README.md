@@ -347,7 +347,9 @@ content.
 |---|---|
 | [docs/WORKING_AGREEMENT.md](docs/WORKING_AGREEMENT.md) | **Read before changing anything.** The rules and the gates |
 | [docs/COURSE_DESIGN.md](docs/COURSE_DESIGN.md) | The single source of truth for teaching design |
-| [docs/STATE_OF_PLAY.md](docs/STATE_OF_PLAY.md) | What exists, known debt, what is next |
+| [docs/STATE_OF_PLAY.md](docs/STATE_OF_PLAY.md) | What exists right now |
+| [docs/PLAN.md](docs/PLAN.md) | What is next, and the open decisions |
+| [docs/DEBT.md](docs/DEBT.md) | Every open problem, and why |
 | [docs/SOMALI_SOURCES.md](docs/SOMALI_SOURCES.md) | Every linguistic fact, with citations and the independence policy |
 | [docs/POSTMORTEM.md](docs/POSTMORTEM.md) | Why the rules exist — the failures that produced them |
 | [docs/LESSON_CONVENTIONS.md](docs/LESSON_CONVENTIONS.md) | How a lesson is written |

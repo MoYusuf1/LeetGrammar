@@ -4,7 +4,8 @@
 > accounts, no backend, progress in `localStorage`.
 >
 > **Current state: 8 lessons in 2 units, all source-verified.** See
-> [STATE_OF_PLAY.md](./STATE_OF_PLAY.md) for exact numbers and what is next.
+> [STATE_OF_PLAY.md](./STATE_OF_PLAY.md) for exact numbers, and
+> [PLAN.md](./PLAN.md) for what is next.
 >
 > For the teaching method and the research behind it, see the
 > [root README](../README.md).
@@ -15,7 +16,9 @@
 |----------|---------|
 | [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) | **Read before changing anything.** The rules, the gates, environment gotchas |
 | [SOURCING.md](./SOURCING.md) | **Canonical sourcing procedure**, tool-neutral. How to verify a Somali form before it ships |
-| [STATE_OF_PLAY.md](./STATE_OF_PLAY.md) | What exists, known debt, next step, open questions |
+| [STATE_OF_PLAY.md](./STATE_OF_PLAY.md) | **What exists right now** — the inventory |
+| [PLAN.md](./PLAN.md) | **What is next**, in order, and the open questions needing a human |
+| [DEBT.md](./DEBT.md) | Every open problem, and why it is still open |
 | [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) | Verified linguistic facts with citations |
 | [POSTMORTEM.md](./POSTMORTEM.md) | Why the rules exist — the failures that produced them |
 | [COURSE_DESIGN.md](./COURSE_DESIGN.md) | Pedagogical design target (**broader than what is built**) |

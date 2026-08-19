@@ -108,7 +108,7 @@ vocab feature isn't built.
 That call was taken. `src/lib/srs.ts`, the three store methods and the `srsCards`
 map are all gone; spaced review uses the fixed intervals in `lib/review.ts`. The
 flag worked exactly as intended — it kept a dead engine from rotting quietly for
-another year. See STATE_OF_PLAY §9.
+another year. See DEBT.md §9.
 
 The app is now fully local: no accounts, no network calls, progress in
 `localStorage` only. See `docs/TECH_STACK.md`.

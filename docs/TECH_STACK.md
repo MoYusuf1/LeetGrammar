@@ -43,7 +43,7 @@ unreferenced reference material. There is no database and no network call in the
 learning flow. Progress (completed lessons, streak, homework scores, unit-test
 results, review schedule, card position) lives in one Zustand store
 (`src/stores/progress-store.ts`) persisted to `localStorage`. XP and SM-2 SRS
-cards were in that store and are gone — see STATE_OF_PLAY §9.
+cards were in that store and are gone — see DEBT.md §9.
 
 ## Removed (formerly "Tier 2 Pragmatic Hypergraph")
 

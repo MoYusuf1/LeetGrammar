@@ -130,7 +130,7 @@ export const TOP_500_WORDS: VocabWord[] = [
 
   // ── Lesson 5 — the signal words ────────────────────────────────────────
   // Every entry here is 2-source verified, so this deck adds nothing to the
-  // unsourced-vocabulary debt tracked in docs/STATE_OF_PLAY.md.
+  // unsourced-vocabulary debt tracked in docs/DEBT.md.
   { rank: 79, somali: 'waa', english: 'statement signal: no word singled out', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
   { rank: 80, somali: 'baa', english: 'spotlight signal: highlights what comes just before', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wiktionary: baa'] },
   { rank: 81, somali: 'ayaa', english: 'spotlight signal: same as baa, more formal', pos: 'particle', lessonId: 5, confidence: 'verified', sources: ['Nilsson 2023 §12.3', 'Wikipedia: Somali grammar'] },
