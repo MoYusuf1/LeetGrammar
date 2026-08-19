@@ -106,7 +106,7 @@ It is now four real segments that highlight the slot from the data.
 
 | | |
 | --- | --- |
-| Verified-form registry | **109** forms (**102** with 2+ independent sources; 7 single-source) |
+| Verified-form registry | **109** forms (**98** with 2+ citations; 4 derived on a rule; 7 single-source) |
 | Vocabulary entries | 95, of which **90** are 2-source verified |
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
@@ -138,7 +138,8 @@ broad and decorative**. See [POSTMORTEM.md](./POSTMORTEM.md).
 
 Was 60 with *no* citation at all, then 52. Three dictionaries arrived in August
 2026 and the pass against them, both grammars and Wiktionary took it to **5**.
-Registry: 109 forms, 102 with two or more independent sources. Method, traps and
+Registry: 109 forms, 98 with two or more independent citations (4 more are
+derived forms resting on a rule, 7 are genuinely thin). Method, traps and
 findings: [SOMALI_SOURCES.md](./SOMALI_SOURCES.md).
 
 What remains is listed under the plan below; none of the five is a lookup that

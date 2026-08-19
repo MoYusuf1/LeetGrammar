@@ -214,7 +214,8 @@ The binding constraint — no native speaker, ever — means nothing downstream
 catches a wrong form. So it is caught upstream, mechanically.
 
 **Two independent sources per form**, recorded in `src/data/verified-forms.ts`.
-Current state: **109 registry forms, 98 with two or more.**
+Current state: **109 registry forms, 98 with two or more citations** (plus 4
+derived forms carrying one citation and a double-attested rule).
 
 "Independent" is defined, not assumed, because six dictionaries arriving at once
 makes it *feel* as though everything has two sources:

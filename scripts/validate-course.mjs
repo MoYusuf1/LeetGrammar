@@ -27,6 +27,12 @@ import { BANNED_TERMS, ALLOWLIST } from '../src/data/banned-terms.ts';
 import { VERIFIED_FORMS, DERIVATION_RULES, isVerifiedForm } from '../src/data/verified-forms.ts';
 import { TEST_BANKS, UNITS, getUnitObjectives, composeUnitTest } from '../src/data/unit-tests.ts';
 import { describeObjective, labelledObjectives, objectiveLabels } from '../src/data/objectives.ts';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/** Repo root, for reading docs that make numeric claims (check D1). */
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 import { composeHomework, carryBackCount } from '../src/lib/homework.ts';
 
 const errors = [];
@@ -208,7 +214,16 @@ function checkRegistryIntegrity() {
     warn('S4', `${declaredSingle.length} registry form(s) rest on a single source: ${declaredSingle.map(([k]) => k).join(', ')}`);
   }
   if (!none.length && !undeclaredSingle.length) {
-    pass('S4', `All ${entries.length} registry forms carry sources (${entries.length - declaredSingle.length} with 2+)`);
+    const twoPlusCount = entries.filter(([, v]) => (v.sources ?? []).length >= 2).length;
+    const derivedCount = entries.filter(([, v]) => v.confidence === 'derived').length;
+    // Report the three tiers separately. Saying "N with 2+" for
+    // `entries - declaredSingle` overstated it: derived forms carry ONE citation
+    // plus a rule, and that wording put a wrong number into two documents.
+    pass(
+      'S4',
+      `All ${entries.length} registry forms carry sources ` +
+        `(${twoPlusCount} with 2+ citations, ${derivedCount} derived on a rule)`,
+    );
   }
 }
 
@@ -865,6 +880,59 @@ function checkObjectiveLabels() {
   }
 }
 
+/**
+ * D1: numbers claimed in the docs must match the code.
+ *
+ * WHY THIS EXISTS. The docs quote counts — lessons, cards, registry forms —
+ * and those counts drift silently as the course grows. This has already
+ * happened twice in one week: STATE_OF_PLAY and README both claimed 52
+ * under-sourced vocabulary entries after a pass had taken it to 5, and README
+ * claimed 98 double-sourced registry forms after a pass had taken it to 102.
+ * Both were corrected by hand, which is exactly the process that produced them.
+ *
+ * Every rule in this project says a claim a human maintains is a claim that
+ * rots. The Somali is machine-checked; the prose about the Somali was not.
+ *
+ * A warning rather than an error: a stale number in a document does not break
+ * the app, and erroring would block a content change on a docs edit. The point
+ * is that nobody has to notice.
+ */
+function checkDocClaims() {
+  const twoPlus = Object.values(VERIFIED_FORMS).filter((v) => (v.sources ?? []).length >= 2).length;
+  const cardCount = AUTHORED_LESSONS.reduce((n, l) => n + l.cards.length, 0);
+
+  // Each claim: a regex with one capture group, and the number it must equal.
+  const claims = [
+    ['README.md', /(\d+) registry forms, (\d+) with two or more/, [Object.keys(VERIFIED_FORMS).length, twoPlus]],
+    ['README.md', /\*\*(\d+) lessons in \d+ units\*\*, (\d+) cards/, [AUTHORED_LESSONS.length, cardCount]],
+  ];
+
+  const stale = [];
+  for (const [file, re, expected] of claims) {
+    let text;
+    try {
+      text = readFileSync(resolve(ROOT, file), 'utf8');
+    } catch {
+      continue;
+    }
+    const m = re.exec(text);
+    if (!m) {
+      stale.push(`${file}: claim not found (pattern changed?) — ${re}`);
+      continue;
+    }
+    expected.forEach((want, i) => {
+      const got = Number(m[i + 1]);
+      if (got !== want) stale.push(`${file}: claims ${got}, actual is ${want}  (in "${m[0].trim()}")`);
+    });
+  }
+
+  if (stale.length) {
+    warn('D1', `Doc claims out of date:\n      ${stale.join('\n      ')}`);
+  } else {
+    pass('D1', `Doc claims match the code (${claims.length} checked)`);
+  }
+}
+
 // ============================================================================
 // REPORT
 // ============================================================================
@@ -899,6 +967,7 @@ checkBankSourcing();
 checkBankLanguage();
 checkBankObjectiveCoverage();
 checkObjectiveLabels();
+checkDocClaims();
 
 for (const p of passes) console.log(`  \x1b[32m✓\x1b[0m ${p.id}  ${p.msg}`);
 if (warnings.length) console.log('');
