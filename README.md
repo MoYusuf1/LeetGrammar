@@ -260,7 +260,7 @@ through, and manual review of them is a required authoring step.**
 ### The gates
 
 ```bash
-npm run build && npx vitest run && npm run validate:course && npm run lint
+npm run gates
 ```
 
 All four, every time. 109 tests. Lint is at zero errors and that is the

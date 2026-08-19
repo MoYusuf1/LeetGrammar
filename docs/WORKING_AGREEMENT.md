@@ -21,7 +21,6 @@ as done.
 Not "it should work" — click through the actual cards.
 
 ```bash
-# .claude/launch.json defines the dev server
 npm run dev    # then http://localhost:3000/#/lesson/1
 ```
 
@@ -90,19 +89,21 @@ harder to catch, because it looks like diligence.
 
 ---
 
-## The three gates
+## The gates
 
-Run all three before saying anything is done.
+Run `npm run gates` before saying anything is done. One command, so no agent
+has to remember the list:
 
 | Command | Catches |
 | --- | --- |
 | `npm run build` | type errors; an `ExerciseType` with no renderer |
 | `npx vitest run` | exercise shape, grading, placeholders, course structure |
 | `npm run validate:course` | sourcing, jargon, exercise mix, objective coverage |
+| `npm run lint` | **zero** errors is the baseline |
 
-`npm run lint` reports **zero** errors. It used to report ~10, all in vendored
-shadcn `ui/*` boilerplate; that directory is gone. Zero is now the baseline —
-a lint error is yours, and there is no pre-existing noise to hide it.
+Lint used to report ~10 errors, all in vendored shadcn `ui/*` boilerplate; that
+directory is gone. Zero is now the baseline — a lint error is yours, and there
+is no pre-existing noise to hide it.
 
 ---
 
@@ -113,7 +114,7 @@ a lint error is yours, and there is no pre-existing noise to hide it.
    before counting two — "two books" and "two sources" are not the same thing.
 2. **Add to the registry** — `src/data/verified-forms.ts`, with the source keys.
 3. **Write the lesson** in `src/data/authored-lessons.ts`.
-4. **Run the three gates.**
+4. **Run the gates** (`npm run gates`).
 5. **Open the browser and complete the lesson**, including every new exercise.
 
 ### Machine translation is never a source

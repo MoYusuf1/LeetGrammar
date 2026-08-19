@@ -13,7 +13,8 @@
 
 | Document | Purpose |
 |----------|---------|
-| [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) | **Read before changing anything.** The rules, the three gates, environment gotchas |
+| [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) | **Read before changing anything.** The rules, the gates, environment gotchas |
+| [SOURCING.md](./SOURCING.md) | **Canonical sourcing procedure**, tool-neutral. How to verify a Somali form before it ships |
 | [STATE_OF_PLAY.md](./STATE_OF_PLAY.md) | What exists, known debt, next step, open questions |
 | [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) | Verified linguistic facts with citations |
 | [POSTMORTEM.md](./POSTMORTEM.md) | Why the rules exist — the failures that produced them |
@@ -21,15 +22,22 @@
 | [TECH_STACK.md](./TECH_STACK.md) | Stack inventory and philosophy |
 | [PONYTAIL_DEBT.md](./PONYTAIL_DEBT.md) | Over-engineering / structural cleanup log |
 
-## The three gates
+## The gates
+
+```bash
+npm run gates
+```
+
+That runs all four:
 
 ```bash
 npm run build            # types; an ExerciseType with no renderer
 npx vitest run           # exercise shape, grading, placeholders, structure
 npm run validate:course  # sourcing, jargon, exercise mix, objective coverage
+npm run lint             # zero errors is the baseline, not an aspiration
 ```
 
-All three must pass. None of them, alone or together, proves a learner can
+All four must pass. None of them, alone or together, proves a learner can
 finish a lesson — **open the browser and drive it.** The worst bug in this
 project's history compiled cleanly and passed every check that existed at the
 time.

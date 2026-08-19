@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || exit 0; ACTIVE=$(python3 -c \"import json,sys; print(json.load(sys.stdin).get('stop_hook_active', False))\" 2>/dev/null || echo False); [ \"$ACTIVE\" = \"True\" ] && exit 0; [ -z \"$(git status --porcelain -- src scripts 2>/dev/null)\" ] && exit 0; (npm run build >/tmp/lg-gate-build.log 2>&1 && npx vitest run >/tmp/lg-gate-test.log 2>&1 && npm run validate:course >/tmp/lg-gate-validate.log 2>&1 && npm run lint >/tmp/lg-gate-lint.log 2>&1) && exit 0; echo '{\"decision\":\"block\",\"reason\":\"Uncommitted changes under src/ or scripts/ fail one of the four gates (build, vitest, validate:course, lint). Logs: /tmp/lg-gate-*.log. Fix them, or say explicitly why the work is being left red.\"}'"
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || exit 0; ACTIVE=$(python3 -c \"import json,sys; print(json.load(sys.stdin).get('stop_hook_active', False))\" 2>/dev/null || echo False); [ \"$ACTIVE\" = \"True\" ] && exit 0; [ -z \"$(git status --porcelain -- src scripts 2>/dev/null)\" ] && exit 0; npm run gates >/tmp/lg-gates.log 2>&1 && exit 0; echo '{\"decision\":\"block\",\"reason\":\"Uncommitted changes under src/ or scripts/ fail `npm run gates`. Log: /tmp/lg-gates.log. Fix them, or say explicitly why the work is being left red.\"}'"
           }
         ]
       }

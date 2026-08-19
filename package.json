@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "validate:course": "node scripts/validate-course.mjs",
+    "gates": "npm run build && npx vitest run && npm run validate:course && npm run lint",
     "fetch:sources": "node scripts/fetch-sources.mjs",
     "lookup": "node scripts/lookup.mjs"
   },

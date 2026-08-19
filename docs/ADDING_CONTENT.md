@@ -61,7 +61,7 @@ The common case: a rule needs more reps.
 }
 ```
 
-3. Run the three gates.
+3. Run the gates (`npm run gates`).
 
 **Card `type` is a pedagogical role; exercise `type` is an interaction shape.**
 Conflating the two is what caused the Lesson 1 softlock. `notice` → comprehend
@@ -191,7 +191,7 @@ it. Invented citations have shipped here before.
 ## The gates, every time
 
 ```bash
-npm run build && npx vitest run && npm run validate:course
+npm run gates
 ```
 
 And if the change is visible in the browser, **open the browser and drive it**.
