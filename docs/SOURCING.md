@@ -49,6 +49,32 @@ Add to `src/data/verified-forms.ts` (or `vocabulary.ts` for deck entries) with b
 
 Dictionary citations use `s.v. "headword"` — the folios are not in those scans' text layers.
 
+## OCR: a fourth channel, for locating only
+
+`docs/Abdirahman Farah - Somali - English Dictionary (1995)` is an image-only
+scan with no text layer, so `lookup.mjs` cannot see it. It can be OCR'd:
+
+```bash
+mkdir -p ~/.local/share/tessdata
+curl -sL -o ~/.local/share/tessdata/eng.traineddata \
+  https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata
+export TESSDATA_PREFIX=~/.local/share/tessdata
+pdftoppm -f 165 -l 165 -r 250 -png "docs/Abdirahman Farah…pdf" /tmp/p
+tesseract /tmp/p-165.png /tmp/p-165 --psm 6
+```
+
+**Locating only — never a citation.** It is a dense four-column scan and the
+columns interleave badly; a sample page produced `FPamily` for "family",
+`brightiy` for "brightly", `nickle` for "nickel". Same rule as everything else
+here: the dump locates, the page decides. Roughly 11 printed pages per letter,
+so `b`≈40, `i/j`≈120–132, `m`≈158–170.
+
+**A live question it surfaced:** this dictionary gives **`Masaajid`** (pl.
+`Masaajiddo`) for "mosque", not `masjid`. `AW` printed p.41 carries *both*
+`masjid mosque` and `masaajid mosque`. The vocabulary deck teaches `masjid`,
+which is still single-sourced — and whether `masaajid` is the better citation
+form is an open question that needs a page read, not an OCR dump.
+
 ## Known traps
 
 - **Compounds sort before headwords.** `habeen badh` (midnight) precedes `habeen` (night). The script's gutter-split handles this; a hand-rolled grep does not.

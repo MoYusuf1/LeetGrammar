@@ -1,0 +1,29 @@
+name: gates
+
+# The last place this repo can ship something broken.
+#
+# The pre-commit hook in .githooks/ is bypassable with --no-verify, and `main`
+# auto-deploys to Vercel — so without this, one bypassed commit ships a broken
+# course. This runs the same `npm run gates` everything else runs; the gate list
+# lives in scripts/gates.mjs and nowhere else.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # Same command as the pre-commit hook and every doc. One definition.
+      - run: npm run gates
