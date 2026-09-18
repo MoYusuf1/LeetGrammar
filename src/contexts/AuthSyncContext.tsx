@@ -70,4 +70,5 @@ export function AuthSyncProvider({ children }: { children: ReactNode }) {
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuthSync() { const value = useContext(Context); if (!value) throw new Error('useAuthSync must be inside AuthSyncProvider'); return value; }
