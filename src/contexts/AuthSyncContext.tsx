@@ -36,12 +36,12 @@ export function AuthSyncProvider({ children }: { children: ReactNode }) {
         applyingRemote.current = true;
         useProgressStore.setState(merged);
         applyingRemote.current = false;
-        await setDoc(ref, { schemaVersion: 7, progress: merged, updatedAt: serverTimestamp() }, { merge: true });
+        await setDoc(ref, { schemaVersion: 8, progress: merged, updatedAt: serverTimestamp() }, { merge: true });
         if (!alive) return;
         stopStore = useProgressStore.subscribe((state) => {
           if (applyingRemote.current) return;
           setSyncState(navigator.onLine ? 'syncing' : 'offline');
-          void setDoc(ref, { schemaVersion: 7, progress: snapshotProgress(state), updatedAt: serverTimestamp() }, { merge: true })
+          void setDoc(ref, { schemaVersion: 8, progress: snapshotProgress(state), updatedAt: serverTimestamp() }, { merge: true })
             .then(() => setSyncState(navigator.onLine ? 'synced' : 'offline'))
             .catch(() => setSyncState(navigator.onLine ? 'error' : 'offline'));
         });
