@@ -1,10 +1,10 @@
 import type { UserProgress } from '@/stores/progress-store';
 
-export type StoredProgress = UserProgress & { schemaVersion: 7; updatedAt: string };
+export type StoredProgress = UserProgress & { schemaVersion: 8; updatedAt: string };
 
 export const progressKeys: (keyof UserProgress)[] = [
   'completedLessons', 'streak', 'lastStudyDate', 'practiceScores', 'activityLog',
-  'lessonCardPositions', 'unitTestResults', 'reviewSchedule',
+  'lessonCardPositions', 'unitTestResults', 'reviewSchedule', 'exerciseProgress',
 ];
 
 export function snapshotProgress(state: UserProgress): UserProgress {
@@ -37,5 +37,11 @@ export function mergeProgress(local: UserProgress, remote?: Partial<UserProgress
     lessonCardPositions: { ...(remote.lessonCardPositions ?? {}), ...(local.lessonCardPositions ?? {}) },
     unitTestResults,
     reviewSchedule: { ...(remote.reviewSchedule ?? {}), ...(local.reviewSchedule ?? {}) },
+    exerciseProgress: Object.fromEntries([...new Set([...Object.keys(local.exerciseProgress ?? {}), ...Object.keys(remote.exerciseProgress ?? {})])].map((id) => {
+      const a = local.exerciseProgress?.[id]; const b = remote.exerciseProgress?.[id];
+      if (!a && b) return [id, b]; if (!b && a) return [id, a]; if (!a || !b) throw new Error('unreachable missing exercise progress');
+      const newest = a.lastAttemptAt >= b.lastAttemptAt ? a : b;
+      return [id, { attempts: Math.max(a.attempts, b.attempts), correct: Math.max(a.correct, b.correct), misses: Math.max(a.misses, b.misses), lastAttemptAt: newest.lastAttemptAt }];
+    })),
   };
 }
