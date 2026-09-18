@@ -1209,6 +1209,52 @@ const LESSON_6: Lesson = {
       },
     },
     {
+      id: '6-complete-2',
+      type: 'complete',
+      exercise: {
+        id: 'l6-c2',
+        type: 'multiple_choice',
+        objectiveIds: ['signal-fusion-unpack'],
+        question: 'You see **baad** in a sentence. What two things is it carrying?',
+        options: [
+          'baa (spotlight before) + aad (you)',
+          'baa (spotlight before) + aan (I)',
+          'waa (plain statement) + aad (you)',
+          'waxa (spotlight at the end) + aad (you)',
+        ],
+        correctAnswer: 'baa (spotlight before) + aad (you)',
+        hint: 'The first letter points to the signal family. The ending tells you who.',
+        explanation:
+          '**baad** is **baa** + **aad**: the spotlight-before signal carrying "you." **baan** carries "I"; **waad** uses the plain-statement signal instead.',
+      },
+    },
+    {
+      id: '6-produce-baan',
+      type: 'produce',
+      exercise: {
+        id: 'l6-p-baan',
+        type: 'translate',
+        objectiveIds: ['signal-fusion'],
+        question: 'Type the one word for **baa** carrying **aan** (I).',
+        answer: 'baan',
+        hint: 'Keep the first letter of the signal and attach the pronoun.',
+        explanation: '**baa** + **aan** → **baan**. The spotlight sits just before this word, and the sentence is about me.',
+      },
+    },
+    {
+      id: '6-produce-buu',
+      type: 'produce',
+      exercise: {
+        id: 'l6-p-buu',
+        type: 'translate',
+        objectiveIds: ['signal-fusion'],
+        question: 'Type the one word for **baa** carrying **uu** (he).',
+        answer: 'buu',
+        hint: 'The signal gives you **b**; the pronoun gives you **uu**.',
+        explanation: '**baa** + **uu** → **buu**. It is the spotlight-before signal carrying "he."',
+      },
+    },
+    {
       id: '6-produce-1',
       type: 'produce',
       exercise: {
