@@ -52,14 +52,41 @@ export default function LearnPage() {
      label, and it is why there is no separate continue button. */
   const current = LESSON_LIST.find((l) => !completed.includes(l.lessonId))?.lessonId;
 
+  const completedCount = completed.length;
+  const dueCount = due.size;
+
   return (
     <div className="min-h-[100dvh] bg-bg">
-      <div className="mx-auto max-w-column px-5 pt-safe-t">
-        <header className="pb-10 pt-12">
-          <h1 className="text-large font-bold tracking-tight text-label">Somali</h1>
-        </header>
+      <div className="learn-shell mx-auto px-5 pt-safe-t">
+        <aside className="learn-sidebar" aria-label="Course overview">
+          <div>
+            <p className="text-caption2 font-semibold uppercase tracking-[0.14em] text-label-3">Course</p>
+            <h1 className="mt-3 text-large font-bold tracking-tight text-label">Somali</h1>
+            <p className="mt-3 max-w-[17rem] text-footnote leading-relaxed text-label-2">
+              A sourced grammar course built around the shape of a real Somali sentence.
+            </p>
+          </div>
 
-        <main className="pb-[calc(4rem+var(--safe-b))]">
+          <dl className="mt-10 grid grid-cols-2 gap-x-5 gap-y-6">
+            <div>
+              <dt className="text-caption2 uppercase tracking-wider text-label-3">Finished</dt>
+              <dd className="mt-1 text-title2 font-semibold tabular-nums text-label">
+                {completedCount}<span className="text-label-3">/{LESSON_LIST.length}</span>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-caption2 uppercase tracking-wider text-label-3">Review</dt>
+              <dd className="mt-1 text-title2 font-semibold tabular-nums text-label">{dueCount}</dd>
+            </div>
+          </dl>
+        </aside>
+
+        <div className="learn-content">
+          <header className="learn-mobile-header pb-10 pt-12">
+            <h1 className="text-large font-bold tracking-tight text-label">Somali</h1>
+          </header>
+
+          <main className="pb-[calc(4rem+var(--safe-b))]">
           {grouped.map(({ unit, lessons }) => {
             const bank = getUnitTest(unit.id);
             return (
@@ -106,7 +133,8 @@ export default function LearnPage() {
               </section>
             );
           })}
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );
