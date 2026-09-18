@@ -41,72 +41,47 @@ import type { PracticeExercise, TestBank } from '../types';
 // ============================================================================
 
 const UNIT_1_ITEMS: PracticeExercise[] = [
-  // ── Lesson 1: reading the letters ───────────────────────────────────────
+  // ── Lesson 1: reading for meaning ───────────────────────────────────────
   {
-    id: 'u1-t01',
-    type: 'multiple_choice',
-    objectiveIds: ['somali-alphabet'],
-    question: 'Somali writing never uses three of the English letters. Which three?',
-    options: ['p, v, z', 'c, q, x', 'j, k, w', 'f, h, y'],
-    correctAnswer: 'p, v, z',
-    hint: 'The other three sets are all letters you have seen inside real Somali words.',
-    explanation:
-      'Somali uses the Latin alphabet without **p**, **v** and **z**. A word spelled with one of them is borrowed and unadapted. The letters c, q and x are all genuine Somali letters with sounds of their own.',
+    id: 'u1-t01', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+    question: 'In **Wiilku waa macallin**, which word carries the content “teacher”?',
+    options: ['macallin', 'Wiilku', 'waa', 'none'], correctAnswer: 'macallin',
+    hint: 'Separate the content words from the short sentence signal.',
+    explanation: '**Macallin** means “teacher.” The other content chunk names the boy, while **waa** organizes the line as a plain statement.',
   },
   {
-    id: 'u1-t02',
-    type: 'multiple_choice',
-    objectiveIds: ['somali-alphabet'],
-    question: 'You hear a hard, breathy "h" made deep in the throat, as at the end of **libaax**. Which letter spells that sound?',
-    options: ['x', 'h', 'kh', 'c'],
-    correctAnswer: 'x',
-    hint: 'Two letters are made deep in the throat. One is a breathy h, the other a tightening.',
-    explanation:
-      'The deep breathy "h" is written **x**, as in **libaax** (lion). Plain h is the ordinary English h; **kh** is the rasp in Scottish "loch"; **c** is a tightening rather than a breath.',
+    id: 'u1-t02', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+    question: 'What does the full line **Wiilku waa macallin** tell you?',
+    options: ['The boy is a teacher', 'The teacher is a boy', 'The boy greets a teacher', 'The teacher sees the boy'], correctAnswer: 'The boy is a teacher',
+    hint: 'Read WHO, SIGNAL, WHAT in that order.',
+    explanation: '**Wiilku** persons the boy, **waa** marks a plain statement, and **macallin** supplies “teacher”: “The boy is a teacher.”',
   },
   {
-    id: 'u1-t03',
-    type: 'multiple_choice',
-    objectiveIds: ['somali-digraphs'],
-    question: 'Which of these two-character pairs counts as one single letter in Somali?',
-    options: ['sh', 'st', 'ch', 'th'],
-    correctAnswer: 'sh',
-    hint: 'Somali has exactly three of these pairs. The other three options are not among them.',
-    explanation:
-      'Somali has exactly three pairs that act as single letters: **dh**, **kh** and **sh**. There is no ch, no th and no st cluster of this kind — so **sh** is the only one on this list.',
+    id: 'u1-t03', type: 'multiple_choice', objectiveIds: ['find-signal'],
+    question: 'Which word is the sentence signal in **Wiilku waa macallin**?',
+    options: ['waa', 'Wiilku', 'macallin', 'wiil'], correctAnswer: 'waa',
+    hint: 'It is the short word between the two content chunks.',
+    explanation: '**Waa** is the sentence signal. It marks an ordinary statement; it is not a content word naming the boy or the teacher.',
   },
   {
-    id: 'u1-t04',
-    type: 'multiple_choice',
-    objectiveIds: ['somali-digraphs'],
-    question: 'Which of these words begins with a single Somali letter that is written with two characters?',
-    options: ['sheeko (story)', 'bisad (cat)', 'both of them', 'neither of them'],
-    correctAnswer: 'sheeko (story)',
-    hint: 'Look at the first one or two characters of each word and check them against the three pairs.',
-    explanation:
-      '**Sheeko** starts with **sh**, one of the three pairs that act as a single letter. **Bisad** starts with plain b, an ordinary single character. Reading sh as two separate sounds is what makes the word hard to recognise.',
+    id: 'u1-t04', type: 'fill_blank', objectiveIds: ['find-signal'],
+    question: 'Choose the signal for the plain statement: **Wiilku ___ macallin.**',
+    options: ['waa', 'baa', 'waxa', 'ay'], correctAnswer: 'waa',
+    hint: 'Nothing is being singled out or contrasted.',
+    explanation: '**Waa** marks the line as a plain statement. The whole sourced sentence is **Wiilku waa macallin**.',
   },
   {
-    id: 'u1-t05',
-    type: 'fill_blank',
-    objectiveIds: ['somali-vowel-length'],
-    question: 'Somali shows that a vowel is held longer by ___.',
-    options: ['writing the vowel twice', 'adding an accent mark', 'doubling the consonant after it', 'adding an h after it'],
-    correctAnswer: 'writing the vowel twice',
-    hint: 'Somali spelling uses no marks above or below letters at all.',
-    explanation:
-      'A long vowel is written twice: aa, ee, ii, oo, uu. Somali spelling carries no accent marks of any kind, so doubling is the only signal that a vowel is held.',
+    id: 'u1-t05', type: 'unscramble', objectiveIds: ['build-statement'],
+    question: 'Build “The boy is a teacher.”', words: ['waa', 'macallin', 'Wiilku'], answer: 'Wiilku waa macallin',
+    hint: 'WHO first, signal second, meaning last.',
+    explanation: 'The correct order is **Wiilku waa macallin**: the boy, the plain-statement signal, then the information that he is a teacher.',
   },
   {
-    id: 'u1-t06',
-    type: 'multiple_choice',
-    objectiveIds: ['somali-vowel-length'],
-    question: 'Which of these words contains a vowel you hold longer?',
-    options: ['libaax', 'mas', 'kab', 'nin'],
-    correctAnswer: 'libaax',
-    hint: 'Look for a vowel written twice in a row.',
-    explanation:
-      '**Libaax** (lion) has **aa**, so that vowel is held. **Mas**, **kab** and **nin** each carry one short vowel. The doubled letters are the only clue, and they are always visible.',
+    id: 'u1-t06', type: 'multiple_choice', objectiveIds: ['build-statement'],
+    question: 'Which sequence matches the decoding routine WHO → SIGNAL → WHAT?',
+    options: ['Wiilku | waa | macallin', 'waa | Wiilku | macallin', 'macallin | waa | Wiilku', 'Wiilku | macallin | waa'], correctAnswer: 'Wiilku | waa | macallin',
+    hint: 'Start with the WHO, then the small organizer, then what is said about him.',
+    explanation: '**Wiilku | waa | macallin** keeps the meaning in the intended order: person, plain-statement signal, meaning.',
   },
 
   // ── Lesson 2: nouns and gender ──────────────────────────────────────────
@@ -357,7 +332,7 @@ const UNIT_1_ITEMS: PracticeExercise[] = [
     id: 'u1-t27',
     type: 'translate',
     objectiveIds: ['pronouns-inclusive-exclusive'],
-    question: 'Write the Somali "we" that leaves the person you are speaking to out of the group.',
+    question: 'Write the Somali "we" that leaves the WHO you are speaking to out of the group.',
     answer: 'annaga',
     hint: 'This is the "us, but not you" one.',
     explanation:
