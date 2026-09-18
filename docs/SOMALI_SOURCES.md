@@ -757,3 +757,20 @@ the obvious next one to work through.
   vocab decks, so a learner sees them. The validator reports this every run and
   will keep reporting it until they are checked — that is the next content job.
 - ⚠️ 2 registry forms (`nabad`, `subax`) rest on a single source.
+
+
+## 12. Drive workbook cross-check for the fusion practice expansion
+
+The September 2026 course expansion adds productive practice for **baan** and
+**buu**, plus a recognition contrast for **baad**. The forms are not inferred
+from the workbook. They were checked against the two published grammars already
+in this project's source system:
+
+- Nilsson, *Beginner's Somali Grammar*, §5.1: the `baa` + subject-pronoun table.
+- Orwin, *Colloquial Somali*, printed p.93: **baan**, **baad**, **buu**, **bay**.
+
+Mohamed's private Drive workbook, *Somali Grammar Drills*, Level 3, independently
+identified this as the next practice gap: it asks learners to decompose and
+build all four `baa` contractions, while the shipped lesson asked them to
+produce none. The workbook guided the exercise choice; the two published books
+remain the language evidence.
