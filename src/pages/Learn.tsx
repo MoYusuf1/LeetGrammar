@@ -26,7 +26,9 @@
  * from lesson.lessonId.
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { UserRound } from 'lucide-react';
+import ProfileSheet from '@/components/ProfileSheet';
 import { useNavigate } from 'react-router';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
 import { UNITS, getUnitTest } from '@/data/unit-tests';
@@ -36,6 +38,7 @@ import { useProgressStore } from '@/stores/progress-store';
 export default function LearnPage() {
   const navigate = useNavigate();
   const store = useProgressStore();
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const grouped = useMemo(
     () =>
@@ -57,6 +60,8 @@ export default function LearnPage() {
 
   return (
     <div className="min-h-[100dvh] bg-bg">
+      <button onClick={() => setProfileOpen(true)} aria-label="Open profile" className="fixed right-4 top-[calc(0.75rem+var(--safe-t))] z-20 grid h-10 w-10 place-items-center rounded-full bg-fill backdrop-blur active:opacity-60"><UserRound size={20}/></button>
+      <ProfileSheet open={profileOpen} onClose={() => setProfileOpen(false)} />
       <div className="learn-shell mx-auto px-5 pt-safe-t">
         <aside className="learn-sidebar" aria-label="Course overview">
           <div>
