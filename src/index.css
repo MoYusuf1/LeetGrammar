@@ -305,3 +305,45 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Desktop keeps the quiet iPhone language while using the room a laptop gives us.
+   Mobile is deliberately untouched: these rules begin above tablet width. */
+.learn-shell {
+  max-width: var(--column);
+}
+
+.learn-sidebar {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  :root {
+    --column: 42rem;
+  }
+
+  .learn-shell {
+    display: grid;
+    grid-template-columns: 17rem minmax(0, 42rem);
+    gap: clamp(4rem, 8vw, 8rem);
+    max-width: 72rem;
+    padding-inline: 2rem;
+  }
+
+  .learn-sidebar {
+    display: block;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    min-height: 100dvh;
+    padding-block: 4.5rem;
+  }
+
+  .learn-mobile-header {
+    display: none;
+  }
+
+  .learn-content {
+    padding-top: 4.5rem;
+  }
+}
