@@ -347,3 +347,129 @@
     padding-top: 4.5rem;
   }
 }
+
+/* iPadOS large-screen shell. The iPhone layout above remains the source of
+   truth below 768px; larger screens become a centered app window with a real
+   split view rather than a stretched phone page. */
+.learn-large-toolbar { display: none; }
+
+@media (min-width: 768px) {
+  :root { --column: 38rem; }
+
+  .learn-page {
+    padding: 2rem;
+    background:
+      radial-gradient(circle at 50% -20%, var(--bg-elevated), transparent 48%),
+      var(--bg);
+  }
+
+  .learn-shell {
+    display: grid;
+    grid-template-columns: 15.5rem minmax(0, 1fr);
+    max-width: 68rem;
+    min-height: calc(100dvh - 4rem);
+    margin-inline: auto;
+    padding: 0;
+    overflow: hidden;
+    border: 0.5px solid var(--separator);
+    border-radius: 28px;
+    background: var(--bg-elevated);
+    box-shadow: 0 24px 70px rgba(0,0,0,.12), 0 2px 12px rgba(0,0,0,.06);
+  }
+
+  .learn-sidebar {
+    display: flex;
+    position: relative;
+    top: auto;
+    min-height: auto;
+    padding: 4.75rem 1.75rem 2rem;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 0.5px solid var(--separator);
+    background: color-mix(in srgb, var(--bg) 82%, var(--bg-elevated));
+  }
+
+  .learn-sidebar::after {
+    content: 'Your progress stays private and available offline.';
+    max-width: 12rem;
+    color: var(--label-3);
+    font-size: .75rem;
+    line-height: 1.4;
+  }
+
+  .learn-mobile-header { display: none; }
+
+  .learn-content {
+    min-width: 0;
+    padding: 0 clamp(2.5rem, 6vw, 5rem) 4rem;
+    background: var(--bg-elevated);
+  }
+
+  .learn-large-toolbar {
+    display: flex;
+    height: 4.5rem;
+    margin-inline: calc(clamp(2.5rem, 6vw, 5rem) * -1);
+    padding-inline: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: .5px solid var(--separator);
+    color: var(--label-2);
+    font-size: .8125rem;
+    font-weight: 600;
+  }
+
+  .learn-content main {
+    max-width: 35rem;
+    margin: 3.5rem auto 0;
+  }
+
+  .profile-trigger {
+    right: max(calc((100vw - 68rem) / 2 + 1.25rem), 3.25rem);
+    top: 3.1rem;
+    background: var(--bg-elevated);
+    border: .5px solid var(--separator);
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  }
+
+  .profile-sheet {
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    overflow: auto;
+    background: rgba(0,0,0,.35);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+    backdrop-filter: blur(18px) saturate(120%);
+  }
+
+  .profile-panel {
+    width: min(46rem, 100%);
+    max-height: min(50rem, calc(100dvh - 4rem));
+    overflow-y: auto;
+    border: .5px solid var(--separator);
+    border-radius: 28px;
+    background: var(--bg);
+    box-shadow: 0 30px 100px rgba(0,0,0,.3);
+  }
+
+  .profile-panel > header {
+    border-radius: 28px 28px 0 0;
+  }
+
+  .profile-panel > main {
+    max-width: 40rem;
+    padding-inline: 2.5rem;
+  }
+
+  .profile-panel .list-group { border: .5px solid var(--separator); }
+}
+
+@media (min-width: 1100px) {
+  .learn-page { padding-block: 3rem; }
+  .learn-shell { min-height: calc(100dvh - 6rem); grid-template-columns: 18rem minmax(0,1fr); }
+  .learn-sidebar { padding-inline: 2.25rem; }
+  .profile-trigger { top: 4.1rem; }
+}
+
+@media (prefers-color-scheme: dark) and (min-width: 768px) {
+  .learn-shell { box-shadow: 0 30px 90px rgba(0,0,0,.55); }
+}

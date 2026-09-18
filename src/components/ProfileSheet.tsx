@@ -17,6 +17,7 @@ export default function ProfileSheet({ open, onClose }: { open: boolean; onClose
   };
   return (
     <div className="profile-sheet fixed inset-0 z-50 overflow-y-auto bg-bg" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+      <div className="profile-panel">
       <header className="glass glass-top sticky top-0 z-10 flex h-14 items-center justify-between px-4 pt-safe-t">
         <button onClick={onClose} aria-label="Close profile" className="grid h-10 w-10 place-items-center rounded-full active:bg-fill"><X size={22}/></button>
         <h1 id="profile-title" className="text-headline font-semibold">Profile</h1><span className="w-10" />
@@ -47,6 +48,7 @@ export default function ProfileSheet({ open, onClose }: { open: boolean; onClose
           </>
         )}
       </main>
+      </div>
     </div>
   );
 }
