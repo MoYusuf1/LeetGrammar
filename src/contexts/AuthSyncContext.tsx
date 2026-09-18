@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { getRedirectResult, onAuthStateChanged, signInWithRedirect, signOut, type User } from 'firebase/auth';
+import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, type User } from 'firebase/auth';
 import { doc, getDoc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, db, firebaseConfigured, googleProvider } from '@/lib/firebase';
 import { mergeProgress, snapshotProgress } from '@/lib/progress-sync';
@@ -63,7 +63,19 @@ export function AuthSyncProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<ContextValue>(() => ({
     user, ready, syncState,
-    signIn: async () => { if (!auth) throw new Error('Firebase is not configured'); await signInWithRedirect(auth, googleProvider); },
+    signIn: async () => {
+      if (!auth) throw new Error('Firebase is not configured');
+      try {
+        await signInWithPopup(auth, googleProvider);
+      } catch (error) {
+        const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : '';
+        if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
+          await signInWithRedirect(auth, googleProvider);
+          return;
+        }
+        throw error;
+      }
+    },
     signOutUser: async () => { if (auth) await signOut(auth); },
     retry: () => setRetryToken((n) => n + 1),
   }), [user, ready, syncState]);
