@@ -473,3 +473,10 @@
 @media (prefers-color-scheme: dark) and (min-width: 768px) {
   .learn-shell { box-shadow: 0 30px 90px rgba(0,0,0,.55); }
 }
+
+@media (min-width: 768px) {
+  .learn-sidebar {
+    align-self: stretch;
+    min-height: 100%;
+  }
+}
