@@ -276,7 +276,11 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
           exercise && !practiceChecked
             ? {
                 label: 'Check',
-                onClick: () => practiceAnswer && setPracticeChecked(true),
+                onClick: () => {
+                  if (!practiceAnswer || !exercise) return;
+                  progress.recordExerciseAttempt(exercise.id, verdictOf(exercise, practiceAnswer) !== false);
+                  setPracticeChecked(true);
+                },
                 disabled: !practiceAnswer,
               }
             : isLastStep
@@ -290,8 +294,8 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
           correct={verdictOf(exercise, practiceAnswer)}
           heading={<FeedbackHeading exercise={exercise} answer={practiceAnswer} />}
           explanation={<RichText text={exercise.explanation} />}
-          continueLabel={isLastStep ? 'Finish lesson' : 'Continue'}
-          onContinue={goNext}
+          continueLabel={verdictOf(exercise, practiceAnswer) === false ? 'Try again' : isLastStep ? 'Finish lesson' : 'Continue'}
+          onContinue={verdictOf(exercise, practiceAnswer) === false ? resetStepState : goNext}
         />
       )}
 
