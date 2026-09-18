@@ -31,7 +31,7 @@ An **8-lesson Somali course** in 2 units, local-only, no accounts, progress in
 | 7 | Action Words | 15 | 6 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
 | 8 | Putting It In Order | 16 | 6 | the action word lands last; the signal hugs the verb; `waxa` sends the spotlight past it |
 
-**Totals:** 121 authored cards · 50 exercises · 32% production.
+**Totals:** 125 authored cards · 54 exercises · 35% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
 The course lands on **`Wiilku waa macallin.`** ("The boy is a teacher."), a
