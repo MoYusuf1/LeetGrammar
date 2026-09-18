@@ -19,9 +19,9 @@ import { AUTHORED_LESSONS } from './authored-lessons.ts';
 
 const OBJECTIVE_LABELS: Record<string, string> = {
   // Lesson 1
-  'somali-alphabet': 'Reading the Somali letters',
-  'somali-digraphs': 'The three pairs that count as one letter',
-  'somali-vowel-length': 'Doubled vowels are held longer',
+  'decode-statement': 'Decode a common statement as meaning, not isolated words',
+  'find-signal': 'Find the small word that organizes a statement',
+  'build-statement': 'Build a common statement from meaning',
   // Lesson 2
   'noun-gender': 'Every noun is masculine or feminine',
   'noun-gender-diagnostic': 'Reading gender off the "the" form',
