@@ -21,6 +21,11 @@ describe('normalizeAnswer', () => {
   it('does not strip internal punctuation', () => {
     expect(normalizeAnswer("su'aal")).toBe("su'aal");
   });
+
+  it('normalizes line breaks without losing the sequence of a connected response', () => {
+    expect(normalizeAnswer('wuu keenaa\nway keentaa')).toBe('wuu keenaa way keentaa');
+    expect(normalizeAnswer('wuu keenaa   way keentaa')).toBe('wuu keenaa way keentaa');
+  });
 });
 
 describe('isAnswerCorrect — choice types', () => {

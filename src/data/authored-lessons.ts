@@ -127,6 +127,35 @@ Then say the gist in plain English. Return for details only after the sentence h
       },
     },
     {
+      id: '1-transfer-gist', type: 'notice', exercise: {
+        id: 'l1-transfer-gist', type: 'multiple_choice', objectiveIds: ['decode-statement', 'find-signal'],
+        question: 'A new caption reads **Wiilku waa macallin**. Without translating word by word, what is its shape?',
+        options: ['the boy | plain statement | teacher', 'a teacher | spotlight | man', 'a man | action | teacher', 'a question about a teacher'],
+        correctAnswer: 'the boy | plain statement | teacher',
+        hint: 'Use the routine on the sentence in front of you: WHO, SIGNAL, WHAT.',
+        explanation: '**Wiilku** is the WHO, **waa** marks a plain statement, and **macallin** supplies teacher. The noun changed, but the decoding routine did not.',
+      },
+    },
+    {
+      id: '1-transfer-detail', type: 'complete', exercise: {
+        id: 'l1-transfer-detail', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+        question: 'Which clue proves **Wiilku waa macallin** is a plain statement rather than a spotlighted contrast?',
+        options: ['the signal waa', 'the first letter of Wiilku', 'the length of macallin', 'the final -u by itself'],
+        correctAnswer: 'the signal waa',
+        hint: 'One small word tells you what kind of statement you are reading.',
+        explanation: '**waa** is the decisive clue: it marks a neutral statement. The content words identify the man and teacher, but they do not set the statement type.',
+      },
+    },
+    {
+      id: '1-whole-write', type: 'produce', exercise: {
+        id: 'l1-whole-write', type: 'translate', objectiveIds: ['build-statement'],
+        question: 'Write the complete Somali profile line “The boy is a teacher.” from memory.',
+        answer: 'Wiilku waa macallin',
+        hint: 'Build WHO → SIGNAL → WHAT. Keep the whole sentence together.',
+        explanation: '**Wiilku waa macallin** is one complete written statement. Rebuilding the full line is the bridge from choosing parts to holding a whole sentence in memory.',
+      },
+    },
+    {
       id: '1-payoff', type: 'payoff',
       prompt: 'Now read it once more: **Wiilku waa macallin.**\n\nYou are not sounding it out or translating three isolated words. You are decoding a person, a sentence signal, and the information carried about him. That is the routine you will reuse with captions, dialogue, and longer sentences.',
     },
@@ -891,6 +920,13 @@ const LESSON_5: Lesson = {
       },
     },
     {
+      id: '5-coach-signal-first',
+      type: 'coach',
+      title: 'Let the signal overrule your first guess',
+      content:
+        'Make a quick first reading, then test it. Find the signal and ask where it points. If **baa** follows the second noun, the first noun is not automatically the spotlight. If **waxa** opens the signal group, hold your answer until the sentence ends. A good reader repairs the first guess when the signal disagrees.',
+    },
+    {
       id: '5-notice-2',
       type: 'notice',
       exercise: {
@@ -1007,6 +1043,26 @@ const LESSON_5: Lesson = {
         hint: 'Spotlight on **Sahra** means the signal must sit immediately after her name.',
         explanation:
           'With **baa** directly after **Sahra**, the spotlight lands on Sahra. The **waxa** version spotlights **saaxiibkeed** instead: "Sahra is greeting her FRIEND". Same words, opposite meaning, and nothing but the signal tells you which.',
+      },
+    },
+    {
+      id: '5-transfer-gap', type: 'notice', exercise: {
+        id: 'l5-transfer-gap', type: 'multiple_choice', objectiveIds: ['signal-focus-before'],
+        question: 'A note says **Gabadhu bariiska baa cuntay**. Someone replies, “It tells us the girl is the contrast.” What repair does the signal require?',
+        options: ['No: baa points left to bariiska, so the rice is contrasted', 'Yes: the first noun is always contrasted', 'No: cuntay is contrasted because it is last', 'There is not enough information to tell'],
+        correctAnswer: 'No: baa points left to bariiska, so the rice is contrasted',
+        hint: 'Treat the first reply as a guess. Find **baa**, then inspect only what is immediately before it.',
+        explanation: 'The first reading fails the signal check. **baa** sits after **bariiska**, so the repair is “the RICE,” not “the girl.” This is written clarification: the clue changes the answer.',
+      },
+    },
+    {
+      id: '5-transfer-response', type: 'produce', exercise: {
+        id: 'l5-transfer-response', type: 'marker_identification', objectiveIds: ['signal-focus-before', 'signal-focus-end'],
+        question: 'Reply with the signal you would tell a reader to check first in this line.',
+        somali: 'Gabadhu bariiska baa cuntay',
+        answer: 'baa',
+        hint: 'Your reply is one word: the signal that settles the disagreement.',
+        explanation: '**baa** is the useful reply because it tells the other reader where to look next: immediately left, at **bariiska**. The response repairs meaning, not just spelling.',
       },
     },
     {
@@ -1596,6 +1652,13 @@ const LESSON_8: Lesson = {
         'The honest version of the rule is **usually**, not always. Somali moves noun phrases around more freely than English does, and you will meet sentences with things after the verb. What follows is the part that does not move.',
     },
     {
+      id: '8-coach-hold-verb',
+      type: 'coach',
+      title: 'Keep the parse open until the action arrives',
+      content:
+        'Do not force the English order onto the first two words. Hold a provisional WHO and WHAT, then look for the signal. The action should sit immediately to its right. If **waxa** is the signal, keep reading after the action for the spotlighted ending. This lets later words revise an early guess instead of trapping you in it.',
+    },
+    {
       id: '8-notice-1',
       type: 'notice',
       exercise: {
@@ -1726,6 +1789,25 @@ const LESSON_8: Lesson = {
       },
     },
     {
+      id: '8-transfer-parse', type: 'notice', exercise: {
+        id: 'l8-transfer-parse', type: 'multiple_choice', objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
+        question: 'Read the new two-line note:\n\n**Wuu keenaa.**\n**Way keentaa.**\n\nWhat stays in the same position in both lines?',
+        options: ['the signal comes immediately before the action', 'the action comes before the signal', 'the same person is acting', 'the action ending never changes'],
+        correctAnswer: 'the signal comes immediately before the action',
+        hint: 'Compare the job of the first word with the job of the second word in each line.',
+        explanation: 'Both lines keep SIGNAL → DO: **wuu | keenaa**, **way | keentaa**. The person and verb ending change, but the signal still hugs the action from in front.',
+      },
+    },
+    {
+      id: '8-connected-write', type: 'produce', exercise: {
+        id: 'l8-connected-write', type: 'translate', objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
+        question: 'Write the two-line update: “He brings.” then “She brings.” Use one Somali sentence per line.',
+        answer: 'wuu keenaa\nway keentaa',
+        hint: 'Each line begins with its squashed signal, followed immediately by the matching action word.',
+        explanation: '**wuu keenaa** and **way keentaa** form a short connected update. Each sentence keeps SIGNAL → DO, while both halves change together to keep the person consistent.',
+      },
+    },
+    {
       id: '8-payoff',
       type: 'payoff',
       prompt:
@@ -1797,4 +1879,4 @@ export function slotsCompletedBefore(lessonId: number): BlueprintSlot[] {
     for (const s of slotsFilledBy(lesson)) done.add(s);
   }
   return [...done];
-      }
+}

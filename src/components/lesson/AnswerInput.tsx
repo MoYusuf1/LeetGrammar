@@ -208,18 +208,33 @@ function FreeResponseExercise({ exercise, answer, checked, onSelect }: AnswerInp
           Somali, or the marker itself — so the field uses the serif. It also
           reinforces that the learner is producing the target language rather
           than talking about it. */}
-      <input
-        type="text"
-        value={answer ?? ''}
-        disabled={checked}
-        onChange={(e) => onSelect(e.target.value)}
-        lang="so"
-        autoCapitalize="none"
-        autoCorrect="off"
-        spellCheck={false}
-        placeholder={exercise.type === 'marker_identification' ? 'Type the marker…' : 'Type your answer in Somali…'}
-        className="somali somali-lg w-full rounded-xl bg-elevated p-4 placeholder:font-sans placeholder:text-body placeholder:font-normal placeholder:tracking-normal placeholder:text-label-3 focus:border-accent focus:outline-none disabled:opacity-70"
-      />
+      {typeof exercise.answer === 'string' && exercise.answer.includes('\n') ? (
+        <textarea
+          value={answer ?? ''}
+          disabled={checked}
+          onChange={(e) => onSelect(e.target.value)}
+          lang="so"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          rows={3}
+          placeholder="Type one Somali sentence per line…"
+          className="somali somali-lg w-full resize-none rounded-xl bg-elevated p-4 placeholder:font-sans placeholder:text-body placeholder:font-normal placeholder:tracking-normal placeholder:text-label-3 focus:border-accent focus:outline-none disabled:opacity-70"
+        />
+      ) : (
+        <input
+          type="text"
+          value={answer ?? ''}
+          disabled={checked}
+          onChange={(e) => onSelect(e.target.value)}
+          lang="so"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          placeholder={exercise.type === 'marker_identification' ? 'Type the marker…' : 'Type your answer in Somali…'}
+          className="somali somali-lg w-full rounded-xl bg-elevated p-4 placeholder:font-sans placeholder:text-body placeholder:font-normal placeholder:tracking-normal placeholder:text-label-3 focus:border-accent focus:outline-none disabled:opacity-70"
+        />
+      )}
     </motion.div>
   );
 }
