@@ -29,6 +29,7 @@ import type { Card as TeachingCard } from '@/data/types';
 export interface VocabFlowCard {
   type: 'vocab';
   words: import('@/data/vocabulary').VocabWord[];
+  lessonTitle: string;
 }
 
 export type FlowCard = TeachingCard | VocabFlowCard;

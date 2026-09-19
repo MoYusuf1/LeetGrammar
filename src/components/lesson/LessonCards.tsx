@@ -36,7 +36,7 @@ import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent, slotsCompletedBefore } from '@/data/authored-lessons';
 import type { Card as TeachingCard, PracticeExercise, BlueprintSlot } from '@/data/types';
 import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
-import { getVocabForLesson, type VocabWord } from '@/data/vocabulary';
+import { getContextualVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import AnswerInput from './AnswerInput';
 import Blueprint from './Blueprint';
 import { stripBoxArt } from './box-art';
@@ -93,9 +93,9 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
    */
   const cards: FlowCard[] = useMemo(() => {
     const base: FlowCard[] = content?.cards ?? [];
-    const words = getVocabForLesson(lessonId);
+    const words = getContextualVocabForLesson(lessonId);
     if (!content || words.length === 0) return base;
-    const vocabCard: VocabFlowCard = { type: 'vocab', words };
+    const vocabCard: VocabFlowCard = { type: 'vocab', words, lessonTitle: content.title };
 
     let seen = 0;
     let insertAt = base.length; // no retrieval cards at all: park it at the end
@@ -429,7 +429,7 @@ function RenderCard({
       );
 
     case 'vocab':
-      return <VocabCard words={(card as VocabFlowCard).words} />;
+      return <VocabCard words={(card as VocabFlowCard).words} lessonTitle={(card as VocabFlowCard).lessonTitle} />;
 
     case 'teach':
     case 'example':
@@ -509,15 +509,21 @@ function IntroCard({
 
 /* ─── Vocab Card ─────────────────────────────────────────────────────────── */
 
-function VocabCard({ words }: { words: VocabWord[] }) {
+function VocabCard({ words, lessonTitle }: { words: VocabWord[]; lessonTitle: string }) {
   return (
-    <motion.div
-      custom={0}
-      variants={contentStagger}
-      initial="hidden"
-      animate="visible"
-      className="list-group"
-    >
+    <div className="space-y-4">
+      <div>
+        <p className="text-caption uppercase tracking-wider text-label-3">Vocabulary in context</p>
+        <h2 className="mt-1 text-title2 font-semibold text-label">Words used in {lessonTitle}</h2>
+        <p className="mt-2 text-subhead text-label-2">These are the words this lesson uses to carry its pattern. Read them here, then meet them again in the examples and questions.</p>
+      </div>
+      <motion.div
+        custom={0}
+        variants={contentStagger}
+        initial="hidden"
+        animate="visible"
+        className="list-group"
+      >
       {words.map((w) => (
         <div key={w.rank} className="list-row flex items-baseline justify-between gap-3 px-4 py-3">
           <div className="min-w-0">
@@ -529,7 +535,8 @@ function VocabCard({ words }: { words: VocabWord[] }) {
           </span>
         </div>
       ))}
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 

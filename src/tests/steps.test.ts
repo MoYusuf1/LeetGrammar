@@ -17,14 +17,14 @@
 
 import { describe, it, expect } from 'vitest';
 import { AUTHORED_LESSONS } from '@/data/authored-lessons';
-import { getVocabForLesson } from '@/data/vocabulary';
+import { getContextualVocabForLesson } from '@/data/vocabulary';
 import { buildSteps, isRetrieval, stepForCard, type FlowCard } from '@/components/lesson/steps';
 
 /** Mirrors the injection in LessonCards so tests measure the real flow. */
 function flowFor(lessonId: number): FlowCard[] {
   const lesson = AUTHORED_LESSONS.find((l) => l.id === lessonId)!;
   const base: FlowCard[] = lesson.cards;
-  const words = getVocabForLesson(lessonId);
+  const words = getContextualVocabForLesson(lessonId);
   if (words.length === 0) return base;
 
   let seen = 0;
@@ -35,7 +35,7 @@ function flowFor(lessonId: number): FlowCard[] {
       break;
     }
   }
-  return [...base.slice(0, insertAt), { type: 'vocab', words }, ...base.slice(insertAt)];
+  return [...base.slice(0, insertAt), { type: 'vocab', words, lessonTitle: lesson.title }, ...base.slice(insertAt)];
 }
 
 describe('buildSteps', () => {

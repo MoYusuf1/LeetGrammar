@@ -175,3 +175,26 @@ export function getVocabByRank(): VocabWord[] {
 
 /** Total number of curated words. */
 export const VOCAB_COUNT = TOP_500_WORDS.length;
+
+
+/**
+ * Vocabulary shown inside each lesson, limited to forms the learner meets in
+ * that lesson's teaching, examples, or exercises. The full sourced registry
+ * remains above for audit and future authored work; this projection prevents
+ * unrelated semantic lists from interrupting a grammar lesson.
+ */
+const CONTEXTUAL_VOCABULARY: Record<number, readonly string[]> = {
+  1: ['cod', 'af'],
+  2: ['nin', 'naag', 'wiil', 'gabadh', 'guri', 'miis', 'buug', 'macallin'],
+  3: ['tan', 'magaalo', 'bad'],
+  4: ['aniga', 'adiga', 'isaga', 'iyada', 'annaga', 'innaga', 'idinka', 'iyaga', 'aan', 'aad', 'uu', 'ay'],
+  5: ['waa', 'baa', 'ayaa', 'waxa', 'saaxiib'],
+  6: ['wuu', 'way', 'wuxuu', 'waxay'],
+  7: ['keen', 'keenaa', 'keentaa', 'keenaan'],
+  8: ['shaah', 'tegey', 'cabbay'],
+};
+
+export function getContextualVocabForLesson(lessonId: number): VocabWord[] {
+  const headwords = new Set(CONTEXTUAL_VOCABULARY[lessonId] ?? []);
+  return getVocabForLesson(lessonId).filter((word) => headwords.has(word.somali));
+}
