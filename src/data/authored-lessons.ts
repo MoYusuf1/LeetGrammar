@@ -543,6 +543,7 @@ const LESSON_3: Lesson = {
   id: 3,
   unitId: 1,
   title: 'Saying "The"',
+  flowVersion: 2,
   cards: [
     {
       id: '3-blueprint',
@@ -551,21 +552,61 @@ const LESSON_3: Lesson = {
       content: `${BOX}\n\nStill the WHO box. Last lesson: which gender a noun has. Today: the ending that shows it.`,
     },
     {
-      id: '3-connect',
-      type: 'connect',
-      prompt: 'You already used these endings as a gender test: wiilka, naagta. Now you will build them yourself.',
+      id: '3-passage-a', type: 'passage',
+      passage: {
+        id: 'l3-text-a',
+        label: 'A dictionary page',
+        lines: [
+          { somali: 'guri, guriga.', gloss: 'house, the house.', note: 'The dictionary lists each noun next to its "the" form.' },
+          { somali: 'magaalo, magaalada.', gloss: 'city, the city.', note: 'Same layout, second entry.' },
+        ],
+      },
+      content: 'Last lesson ended with the advice: learn every noun in its "the" form. This is what that advice looks like — a dictionary page, two entries. Read it once, then answer.',
     },
     {
-      id: '3-promise',
-      type: 'promise',
-      prompt: 'By the end you will turn any noun you meet into its "the" form, including the ones where the ending changes shape.',
+      id: '3-gist-a', type: 'notice', exercise: {
+        id: 'l3-gist-a', type: 'multiple_choice', objectiveIds: ['article-suffix'],
+        question: 'What is this dictionary page showing you?',
+        options: [
+          'each noun next to its "the" form',
+          'two nouns that mean the same thing',
+          'the Somali alphabet in order',
+          'pairs of opposites',
+        ],
+        correctAnswer: 'each noun next to its "the" form',
+        hint: 'Read the two entries side by side. What changes between the first word and the second?',
+        explanation: '**guri, guriga** — house, the house. **magaalo, magaalada** — city, the city. Each entry pairs a bare noun with its "the" form, which is exactly where the gender clue lives.',
+        repair: {
+          id: 'l3-gist-a-r', type: 'multiple_choice', objectiveIds: ['article-suffix'],
+          question: 'Which pair on the page belongs to **magaalo**?',
+          options: ['magaalo, magaalada', 'guri, guriga', 'both pairs', 'neither pair'],
+          correctAnswer: 'magaalo, magaalada',
+          hint: 'Match the first word of each pair.',
+          explanation: 'The second entry, **magaalo, magaalada**, is the city pair. The first is the house: **guri, guriga**.',
+        },
+      },
     },
     {
-      id: '3-predict',
-      type: 'predict',
-      prompt:
-        '**guri** means house. **guriga** means *the* house.\n\n' +
-        'Before reading on, look at those two words and say what happened. Where did "the" go?',
+      id: '3-detail-a', type: 'notice', exercise: {
+        id: 'l3-detail-a', type: 'multiple_choice', objectiveIds: ['article-suffix'],
+        question: 'Find **guriga** on the page. What is it the "the" form of?',
+        options: ['guri (house)', 'magaalo (city)', 'wiil (boy)', 'kab (shoe)'],
+        correctAnswer: 'guri (house)',
+        hint: 'It sits on the same line as the noun it belongs to.',
+        explanation: '**Guriga** is the "the" form of **guri** (house): the entry reads "guri, guriga" — house, the house.',
+        repair: {
+          id: 'l3-detail-a-r', type: 'multiple_choice', objectiveIds: ['article-suffix'],
+          question: 'And **magaalada** — which noun does it come from?',
+          options: ['magaalo (city)', 'guri (house)', 'mas (snake)', 'bil (month)'],
+          correctAnswer: 'magaalo (city)',
+          hint: 'Same move on the second entry.',
+          explanation: '**Magaalada** comes from **magaalo** (city): "magaalo, magaalada" — city, the city.',
+        },
+      },
+    },
+    {
+      id: '3-coach-endings', type: 'coach', title: 'Same page, two tails',
+      content: 'Both entries do the same job — noun, then its "the" form — but look at the tails: **guriga** grows a **g**, **magaalada** grows a **d**. Last lesson told you why: the ending shows the noun\'s gender, k-type for masculine, t-type for feminine. So far you have only read the clue. Now you build it.',
     },
     {
       id: '3-teach',
@@ -578,6 +619,29 @@ const LESSON_3: Lesson = {
         'Write it joined: **maska**, not "mas-ka".\n\n' +
         'There is also **no word for "a"**. The bare noun already covers it: **kab** on its own means "shoe" or "a shoe", whichever the English needs.\n\n' +
         'The basic endings are **-ka** for masculine and **-ta** for feminine.',
+    },
+    {
+      id: '3-notice-3',
+      type: 'notice',
+      exercise: {
+        id: 'l3-n3',
+        type: 'multiple_choice',
+        objectiveIds: ['article-no-indefinite'],
+        question: 'How do you say "a shoe" in Somali, given that "the shoe" is **kabta**?',
+        options: ['kab', 'kabta', 'kaba', 'a kab'],
+        correctAnswer: 'kab',
+        hint: 'Somali has no word for "a". Think about what is left when you remove the "the" ending.',
+        explanation:
+          'Somali has **no indefinite article**. The bare noun **kab** already means "shoe" or "a shoe". You only add an ending when you mean "the".',
+        repair: {
+          id: 'l3-n3-r', type: 'multiple_choice', objectiveIds: ['article-no-indefinite'],
+          question: 'And how do you say "a snake", given that "the snake" is **maska**?',
+          options: ['mas', 'maska', 'masa', 'masta'],
+          correctAnswer: 'mas',
+          hint: 'There is no word for "a". What is left once the "the" ending comes off?',
+          explanation: '**Mas** on its own covers "snake" and "a snake". Somali has no separate word for "a" — the bare noun does the job.',
+        },
+      },
     },
     {
       id: '3-teach-assim',
@@ -628,6 +692,14 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
         hint: 'Look at the sound immediately before the ending, then check the masculine list.',
         explanation:
           'After **g, aa, i, y, w** the masculine ending becomes **-ga**. **Guri** ends in i, so it takes -ga: **guriga**.',
+        repair: {
+          id: 'l3-n1-r', type: 'multiple_choice', objectiveIds: ['article-assimilation'],
+          question: '**Guriga** started from the base ending **-ka**. What happened to the k?',
+          options: ['It softened to g after i', 'It doubled, as in buugga', 'It dropped out entirely', 'It turned into t'],
+          correctAnswer: 'It softened to g after i',
+          hint: 'The noun ends in i. Check the masculine list for what -ka does after i.',
+          explanation: 'After **i** the masculine ending softens: **-ka** becomes **-ga**, so **guri** gives **guriga**. The base ending is still underneath — it just changed shape.',
+        },
       },
     },
     {
@@ -643,21 +715,14 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
         hint: 'Bil is feminine and ends in l. That triggers the one rule where a letter disappears.',
         explanation:
           'After **l**, the feminine ending becomes **-sha** and the **l drops**: bil → **bisha**. This is the least guessable rule in the set, which is why it is worth learning first.',
-      },
-    },
-    {
-      id: '3-notice-3',
-      type: 'notice',
-      exercise: {
-        id: 'l3-n3',
-        type: 'multiple_choice',
-        objectiveIds: ['article-no-indefinite'],
-        question: 'How do you say "a shoe" in Somali, given that "the shoe" is **kabta**?',
-        options: ['kab', 'kabta', 'kaba', 'a kab'],
-        correctAnswer: 'kab',
-        hint: 'Somali has no word for "a". Think about what is left when you remove the "the" ending.',
-        explanation:
-          'Somali has **no indefinite article**. The bare noun **kab** already means "shoe" or "a shoe". You only add an ending when you mean "the".',
+        repair: {
+          id: 'l3-n2-r', type: 'multiple_choice', objectiveIds: ['article-assimilation'],
+          question: '**Gabadh** means "girl". Which is the correct form for "the girl"?',
+          options: ['gabadha', 'gabadhta', 'gabadhsha', 'gabadhda'],
+          correctAnswer: 'gabadha',
+          hint: 'After dh, the feminine ending shrinks to just -a in writing.',
+          explanation: 'After **dh** the feminine ending is just **-a**: gabadh → **gabadha**. (The other form of the word, **gabar**, gives **gabarta** — both are correct.)',
+        },
       },
     },
     {
@@ -672,6 +737,14 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
         hint: 'After o, the feminine ending becomes -da, and the o itself changes to a.',
         explanation:
           'After **o** the feminine ending becomes **-da**, and the **o changes to a**: magaalo → **magaalada**. Two changes at once, which is why this one is easy to get half-right.',
+        repair: {
+          id: 'l3-c1-r', type: 'multiple_choice', objectiveIds: ['article-assimilation'],
+          question: 'So which of these is "the city"?',
+          options: ['magaalada', 'magaalota', 'magaaloka', 'magaalta'],
+          correctAnswer: 'magaalada',
+          hint: 'Feminine, ending in o: the ending becomes -da and the o becomes a.',
+          explanation: '**Magaalo** is feminine and ends in **o**, so the ending is **-da** and the o turns to a: **magaalada**. The other three spellings are the mistakes this rule prevents.',
+        },
       },
     },
     {
@@ -686,6 +759,14 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
         hint: 'After e the masculine ending becomes -ha, and the e itself becomes a.',
         explanation:
           'After **e** the masculine ending becomes **-ha**, and the **e changes to a**: aabbe → **aabbaha**. Same double change as the feminine -o rule.',
+        repair: {
+          id: 'l3-c2-r', type: 'multiple_choice', objectiveIds: ['article-assimilation'],
+          question: 'And which of these is "the father"?',
+          options: ['aabbaha', 'aabbeha', 'aabbeka', 'aabbega'],
+          correctAnswer: 'aabbaha',
+          hint: 'After e the masculine ending is -ha, and the e itself becomes a.',
+          explanation: '**Aabbe** ends in **e**: the ending is **-ha** and the e turns to a, giving **aabbaha**. Both the ending and the vowel change.',
+        },
       },
     },
     {
@@ -702,6 +783,13 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
         hint: 'After dh, the feminine ending shrinks to just -a in writing.',
         explanation:
           'After **dh** the feminine ending is written as just **-a**: gabadh → **gabadha**. The dh itself is pronounced more strongly. (You may also meet **gabar** for "girl", giving **gabarta**: both are correct.)',
+        repair: {
+          id: 'l3-c3-r', type: 'translate', objectiveIds: ['article-assimilation'],
+          question: '**Gabar** is the other word for "girl", and no softening rule mentions r. Write "the girl" using **gabar**.',
+          answer: ['gabarta'],
+          hint: 'When no rule applies, the feminine ending stays in its base form.',
+          explanation: '**R** is on no softening list, so the ending stays **-ta**: gabar → **gabarta**. Same word, same gender, base ending.',
+        },
       },
     },
     {
@@ -717,6 +805,19 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
         hint: 'After the throat letters c, h, x, kh, q, the masculine ending loses its consonant entirely.',
         explanation:
           'After **c, h, x, kh, q** the masculine ending is just **-a**: libaax → **libaaxa**. The throat consonant already carries the weight, so no k-sound is added.',
+        repair: {
+          id: 'l3-c4-r', type: 'multiple_choice', objectiveIds: ['article-assimilation'],
+          question: 'Why does **libaaxa** carry no k-sound at all?',
+          options: [
+            'The throat letter already carries the weight, so the ending is just -a',
+            'Libaax is feminine, and feminine nouns take -a',
+            'The k was dropped by a spelling mistake',
+            'Every masculine noun takes just -a',
+          ],
+          correctAnswer: 'The throat letter already carries the weight, so the ending is just -a',
+          hint: 'Check which letters are on the "just -a" list.',
+          explanation: 'After the throat letters **c, h, x, kh, q** the masculine ending loses its consonant and is written as just **-a**. Libaax ends in x, so **libaaxa**.',
+        },
       },
     },
     {
@@ -731,6 +832,14 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
         hint: 'Check the feminine list for what happens after i.',
         explanation:
           'After **d, i, y, w** and the throat letters, the feminine ending becomes **-da**: mindi → **mindida**.',
+        repair: {
+          id: 'l3-p1-r', type: 'multiple_choice', objectiveIds: ['article-assimilation'],
+          question: 'So which of these is "the knife"?',
+          options: ['mindida', 'mindita', 'mindiha', 'mindisha'],
+          correctAnswer: 'mindida',
+          hint: 'Feminine, ending in i: check the feminine list.',
+          explanation: 'After **i** the feminine ending becomes **-da**: mindi → **mindida**.',
+        },
       },
     },
     {
@@ -747,6 +856,66 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
         hint: 'None of the softening rules mention n, so the ending stays in its basic form.',
         explanation:
           '**N** is not on any softening list, so the masculine ending stays as the base **-ka**: **macallinka**. When no rule applies, use the base form.',
+        repair: {
+          id: 'l3-p2-r', type: 'translate', objectiveIds: ['article-assimilation', 'article-suffix'],
+          question: '**Nin** (man) is masculine and ends in **n**. Write "the man" in Somali.',
+          answer: 'ninka',
+          hint: 'N is on no softening list, same as for macallin.',
+          explanation: '**N** appears in no softening rule, so the masculine ending stays **-ka**: nin → **ninka**. No rule applies, base form wins.',
+        },
+      },
+    },
+    {
+      id: '3-passage-b', type: 'passage',
+      passage: {
+        id: 'l3-text-b',
+        label: 'Another dictionary page',
+        lines: [
+          { somali: 'mas, maska.', gloss: 'snake, the snake.' },
+          { somali: 'kab, kabta.', gloss: 'shoe, the shoe.' },
+        ],
+      },
+      content: 'A page you have never seen, from a different shelf of the dictionary. Same layout as before — read it once, then answer.',
+    },
+    {
+      id: '3-transfer-gist', type: 'notice', exercise: {
+        id: 'l3-gist-b', type: 'multiple_choice', objectiveIds: ['article-suffix'],
+        question: 'Same kind of page, new words. What does the line "kab, kabta" tell you?',
+        options: [
+          'kab means shoe, and kabta is its "the" form',
+          'kab and kabta are two different kinds of shoe',
+          'kabta is the plural of kab',
+          'kab is the "the" form of kabta',
+        ],
+        correctAnswer: 'kab means shoe, and kabta is its "the" form',
+        hint: 'Same layout as the first page: bare noun, then its "the" form.',
+        explanation: 'The pair works exactly like "guri, guriga": **kab** is the bare noun (shoe), **kabta** its "the" form. And the t-type ending tells you kab is feminine.',
+        repair: {
+          id: 'l3-gist-b-r', type: 'multiple_choice', objectiveIds: ['article-suffix'],
+          question: 'Which pair on this page shows the snake?',
+          options: ['mas, maska', 'kab, kabta', 'both pairs', 'neither pair'],
+          correctAnswer: 'mas, maska',
+          hint: 'Match the animal to its pair.',
+          explanation: '**mas, maska** is the snake pair. **kab, kabta** is the shoe.',
+        },
+      },
+    },
+    {
+      id: '3-transfer-detail', type: 'notice', exercise: {
+        id: 'l3-detail-b', type: 'multiple_choice', objectiveIds: ['article-suffix'],
+        question: 'On this page, which "the" form shows a t-type ending?',
+        options: ['kabta', 'maska', 'both of them', 'neither of them'],
+        correctAnswer: 'kabta',
+        hint: 'Read the consonant inside each ending: k points one way, t the other.',
+        explanation: '**Kabta** carries a **t** — t-type, feminine. **Maska** carries a **k** — k-type, masculine. Same page, two genders, readable straight off the endings.',
+        repair: {
+          id: 'l3-detail-b-r', type: 'multiple_choice', objectiveIds: ['article-suffix'],
+          question: 'And which shows a k-type ending?',
+          options: ['maska', 'kabta', 'both of them', 'neither of them'],
+          correctAnswer: 'maska',
+          hint: 'The other one.',
+          explanation: '**Maska** carries a **k** — k-type, so **mas** is masculine, just as **kabta** told you **kab** is feminine.',
+        },
       },
     },
     {
