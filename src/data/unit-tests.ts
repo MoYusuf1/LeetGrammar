@@ -101,6 +101,23 @@ export function getUnitObjectives(unitId: number): string[] {
  * the learner did not answer in the lesson. Keeping the registry explicit lets
  * tests stop us from relabelling a familiar specimen as unseen evidence.
  */
+/**
+ * Audited unseen or parallel text evidence for each implemented lesson.
+ * These IDs point only at sourced, machine-gradable bank items whose prompt is
+ * absent from that lesson. The lesson map prevents broad unit-level evidence
+ * from hiding a curriculum gap in one lesson.
+ */
+export const LESSON_TRANSFER_ITEM_IDS: Record<number, readonly string[]> = {
+  1: ['u1-t01', 'u1-t03'],
+  2: ['u1-t09', 'u1-t10', 'u1-t11'],
+  3: ['u1-t15', 'u1-t18', 'u1-t19', 'u1-t20'],
+  4: ['u1-t23', 'u1-t26', 'u1-t28', 'u1-t29'],
+  5: ['u2-t03', 'u2-t06', 'u2-t07'],
+  6: ['u2-t11', 'u2-t12', 'u2-t13'],
+  7: ['u2-t14', 'u2-t15', 'u2-t17'],
+  8: ['u2-t20', 'u2-t23', 'u2-t24'],
+};
+
 export const UNSEEN_READING_ITEM_IDS: Record<number, readonly string[]> = {
   1: ['u1-t09', 'u1-t10', 'u1-t11'],
   2: ['u2-t03', 'u2-t06', 'u2-t07', 'u2-t20', 'u2-t23'],

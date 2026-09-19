@@ -46,8 +46,8 @@ export const COURSE_OUTCOMES: CourseOutcome[] = [
     evidence: [
       { mode: 'guided-retrieval', lessonIds: [1, 5, 8], evidenceIds: ['l1-n1', 'l5-n1', 'l8-n2'], implemented: true, note: 'Core lesson retrieval.' },
       { mode: 'context-transfer', lessonIds: [1], evidenceIds: ['l1-transfer-gist'], implemented: true, note: 'A familiar sourced sentence is read in a new caption context; this does not claim an unseen string.' },
-      { mode: 'unseen-reading', lessonIds: [5, 8], evidenceIds: ['l5-transfer-gap', 'l8-transfer-parse'], implemented: true, note: 'New text configurations in the later vertical-slice lessons.' },
-      { mode: 'delayed-transfer', lessonIds: [1, 5, 8], evidenceIds: ['homework:1', 'homework:5', 'homework:8'], implemented: true, note: 'Homework re-composes verified material after the lesson.' },
+      { mode: 'unseen-reading', lessonIds: [1, 2, 3, 4, 5, 6, 7, 8], evidenceIds: ['unit-bank:lesson-transfer'], implemented: true, note: 'Every lesson has an audited, sourced parallel-text set in LESSON_TRANSFER_ITEM_IDS; the items are absent from that lesson and machine-gradable.' },
+      { mode: 'delayed-transfer', lessonIds: [1, 2, 3, 4, 5, 6, 7, 8], evidenceIds: ['homework:all-lessons'], implemented: true, note: 'Only scheduled-due homework counts; each lesson re-composes verified material and excludes verbatim lesson prompts.' },
     ],
   },
   {
