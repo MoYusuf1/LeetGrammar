@@ -33,6 +33,13 @@ export interface AnswerInputProps {
   /** True once the answer is locked — inputs go read-only and choices reveal. */
   checked: boolean;
   onSelect: (a: string) => void;
+  /**
+   * 'lesson' (default): the iOS picker rows used inside lesson cards.
+   * 'quiz': the unit-test presentation — each option is its own card with a
+   * radio that fills on tap, so the selected answer is unmistakable before
+   * the learner moves on. Framing stays with the caller either way.
+   */
+  variant?: 'lesson' | 'quiz';
 }
 
 /**
@@ -65,8 +72,57 @@ export default function AnswerInput(props: AnswerInputProps) {
  * object") — nothing in the data distinguishes them, and marking an English
  * sentence as Somali is worse than marking neither.
  */
-function ChoiceExercise({ exercise, answer, checked, onSelect }: AnswerInputProps) {
+function ChoiceExercise({ exercise, answer, checked, onSelect, variant = 'lesson' }: AnswerInputProps) {
   const isCorrect = checked && answer === exercise.correctAnswer;
+
+  /* Quiz variant: options as separate cards, selected = ink-bordered card
+     with a filled radio. Knowt-style answer interactions inside the app's
+     monochrome system — the fill and the border carry the state, not a hue. */
+  if (variant === 'quiz') {
+    return (
+      <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="space-y-2.5">
+        {(exercise.options ?? []).map((option, i) => {
+          const isSelected = answer === option;
+          const isCorrectOption = checked && option === exercise.correctAnswer;
+          const isWrongOption = checked && isSelected && !isCorrect;
+          return (
+            <button
+              key={i}
+              onClick={() => onSelect(option)}
+              disabled={checked}
+              className={`pressable flex min-h-[54px] w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
+                isSelected ? 'border-accent bg-fill' : 'border-separator bg-elevated'
+              } ${checked ? 'cursor-default' : 'cursor-pointer active:bg-fill'}`}
+            >
+              <span
+                aria-hidden
+                className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+                  isSelected ? 'border-accent' : 'border-label-3'
+                }`}
+              >
+                {isSelected && <span className="h-2.5 w-2.5 rounded-full bg-accent" />}
+              </span>
+              <span
+                className={`min-w-0 flex-1 text-body ${
+                  isCorrectOption || isSelected ? 'font-semibold text-label' : 'text-label'
+                } ${isWrongOption ? 'line-through decoration-label-3' : ''}`}
+              >
+                {option}
+              </span>
+              <span aria-hidden className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
+                {isCorrectOption ? (
+                  <Check className="h-[18px] w-[18px] text-label" strokeWidth={2.5} />
+                ) : isWrongOption ? (
+                  <X className="h-[18px] w-[18px] text-label-3" strokeWidth={2.5} />
+                ) : null}
+              </span>
+            </button>
+          );
+        })}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="list-group">
       {(exercise.options ?? []).map((option, i) => {

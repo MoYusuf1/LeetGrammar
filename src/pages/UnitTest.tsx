@@ -34,7 +34,7 @@ import { motion } from 'framer-motion';
 import { Check, X, RotateCcw } from 'lucide-react';
 import { getUnit, getUnitTest, composeUnitTest } from '@/data/unit-tests';
 import { describeObjective } from '@/data/objectives';
-import type { PracticeExercise } from '@/data/types';
+import type { ExerciseType, PracticeExercise } from '@/data/types';
 import {
   MASTERY_THRESHOLD,
   gradeUnitTest,
@@ -46,13 +46,27 @@ import {
 import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { useProgressStore } from '@/stores/progress-store';
 import AnswerInput from '@/components/lesson/AnswerInput';
-import CardProgressDots from '@/components/lesson/CardProgressDots';
 import RichText from '@/components/RichText';
 import Somali from '@/components/Somali';
 
 type Phase = 'intro' | 'test' | 'results' | 'correctives';
 
 const PASS_MARK = Math.round(MASTERY_THRESHOLD * 100);
+
+/**
+ * What each question mode is called in the UI. Knowt's practice tests name
+ * the mode on every question (multiple choice, true/false, written) so the
+ * learner always knows what is being asked of them; ours do the same job for
+ * this course's exercise shapes.
+ */
+const QUESTION_MODE: Record<ExerciseType, string> = {
+  multiple_choice: 'Multiple choice',
+  fill_blank: 'Fill in the blank',
+  matching: 'Matching',
+  unscramble: 'Sentence builder',
+  translate: 'Written answer',
+  marker_identification: 'Spot the marker',
+};
 
 export default function UnitTestPage() {
   const { id } = useParams<{ id: string }>();
@@ -117,6 +131,19 @@ export default function UnitTestPage() {
         <h1 className="text-title1 font-bold text-label">{bank.name}</h1>
         <p className="mt-2 text-title3 text-label-2">{bank.description}</p>
 
+        {/* The modes the learner will meet, up front — Knowt shows the test's
+            question types before you start; so do we. */}
+        <div className="mt-5 flex flex-wrap gap-2">
+          {[...new Set(items.map((it) => it.type))].map((t) => (
+            <span
+              key={t}
+              className="rounded-full bg-fill px-3 py-1 text-caption2 font-semibold uppercase tracking-wider text-label-2"
+            >
+              {QUESTION_MODE[t]}
+            </span>
+          ))}
+        </div>
+
         <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
           <Row label="Attempt set" value={`${priorAttempts + 1}`} />
@@ -167,15 +194,32 @@ export default function UnitTestPage() {
       <Shell
         onClose={() => setPhase('intro')}
         title={bank.name}
-        progress={`${index + 1}/${items.length}`}
+        below={
+          /* Knowt keeps the test's progress on screen at all times. A bar
+             that fills as questions are answered; 34 dots rendered as an
+             unreadable smudge, so they are gone. */
+          <div
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={items.length}
+            aria-valuenow={answered}
+            aria-label={`${answered} of ${items.length} answered`}
+            className="h-1.5 overflow-hidden rounded-full bg-fill"
+          >
+            <div
+              className="h-full rounded-full bg-accent transition-[width] duration-300 ease-out"
+              style={{ width: `${(answered / items.length) * 100}%` }}
+            />
+          </div>
+        }
       >
-        <div className="mb-5">
-          <CardProgressDots
-            total={items.length}
-            current={index}
-            completed={new Set(items.map((it, i) => (responses[it.id] ? i : -1)).filter((i) => i >= 0))}
-            onDotClick={(i) => i < index && setIndex(i)}
-          />
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <span className="rounded-full bg-fill px-3 py-1 text-caption2 font-semibold uppercase tracking-wider text-label-2">
+            {QUESTION_MODE[current.type]}
+          </span>
+          <span className="text-caption2 tabular-nums text-label-3">
+            Question {index + 1} of {items.length}
+          </span>
         </div>
 
         <ItemQuestion exercise={current} />
@@ -188,6 +232,7 @@ export default function UnitTestPage() {
             answer={answer}
             checked={false}
             onSelect={setAnswer}
+            variant="quiz"
           />
         </div>
 
@@ -241,6 +286,10 @@ export default function UnitTestPage() {
   if (phase === 'results' && result) {
     const tally = tallyByObjective(items, responses);
     const missed = items.filter((item) => !isAnswerCorrect(item, responses[item.id] ?? null));
+    /* Knowt hands back feedback on every question, not only the failures.
+       The right answers are the shorter list to render, so they get a
+       compact section of their own below the misses. */
+    const nailed = items.filter((item) => isAnswerCorrect(item, responses[item.id] ?? null));
 
     return (
       <Shell onClose={() => navigate('/learn')} title="Results">
@@ -334,7 +383,7 @@ export default function UnitTestPage() {
               onClick={() => setPhase('correctives')}
               className="pressable w-full rounded-xl bg-accent py-3.5 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
             >
-              Practise these {correctives.length} questions
+              Review incorrect only · {correctives.length} {correctives.length === 1 ? 'question' : 'questions'}
             </button>
           </div>
         )}
@@ -372,19 +421,48 @@ export default function UnitTestPage() {
           </>
         )}
 
+        {/* What you got right — feedback on every question, not only misses. */}
+        {nailed.length > 0 && (
+          <>
+            <h2 className="mb-2.5 mt-8 text-footnote font-semibold text-label">
+              What you got right ({nailed.length})
+            </h2>
+            <div className="overflow-hidden rounded-xl bg-elevated">
+              {nailed.map((item, i) => (
+                <div
+                  key={item.id}
+                  className={`flex items-start gap-3 px-4 py-3 ${i === 0 ? '' : 'border-t border-separator'}`}
+                >
+                  <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-fill text-green">
+                    <Check size={13} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-footnote font-medium text-label">
+                      <RichText text={item.question} />
+                    </p>
+                    <p className="mt-1 text-footnote text-label-2">
+                      <Somali inherit>{displayAnswer(item)}</Somali>
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
         <div className="mt-8 space-y-3">
           <button
-            onClick={() => navigate('/learn')}
-            className="pressable w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-          >
-            Done
-          </button>
-          <button
             onClick={restart}
-            className="pressable flex w-full items-center justify-center gap-2 rounded-xl py-4 text-body font-semibold text-label transition-colors hover:bg-fill"
+            className="pressable flex w-full items-center justify-center gap-2 rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
           >
             <RotateCcw className="h-4 w-4" />
-            Retake
+            Retake the test
+          </button>
+          <button
+            onClick={() => navigate('/learn')}
+            className="pressable w-full rounded-xl py-4 text-body font-semibold text-label transition-colors hover:bg-fill"
+          >
+            Done
           </button>
         </div>
       </Shell>
@@ -523,11 +601,14 @@ function Shell({
   onClose,
   title,
   progress,
+  below,
 }: {
   children: React.ReactNode;
   onClose: () => void;
   title: string;
   progress?: string;
+  /** A second row inside the glass header — the test progress bar lives here. */
+  below?: React.ReactNode;
 }) {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-bg">
@@ -545,6 +626,7 @@ function Shell({
             <span className="flex-shrink-0 text-caption2 tabular-nums text-label-3">{progress}</span>
           )}
         </div>
+        {below && <div className="mx-auto max-w-column pb-3">{below}</div>}
       </header>
 
       <main className="mx-auto w-full max-w-column flex-1 px-4 pb-[calc(1.5rem+var(--safe-b))] pt-5">
