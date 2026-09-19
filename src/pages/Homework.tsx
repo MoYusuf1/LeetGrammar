@@ -35,7 +35,7 @@ import { useNavigate, useParams, Link } from 'react-router';
 import { motion } from 'framer-motion';
 import { X, RotateCcw } from 'lucide-react';
 import { getLessonContent } from '@/data/authored-lessons';
-import { composeHomework, carryBackCount } from '@/lib/homework';
+import { composeHomework, carryBackCount, delayedTransferItems, isDelayedTransferSession } from '@/lib/homework';
 import { dueLessons } from '@/lib/review';
 import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { useProgressStore } from '@/stores/progress-store';
@@ -83,6 +83,11 @@ export default function HomeworkPage() {
     [lessonId, attempt, due, history],
   );
   const current = items[index];
+  const delayed = isDelayedTransferSession(lessonId, due);
+  const delayedEvidence = useMemo(
+    () => delayedTransferItems(lessonId, attempt, due, history).length,
+    [lessonId, attempt, due, history],
+  );
   const carried = useMemo(() => carryBackCount(lessonId, items), [lessonId, items]);
   // How many items in this set are back because the learner missed them
   // before. Shown in the intro so a re-served form reads as deliberate, not
@@ -153,14 +158,17 @@ export default function HomeworkPage() {
         <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
           <Row label="Due for review" value={`${carried}`} />
+          <Row label="Session" value={delayed ? 'Delayed transfer' : 'Practice'} />
+          {delayed && <Row label="Fresh transfer items" value={`${delayedEvidence}`} />}
           {retried > 0 && <Row label="Back from your misses" value={`${retried}`} />}
           <Row label="Hints" value="On, this is practice" />
           <Row label="Scoring" value="Not marked" />
         </dl>
 
         <p className="mt-4 text-footnote text-label-3">
-          Come back to this a few days after finishing the lesson rather than straight away.
-          Spacing it out is most of where the value is.
+          {delayed
+            ? 'This lesson is due now. The fresh items below count as delayed transfer because the wording is not copied from the lesson.'
+            : 'Come back when this lesson is due rather than repeating it straight away. Only a scheduled return counts as delayed transfer.'}
         </p>
 
         <button
