@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Download, LogOut, RefreshCw, X } from 'lucide-react';
 import { useAuthSync } from '@/contexts/AuthSyncContext';
 import { snapshotProgress } from '@/lib/progress-sync';
+import { PROGRESS_SCHEMA_VERSION } from '@/domain/progress/document';
 import { useProgressStore } from '@/stores/progress-store';
 
 const labels = { local: 'On this device', syncing: 'Syncing', synced: 'Synced', offline: 'Offline', error: 'Needs attention' } as const;
@@ -12,7 +13,7 @@ export default function ProfileSheet({ open, onClose }: { open: boolean; onClose
   const bestScore = useMemo(() => Math.max(0, ...Object.values(progress.unitTestResults ?? {}).map((r) => r.bestPercentage)), [progress.unitTestResults]);
   if (!open) return null;
   const download = () => {
-    const blob = new Blob([JSON.stringify({ schemaVersion: 7, exportedAt: new Date().toISOString(), progress: snapshotProgress(progress) }, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ schemaVersion: PROGRESS_SCHEMA_VERSION, exportedAt: new Date().toISOString(), progress: snapshotProgress(progress) }, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `leetgrammar-progress-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url);
   };
   return (
