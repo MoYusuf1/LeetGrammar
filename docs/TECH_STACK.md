@@ -1,13 +1,12 @@
 # Technology Stack
 
-> **Status:** local-only, no backend
-> **Last Updated:** 2026-08-07
+> **Status:** local-first with Firebase account sync
+> **Last Updated:** 2026-09-19
 
 ## Philosophy
 
 Add technology reluctantly. Each dependency must earn its place in bundle size and
-maintenance. The app is a static Somali lesson course — it doesn't need a backend,
-accounts, or a graph engine to do that.
+maintenance. Course content stays static. Firebase Authentication and Firestore provide optional private progress sync; there is no standalone server. See `BACKEND_ARCHITECTURE.md`.
 
 ---
 
@@ -19,7 +18,8 @@ accounts, or a graph engine to do that.
 | Language | TypeScript | 5.9 | Type safety |
 | Build Tool | Vite | 7.2 | Bundling |
 | Router | React Router | 7.6 | SPA navigation |
-| State | Zustand | 5.0 | Progress store, persisted to `localStorage` |
+| State | Zustand | 5.0 | Local-first progress store |
+| Account sync | Firebase Auth + Firestore | 12.3+ | Optional Google sign-in and private cross-device progress |
 | Styling | Tailwind CSS | 3.4 | CSS |
 | Animation | Framer Motion | 12.38 | Transitions |
 | Testing | Vitest | 4.1 | Unit tests |
@@ -39,10 +39,7 @@ All lesson content is static TypeScript data, hand-authored in
 `src/data/authored-lessons.ts` plus `src/data/vocabulary.ts`. It used to be
 generated from `COURSE.md` by `scripts/course-to-app.cjs`; both the generator and
 its output (`teaching-content.ts`) are deleted, and `COURSE.md` is now
-unreferenced reference material. There is no database and no network call in the
-learning flow. Progress (completed lessons, streak, homework scores, unit-test
-results, review schedule, card position) lives in one Zustand store
-(`src/stores/progress-store.ts`) persisted to `localStorage`. XP and SM-2 SRS
+unreferenced reference material. Course content needs no database or network call. Progress (completed lessons, streak, homework scores, unit-test results, review schedule, card position) lives in a Zustand store persisted to `localStorage`; signed-in learners also sync the same schema-v8 snapshot to their owner-only Firestore document. XP and SM-2 SRS
 cards were in that store and are gone — see DEBT.md §9.
 
 ## Removed (formerly "Tier 2 Pragmatic Hypergraph")
@@ -59,7 +56,7 @@ dependencies — was removed. See `docs/PONYTAIL_DEBT.md` for the removal log.
 
 | Tech | Why Rejected |
 |------|-------------|
-| Any backend/database | Content is static; progress is local. Nothing here needs a server. |
+| Standalone app server | Content is static and Firebase covers optional account sync. |
 | Neo4j / graph DBs | No graph left to store. |
 | GraphQL | No server to query. |
 | Redux Toolkit | Zustand is sufficient. |
