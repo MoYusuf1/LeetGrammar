@@ -20,7 +20,7 @@ import { persist } from 'zustand/middleware';
 import type { UnitTestResult } from '@/lib/assessment';
 import { seedReview, advanceReview, type ReviewSchedule } from '@/lib/review';
 
-const STORAGE_KEY = 'leet-somali-progress-v7';
+const STORAGE_KEY = 'leet-somali-progress-v8';
 
 /**
  * What a learner has done on a unit test.
@@ -36,6 +36,8 @@ export interface UnitTestRecord {
   passed: boolean; // has ever reached the mastery threshold
   last: UnitTestResult;
 }
+
+export interface ExerciseProgress { attempts: number; correct: number; misses: number; lastAttemptAt: string; }
 
 export interface UserProgress {
   completedLessons: number[];
@@ -56,6 +58,10 @@ export interface UserProgress {
    * per §1.4 — see lib/review.ts.
    */
   reviewSchedule: ReviewSchedule;
+
+  // Per-prompt retrieval history. Misses survive sign-in so the same weak point
+  // can be repeated and later review can adapt across devices.
+  exerciseProgress: Record<string, ExerciseProgress>;
 }
 
 const defaultProgress: UserProgress = {
@@ -67,6 +73,7 @@ const defaultProgress: UserProgress = {
   lessonCardPositions: {},
   unitTestResults: {},
   reviewSchedule: {},
+  exerciseProgress: {},
 };
 
 function getToday(): string {
@@ -110,6 +117,7 @@ interface ProgressState extends UserProgress {
   /** Advance a lesson to its next review interval. Called when homework is done. */
   recordLessonReviewed: (lessonId: number) => void;
   getUnitTestRecord: (unitId: number) => UnitTestRecord | undefined;
+  recordExerciseAttempt: (exerciseId: string, correct: boolean) => void;
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -196,6 +204,25 @@ export const useProgressStore = create<ProgressState>()(
 
       getUnitTestRecord: (unitId: number) => (get().unitTestResults ?? {})[unitId],
 
+      recordExerciseAttempt: (exerciseId: string, correct: boolean) => {
+        set((state) => {
+          const previous = state.exerciseProgress?.[exerciseId] ?? { attempts: 0, correct: 0, misses: 0, lastAttemptAt: '' };
+          return addActivity({
+            ...state,
+            lastStudyDate: getToday(),
+            exerciseProgress: {
+              ...(state.exerciseProgress ?? {}),
+              [exerciseId]: {
+                attempts: previous.attempts + 1,
+                correct: previous.correct + (correct ? 1 : 0),
+                misses: previous.misses + (correct ? 0 : 1),
+                lastAttemptAt: new Date().toISOString(),
+              },
+            },
+          });
+        });
+      },
+
       recordLessonReviewed: (lessonId: number) => {
         set((state) => {
           const schedule = state.reviewSchedule ?? {};
@@ -219,6 +246,7 @@ export const useProgressStore = create<ProgressState>()(
         lessonCardPositions: state.lessonCardPositions,
         unitTestResults: state.unitTestResults,
         reviewSchedule: state.reviewSchedule,
+        exerciseProgress: state.exerciseProgress,
       }),
     }
   )

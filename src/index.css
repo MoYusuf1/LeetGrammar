@@ -307,43 +307,141 @@
 }
 
 
-/* Desktop keeps the quiet iPhone language while using the room a laptop gives us.
-   Mobile is deliberately untouched: these rules begin above tablet width. */
-.learn-shell {
-  max-width: var(--column);
-}
+/* Adaptive large-screen shell. Mobile remains the source of truth below
+   768px. Tablet keeps touch targets and an edge-to-edge split view; laptop and
+   desktop progressively add width and density without turning the app into a
+   floating iPad mockup or stretching the reading measure. */
+.learn-shell { max-width: var(--column); }
+.learn-sidebar,
+.learn-large-toolbar { display: none; }
 
-.learn-sidebar {
-  display: none;
-}
+@media (min-width: 768px) {
+  :root { --column: 40rem; }
 
-@media (min-width: 900px) {
-  :root {
-    --column: 42rem;
-  }
+  .learn-page { background: var(--bg-elevated); }
 
   .learn-shell {
     display: grid;
-    grid-template-columns: 17rem minmax(0, 42rem);
-    gap: clamp(4rem, 8vw, 8rem);
-    max-width: 72rem;
-    padding-inline: 2rem;
+    grid-template-columns: clamp(13.5rem, 29vw, 16rem) minmax(0, 1fr);
+    width: 100%;
+    max-width: none;
+    min-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    background: var(--bg-elevated);
   }
 
   .learn-sidebar {
-    display: block;
+    display: flex;
     position: sticky;
     top: 0;
-    align-self: start;
-    min-height: 100dvh;
-    padding-block: 4.5rem;
+    height: 100dvh;
+    padding: 4.5rem clamp(1.5rem, 3vw, 2rem) 2rem;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: .5px solid var(--separator);
+    background: color-mix(in srgb, var(--bg) 86%, var(--bg-elevated));
   }
 
-  .learn-mobile-header {
-    display: none;
+  .learn-sidebar::after {
+    content: 'Your progress stays private and available offline.';
+    max-width: 12rem;
+    color: var(--label-3);
+    font-size: .75rem;
+    line-height: 1.4;
+  }
+
+  .learn-mobile-header { display: none; }
+
+  .learn-content {
+    min-width: 0;
+    padding: 0 clamp(2.25rem, 5vw, 4rem) 4rem;
+    background: var(--bg-elevated);
+  }
+
+  .learn-large-toolbar {
+    display: flex;
+    height: 4.5rem;
+    margin-inline: calc(clamp(2.25rem, 5vw, 4rem) * -1);
+    padding-inline: clamp(2.25rem, 5vw, 4rem);
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: .5px solid var(--separator);
+    color: var(--label-2);
+    font-size: .8125rem;
+    font-weight: 600;
+  }
+
+  .learn-content main {
+    width: 100%;
+    max-width: 40rem;
+    margin: 3.25rem auto 0;
+  }
+
+  .profile-trigger {
+    right: 1.25rem;
+    top: 1rem;
+    background: var(--bg-elevated);
+    border: .5px solid var(--separator);
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  }
+
+  .profile-sheet {
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    overflow: auto;
+    background: rgba(0,0,0,.35);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+    backdrop-filter: blur(18px) saturate(120%);
+  }
+
+  .profile-panel {
+    width: min(46rem, 100%);
+    max-height: min(50rem, calc(100dvh - 4rem));
+    overflow-y: auto;
+    border: .5px solid var(--separator);
+    border-radius: 24px;
+    background: var(--bg);
+    box-shadow: 0 30px 100px rgba(0,0,0,.3);
+  }
+
+  .profile-panel > header { border-radius: 24px 24px 0 0; }
+  .profile-panel > main { max-width: 40rem; padding-inline: 2.5rem; }
+  .profile-panel .list-group { border: .5px solid var(--separator); }
+}
+
+@media (min-width: 1024px) {
+  :root { --column: 44rem; }
+
+  .learn-shell {
+    grid-template-columns: clamp(17rem, 22vw, 20rem) minmax(0, 1fr);
+  }
+
+  .learn-sidebar {
+    padding: 5rem clamp(2rem, 3vw, 3rem) 2.5rem;
   }
 
   .learn-content {
-    padding-top: 4.5rem;
+    padding-inline: clamp(3rem, 7vw, 7rem);
+  }
+
+  .learn-large-toolbar {
+    margin-inline: calc(clamp(3rem, 7vw, 7rem) * -1);
+    padding-inline: clamp(3rem, 7vw, 7rem);
+  }
+
+  .learn-content main {
+    max-width: 44rem;
+    margin-top: 4rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .learn-shell { grid-template-columns: minmax(19rem, 22vw) minmax(0, 1fr); }
+  .learn-content { padding-inline: clamp(5rem, 9vw, 10rem); }
+  .learn-large-toolbar {
+    margin-inline: calc(clamp(5rem, 9vw, 10rem) * -1);
+    padding-inline: clamp(5rem, 9vw, 10rem);
   }
 }

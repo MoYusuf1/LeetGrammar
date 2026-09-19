@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      function isOwner() { return request.auth != null && request.auth.uid == userId; }
+      function validProgressDocument() {
+        return request.resource.data.keys().hasOnly(['schemaVersion', 'progress', 'updatedAt'])
+          && request.resource.data.schemaVersion == 7
+          && request.resource.data.progress is map;
+      }
+      allow read: if isOwner();
+      allow create, update: if isOwner() && validProgressDocument();
+      allow delete: if isOwner();
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

@@ -282,7 +282,7 @@ describe('assessment: grading a whole unit test', () => {
     const responses = { ...allCorrect, [target.id]: 'wrong' };
     const result = gradeUnitTest(1, items, responses);
     expect(result.failedObjectives).toContain('article-assimilation');
-    expect(result.failedObjectives).not.toContain('somali-alphabet');
+    expect(result.failedObjectives).not.toContain('noun-gender');
   });
 
   it('an item tagged with two objectives counts against both when missed', () => {

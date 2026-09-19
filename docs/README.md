@@ -1,7 +1,8 @@
 # LeetGrammar Documentation
 
-> **Start here.** LeetGrammar is a local-only Somali grammar course — no
-> accounts, no backend, progress in `localStorage`.
+> **Start here.** LeetGrammar is a local-first Somali course — an optional
+> Google account syncs progress, the review schedule, and the per-prompt miss
+> history through Firestore; everything also works fully on-device.
 >
 > **Current state: 8 lessons in 2 units, all source-verified.** See
 > [STATE_OF_PLAY.md](./STATE_OF_PLAY.md) for exact numbers, and

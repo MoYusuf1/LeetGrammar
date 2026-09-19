@@ -34,168 +34,99 @@ export interface LessonSummary {
 const BOX = '┌──────┬────────┬────────┬──────┐\n│ WHO  │ SIGNAL │  WHAT  │  DO  │\n└──────┴────────┴────────┴──────┘';
 
 // ============================================================================
-// LESSON 1 — Sounds & Spelling
+// LESSON 1 — Reading for Meaning
 // ============================================================================
 
 const LESSON_1: Lesson = {
   id: 1,
   unitId: 1,
-  title: 'Sounds & Spelling',
+  title: 'Reading for Meaning',
   cards: [
     {
-      id: '1-blueprint',
-      type: 'blueprint',
-      blueprintSlot: undefined,
-      content: `${BOX}\n\nThis is the shape every Somali sentence follows. You will fill one box at a time.\n\nFirst, though: reading the letters.`,
+      id: '1-blueprint', type: 'blueprint', blueprintSlot: ['WHO', 'SIGNAL'],
+      content: `${BOX}\n\nYou already read Somali. Start where real understanding starts: find the WHO or thing, find the small signal, then decode what the sentence says about them.`,
     },
     {
-      id: '1-promise',
-      type: 'promise',
-      prompt: 'By the end of this lesson you will be able to read any written Somali word aloud, including the four letters that trip up English speakers.',
+      id: '1-promise', type: 'promise',
+      prompt: 'By the end, you will decode a common Somali statement as a sentence, not as a list of translated words: **Wiilku waa macallin** — “The boy is a teacher.”',
     },
     {
-      id: '1-predict',
-      type: 'predict',
-      prompt:
-        'Somali is written with the same letters you are reading right now. But three of them never appear in a Somali word at all.\n\n' +
-        'Before reading on, have a guess at which three. If nothing comes to mind, guess at what kind of letters they might be.',
+      id: '1-predict', type: 'predict',
+      prompt: 'Read **Wiilku waa macallin** once. Without looking anything up, guess which word names the boy, which word is the small signal, and which word tells you what he is. Commit to a guess before you continue.',
     },
     {
-      id: '1-teach',
-      type: 'teach',
-      title: 'The Somali alphabet',
-      content:
-        'Somali is written in the Latin alphabet: the same letters you already read. Two things are different.\n\n' +
-        '**Three letters are missing.** Somali never uses **p**, **v**, or **z**. If you see them, the word is borrowed and unadapted.\n\n' +
-        '**Three pairs act as single letters.** These are not two sounds. Each pair is one:\n' +
-        '• **dh**: a "d" made with the tongue curled back\n' +
-        '• **kh**: a rasp in the back of the throat, like Scottish "loch"\n' +
-        '• **sh**: as in English "ship"\n\n' +
-        'That is the whole list. There are exactly three.',
-    },
-    {
-      id: '1-teach-cx',
-      type: 'teach',
-      title: 'The two throat letters: c and x',
-      content:
-        'Two ordinary-looking letters do something English never does. Both are made deep in the throat.\n\n' +
-        '• **c** is **not** "k" and **not** "s". It is a tightening deep in the throat, then a vowel. It opens the name **Cali** and the word **caano** (milk).\n\n' +
-        '• **x** is **not** "ks". It is a hard, breathy "h" from the same deep place. It ends **libaax** (lion).\n\n' +
-        'These two are the most common reason a learner\'s Somali is hard to follow. They are worth slowing down on.\n\n' +
-        'You will also see **q**, made further back than English "k".',
-    },
-    {
-      id: '1-notice-1',
-      type: 'notice',
-      exercise: {
-        id: 'l1-n1',
-        type: 'multiple_choice',
-        objectiveIds: ['somali-alphabet'],
-        question: 'Which of these letters is **never** used in Somali spelling?',
-        options: ['q', 'x', 'v', 'c'],
-        correctAnswer: 'v',
-        hint: 'Three English letters are absent from Somali. The other three options are all real Somali letters with sounds of their own.',
-        explanation:
-          'Somali uses every English letter **except p, v, and z**. The other three options are genuine Somali letters: **q** is a deep "k", **x** is a throat "h", and **c** is a throat tightening.',
+      id: '1-notice-1', type: 'notice', exercise: {
+        id: 'l1-n1', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+        question: 'In **Wiilku waa macallin**, which word carries the useful content “teacher”?',
+        options: ['macallin', 'Wiilku', 'waa', 'none of them'], correctAnswer: 'macallin',
+        hint: 'Start with the content words. One names a person; one names what that person is.',
+        explanation: '**Macallin** means “teacher.” Finding the content words first gives you the sentence frame before you work out the small grammar signal between them.',
       },
     },
     {
-      id: '1-notice-2',
-      type: 'notice',
-      exercise: {
-        id: 'l1-n2',
-        type: 'multiple_choice',
-        objectiveIds: ['somali-alphabet'],
-        // Asks for the SOUND, not the letter. The old version was "which throat
-        // letter does it end with?" with **libaax** printed in the question and
-        // 'x' among the options, so the answer sat in plain sight and the item
-        // tested nothing but eyesight. This is the E10 class the validator warns
-        // about and cannot detect.
-        question:
-          'You just met **libaax** (lion). Its last letter is **x**. What sound does that stand for?',
-        options: [
-          'a hard, breathy "h" from deep in the throat',
-          'the "ks" in English "box"',
-          'a tightening in the throat, with no breath',
-          'the "sh" in English "ship"',
-        ],
-        correctAnswer: 'a hard, breathy "h" from deep in the throat',
-        hint: 'It is one of the two deep-throat letters. The other one is **c**, and they do different jobs.',
-        explanation:
-          '**Libaax** ends in **x**: a hard, breathy "h" from deep in the throat. It is not "ks" as in English "box". The definite form is **libaaxa**.',
+      id: '1-vocab-strategy', type: 'teach', title: 'Decode before you translate', isNew: true,
+      content: 'When speech or captions move quickly, do not stop at every word. Use a three-pass routine:\n\n1. **WHO:** catch the WHO, thing, or topic.\n2. **Signal:** find the small word that tells you what kind of statement you are hearing.\n3. **WHAT:** catch what is being said about the WHO.\n\nIn **Wiilku waa macallin**, those passes give you **Wiilku | waa | macallin**. You can understand the line before you can explain every ending.',
+    },
+    {
+      id: '1-notice-2', type: 'notice', exercise: {
+        id: 'l1-n2', type: 'multiple_choice', objectiveIds: ['find-signal'],
+        question: 'Which word in **Wiilku waa macallin** is the small sentence signal?',
+        options: ['waa', 'Wiilku', 'macallin', 'wiil'], correctAnswer: 'waa',
+        hint: 'The signal is not the WHO and not what he is. It is the short word between them.',
+        explanation: '**Waa** marks a plain statement. It is not the English word “is”; it tells you that the speaker is making an ordinary statement with no special spotlight.',
       },
     },
     {
-      id: '1-complete-1',
-      type: 'complete',
-      exercise: {
-        id: 'l1-c1',
-        type: 'multiple_choice',
-        objectiveIds: ['somali-digraphs'],
-        question: 'How many letter-pairs act as a single letter in Somali?',
-        options: ['two: dh and kh', 'three: dh, kh and sh', 'four: dh, kh, sh and ch', 'five: dh, kh, sh, ph and th'],
-        correctAnswer: 'three: dh, kh and sh',
-        hint: 'Count the pairs from the alphabet card. Somali has no "ch", "ph" or "th".',
-        explanation:
-          'There are exactly **three**: **dh**, **kh**, **sh**. Each is one sound, not two. Somali has no ch, ph or th.',
+      id: '1-teach-signal', type: 'teach', title: 'The small word changes how you listen', isNew: true,
+      content: '**Waa** marks a plain statement. Treat it as a listening signpost, not a word to translate one-for-one.\n\n• **Wiilku waa macallin.**  *The boy is a teacher.*\n\nSomali uses small signal words to organize meaning. They are easy to miss in fast speech, but once you notice them, long lines become easier to break apart. Later lessons add the signals that spotlight one part of a sentence.',
+    },
+    {
+      id: '1-complete-1', type: 'complete', exercise: {
+        id: 'l1-c1', type: 'fill_blank', objectiveIds: ['find-signal'],
+        question: 'Complete the plain statement: **Wiilku ___ macallin.**',
+        options: ['waa', 'baa', 'waxa', 'ay'], correctAnswer: 'waa',
+        hint: 'You need the signal for an ordinary statement, with nothing singled out.',
+        explanation: '**Wiilku waa macallin** is a plain statement: “The boy is a teacher.” **Waa** is the signpost for that ordinary statement.',
       },
     },
     {
-      id: '1-complete-2',
-      type: 'complete',
-      exercise: {
-        id: 'l1-c2',
-        type: 'multiple_choice',
-        objectiveIds: ['somali-vowel-length'],
-        question: 'Compare **mas** (snake) with **caano** (milk). What does the doubled **aa** tell you?',
-        options: [
-          'Hold the vowel longer',
-          'Stress that syllable',
-          'The word is plural',
-          'The word is borrowed',
-        ],
-        correctAnswer: 'Hold the vowel longer',
-        hint: 'Somali writes long vowels by simply writing the vowel twice. Nothing else changes.',
-        explanation:
-          'A doubled vowel means **hold it longer**: aa, ee, ii, oo, uu. That is the only way Somali marks vowel length: there are no accent marks.',
+      id: '1-complete-2', type: 'complete', exercise: {
+        id: 'l1-c2', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+        question: 'A caption reads **Wiilku waa macallin**. What is the whole line telling you?',
+        options: ['The boy is a teacher', 'The teacher is a boy', 'The boy greets a teacher', 'A teacher sees the boy'], correctAnswer: 'The boy is a teacher',
+        hint: 'Keep the three chunks in order: the boy | plain statement | teacher.',
+        explanation: '**Wiilku** is the boy as the subject, **waa** marks a plain statement, and **macallin** supplies “teacher.” Together: “The boy is a teacher.”',
       },
     },
     {
-      id: '1-complete-3',
-      type: 'complete',
-      exercise: {
-        id: 'l1-c3',
-        type: 'multiple_choice',
-        objectiveIds: ['somali-alphabet'],
-        question: 'The name **Cali** begins with **c**. How is it pronounced?',
-        options: [
-          'A tightening deep in the throat, then "ali"',
-          'Like English "k": "Kali"',
-          'Like English "s": "Sali"',
-          'Like English "ch": "Chali"',
-        ],
-        correctAnswer: 'A tightening deep in the throat, then "ali"',
-        hint: 'Somali **c** is one of the two throat letters. It is not borrowed from how English uses the letter c.',
-        explanation:
-          'Somali **c** is a tightening deep in the throat. Reading it as English "k" or "s" is the single most common beginner mistake, and it makes common words like **Cali** and **caano** unrecognisable.',
+      id: '1-produce-1', type: 'produce', exercise: {
+        id: 'l1-p1', type: 'unscramble', objectiveIds: ['build-statement'],
+        question: 'Build the Somali line “The boy is a teacher.”',
+        words: ['macallin', 'Wiilku', 'waa'], answer: 'Wiilku waa macallin',
+        hint: 'WHO first, then the plain-statement signal, then the meaning.',
+        explanation: '**Wiilku waa macallin** follows the decoding routine in production: WHO **Wiilku**, SIGNAL **waa**, WHAT **macallin**.',
       },
     },
     {
-      id: '1-payoff',
-      type: 'payoff',
-      prompt:
-        'You can now read these correctly:\n\n**libaax**: lion (throat x)\n**caano**: milk (throat c)\n**gabadh**: girl (the dh pair)\n**buug**: book\n\nNothing here needs memorising. You are just reading.',
+      id: '1-complete-3', type: 'complete', exercise: {
+        id: 'l1-c3', type: 'multiple_choice', objectiveIds: ['decode-statement', 'find-signal'],
+        question: 'You hear a fast line and catch **Wiilku ... macallin**. What should you listen for between the two content words?',
+        options: ['the sentence signal', 'a spelling rule', 'the alphabet name', 'an English article'], correctAnswer: 'the sentence signal',
+        hint: 'Use the same three-pass routine: WHO, SIGNAL, WHAT.',
+        explanation: 'Listen for the small signal between the content chunks. In this line it is **waa**, and recognizing it lets you decode the sentence as a plain statement.',
+      },
     },
     {
-      id: '1-summary',
-      type: 'summary',
-      title: 'What you learned',
-      content:
-        'Somali uses the Latin alphabet without p, v, z. Three pairs act as single letters: dh, kh, sh. Two letters (c and x) are made deep in the throat and have no English equivalent. Doubled vowels are held longer.',
+      id: '1-payoff', type: 'payoff',
+      prompt: 'Now read it once more: **Wiilku waa macallin.**\n\nYou are not sounding it out or translating three isolated words. You are decoding a person, a sentence signal, and the information carried about him. That is the routine you will reuse with captions, dialogue, and longer sentences.',
+    },
+    {
+      id: '1-summary', type: 'summary', title: 'What you can do now',
+      content: 'Read for meaning in three passes: **WHO → SIGNAL → WHAT**. In **Wiilku waa macallin**, the WHO is the boy, **waa** marks a plain statement, and **macallin** gives the meaning. Next you will expand the people-and-things vocabulary that can fill those sentence slots.',
     },
   ],
-  newItems: ['1-teach', '1-teach-cx'],
-  objectives: ['somali-alphabet', 'somali-digraphs', 'somali-vowel-length'],
+  newItems: ['1-vocab-strategy', '1-teach-signal'],
+  objectives: ['decode-statement', 'find-signal', 'build-statement'],
 };
 
 // ============================================================================
@@ -216,7 +147,7 @@ const LESSON_2: Lesson = {
     {
       id: '2-connect',
       type: 'connect',
-      prompt: 'Last lesson you learned to read Somali letters. Now the first box of the sentence: the thing the sentence is about.',
+      prompt: 'Last lesson you decoded your first whole statement — **Wiilku waa macallin**: the boy, the plain-statement signal, and what he is. Now the first box of the sentence: the thing the sentence is about.',
     },
     {
       id: '2-promise',
@@ -626,7 +557,7 @@ const LESSON_4: Lesson = {
       id: '4-predict',
       type: 'predict',
       prompt:
-        'English has one word for "we", and it is quietly ambiguous: "we are going" may or may not include the person you are talking to.\n\n' +
+        'English has one word for "we", and it is quietly ambiguous: "we are going" may or may not include the WHO you are talking to.\n\n' +
         'Somali makes you choose. Before reading on, guess what goes wrong if you pick the wrong one.',
     },
     {
@@ -765,7 +696,7 @@ const LESSON_4: Lesson = {
         answer: 'innaga',
         hint: 'This is the inclusive one: the "we" that pulls the listener in.',
         explanation:
-          '**Innaga** is the inclusive "we", meaning "you and I". **Annaga** would exclude the person you are speaking to.',
+          '**Innaga** is the inclusive "we", meaning "you and I". **Annaga** would exclude the WHO you are speaking to.',
       },
     },
     {
@@ -1817,4 +1748,4 @@ export function slotsCompletedBefore(lessonId: number): BlueprintSlot[] {
     for (const s of slotsFilledBy(lesson)) done.add(s);
   }
   return [...done];
-}
+      }

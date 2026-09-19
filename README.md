@@ -5,7 +5,7 @@ instructional choice traces to published evidence and every Somali form traces
 to two published sources.
 
 Text-only. Local-only — no accounts, no backend, progress in `localStorage`.
-**8 lessons in 2 units**, 121 cards, 50 exercises, 58 unit-test items,
+**8 lessons in 2 units**, 125 cards, 54 exercises, 58 unit-test items,
 109 source-verified forms.
 
 ---

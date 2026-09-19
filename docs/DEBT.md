@@ -78,6 +78,15 @@ is due, most overdue first, and doing that lesson's homework advances it. The
 review count is passed to `composeHomework` as the attempt, so the fourth
 return of Lesson 3 is not the first one again.
 
+**Error-driven repetition — built ✅ (September 2026).** Spacing decided *when*
+material came back, but nothing decided *what*: every checked answer wrote a
+per-prompt history (`exerciseProgress`, synced since schema v8) that nothing
+read. Homework now leads each group with the prompts the learner has missed —
+most-missed, then longest-unseen — and homework answers feed the same history,
+so a form missed in practice is what the next set opens with. The mechanism
+and its regression tests live in `src/lib/homework.ts` and
+`src/tests/homework.test.ts`; the design argument is COURSE_DESIGN §0b.4.
+
 **Fixed intervals, not SM-2.** `lib/srs.ts` implements SM-2 with ease factors
 and is deliberately unused: §1.4 found equal and expanding intervals
 statistically equivalent, so the design rules out expanding schedules as costing
