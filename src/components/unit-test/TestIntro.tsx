@@ -5,7 +5,7 @@
  */
 
 import type { TestBank } from '@/data/types';
-import type { UnitTestRecord } from '@/stores/progress-store';
+import type { UnitTestRecord } from '@/domain/progress/types';
 import type { PracticeExercise } from '@/data/types';
 import { MASTERY_THRESHOLD } from '@/lib/assessment';
 import TaskShell from '@/components/shared/TaskShell';
