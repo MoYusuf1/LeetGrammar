@@ -11,10 +11,9 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, type User } from 'firebase/auth';
-import { doc, getDoc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
-import { auth, db, firebaseConfigured, googleProvider } from '@/lib/firebase';
+import { auth, db, googleProvider } from '@/infrastructure/firebase/client';
+import { FirestoreProgressRepository } from '@/infrastructure/firebase/progress-repository';
 import { startProgressSync, type SyncState } from '@/lib/sync-engine';
-import type { UserProgress } from '@/stores/progress-store';
 import { useProgressStore } from '@/stores/progress-store';
 
 export type { SyncState };
@@ -23,32 +22,22 @@ const Context = createContext<ContextValue | null>(null);
 
 export function AuthSyncProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [ready, setReady] = useState(!firebaseConfigured);
-  const [syncState, setSyncState] = useState<SyncState>(firebaseConfigured ? 'syncing' : 'local');
+  const [ready, setReady] = useState(false);
+  const [syncState, setSyncState] = useState<SyncState>('syncing');
   const [retryToken, setRetryToken] = useState(0);
 
   useEffect(() => {
-    if (!auth) return;
     getRedirectResult(auth).catch(() => setSyncState('error'));
     return onAuthStateChanged(auth, (next) => { setUser(next); setReady(true); setSyncState(next ? 'syncing' : 'local'); });
   }, []);
 
   useEffect(() => {
-    if (!user || !db) return;
-    const ref = doc(db, 'users', user.uid);
+    if (!user) return;
+    const repository = new FirestoreProgressRepository(db, user.uid);
     const stopSync = startProgressSync({
-      loadRemote: async () => {
-        const snap = await getDoc(ref);
-        return snap.exists() ? (snap.data().progress as Partial<UserProgress>) : undefined;
-      },
-      saveRemote: (progress) =>
-        setDoc(ref, { schemaVersion: 8, progress, updatedAt: serverTimestamp() }, { merge: true }),
-      watchRemote: (apply, fail) =>
-        onSnapshot(ref, { includeMetadataChanges: true }, (snap) => {
-          // Pending writes are this client's own echo, not new remote state.
-          if (!snap.exists() || snap.metadata.hasPendingWrites) return;
-          apply(snap.data().progress as Partial<UserProgress>, snap.metadata.fromCache);
-        }, fail),
+      loadRemote: () => repository.load(),
+      saveRemote: (progress) => repository.save(progress),
+      watchRemote: (apply, fail) => repository.watch(apply, fail),
       getLocal: () => useProgressStore.getState(),
       setLocal: (progress) => useProgressStore.setState(progress),
       watchLocal: (listener) => useProgressStore.subscribe(listener),
@@ -64,7 +53,6 @@ export function AuthSyncProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ContextValue>(() => ({
     user, ready, syncState,
     signIn: async () => {
-      if (!auth) throw new Error('Firebase is not configured');
       try {
         await signInWithPopup(auth, googleProvider);
       } catch (error) {
@@ -76,7 +64,7 @@ export function AuthSyncProvider({ children }: { children: ReactNode }) {
         throw error;
       }
     },
-    signOutUser: async () => { if (auth) await signOut(auth); },
+    signOutUser: async () => signOut(auth),
     retry: () => setRetryToken((n) => n + 1),
   }), [user, ready, syncState]);
   return <Context.Provider value={value}>{children}</Context.Provider>;
