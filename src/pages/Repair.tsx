@@ -15,8 +15,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { X } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
+import CircleIconButton from '@/components/shared/CircleIconButton';
 import { repairQueue, servingForRepair } from '@/lib/repair';
-import { PracticeCard, FeedbackHeading } from '@/components/lesson/LessonCards';
+import PracticeCard, { FeedbackHeading } from '@/components/lesson/cards/PracticeCard';
 import { verdictOf } from '@/lib/grading';
 import FeedbackSheet from '@/components/lesson/FeedbackSheet';
 import LessonToolbar from '@/components/lesson/LessonToolbar';
@@ -55,13 +56,13 @@ export default function RepairPage() {
 
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden bg-bg">
-      <button
+      <CircleIconButton
+        label="Close repair session"
         onClick={() => navigate('/learn')}
-        aria-label="Close repair session"
-        className="glass pressable fixed left-4 top-[calc(0.75rem+var(--safe-t))] z-30 flex h-10 w-10 items-center justify-center rounded-full text-label"
+        className="fixed left-4 top-[calc(0.75rem+var(--safe-t))] z-30 text-label"
       >
         <X className="h-[18px] w-[18px]" />
-      </button>
+      </CircleIconButton>
 
       <div className="flex-1 overflow-y-auto overscroll-contain px-5 pb-[calc(6rem+var(--safe-b))] pt-[calc(var(--safe-t)+74px)]">
         <div className="mx-auto max-w-column">
