@@ -27,7 +27,7 @@
  */
 
 import { useMemo, useState } from 'react';
-import { UserRound } from 'lucide-react';
+import { ClipboardCheck, UserRound } from 'lucide-react';
 import ProfileSheet from '@/components/ProfileSheet';
 import { useNavigate } from 'react-router';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
@@ -155,12 +155,15 @@ export default function LearnPage() {
                 {bank && (
                   <button
                     onClick={() => navigate(`/unit-test/${unit.id}`)}
-                    className="mt-1 grid w-full grid-cols-[2.75rem_1fr] items-baseline gap-3 py-3 text-left active:opacity-50"
+                    className="mt-2 grid w-full grid-cols-[2.75rem_1fr] items-center gap-3 py-3 text-left active:opacity-50"
                   >
-                    <span aria-hidden className="text-title2 font-light text-label-3">
-                      ·
+                    <span aria-hidden className="grid h-8 w-8 place-items-center rounded-lg bg-fill text-label-2">
+                      <ClipboardCheck size={18} strokeWidth={1.8} />
                     </span>
-                    <span className="text-title3 text-label">{bank.name}</span>
+                    <span className="min-w-0">
+                      <span className="block text-title3 font-medium text-label">{bank.name}</span>
+                      <span className="mt-0.5 block text-footnote text-label-2">Check what you remember</span>
+                    </span>
                   </button>
                 )}
               </section>

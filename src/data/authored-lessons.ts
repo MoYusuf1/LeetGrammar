@@ -49,7 +49,7 @@ const LESSON_1: Lesson = {
     },
     {
       id: '1-promise', type: 'promise',
-      prompt: 'By the end, you will read two short Somali class-page captions and say who is a teacher and who is a student — including one caption you have never seen.',
+      prompt: 'Read two short Somali captions and identify the teacher and the student, even in a new caption.',
     },
     {
       id: '1-passage-a', type: 'passage',
@@ -61,12 +61,12 @@ const LESSON_1: Lesson = {
           { somali: 'Cumar waa arday wanaagsan.', gloss: 'Omar is a good student.', note: 'Cumar is a name — Omar.' },
         ],
       },
-      content: 'Read this class page once, all the way through. Do not stop on any single word — say to yourself what the page is about, roughly. Then move on.',
+      content: 'Read both captions for the gist. Who is each person?',
     },
     {
       id: '1-gist-a', type: 'notice', exercise: {
         id: 'l1-gist-a', type: 'multiple_choice', objectiveIds: ['decode-statement'],
-        question: 'What is this class page telling you, roughly?',
+        question: 'What are these captions about?',
         options: [
           'who is a teacher and who is a student',
           'what the boy and Omar are doing today',
@@ -74,11 +74,11 @@ const LESSON_1: Lesson = {
           'how old the boy and Omar are',
         ],
         correctAnswer: 'who is a teacher and who is a student',
-        hint: 'You do not need every word. Ask: is this page about people, places, or events?',
-        explanation: 'Both captions name a person and say what he is: the boy is a teacher, Omar is a student. That is the gist, and you could get it before knowing every ending. Gist first, details second — that order is the whole reading routine.',
+        hint: 'Are these notices about people, places, or events?',
+        explanation: 'Both captions name a person and say what he is: the boy is a teacher; Omar is a student. Start with that gist, then read the details.',
         repair: {
           id: 'l1-gist-a-r', type: 'multiple_choice', objectiveIds: ['decode-statement'],
-          question: 'Look at the class page once more. Which line of it is about a student?',
+          question: 'Which line is about a student?',
           options: ['the second line', 'the first line', 'both lines', 'neither line'],
           correctAnswer: 'the second line',
           hint: 'One caption is about the boy; the other is about Omar.',
@@ -106,7 +106,7 @@ const LESSON_1: Lesson = {
     },
     {
       id: '1-coach-routine', type: 'coach', title: 'Three passes, in order',
-      content: 'You just did the whole routine without naming it. First pass: **WHO** — which people does this page name? Second: **SIGNAL** — which small word sits in the middle of each line? Third: **WHAT** — what does it say each person is? Use the passes in that order on anything you read: gist before details, and details before any single stubborn word.',
+      content: 'Read in three passes: **WHO** names the people, **SIGNAL** marks the sentence, and **WHAT** says something about them. Take the gist first, then the details.',
     },
     {
       id: '1-teach-signal', type: 'teach', title: 'The small word between the chunks', isNew: true,
@@ -118,7 +118,7 @@ const LESSON_1: Lesson = {
         question: 'Complete the plain statement: **Wiilku ___ macallin.**',
         options: ['waa', 'baa', 'waxa', 'ay'], correctAnswer: 'waa',
         hint: 'You need the signal for an ordinary statement, with nothing singled out.',
-        explanation: '**Wiilku waa macallin** is a plain statement: “The boy is a teacher.” **Waa** is the signpost for that. **Baa** and **waxa** are spotlight signals from later lessons — wrong here, because nothing is being singled out.',
+        explanation: '**Wiilku waa macallin** is a plain statement: “The boy is a teacher.” **Waa** marks it. **Baa** and **waxa** spotlight something; nothing is singled out here.',
         repair: {
           id: 'l1-c1-r', type: 'fill_blank', objectiveIds: ['find-signal'],
           question: 'Same move, fresh line: **Cumar ___ arday wanaagsan.**',
@@ -154,7 +154,7 @@ const LESSON_1: Lesson = {
           { somali: 'Wiilkaygu waa macallin.', gloss: 'My son is a teacher.', note: 'Wiilkaygu means “my son” — read it as one WHO chunk.' },
         ],
       },
-      content: 'A page you have never seen. Same routine, no new rules: read it through once and take the gist before anything else.',
+      content: 'Read the new captions for the gist: who is each person?',
     },
     {
       id: '1-transfer-gist', type: 'notice', exercise: {
@@ -162,7 +162,7 @@ const LESSON_1: Lesson = {
         question: 'Who is the teacher in THESE captions?',
         options: ['Sahra', 'the boy', 'Cumar', 'no one'],
         correctAnswer: 'Sahra',
-        hint: 'This is a new page. Read the captions in front of you, not the ones from before.',
+        hint: 'Use the captions in front of you.',
         explanation: '**Sahro waa macallimad** — Sahra is a teacher. “The boy” was the answer on the last page, and it is the trap here: a memorized answer names the boy, a read answer names Sahra. **Macallimad** is simply the word for a woman teacher.',
         repair: {
           id: 'l1-transfer-gist-r', type: 'multiple_choice', objectiveIds: ['decode-statement'],
@@ -177,7 +177,7 @@ const LESSON_1: Lesson = {
     {
       id: '1-transfer-detail', type: 'notice', exercise: {
         id: 'l1-transfer-detail', type: 'multiple_choice', objectiveIds: ['find-signal'],
-        question: 'Which clue proves both class pages are plain statements rather than spotlighted contrasts?',
+        question: 'Which clue marks both captions as plain statements?',
         options: ['the signal waa', 'the names at the start', 'the word macallin', 'the length of the lines'],
         correctAnswer: 'the signal waa',
         hint: 'One small word tells you what kind of statement you are reading.',
@@ -214,7 +214,7 @@ const LESSON_1: Lesson = {
     },
     {
       id: '1-summary', type: 'summary', title: 'What you can do now',
-      content: 'Read a short Somali caption or profile line in three passes: **WHO → SIGNAL → WHAT**. **Waa** marks a plain statement; the words around it say who and what. You read two real class pages, including one you had never seen — that is the skill every later lesson builds on. Next: the words that fill the WHO box, and why Somali hides their gender in writing.',
+      content: 'Read a short Somali caption in three passes: **WHO → SIGNAL → WHAT**. **Waa** marks a plain statement; the words around it say who and what.',
     },
   ],
   newItems: ['1-teach-signal'],
@@ -240,7 +240,7 @@ const LESSON_2: Lesson = {
     {
       id: '2-promise',
       type: 'promise',
-      prompt: 'By the end you will know why the boy\u2019s word on the noticeboard ends one way and the hand\u2019s ends another \u2014 and why you could never have seen it in the bare words.',
+      prompt: 'Explain why “the boy” and “the hand” take different endings, even though the bare nouns hide the difference.',
     },
     {
       id: '2-passage-a', type: 'passage',
@@ -252,12 +252,12 @@ const LESSON_2: Lesson = {
           { somali: 'Gacantu waa wasakh.', gloss: 'The hand is dirty.', note: 'Gacantu is \u201cthe hand\u201d, named as the thing the line is about.' },
         ],
       },
-      content: 'Read this noticeboard once, all the way through, with the same three passes: WHO, SIGNAL, WHAT. Do not stop on any single word. Then move on.',
+      content: 'Read both notices in three passes: WHO, SIGNAL, WHAT.',
     },
     {
       id: '2-gist-a', type: 'notice', exercise: {
         id: 'l2-gist-a', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
-        question: 'What is this noticeboard telling you, roughly?',
+        question: 'What do these notices say?',
         options: [
           'what the boy is, and how the hand is',
           'where the boy and the hand are',
@@ -265,7 +265,7 @@ const LESSON_2: Lesson = {
           'what the boy is doing to his hand',
         ],
         correctAnswer: 'what the boy is, and how the hand is',
-        hint: 'You do not need every word. Ask: is this page about people, places, or events?',
+        hint: 'Are these notices about people, places, or events?',
         explanation: 'One caption says the boy is a teacher; the other says the hand is dirty. Each names a thing and says something about it \u2014 the shape you already know from the class page.',
         repair: {
           id: 'l2-gist-a-r', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
@@ -290,8 +290,8 @@ const LESSON_2: Lesson = {
           question: 'And what does the noticeboard say about the boy?',
           options: ['He is a teacher', 'He is a student', 'His hand is dirty', 'He is at school'],
           correctAnswer: 'He is a teacher',
-          hint: 'Same routine on the first line.',
-          explanation: '**Wiilku waa macallin** \u2014 the boy is a teacher. You read this line last lesson; the noticeboard uses the same shape.',
+          hint: 'Read the first line as WHO, SIGNAL, WHAT.',
+          explanation: '**Wiilku waa macallin** means “the boy is a teacher”: WHO, SIGNAL, WHAT.',
         },
       },
     },
@@ -305,7 +305,7 @@ const LESSON_2: Lesson = {
       title: 'Every noun has a gender',
       content:
         'Here is what the two tails were carrying. Every Somali noun is either **masculine** or **feminine**. This is a grammar label, not a statement about the world: **buug** (book) is masculine and **kab** (shoe) is feminine.\n\n' +
-        'It matters because gender decides the ending a noun takes \u2014 the noticeboard\u2019s **-ku** and **-tu** were that choice, and next lesson you will build the endings yourself. Get the gender wrong and the word comes out wrong.\n\n' +
+        'Gender decides the ending a noun takes: **-ku** or **-tu** here. Get the gender wrong and the word comes out wrong.\n\n' +
         'Some nouns you can guess from meaning:\n' +
         '\u2022 **nin** (man), **wiil** (boy): masculine\n' +
         '\u2022 **naag** (woman), **gabadh** (girl): feminine\n\n' +
@@ -469,7 +469,7 @@ const LESSON_2: Lesson = {
           { somali: 'Maryan waa macallimad wanaagsan.', gloss: 'Maryan is a good teacher.', note: 'Wanaagsan adds \u201cgood\u201d to what she is.' },
         ],
       },
-      content: 'A page you have never seen. Same routine, no help this time: WHO, SIGNAL, WHAT, once through. Then answer.',
+      content: 'Read the new captions as WHO, SIGNAL, WHAT.',
     },
     {
       id: '2-transfer-gist', type: 'notice', exercise: {
@@ -482,7 +482,7 @@ const LESSON_2: Lesson = {
           'how the women know the boy',
         ],
         correctAnswer: 'who is a teacher',
-        hint: 'Same routine as the noticeboard: WHO, SIGNAL, WHAT.',
+        hint: 'Use WHO, SIGNAL, WHAT.',
         explanation: '**Aamina waa macallimad** \u2014 Amina is a teacher. **Maryan waa macallimad wanaagsan** \u2014 Maryan is a good teacher. Each caption names someone and says what she is, exactly the shape you know.',
         repair: {
           id: 'l2-gist-b-r', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
@@ -521,7 +521,7 @@ const LESSON_2: Lesson = {
       id: '2-payoff',
       type: 'payoff',
       prompt:
-        'Two pages read, and the routine never changed: WHO, SIGNAL, WHAT.\n\nBut the tails talk now:\n\n**wiilku** (the boy) \u2192 k-type \u2192 masculine\n**gacantu** (the hand) \u2192 t-type \u2192 feminine\n**guriga** (the house) \u2192 masculine\n**magaalada** (the city) \u2192 feminine\n\nNext lesson: how those endings are actually built \u2014 and why they sometimes change shape.',
+        'The pattern stays WHO, SIGNAL, WHAT. The endings now carry more:\n\n**wiilku** (the boy) \u2192 k-type \u2192 masculine\n**gacantu** (the hand) \u2192 t-type \u2192 feminine\n**guriga** (the house) \u2192 masculine\n**magaalada** (the city) \u2192 feminine',
     },
     {
       id: '2-summary',
@@ -549,7 +549,7 @@ const LESSON_3: Lesson = {
       id: '3-blueprint',
       type: 'blueprint',
       blueprintSlot: ['WHO', 'WHAT'],
-      content: `${BOX}\n\nStill the WHO box. Last lesson: which gender a noun has. Today: the ending that shows it.`,
+      content: `${BOX}\n\nThe WHO box now carries its gender in the ending.`,
     },
     {
       id: '3-passage-a', type: 'passage',
@@ -561,7 +561,7 @@ const LESSON_3: Lesson = {
           { somali: 'magaalo, magaalada.', gloss: 'city, the city.', note: 'Same layout, second entry.' },
         ],
       },
-      content: 'Last lesson ended with the advice: learn every noun in its "the" form. This is what that advice looks like — a dictionary page, two entries. Read it once, then answer.',
+      content: 'Read both dictionary entries: the bare noun, then its “the” form.',
     },
     {
       id: '3-gist-a', type: 'notice', exercise: {
@@ -606,7 +606,7 @@ const LESSON_3: Lesson = {
     },
     {
       id: '3-coach-endings', type: 'coach', title: 'Same page, two tails',
-      content: 'Both entries do the same job — noun, then its "the" form — but look at the tails: **guriga** grows a **g**, **magaalada** grows a **d**. Last lesson told you why: the ending shows the noun\'s gender, k-type for masculine, t-type for feminine. So far you have only read the clue. Now you build it.',
+      content: 'Both entries pair a noun with its “the” form. **Guriga** grows a **g**; **magaalada** grows a **d**. The ending shows gender: k-type for masculine, t-type for feminine. Now build the forms.',
     },
     {
       id: '3-teach',
@@ -875,7 +875,7 @@ A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
           { somali: 'kab, kabta.', gloss: 'shoe, the shoe.' },
         ],
       },
-      content: 'A page you have never seen, from a different shelf of the dictionary. Same layout as before — read it once, then answer.',
+      content: 'Read the new dictionary pairs, then use their endings.',
     },
     {
       id: '3-transfer-gist', type: 'notice', exercise: {
@@ -954,7 +954,7 @@ const LESSON_4: Lesson = {
     {
       id: '4-promise',
       type: 'promise',
-      prompt: 'By the end you will build a complete, correct Somali sentence: **Wiilku waa macallin.**: "The boy is a teacher."',
+      prompt: 'Build a complete Somali sentence: **Wiilku waa macallin.** “The boy is a teacher.”',
     },
     {
       id: '4-passage-a', type: 'passage',
@@ -966,7 +966,7 @@ const LESSON_4: Lesson = {
           { somali: 'Cumar waa arday wanaagsan.', gloss: 'Cumar is a good student.', note: 'Same shape, second name.' },
         ],
       },
-      content: 'A school noticeboard introduces the staff. Two lines, two names. Read it once, then answer.',
+      content: 'Read the two staff captions. Who is each person?',
     },
     {
       id: '4-gist-a', type: 'notice', exercise: {
@@ -1070,8 +1070,7 @@ const LESSON_4: Lesson = {
         '• **aad**: you\n' +
         '• **uu**: he\n' +
         '• **ay**: she / they\n\n' +
-        'You will see these fused onto **waa**, the statement signal, in the next unit: **waa + uu** becomes **wuu**.\n\n' +
-        'For now just recognise them. They are short, they are everywhere, and they are not the same words as **aniga / adiga / isaga / iyada**.',
+        'These short forms fuse onto signals: **waa + uu** becomes **wuu**. Recognise them as distinct from **aniga / adiga / isaga / iyada**.',
     },
     {
       id: '4-notice-2',
@@ -1337,7 +1336,7 @@ const LESSON_5: Lesson = {
       id: '5-promise',
       type: 'promise',
       prompt:
-        'By the end you will read two sentences made of **exactly the same words**. One means "SAHRA is greeting her friend". The other means "Sahra is greeting her FRIEND". You will know which is which.',
+        'Distinguish two sentences made of **exactly the same words**: “SAHRA is greeting her friend” and “Sahra is greeting her FRIEND.”',
     },
     {
       id: '5-passage-a', type: 'passage',
@@ -1349,7 +1348,7 @@ const LESSON_5: Lesson = {
           { somali: 'Sahra waxa ay salaamaysaa saaxiibkeed.', gloss: 'Sahra is greeting her FRIEND.', note: 'Only the small word near the start changed, and the meaning moved with it.' },
         ],
       },
-      content: 'A photo of Sahra greeting her friend, captioned twice. Same words in both lines. Read them once, then answer.',
+      content: 'Read both captions. The words match; the spotlight changes.',
     },
     {
       id: '5-gist-a', type: 'notice', exercise: {
@@ -1429,7 +1428,7 @@ const LESSON_5: Lesson = {
         '**One thing to be careful about.** That English sentence has the word "is" in it, and the Somali does not. There is no verb in **Wiilku waa macallin** at all. English simply cannot say it without one.\n\n' +
         '**waa** is not the word for "is". It sits in front of action words just the same:\n\n' +
         '• **wuu keenaa**  *he brings*\n\n' +
-        'You will build that one properly in a couple of lessons. For now, just notice that **waa** is there doing the same job: marking a plain statement, whatever follows it.\n\n' +
+        'Notice that **waa** still marks a plain statement, whatever follows it.\n\n' +
         'Use **waa** when you would say the English sentence evenly, with no word pushed harder than the rest.',
     },
     {
@@ -1465,7 +1464,7 @@ const LESSON_5: Lesson = {
         '**baa** shines a light on the words **immediately before it**.\n\n' +
         '• **Sahra baa salaamaysa saaxiibkeed.**  *SAHRA is greeting her friend.*\n\n' +
         '**Sahra** sits directly before **baa**, so Sahra is the spotlight. The sentence answers "**who** is greeting her friend?"\n\n' +
-        'There is a second word, **ayaa**, that does the identical job. **baa** and **ayaa** are interchangeable: **ayaa** just sounds slightly more formal. You will meet both in real text; treat them as one thing.\n\n' +
+        '**Ayaa** does the same job as **baa** and sounds slightly more formal. Treat them as one signal.\n\n' +
         'The rule to hold on to: **look immediately to the left of baa.** Whatever is there is what the sentence is about.',
     },
     {
@@ -1539,8 +1538,7 @@ const LESSON_5: Lesson = {
         'So the two signals split the work cleanly:\n\n' +
         '• **baa** → look **left**, at the word just before it\n' +
         '• **waxa** → look **right**, at the word that ends the sentence\n\n' +
-        'You will also see **waxa** written **waxaa**. Same word.\n\n' +
-        'One thing to notice and not worry about yet: **waxa ay**. The little **ay** is the short "she" from last lesson, riding along behind the signal. Next lesson those two fuse into a single word.',
+        '**Waxa** may be written **waxaa**. In **waxa ay**, the short “she” follows the signal; together they fuse into one word.',
     },
     {
       id: '5-notice-3',
@@ -1767,7 +1765,7 @@ const LESSON_6: Lesson = {
       id: '6-promise',
       type: 'promise',
       prompt:
-        'By the end you will see **wuxuu** and read it instantly as two things: the spotlight signal **waxa**, plus **uu**: he.',
+        'Read **wuxuu** as two parts: the spotlight signal **waxa** plus **uu**, “he.”',
     },
     {
       id: '6-passage-a', type: 'passage',
@@ -1832,7 +1830,7 @@ const LESSON_6: Lesson = {
       type: 'teach',
       title: 'Two words, one word',
       content:
-        'Every signal you met last lesson can carry a short pronoun: the little words for who, from Lesson 4:\n\n' +
+        'A signal can carry a short pronoun:\n\n' +
         '**aan** (I) · **aad** (you) · **uu** (he) · **ay** (she / they)\n\n' +
         'And in practice they almost never stay apart. The signal and the pronoun squash together into one word.\n\n' +
         'This is the single biggest reason written Somali looks unreadable at first. You go hunting for **waa** and it is not there, because it is now the front half of **wuu**.\n\n' +
@@ -1931,7 +1929,7 @@ const LESSON_6: Lesson = {
         'Three of the four behave exactly as you would guess. The fourth does not:\n\n' +
         '• **waxa** + **uu** (he) → **wuxuu**\n\n' +
         'Not "waxauu". The vowel in the middle shifts, and the word comes out **wuxuu**.\n\n' +
-        'This is the one to learn as a shape rather than a sum. It is also extremely common, so you will meet it constantly.',
+        'Learn this one as a shape rather than a sum. It is extremely common.',
     },
     {
       id: '6-notice-2',
@@ -2148,7 +2146,7 @@ const LESSON_6: Lesson = {
       prompt:
         'That was the promise.\n\n' +
         '**wuxuu** = **waxa** (spotlight at the end) + **uu** (he)\n\n' +
-        'A word that looked like noise two lessons ago is now two pieces you already knew.',
+        'What looked like one dense word is now two familiar pieces.',
     },
     {
       id: '6-summary',
@@ -2207,7 +2205,7 @@ const LESSON_7: Lesson = {
       id: '7-promise',
       type: 'promise',
       prompt:
-        'By the end you will look at **wuu keenaa** and **way keentaa** and say instantly who is doing the bringing. You will also know why the verb alone could never have told you.',
+        'Use **wuu keenaa** and **way keentaa** to identify who is bringing, and see why the verb alone cannot tell you.',
     },
     {
       id: '7-passage-a', type: 'passage',
@@ -2337,7 +2335,7 @@ const LESSON_7: Lesson = {
         '• **-aa** → **I**, and **he**\n' +
         '• **-taa** → **you**, and **she**\n\n' +
         'Each ending covers two different people. So **keenaa** on its own is genuinely ambiguous: it could be *I bring* or *he brings*, and nothing in the word settles it.\n\n' +
-        'This is not sloppiness in the language. The information is simply somewhere else: in the **signal** sitting in front of it, the one you learned to unsquash last lesson.\n\n' +
+        'The missing information sits in the **signal** before the verb.\n\n' +
         '• **waan keenaa**: **I** bring\n' +
         '• **wuu keenaa**: **he** brings\n\n' +
         'Same verb, same ending. The **waan** and the **wuu** carry who.',
@@ -2531,7 +2529,7 @@ const LESSON_7: Lesson = {
         'That was the promise.\n\n' +
         '**wuu keenaa**: he brings\n' +
         '**way keentaa**: she brings\n\n' +
-        'The verb ending narrows it to two people. The signal picks which. Neither could do it alone, which is why you needed last lesson before this one.',
+        'The verb ending narrows it to two people. The signal picks which. Neither works alone.',
     },
     {
       id: '7-summary',
@@ -2601,7 +2599,7 @@ const LESSON_8: Lesson = {
       id: '8-promise',
       type: 'promise',
       prompt:
-        'By the end you will read **Nin shaah wuu cabbay**: four words in an order English would never use. You will know exactly why each one sits where it does.',
+        'Read **Nin shaah wuu cabbay** and explain why its four words sit in that order.',
     },
     {
       id: '8-passage-a', type: 'passage',
@@ -2667,7 +2665,7 @@ const LESSON_8: Lesson = {
         '• **Nin shaah wuu cabbay.**: a man / tea / (signal+he) / drank\n' +
         '• **Koob keen!**: a cup / bring!\n\n' +
         'Read literally, that is *"a man tea he-drank"* and *"a cup bring"*. This is the single biggest reason a Somali sentence feels back-to-front at first: you are waiting for the verb and it has not arrived yet.\n\n' +
-        'The honest version of the rule is **usually**, not always. Somali moves noun phrases around more freely than English does, and you will meet sentences with things after the verb. What follows is the part that does not move.',
+        'The rule is **usually**, not always. Somali moves noun phrases more freely than English. The next pattern is the part that stays fixed.',
     },
     {
       id: '8-coach-hold-verb',
@@ -2782,7 +2780,7 @@ const LESSON_8: Lesson = {
         'One thing does move the verb off the end: **waxa**, the signal that spotlights whatever comes last.\n\n' +
         'It has to. If **waxa** spotlights the end of the sentence, and the verb is at the end, then something must give, so the spotlighted words go **after** the verb:\n\n' +
         '**waxa** (+ who) → **verb** → *the spotlighted words*\n\n' +
-        'That is why **waxa** sentences look inside out even once you are comfortable with the rest. They are not an exception to the system; they are the system, with the spotlight doing exactly what Lesson 5 said it does.\n\n' +
+        'That is why **waxa** sentences can look inside out. The spotlight still lands exactly where **waxa** says it will.\n\n' +
         'The landmark still holds: the signal is still immediately before the verb.',
     },
     {
@@ -2865,7 +2863,7 @@ const LESSON_8: Lesson = {
         id: 'l8-text-b',
         label: 'A two-line update',
         lines: [
-          { somali: 'Wuu keenaa.', gloss: 'He brings.', note: 'You built lines like this last lesson.' },
+          { somali: 'Wuu keenaa.', gloss: 'He brings.', note: 'A complete plain statement.' },
           { somali: 'Way keentaa.', gloss: 'She brings.', note: 'Watch what stays put and what changes.' },
         ],
       },
