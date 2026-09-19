@@ -9,7 +9,7 @@ import {
   getLessonContent,
 } from '@/data/authored-lessons';
 import type { PracticeExercise, ExerciseType, CardType } from '@/data/types';
-import { getVocabForLesson, TOP_500_WORDS } from '@/data/vocabulary';
+import { getContextualVocabForLesson, getVocabForLesson, TOP_500_WORDS } from '@/data/vocabulary';
 
 /**
  * These invariants exist because each one corresponds to a defect that actually
@@ -185,6 +185,17 @@ describe('authored-lessons: vocabulary alignment', () => {
     }
   });
 
+
+
+  it('contextual decks are bounded and only draw from each lesson source set', () => {
+    for (const { lessonId } of LESSON_LIST) {
+      const source = new Set(getVocabForLesson(lessonId).map((word) => word.somali));
+      const contextual = getContextualVocabForLesson(lessonId);
+      expect(contextual.length, `lesson ${lessonId} has no contextual vocabulary`).toBeGreaterThan(0);
+      expect(contextual.length, `lesson ${lessonId} contextual deck is oversized`).toBeLessThanOrEqual(12);
+      for (const word of contextual) expect(source.has(word.somali)).toBe(true);
+    }
+  });
   it('no duplicate Somali headwords', () => {
     const seen = new Map<string, number>();
     const dupes: string[] = [];
@@ -290,5 +301,19 @@ describe('lesson player: stateful inputs are keyed', () => {
       }
     }
     expect(unkeyed).toEqual([]);
+  });
+});
+
+
+describe('authored-lessons: reusable learning moves', () => {
+  it('every lesson in the proven text-first curriculum teaches a coach move', () => {
+    for (const lesson of AUTHORED_LESSONS) {
+      const coaches = lesson.cards.filter((card) => card.type === 'coach');
+      expect(coaches.length, `lesson ${lesson.id} has no Learning move`).toBeGreaterThan(0);
+      for (const coach of coaches) {
+        expect(coach.title, `lesson ${lesson.id} coach has no title`).toBeTruthy();
+        expect(coach.content?.length ?? 0, `lesson ${lesson.id} coach is too thin`).toBeGreaterThan(120);
+      }
+    }
   });
 });
