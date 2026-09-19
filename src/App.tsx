@@ -29,6 +29,7 @@ const Lesson = lazy(() => import('@/pages/Lesson'));
 const Homework = lazy(() => import('@/pages/Homework'));
 const UnitTest = lazy(() => import('@/pages/UnitTest'));
 const Repair = lazy(() => import('@/pages/Repair'));
+const Syllabus = lazy(() => import('@/pages/Syllabus'));
 
 function PageLoader() {
   return (
@@ -52,6 +53,7 @@ export default function App() {
             <Route path="/homework/:id" element={<Homework />} />
             <Route path="/unit-test/:id" element={<UnitTest />} />
             <Route path="/repair" element={<Repair />} />
+            <Route path="/syllabus" element={<Syllabus />} />
 
             {/* Everything else lands on the one page, including the routes the
                 old LeetCode-shaped UI used to have. */}
