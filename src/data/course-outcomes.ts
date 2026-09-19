@@ -38,7 +38,7 @@ export const COURSE_OUTCOMES: CourseOutcome[] = [
     id: 'decode-written-statement',
     canDo: 'I can find the WHO, SIGNAL, WHAT, and DO in a level-appropriate written Somali statement.',
     objectiveIds: [
-      'decode-statement', 'find-signal', 'build-statement', 'subject-case', 'sentence-shape',
+      'decode-statement', 'decode-caption-page', 'find-signal', 'build-statement', 'subject-case', 'sentence-shape',
       'signal-statement', 'signal-focus-before', 'signal-focus-end', 'signal-fusion',
       'signal-fusion-unpack', 'verb-ending-ambiguity', 'order-verb-last',
       'order-signal-hugs-verb', 'order-waxa-moves-it',

@@ -229,6 +229,7 @@ const LESSON_2: Lesson = {
   id: 2,
   unitId: 1,
   title: 'Naming Things',
+  flowVersion: 2,
   cards: [
     {
       id: '2-blueprint',
@@ -237,56 +238,112 @@ const LESSON_2: Lesson = {
       content: `${BOX}\n\nToday: the WHO box. Nouns, and the one property of them you cannot see.`,
     },
     {
-      id: '2-connect',
-      type: 'connect',
-      prompt: 'Last lesson you decoded your first whole statement — **Wiilku waa macallin**: the boy, the plain-statement signal, and what he is. Now the first box of the sentence: the thing the sentence is about.',
-    },
-    {
       id: '2-promise',
       type: 'promise',
-      prompt: 'By the end you will know why **wiil** (boy) and **gabadh** (girl) behave differently in every sentence. And why you cannot tell which is which by looking.',
+      prompt: 'By the end you will know why the boy\u2019s word on the noticeboard ends one way and the hand\u2019s ends another \u2014 and why you could never have seen it in the bare words.',
     },
     {
-      id: '2-predict',
-      type: 'predict',
-      prompt:
-        '**guri** means house. **magaalo** means city. One of them is masculine and the other is feminine, and nothing in the spelling tells you which.\n\n' +
-        'Before reading on, where do you think that information is hiding, if not in the word itself?',
+      id: '2-passage-a', type: 'passage',
+      passage: {
+        id: 'l2-text-a',
+        label: 'A school noticeboard',
+        lines: [
+          { somali: 'Wiilku waa macallin.', gloss: 'The boy is a teacher.', note: 'The caption you know from the first class page.' },
+          { somali: 'Gacantu waa wasakh.', gloss: 'The hand is dirty.', note: 'Gacantu is \u201cthe hand\u201d, named as the thing the line is about.' },
+        ],
+      },
+      content: 'Read this noticeboard once, all the way through, with the same three passes: WHO, SIGNAL, WHAT. Do not stop on any single word. Then move on.',
+    },
+    {
+      id: '2-gist-a', type: 'notice', exercise: {
+        id: 'l2-gist-a', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
+        question: 'What is this noticeboard telling you, roughly?',
+        options: [
+          'what the boy is, and how the hand is',
+          'where the boy and the hand are',
+          'whose hand is dirty',
+          'what the boy is doing to his hand',
+        ],
+        correctAnswer: 'what the boy is, and how the hand is',
+        hint: 'You do not need every word. Ask: is this page about people, places, or events?',
+        explanation: 'One caption says the boy is a teacher; the other says the hand is dirty. Each names a thing and says something about it \u2014 the shape you already know from the class page.',
+        repair: {
+          id: 'l2-gist-a-r', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
+          question: 'Look at the noticeboard once more. Which line is about a hand?',
+          options: ['the second line', 'the first line', 'both lines', 'neither line'],
+          correctAnswer: 'the second line',
+          hint: 'One caption names the boy; the other names something else.',
+          explanation: '**Gacantu waa wasakh** \u2014 the second caption \u2014 is about the hand: it is dirty. The first caption is about the boy.',
+        },
+      },
+    },
+    {
+      id: '2-detail-a', type: 'notice', exercise: {
+        id: 'l2-detail-a', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
+        question: 'What does the noticeboard say about the hand?',
+        options: ['It is dirty', 'It is hurt', 'It is the boy\u2019s', 'It is clean'],
+        correctAnswer: 'It is dirty',
+        hint: 'Find the line whose WHO is the hand, then read its WHAT.',
+        explanation: '**Gacantu waa wasakh** says the hand is dirty. The routine holds: WHO (**gacantu**), SIGNAL (**waa**), WHAT (**wasakh**).',
+        repair: {
+          id: 'l2-detail-a-r', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
+          question: 'And what does the noticeboard say about the boy?',
+          options: ['He is a teacher', 'He is a student', 'His hand is dirty', 'He is at school'],
+          correctAnswer: 'He is a teacher',
+          hint: 'Same routine on the first line.',
+          explanation: '**Wiilku waa macallin** \u2014 the boy is a teacher. You read this line last lesson; the noticeboard uses the same shape.',
+        },
+      },
+    },
+    {
+      id: '2-coach-endings', type: 'coach', title: 'Same shape, different tail',
+      content: 'You read both captions with the same three passes \u2014 WHO, SIGNAL, WHAT \u2014 and nothing in the routine was new. Now look at only the WHO chunks: **wiilku** and **gacantu**. Same job, same position in the line, but one ends **-ku** and the other ends **-tu**. That difference is not a typo and it is not random. The next card tells you what it carries.',
     },
     {
       id: '2-teach',
       type: 'teach',
       title: 'Every noun has a gender',
       content:
-        'Every Somali noun is either **masculine** or **feminine**. This is a grammar label, not a statement about the world: **buug** (book) is masculine and **kab** (shoe) is feminine.\n\n' +
-        'It matters because gender decides the ending you attach when you say "the", which you will learn next lesson. Get the gender wrong and the whole word comes out wrong.\n\n' +
+        'Here is what the two tails were carrying. Every Somali noun is either **masculine** or **feminine**. This is a grammar label, not a statement about the world: **buug** (book) is masculine and **kab** (shoe) is feminine.\n\n' +
+        'It matters because gender decides the ending a noun takes \u2014 the noticeboard\u2019s **-ku** and **-tu** were that choice, and next lesson you will build the endings yourself. Get the gender wrong and the word comes out wrong.\n\n' +
         'Some nouns you can guess from meaning:\n' +
-        '• **nin** (man), **wiil** (boy): masculine\n' +
-        '• **naag** (woman), **gabadh** (girl): feminine\n\n' +
+        '\u2022 **nin** (man), **wiil** (boy): masculine\n' +
+        '\u2022 **naag** (woman), **gabadh** (girl): feminine\n\n' +
         'Most you cannot:\n' +
-        '• **guri** (house), **buug** (book), **miis** (table): masculine\n' +
-        '• **magaalo** (city), **kab** (shoe), **bil** (month): feminine',
+        '\u2022 **guri** (house), **buug** (book), **miis** (table): masculine\n' +
+        '\u2022 **magaalo** (city), **kab** (shoe), **bil** (month): feminine',
     },
     {
-      id: '2-example',
-      type: 'example',
-      title: 'Why you cannot see it',
-      content:
-        'Somali speakers hear gender in the **tone** of the word. Compare:\n\n' +
-        '**inan**: boy (tone falls on the first syllable)\n' +
-        '**inan**: girl (tone rises to the last)\n\n' +
-        'Same letters. Different word. Different gender.\n\n' +
-        'Here is the catch: **Somali does not write tone.** There are no accent marks in ordinary spelling. So on the page these two words are identical, and no spelling rule will ever tell you which is which.\n\n' +
-        'This is why gender has to be learned with the word, the way you would learn it in French or German. It is not that Somali is irregular: it is that the writing system leaves the clue out.',
+      id: '2-complete-2',
+      type: 'complete',
+      exercise: {
+        id: 'l2-c2',
+        type: 'multiple_choice',
+        objectiveIds: ['noun-gender'],
+        question: 'Which of these nouns is **feminine**?',
+        options: ['naag (woman)', 'nin (man)', 'wiil (boy)', 'buug (book)'],
+        correctAnswer: 'naag (woman)',
+        hint: 'This is one of the few you can guess from meaning.',
+        explanation:
+          '**Naag** (woman) is feminine, like **gabadh** (girl). **Buug** (book) is masculine \u2014 for most nouns the label has nothing to do with the meaning, which is why it must be learned with the word.',
+        repair: {
+          id: 'l2-c2-r', type: 'multiple_choice', objectiveIds: ['noun-gender'],
+          question: 'And which of these is **masculine**?',
+          options: ['miis (table)', 'magaalo (city)', 'kab (shoe)', 'bil (month)'],
+          correctAnswer: 'miis (table)',
+          hint: 'Three of these four are feminine. The odd one out is a piece of furniture.',
+          explanation: '**Miis** (table) is masculine. **Magaalo**, **kab** and **bil** are all feminine \u2014 none of them guessable from meaning.',
+        },
+      },
     },
     {
       id: '2-teach-diagnostic',
       type: 'teach',
       title: 'How to find out a noun\'s gender',
       content:
-        'Since spelling will not tell you, look at the word\'s **"the" form**: that is where gender shows up:\n\n' +
-        '• **wiil** → **wiilka** (the boy): a **k** appears → masculine\n' +
-        '• **naag** → **naagta** (the woman): a **t** appears → feminine\n\n' +
+        'Since spelling will not tell you, look at the word\'s **"the" form**: that is where gender shows up \u2014 the noticeboard\u2019s **wiilku** and **gacantu** were it at work.\n\n' +
+        '\u2022 **wiil** \u2192 **wiilka** (the boy): a **k** appears \u2192 masculine\n' +
+        '\u2022 **naag** \u2192 **naagta** (the woman): a **t** appears \u2192 feminine\n\n' +
         'Masculine nouns take a **k**-type ending. Feminine nouns take a **t**-type ending.\n\n' +
         'A good dictionary lists the "the" form for exactly this reason. When you meet a new noun, learn it in that form and the gender comes free.',
     },
@@ -303,34 +360,71 @@ const LESSON_2: Lesson = {
         hint: 'Look at the consonant that appears in the ending. A k-sound points one way, a t-sound the other.',
         explanation:
           '**Guriga** contains a **g** (a k-type ending) so **guri** is **masculine**. Feminine nouns would show a t-type ending instead, as in **naagta**.',
+        repair: {
+          id: 'l2-n1-r', type: 'multiple_choice', objectiveIds: ['noun-gender-diagnostic'],
+          question: 'The word for "the snake" is **maska**. What does that tell you about **mas**?',
+          options: ['It is masculine', 'It is feminine', 'It is plural', 'It is borrowed'],
+          correctAnswer: 'It is masculine',
+          hint: 'Which consonant shows up in the ending?',
+          explanation: '**Maska** shows a **k** \u2014 a k-type ending \u2014 so **mas** is **masculine**, the same story as **guri** \u2192 **guriga**.',
+        },
       },
     },
     {
-      id: '2-coach-pairs',
-      type: 'coach',
-      title: 'Store a noun with its clue',
-      content:
-        `A bare noun hides the gender clue, so do not memorize it alone. Store a two-part memory: **bare noun → “the” form**. Then retrieve in both directions:
-
-• See **guri**: recall **guriga**.
-• See **guriga**: strip the ending and recover **guri**.
-
-The pair turns an invisible fact into something you can inspect. The next questions make you read the clue rather than recite a label.`,
-    },
-    {
-      id: '2-notice-2',
-      type: 'notice',
+      id: '2-complete-1',
+      type: 'complete',
       exercise: {
-        id: 'l2-n2',
-        type: 'multiple_choice',
+        id: 'l2-c1',
+        type: 'fill_blank',
         objectiveIds: ['noun-gender-diagnostic'],
-        question: 'The word for "the city" is **magaalada**. Is **magaalo** masculine or feminine?',
-        options: ['Feminine', 'Masculine', 'Both, depending on context', 'Neither: cities have no gender'],
-        correctAnswer: 'Feminine',
-        hint: 'The ending contains a d, which is a t-type ending. Which gender takes t-type endings?',
+        question: 'The word for "the book" is **buugga**. So **buug** is ___.',
+        options: ['masculine', 'feminine', 'plural', 'definite'],
+        correctAnswer: 'masculine',
+        hint: 'The doubled g is a k-type ending. That points to one gender.',
         explanation:
-          '**Magaalada** shows a **d** (a t-type ending) so **magaalo** is **feminine**. Every Somali noun has a gender, including inanimate ones like cities.',
+          '**Buugga** has a k-type ending, so **buug** is **masculine**: a good example of gender having nothing to do with meaning.',
+        repair: {
+          id: 'l2-c1-r', type: 'multiple_choice', objectiveIds: ['noun-gender-diagnostic'],
+          question: 'The word for "the city" is **magaalada**. So **magaalo** is ___.',
+          options: ['feminine', 'masculine', 'plural', 'definite'],
+          correctAnswer: 'feminine',
+          hint: 'The d in the ending belongs to the t family \u2014 a softened t-type.',
+          explanation: '**Magaalada** carries a t-type ending (softened to d), so **magaalo** is **feminine**. A city has a gender like everything else.',
+        },
       },
+    },
+    {
+      id: '2-produce-1',
+      type: 'produce',
+      exercise: {
+        id: 'l2-p1',
+        type: 'translate',
+        objectiveIds: ['noun-gender-diagnostic'],
+        question: 'A text uses **naagta** ("the woman"). Write the bare noun: the form with the "the" ending stripped off.',
+        answer: 'naag',
+        hint: 'Remove the t-type ending. What is left is the word as a dictionary lists it.',
+        explanation:
+          'Strip **-ta** and you get **naag** (woman). The t-type ending also tells you it is feminine: the bare noun alone would not.',
+        repair: {
+          id: 'l2-p1-r', type: 'translate', objectiveIds: ['noun-gender-diagnostic'],
+          question: 'A text uses **kabta** ("the shoe"). Write the bare noun.',
+          answer: 'kab',
+          hint: 'Same move: strip the t-type ending.',
+          explanation: 'Strip **-ta** and you get **kab** (shoe) \u2014 feminine, exactly as the ending told you.',
+        },
+      },
+    },
+    {
+      id: '2-example',
+      type: 'example',
+      title: 'Why you cannot see it',
+      content:
+        'In everyday Somali, gender rides on the **tone** of the word. Compare:\n\n' +
+        '**inan**: boy (tone falls on the first syllable)\n' +
+        '**inan**: girl (tone rises to the last)\n\n' +
+        'Same letters. Different word. Different gender.\n\n' +
+        'Here is the catch: **Somali does not write tone.** There are no accent marks in ordinary spelling. So on the page these two words are identical, and no spelling rule will ever tell you which is which.\n\n' +
+        'This is why gender has to be learned with the word, the way you would learn it in French or German. It is not that Somali is irregular: it is that the writing system leaves the clue out.',
     },
     {
       id: '2-notice-3',
@@ -347,71 +441,98 @@ The pair turns an invisible fact into something you can inspect. The next questi
           'It is a recent borrowing with no fixed meaning',
         ],
         correctAnswer: 'The difference is in the tone, which Somali does not write',
-        hint: 'Think about what a Somali speaker hears that the page does not show.',
+        hint: 'Think about what the page cannot show you.',
         explanation:
-          'Spoken Somali distinguishes them by **tone**: the boy word and the girl word carry it differently. Written Somali uses no accent marks, so both come out as **inan**. Context, or the "the" form, resolves it.',
+          'In everyday Somali the two are told apart by **tone**: the boy word and the girl word carry it differently. Written Somali uses no accent marks, so both come out as **inan**. Context, or the "the" form, resolves it.',
+        repair: {
+          id: 'l2-n3-r', type: 'multiple_choice', objectiveIds: ['noun-gender-unwritten'],
+          question: 'A learner writes **wiil** and **guri** side by side and asks which is masculine. What is the honest answer?',
+          options: [
+            'The bare words cannot say — the clue is not written on them',
+            'wiil, because it ends in l',
+            'guri, because it ends in i',
+            'Neither — they have no gender',
+          ],
+          correctAnswer: 'The bare words cannot say — the clue is not written on them',
+          hint: 'Remember inan: the difference lives in tone, and tone is not written.',
+          explanation: 'Both bare nouns hide their gender. Read it off their "the" forms instead: **wiilka** is k-type (masculine), **guriga** is k-type too — but **magaalada** is t-type (feminine). The ending is where the clue lives.',
+        },
       },
     },
     {
-      id: '2-complete-1',
-      type: 'complete',
-      exercise: {
-        id: 'l2-c1',
-        type: 'fill_blank',
-        objectiveIds: ['noun-gender-diagnostic'],
-        question: 'The word for "the book" is **buugga**. So **buug** is ___.',
-        options: ['masculine', 'feminine', 'plural', 'definite'],
-        correctAnswer: 'masculine',
-        hint: 'The doubled g is a k-type ending. That points to one gender.',
-        explanation:
-          '**Buugga** has a k-type ending, so **buug** is **masculine**: a good example of gender having nothing to do with meaning.',
+      id: '2-passage-b', type: 'passage',
+      passage: {
+        id: 'l2-text-b',
+        label: 'Another class page',
+        lines: [
+          { somali: 'Aamina waa macallimad.', gloss: 'Amina is a teacher.', note: 'Aamina is a name \u2014 Amina.' },
+          { somali: 'Maryan waa macallimad wanaagsan.', gloss: 'Maryan is a good teacher.', note: 'Wanaagsan adds \u201cgood\u201d to what she is.' },
+        ],
+      },
+      content: 'A page you have never seen. Same routine, no help this time: WHO, SIGNAL, WHAT, once through. Then answer.',
+    },
+    {
+      id: '2-transfer-gist', type: 'notice', exercise: {
+        id: 'l2-gist-b', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
+        question: 'What are both captions on this page telling you?',
+        options: [
+          'who is a teacher',
+          'where the women teach',
+          'what the women are doing today',
+          'how the women know the boy',
+        ],
+        correctAnswer: 'who is a teacher',
+        hint: 'Same routine as the noticeboard: WHO, SIGNAL, WHAT.',
+        explanation: '**Aamina waa macallimad** \u2014 Amina is a teacher. **Maryan waa macallimad wanaagsan** \u2014 Maryan is a good teacher. Each caption names someone and says what she is, exactly the shape you know.',
+        repair: {
+          id: 'l2-gist-b-r', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
+          question: 'Which caption calls Maryan a GOOD teacher?',
+          options: ['the second line', 'the first line', 'both lines', 'neither line'],
+          correctAnswer: 'the second line',
+          hint: 'Find Maryan first, then read what her caption adds.',
+          explanation: 'The second caption, **Maryan waa macallimad wanaagsan**, adds **wanaagsan** \u2014 good. The first says only that Aamina is a teacher.',
+        },
       },
     },
     {
-      id: '2-complete-2',
-      type: 'complete',
-      exercise: {
-        id: 'l2-c2',
-        type: 'multiple_choice',
-        objectiveIds: ['noun-gender'],
-        question: 'Which of these nouns is **feminine**?',
-        options: ['kab (shoe)', 'miis (table)', 'buug (book)', 'wiil (boy)'],
-        correctAnswer: 'kab (shoe)',
-        hint: 'Its "the" form is kabta. The others are wiilka, miiska and buugga.',
-        explanation:
-          '**Kab** (shoe) is feminine: **kabta**. The other three are masculine: **miiska**, **buugga**, **wiilka**.',
-      },
-    },
-    {
-      id: '2-produce-1',
-      type: 'produce',
-      exercise: {
-        id: 'l2-p1',
-        type: 'translate',
-        objectiveIds: ['noun-gender-diagnostic'],
-        question: 'A text uses **naagta** ("the woman"). Write the bare noun: the form with the "the" ending stripped off.',
-        answer: 'naag',
-        hint: 'Remove the t-type ending. What is left is the word as a dictionary lists it.',
-        explanation:
-          'Strip **-ta** and you get **naag** (woman). The t-type ending also tells you it is feminine: the bare noun alone would not.',
+      id: '2-transfer-detail', type: 'notice', exercise: {
+        id: 'l2-detail-b', type: 'multiple_choice', objectiveIds: ['noun-gender-diagnostic'],
+        question: '**Aamina** and **Maryan** carry no ending like **-ku** or **-tu**. Why not?',
+        options: [
+          'Names do not take the "the" ending',
+          'Both names are feminine, and feminine takes no ending',
+          'The endings were dropped by mistake',
+          'They take the ending only at the end of a sentence',
+        ],
+        correctAnswer: 'Names do not take the "the" ending',
+        hint: 'Would you ever say "the Aamina"?',
+        explanation: 'Proper names are already definite \u2014 you never say "the Maryan" \u2014 so they carry no "the" ending, and their gender does not show on the name itself.',
+        repair: {
+          id: 'l2-detail-b-r', type: 'multiple_choice', objectiveIds: ['noun-gender-diagnostic'],
+          question: 'Which caption names Aamina?',
+          options: ['the first line', 'the second line', 'both lines', 'neither line'],
+          correctAnswer: 'the first line',
+          hint: 'Read the WHO chunk of each caption.',
+          explanation: '**Aamina waa macallimad** \u2014 the first caption names Aamina and says she is a teacher. The second is about Maryan.',
+        },
       },
     },
     {
       id: '2-payoff',
       type: 'payoff',
       prompt:
-        'You can now read gender straight off the dictionary form:\n\n**wiilka** (the boy) → masculine\n**naagta** (the woman) → feminine\n**guriga** (the house) → masculine\n**magaalada** (the city) → feminine\n\nNext lesson: how those endings are actually built.',
+        'Two pages read, and the routine never changed: WHO, SIGNAL, WHAT.\n\nBut the tails talk now:\n\n**wiilku** (the boy) \u2192 k-type \u2192 masculine\n**gacantu** (the hand) \u2192 t-type \u2192 feminine\n**guriga** (the house) \u2192 masculine\n**magaalada** (the city) \u2192 feminine\n\nNext lesson: how those endings are actually built \u2014 and why they sometimes change shape.',
     },
     {
       id: '2-summary',
       type: 'summary',
       title: 'Nouns and gender',
       content:
-        'Every Somali noun is masculine or feminine. Speech marks it with tone, but writing does not, so gender must be learned with the word. The reliable clue is the "the" form: k-type ending means masculine, t-type means feminine.',
+        'Every Somali noun is masculine or feminine. Tone marks it, and writing leaves tone out, so gender must be learned with the word. The reliable clue is the "the" form: k-type ending means masculine, t-type means feminine. Proper names carry no ending at all.',
     },
   ],
   newItems: ['2-teach', '2-example', '2-teach-diagnostic'],
-  objectives: ['noun-gender', 'noun-gender-diagnostic', 'noun-gender-unwritten'],
+  objectives: ['decode-caption-page', 'noun-gender', 'noun-gender-diagnostic', 'noun-gender-unwritten'],
 };
 
 // ============================================================================

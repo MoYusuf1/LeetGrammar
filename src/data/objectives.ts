@@ -23,6 +23,7 @@ const OBJECTIVE_LABELS: Record<string, string> = {
   'find-signal': 'Find the small word that organizes a statement',
   'build-statement': 'Build a common statement from meaning',
   // Lesson 2
+  'decode-caption-page': 'Read a short caption page for gist and detail',
   'noun-gender': 'Every noun is masculine or feminine',
   'noun-gender-diagnostic': 'Reading gender off the "the" form',
   'noun-gender-unwritten': 'Why gender does not show in writing',
