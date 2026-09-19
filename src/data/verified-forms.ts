@@ -307,6 +307,14 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // wiilkaygu: Nilsson §13.1(a) only ("Wíilkaygu waa macállin — My son is a
   // teacher"). Recognition only.
   wiilkaygu: { gloss: 'my son (subject)', sources: ['N §13.1'], confidence: 'single' },
+  // gacantu: Nilsson printed p.125 ("Gacantu waa wasakh — The hand is DIRTY");
+  // Orwin printed p.230 ("Gacantu waa ku xanuunaysaa"). Two independent
+  // authors. Feminine per Orwin's glossary ("gacan (f. ...)").
+  gacantu: { gloss: 'the hand (subject)', gender: 'f', sources: ['N p.125', 'O p.230'] },
+  // wasakh: Nilsson printed p.125 (the same example) and his p.133 wordlist
+  // ("wasákh –da dirt, filth") — one author; Wiktionary's Somali adjective
+  // entry ("wasakh — dirty") is the second, independent source.
+  wasakh: { gloss: 'dirty', sources: ['N p.125', 'Wikt'] },
 };
 
 /** Proper nouns that appear in sourced example sentences. */
@@ -319,6 +327,12 @@ export const VERIFIED_PROPER_NOUNS = new Set([
   // name; Sahro is Sahra's subject-tone form in "Sahro waa macallimad".
   'cumar',
   'sahro',
+  // Lesson 2 passages (Sept 2026 rework): Aamina is Nilsson's printed p.125
+  // example ("Aamina waa macallimad — Amina is a TEACHER"); Maryan is his
+  // printed p.75 example ("Maryan waa macallimad wanaagsan — Maryan is a
+  // good teacher") and a named speaker in Orwin's dialogues.
+  'aamina',
+  'maryan',
 ]);
 
 /** Is this form cleared to show a learner? Case-insensitive. */

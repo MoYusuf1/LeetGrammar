@@ -84,6 +84,23 @@ const UNIT_1_ITEMS: PracticeExercise[] = [
     explanation: '**Wiilku | waa | macallin** keeps the meaning in the intended order: person, plain-statement signal, meaning.',
   },
 
+  // ── Lesson 2: reading a caption page ─────────────────────────────────────
+  {
+    id: 'u1-t09a', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
+    question: 'Which line tells you that Maryan is a good teacher?',
+    options: ['Maryan waa macallimad wanaagsan.', 'Aamina waa macallimad.', 'Wiilku waa macallin.', 'Gacantu waa wasakh.'],
+    correctAnswer: 'Maryan waa macallimad wanaagsan.',
+    hint: 'Find Maryan first, then check what her line says she is.',
+    explanation: '**Maryan waa macallimad wanaagsan** names Maryan and calls her a good teacher. The Aamina line names a different teacher; the other two are about the boy and the hand.',
+  },
+  {
+    id: 'u1-t09b', type: 'multiple_choice', objectiveIds: ['decode-caption-page'],
+    question: '**Aamina waa macallimad.** What is Aamina?',
+    options: ['a teacher', 'a student', 'a doctor', 'a good teacher'],
+    correctAnswer: 'a teacher',
+    hint: 'WHO, SIGNAL, WHAT — the last chunk is what she is.',
+    explanation: '**Aamina waa macallimad** — Aamina is the WHO, **waa** the plain-statement signal, **macallimad** “a teacher”. The line does not add “good”.',
+  },
   // ── Lesson 2: nouns and gender ──────────────────────────────────────────
   {
     id: 'u1-t07',
