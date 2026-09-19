@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { TEST_BANKS, UNITS, getUnit, getUnitTest, getUnitObjectives, composeUnitTest } from '@/data/unit-tests';
+import { TEST_BANKS, UNITS, UNSEEN_READING_ITEM_IDS, getUnit, getUnitTest, getUnitObjectives, composeUnitTest } from '@/data/unit-tests';
 import { AUTHORED_LESSONS } from '@/data/authored-lessons';
 import { describeObjective, labelledObjectives } from '@/data/objectives';
 import { isAnswerCorrect } from '@/lib/grading';
@@ -440,5 +440,29 @@ describe('unit-tests: the composed test carries earlier units forward', () => {
 
   it('a unit with no bank composes to nothing rather than throwing', () => {
     expect(composeUnitTest(99)).toEqual([]);
+  });
+});
+
+
+describe('unit-tests: unseen reading and alternate retakes', () => {
+  it('every unit exposes a verified unseen-reading set drawn from its own bank', () => {
+    for (const bank of TEST_BANKS) {
+      const unitId = Number(bank.id.replace(/^unit-|-test$/g, ''));
+      const ids = UNSEEN_READING_ITEM_IDS[unitId] ?? [];
+      expect(ids.length, `unit ${unitId} has no unseen-reading evidence`).toBeGreaterThan(0);
+      const bankIds = new Set(bank.items.map((item) => item.id));
+      for (const id of ids) expect(bankIds.has(id), `${id} is not in unit ${unitId}`).toBe(true);
+    }
+  });
+
+  it('retakes rotate the item order without changing or duplicating the pool', () => {
+    for (const unit of UNITS) {
+      const first = composeUnitTest(unit.id, 13, 0).map((item) => item.id);
+      const retake = composeUnitTest(unit.id, 13, 1).map((item) => item.id);
+      expect(retake).not.toEqual(first);
+      expect([...retake].sort()).toEqual([...first].sort());
+      expect(new Set(retake).size).toBe(retake.length);
+      expect(composeUnitTest(unit.id, 13, 1).map((item) => item.id)).toEqual(retake);
+    }
   });
 });
