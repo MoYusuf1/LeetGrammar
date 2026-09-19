@@ -466,3 +466,16 @@ describe('unit-tests: unseen reading and alternate retakes', () => {
     }
   });
 });
+
+
+describe('unit-tests: outcome-level evidence', () => {
+  it('grades can-do outcomes from the same objective evidence as the test', () => {
+    const items = composeUnitTest(1);
+    const responses = Object.fromEntries(items.map((item) => [item.id, intendedAnswer(item)]));
+    const result = gradeUnitTest(1, items, responses);
+    expect(result.outcomeScores.length).toBeGreaterThan(0);
+    expect(result.outcomeScores.every((outcome) => outcome.total > 0)).toBe(true);
+    expect(result.outcomeScores.every((outcome) => outcome.percentage === 100)).toBe(true);
+    expect(result.outcomeScores.every((outcome) => outcome.canDo.startsWith('I can '))).toBe(true);
+  });
+});

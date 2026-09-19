@@ -12,7 +12,7 @@ describe('first sign-in progress merge', () => {
     expect(merged.exerciseProgress['l1-n1']).toEqual({attempts:3,correct:1,misses:2,lastAttemptAt:'2026-09-18'});
   });
   it('never lowers a unit-test best score', () => {
-    const result = (percentage:number, timestamp:number) => ({ unitId:1, attempts:1, bestPercentage:percentage, passed:percentage>=85, last:{ unitId:1, score:percentage/100, percentage, passed:percentage>=85, totalItems:10, correctItems:percentage/10, failedObjectives:[], timestamp } });
+    const result = (percentage:number, timestamp:number) => ({ unitId:1, attempts:1, bestPercentage:percentage, passed:percentage>=85, last:{ unitId:1, score:percentage/100, percentage, passed:percentage>=85, totalItems:10, correctItems:percentage/10, failedObjectives:[], outcomeScores:[], timestamp } });
     const merged = mergeProgress(base({unitTestResults:{1:result(92,1)}}), base({unitTestResults:{1:result(60,2)}}));
     expect(merged.unitTestResults[1].bestPercentage).toBe(92); expect(merged.unitTestResults[1].passed).toBe(true);
   });
