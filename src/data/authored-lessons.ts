@@ -1152,6 +1152,16 @@ const LESSON_6: Lesson = {
         'Nothing new is being said. It is the same signal and the same pronoun, printed as one word.',
     },
     {
+      id: '6-coach-unpack',
+      type: 'coach',
+      title: 'Unpack before you memorize',
+      content:
+        'When a short word looks unfamiliar, do not store it as a new lump. Read it in two passes:\n\n' +
+        '1. **Front:** which signal family does it belong to?\n' +
+        '2. **Ending:** who is carried inside it?\n\n' +
+        'For **wuu**, the front gives **waa** and the long **uu** gives “he.” For **waxay**, the front gives **waxa** and **ay** gives “she / they.” Only after you try the split should you check the table. This turns sixteen shapes into three families plus four people.',
+    },
+    {
       id: '6-teach-waa-family',
       type: 'teach',
       isNew: true,
@@ -1414,6 +1424,13 @@ const LESSON_7: Lesson = {
         '• **keenaa**: bring / brings\n' +
         '• **keentaa**: bring / brings, for a different set of people\n\n' +
         'That **t** is the whole difference, and it is doing a specific job.',
+    },
+    {
+      id: '7-coach-two-clues',
+      type: 'coach',
+      title: 'Use the ending and the signal together',
+      content:
+        'Treat the verb ending as a shortlist, not a final answer. First read the ending: **-aa** narrows the doer to I or he; **-taa** narrows it to you or she. Then move left to the fused signal and settle which person it is.\n\nIf the two clues disagree, stop and repair the parse. Do not guess from the verb alone. Good reading combines partial clues instead of asking one clue to do every job.',
     },
     {
       id: '7-teach-endings',
