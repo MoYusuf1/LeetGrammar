@@ -42,12 +42,13 @@ export const COURSE_OUTCOMES: CourseOutcome[] = [
       'signal-statement', 'signal-focus-before', 'signal-focus-end', 'signal-fusion',
       'signal-fusion-unpack', 'verb-ending-ambiguity', 'order-verb-last',
       'order-signal-hugs-verb', 'order-waxa-moves-it',
+      'relation-word-position', 'relation-word-choice',
     ],
     evidence: [
       { mode: 'guided-retrieval', lessonIds: [1, 5, 8], evidenceIds: ['l1-gist-a', 'l5-n1', 'l8-n2'], implemented: true, note: 'Core lesson retrieval.' },
       { mode: 'context-transfer', lessonIds: [1], evidenceIds: ['l1-transfer-gist'], implemented: true, note: 'A genuinely unseen sourced class page (Sahro waa macallimad …) is read with the same routine; the memorized-answer distractor proves the read is fresh.' },
-      { mode: 'unseen-reading', lessonIds: [1, 2, 3, 4, 5, 6, 7, 8], evidenceIds: ['unit-bank:lesson-transfer'], implemented: true, note: 'Every lesson has an audited, sourced parallel-text set in LESSON_TRANSFER_ITEM_IDS; the items are absent from that lesson and machine-gradable.' },
-      { mode: 'delayed-transfer', lessonIds: [1, 2, 3, 4, 5, 6, 7, 8], evidenceIds: ['homework:all-lessons'], implemented: true, note: 'Only scheduled-due homework counts; each lesson re-composes verified material and excludes verbatim lesson prompts.' },
+      { mode: 'unseen-reading', lessonIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], evidenceIds: ['unit-bank:lesson-transfer'], implemented: true, note: 'Every lesson has an audited, sourced parallel-text set in LESSON_TRANSFER_ITEM_IDS; the items are absent from that lesson and machine-gradable.' },
+      { mode: 'delayed-transfer', lessonIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], evidenceIds: ['homework:all-lessons'], implemented: true, note: 'Only scheduled-due homework counts; each lesson re-composes verified material and excludes verbatim lesson prompts.' },
     ],
   },
   {
@@ -57,11 +58,13 @@ export const COURSE_OUTCOMES: CourseOutcome[] = [
       'noun-gender', 'noun-gender-diagnostic', 'noun-gender-unwritten', 'article-suffix',
       'article-assimilation', 'article-no-indefinite', 'pronouns-subject',
       'pronouns-inclusive-exclusive', 'verb-person-endings',
+      'adjective-position', 'adjective-definiteness', 'adjective-subject-marking',
+      'number-words', 'counting-with-nouns', 'hal-vs-kow', 'relation-words',
     ],
     evidence: [
-      { mode: 'cold-production', lessonIds: [1, 2, 3, 4, 6, 7, 8], evidenceIds: ['lesson-production'], implemented: true, note: 'Typed and assembled responses.' },
+      { mode: 'cold-production', lessonIds: [1, 2, 3, 4, 6, 7, 8, 9, 10, 11], evidenceIds: ['lesson-production'], implemented: true, note: 'Typed and assembled responses.' },
       { mode: 'connected-writing', lessonIds: [8], evidenceIds: ['l8-connected-write'], implemented: true, note: 'A bounded two-line update; compared against a model, not treated as open-ended writing.' },
-      { mode: 'delayed-transfer', lessonIds: [1, 2, 3, 4, 6, 7, 8], evidenceIds: ['homework-production'], implemented: true, note: 'Cumulative homework.' },
+      { mode: 'delayed-transfer', lessonIds: [1, 2, 3, 4, 6, 7, 8, 9, 10, 11], evidenceIds: ['homework-production'], implemented: true, note: 'Cumulative homework.' },
     ],
   },
   {

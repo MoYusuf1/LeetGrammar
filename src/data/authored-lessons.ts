@@ -1,7 +1,7 @@
 /**
  * AUTHORED LESSONS — the course's only content source.
  *
- * Deliberately narrow: 4 lessons that are real, rather than 14 that are stubs.
+ * Deliberately narrow: 11 lessons that are real, rather than 14 that are stubs.
  * Lessons beyond these do not exist and must not be represented anywhere in the
  * UI — no placeholder entries, no greyed-out "coming soon" rows that imply
  * content is written. MAX_LESSON_ID derives from the array so the two cannot
@@ -2954,6 +2954,875 @@ const LESSON_8: Lesson = {
   ],
 };
 
+// ============================================================================
+// UNIT 3 — Describe, count, and locate (Sept 2026)
+// ----------------------------------------------------------------------------
+// Lessons 9–11: describing words, number words, relation words. Approved by
+// the user as roadmap sequence A: this material becomes Unit 3, and the old
+// planned Unit 3 (past/negation/questions) moves to Unit 4 (Lessons 12–14).
+//
+// SOURCING RULE applies exactly as above: every Somali string below is lifted
+// from a source named in docs/SOMALI_SOURCES.md (Unit 3 section), with tone
+// marks normalized away. Orwin citations were verified on the PDF pages
+// (printed p.63-64, 67-68, 79-80), never from the OCR dump. Out of forced
+// production by design: reduplicated adjectives, the counted-noun shape
+// changes, predicate adjectives, relation-word clusters, contractions.
+// ============================================================================
+
+// ============================================================================
+// LESSON 9 — Describing Words: Which One?
+// ============================================================================
+
+const LESSON_9: Lesson = {
+  id: 9,
+  unitId: 3,
+  title: 'Describing Words: Which One?',
+  flowVersion: 2,
+  newItems: ['9-teach-order', '9-teach-definite', '9-teach-doer-marking'],
+  objectives: ['adjective-position', 'adjective-definiteness', 'adjective-subject-marking'],
+  cards: [
+    {
+      id: '9-blueprint',
+      type: 'blueprint',
+      blueprintSlot: 'WHAT',
+      content: `${BOX}\n\nThe WHO and WHAT boxes can say more than what something is. They can say WHICH one: the small boy, the new house, the tall man.`,
+    },
+    {
+      id: '9-promise',
+      type: 'promise',
+      prompt: 'Read and build short statements that say **which** person or thing: **guri cusub** (a new house), **ninka dheeri** (the tall man).',
+    },
+    {
+      id: '9-passage-a', type: 'passage',
+      passage: {
+        id: 'l9-text-a',
+        label: 'A line from a class book',
+        lines: [
+          { somali: 'Ninka dheeri waa tagay.', gloss: 'The tall man left.', note: 'Four words: who, which one, a signal, what happened.' },
+        ],
+      },
+      content: 'Read the line first. The questions come before any explanation.',
+    },
+    {
+      id: '9-gist-a', type: 'notice', exercise: {
+        id: 'l9-gist-a', type: 'multiple_choice', objectiveIds: ['adjective-position'],
+        question: 'Read the line. What is it mainly doing?',
+        options: [
+          'saying which man left: the tall one',
+          'saying where the man went',
+          'asking who the man is',
+          'listing several men',
+        ],
+        correctAnswer: 'saying which man left: the tall one',
+        hint: 'Two of the words name and describe. The last word says what happened.',
+        explanation: '**Ninka dheeri** picks out the man: the tall one. **waa tagay** says what he did: he left. The line identifies WHICH man, then reports.',
+        repair: {
+          id: 'l9-gist-a-r', type: 'multiple_choice', objectiveIds: ['adjective-position'],
+          question: 'A reader says this line mainly tells where the man went. What does it actually do?',
+          options: [
+            'it says which man left: the tall one',
+            'it names the place he went to',
+            'it asks a question about the man',
+            'it describes two different men',
+          ],
+          correctAnswer: 'it says which man left: the tall one',
+          hint: 'Is there a place word anywhere in the line?',
+          explanation: 'No place is named. **dheeri** describes the man, and **tagay** only says that he left, not where to.',
+        },
+      },
+    },
+    {
+      id: '9-detail-a', type: 'notice', exercise: {
+        id: 'l9-detail-a', type: 'multiple_choice', objectiveIds: ['adjective-position'],
+        question: 'Which word in the line does the describing?',
+        options: ['dheeri', 'ninka', 'waa', 'tagay'],
+        correctAnswer: 'dheeri',
+        hint: 'One word names the man; one word describes him.',
+        explanation: '**ninka** is the man. **dheeri** is the describing word: tall. It sits right after the word it describes.',
+        repair: {
+          id: 'l9-detail-a-r', type: 'multiple_choice', objectiveIds: ['adjective-position'],
+          question: 'In **ninka dheeri**, which word means "tall"?',
+          options: ['dheeri', 'ninka', 'both together', 'neither'],
+          correctAnswer: 'dheeri',
+          hint: '**ninka** means "the man".',
+          explanation: '**dheeri** means tall. **ninka** is the man himself. The describing word follows the thing-word.',
+        },
+      },
+    },
+    {
+      id: '9-teach-order',
+      type: 'teach',
+      isNew: true,
+      title: 'The describing word follows the thing',
+      content:
+        'English puts describing words first: a **new** house. Somali flips that. The describing word follows the thing it describes:\n\n' +
+        '• **guri cusub**: a new house\n' +
+        '• **shimbir yar**: a small bird\n' +
+        '• **wiil weyn**: a big boy\n\n' +
+        'Nothing else changes. No extra word sits between them. And the describing word keeps one shape for everything: **gabar yar** (a small girl) and **wiil yar** (a small boy) use the same **yar**.',
+    },
+    {
+      id: '9-teach-definite',
+      type: 'teach',
+      isNew: true,
+      title: '"The" stays on the thing-word',
+      content:
+        'Add "the" and only one word changes: the thing-word. The describing word stays exactly as it was:\n\n' +
+        '• **guri cusub** → **guriga cusub**: the new house\n' +
+        '• **wiil yar** → **wiilka yar**: the small boy\n' +
+        '• **gabar yar** → **gabarta yar**: the small girl\n\n' +
+        'The **-ga**, **-ka**, **-ta** endings you already know do all the work. Never hang a second ending on the describing word.',
+    },
+    {
+      id: '9-notice-1',
+      type: 'notice',
+      exercise: {
+        id: 'l9-n1', type: 'fill_blank', objectiveIds: ['adjective-position', 'adjective-definiteness'],
+        question: '**guri ___** — a new house',
+        options: ['cusub', 'weyn', 'yar'],
+        correctAnswer: 'cusub',
+        hint: 'The describing word follows the thing-word.',
+        explanation: '**guri cusub**: a new house. **cusub** means new, and it sits after **guri**, not before it.',
+        repair: {
+          id: 'l9-n1-r', type: 'fill_blank', objectiveIds: ['adjective-position'],
+          question: '**shimbir ___** — a small bird',
+          options: ['yar', 'weyn', 'cusub'],
+          correctAnswer: 'yar',
+          hint: '**shimbir** is the bird; the describing word follows it.',
+          explanation: '**shimbir yar**: a small bird. **yar** means small, and it follows the word it describes.',
+        },
+      },
+    },
+    {
+      id: '9-teach-doer-marking',
+      type: 'teach',
+      isNew: true,
+      title: 'The doer-marking hops to the last word',
+      content:
+        'You already know the doer takes a special shape: **ninku waa tagay** (the man left), with **-u** on the doer.\n\n' +
+        'Add a describing word and the mark hops to the last word of the pair:\n\n' +
+        '• **ninka dheeri waa tagay**: the tall man left\n' +
+        '• **gabadha yari waa toostay**: the small girl got up\n\n' +
+        'The thing-word drops back to its plain shape (**ninka**, **gabadha**), and the describing word carries the mark (**dheeri**, **yari**). Reading tip: a describing word ending in **-i** tells you the whole pair is the doer.',
+    },
+    {
+      id: '9-complete-1',
+      type: 'complete',
+      exercise: {
+        id: 'l9-c1', type: 'unscramble', objectiveIds: ['adjective-definiteness', 'adjective-position'],
+        question: 'Build: the new house',
+        words: ['cusub', 'guriga'],
+        answer: 'guriga cusub',
+        hint: '"The" goes on the thing-word; the describing word follows.',
+        explanation: '**guriga cusub**: the house first, then new. The **-ga** ending stays on **guri**; **cusub** follows untouched.',
+        repair: {
+          id: 'l9-c1-r', type: 'unscramble', objectiveIds: ['adjective-definiteness'],
+          question: 'Build: the small girl',
+          words: ['yar', 'gabarta'],
+          answer: 'gabarta yar',
+          hint: '**gabar** takes the **-ta** ending. The describing word follows.',
+          explanation: '**gabarta yar**: the girl first, carrying "the", then **yar** after it.',
+        },
+      },
+    },
+    {
+      id: '9-produce-1',
+      type: 'produce',
+      exercise: {
+        id: 'l9-p1', type: 'unscramble', objectiveIds: ['adjective-subject-marking'],
+        question: 'Build: the tall man left.',
+        words: ['tagay', 'ninka', 'dheeri', 'waa'],
+        answer: 'ninka dheeri waa tagay',
+        hint: 'The doer-marking sits on the last word of the pair.',
+        explanation: '**ninka dheeri** is the doer, so the mark lands on **dheeri**. Then **waa tagay**: the statement signal and the action.',
+        repair: {
+          id: 'l9-p1-r', type: 'marker_identification', objectiveIds: ['adjective-subject-marking'],
+          question: 'Type the word that carries the doer-marking in this line.',
+          somali: 'Gabadha yari waa toostay.',
+          answer: 'yari',
+          hint: 'The pair is **gabadha yari**; one of the two carries the mark.',
+          explanation: '**yari** carries it. **gabadha** drops back to its plain shape, and the describing word takes the **-i**.',
+        },
+      },
+    },
+    {
+      id: '9-coach-pair',
+      type: 'coach',
+      title: 'Learning move: find the pair first',
+      content:
+        'When a line feels crowded, find the thing-word first, then attach the word right after it as its description. Read **ninka dheeri** as one unit — "the tall man" — before you touch the rest of the line. Then check the last word of the pair for the **-i** mark: if it is there, the pair is the doer. Pair first, mark second, action last.',
+    },
+    {
+      id: '9-notice-2',
+      type: 'notice',
+      exercise: {
+        id: 'l9-n2', type: 'marker_identification', objectiveIds: ['adjective-subject-marking'],
+        question: 'Type the word that carries the doer-marking.',
+        somali: 'Ninka dheeri waa tagay.',
+        answer: 'dheeri',
+        hint: 'The doer-marking hops to the last word of the pair.',
+        explanation: 'The pair is **ninka dheeri** (the tall man). **ninka** drops its **-u** shape and the mark moves to **dheeri**. That marks the whole pair as the doer.',
+        repair: {
+          id: 'l9-n2-r', type: 'multiple_choice', objectiveIds: ['adjective-subject-marking'],
+          question: 'In **gabadha yari waa toostay**, which word carries the doer-marking?',
+          options: ['yari', 'gabadha', 'waa', 'toostay'],
+          correctAnswer: 'yari',
+          hint: 'It is the last word of the pair.',
+          explanation: '**yari** carries the mark. The pair **gabadha yari** (the small girl) is the doer, and the mark sits on its final word.',
+        },
+      },
+    },
+    {
+      id: '9-passage-b', type: 'passage',
+      passage: {
+        id: 'l9-text-b',
+        label: "A line from a learner's profile",
+        lines: [
+          { somali: 'Maryan waa macallimad wanaagsan.', gloss: 'Maryan is a good teacher.', note: 'The describing word comes last, after what she is.' },
+        ],
+      },
+      content: 'A fresh line. Same routine: read it before the questions.',
+    },
+    {
+      id: '9-detail-b', type: 'notice', exercise: {
+        id: 'l9-detail-b', type: 'multiple_choice', objectiveIds: ['adjective-position'],
+        question: 'What kind of teacher is Maryan?',
+        options: ['a good one', 'a new one', 'a small one', 'a tall one'],
+        correctAnswer: 'a good one',
+        hint: 'The last word does the describing.',
+        explanation: '**macallimad** is what she is: a teacher. **wanaagsan** describes her: good. The describing word follows again, this time after **waa**.',
+        repair: {
+          id: 'l9-detail-b-r', type: 'multiple_choice', objectiveIds: ['adjective-position'],
+          question: 'Which word in the line describes Maryan?',
+          options: ['wanaagsan', 'maryan', 'macallimad', 'waa'],
+          correctAnswer: 'wanaagsan',
+          hint: 'One word names her, one says what she is, one describes her.',
+          explanation: '**wanaagsan** describes her: good. **macallimad** says what she is; **Maryan** names her.',
+        },
+      },
+    },
+    {
+      id: '9-produce-2',
+      type: 'produce',
+      exercise: {
+        id: 'l9-p2', type: 'translate', objectiveIds: ['adjective-definiteness', 'adjective-position'],
+        question: 'Type the Somali for "the big man".',
+        answer: 'ninka weyn',
+        hint: 'Thing-word with "the" on it, then the describing word.',
+        explanation: '**ninka weyn**: **ninka** carries "the", and **weyn** (big) follows. Two words — no separate word for "the".',
+        repair: {
+          id: 'l9-p2-r', type: 'translate', objectiveIds: ['adjective-definiteness'],
+          question: 'Type the Somali for "the new house".',
+          answer: 'guriga cusub',
+          hint: '**guri** takes the ending; **cusub** follows.',
+          explanation: '**guriga cusub**: the **-ga** ending lives on **guri**, and the describing word follows unchanged.',
+        },
+      },
+    },
+    {
+      id: '9-payoff',
+      type: 'payoff',
+      prompt: 'Say which one, and prove the pair is the doer.',
+      content: '**Gabadha yari waa toostay.** The small girl got up. You found the pair (**gabadha yari**), read the **-i** on its last word as the doer-mark, and kept the action at the end. That is the whole move of this lesson, on demand.',
+    },
+    {
+      id: '9-summary',
+      type: 'summary',
+      title: 'What you can do now',
+      content:
+        '• A describing word FOLLOWS the word it describes: **guri cusub**.\n' +
+        '• "The" stays on the thing-word: **guriga cusub** — never a second ending.\n' +
+        '• When the pair is the doer, the mark hops to the describing word: **ninka dheeri**.\n' +
+        '• One describing word per thing, for now. Stacking comes later.',
+    },
+  ],
+};
+
+// ============================================================================
+// LESSON 10 — Number Words: How Many?
+// ============================================================================
+
+const LESSON_10: Lesson = {
+  id: 10,
+  unitId: 3,
+  title: 'Number Words: How Many?',
+  flowVersion: 2,
+  newItems: ['10-teach-numbers', '10-teach-counting', '10-teach-hal-kow'],
+  objectives: ['number-words', 'counting-with-nouns', 'hal-vs-kow'],
+  cards: [
+    {
+      id: '10-blueprint',
+      type: 'blueprint',
+      blueprintSlot: 'WHAT',
+      content: `${BOX}\n\nThe WHAT box can also say HOW MANY: one book, two cars, three months.`,
+    },
+    {
+      id: '10-promise',
+      type: 'promise',
+      prompt: 'Count things on the page: **hal buug** (one book), **laba baabuur** (two cars), **saddex bilood** (three months) — and know when "one" is **kow** instead.',
+    },
+    {
+      id: '10-passage-a', type: 'passage',
+      passage: {
+        id: 'l10-text-a',
+        label: 'An inventory page',
+        lines: [
+          { somali: 'hal buug', gloss: 'one book' },
+          { somali: 'laba baabuur', gloss: 'two cars' },
+          { somali: 'saddex bilood', gloss: 'three months' },
+        ],
+      },
+      content: 'Three lines from an inventory page. Read them, then answer.',
+    },
+    {
+      id: '10-gist-a', type: 'notice', exercise: {
+        id: 'l10-gist-a', type: 'multiple_choice', objectiveIds: ['number-words'],
+        question: 'What does every line on this page do?',
+        options: [
+          'says how many of something there is',
+          'names three people',
+          'tells where the things are',
+          'asks three questions',
+        ],
+        correctAnswer: 'says how many of something there is',
+        hint: 'Each line starts with the same kind of word.',
+        explanation: 'Every line opens with a number word — **hal**, **laba**, **saddex** — followed by the thing being counted. The page counts.',
+        repair: {
+          id: 'l10-gist-a-r', type: 'multiple_choice', objectiveIds: ['number-words'],
+          question: 'A reader thinks this page lists three places. What does it actually do?',
+          options: [
+            'it says how many of each thing there is',
+            'it names three towns',
+            'it tells who owns the things',
+            'it asks for the things back',
+          ],
+          correctAnswer: 'it says how many of each thing there is',
+          hint: 'Look at the first word of each line.',
+          explanation: '**hal**, **laba**, **saddex** are amounts: one, two, three. The page is counting things, not naming places.',
+        },
+      },
+    },
+    {
+      id: '10-detail-a', type: 'notice', exercise: {
+        id: 'l10-detail-a', type: 'multiple_choice', objectiveIds: ['number-words'],
+        question: 'How many cars does the page list?',
+        options: ['two', 'one', 'three', 'ten'],
+        correctAnswer: 'two',
+        hint: 'Find **baabuur**, then read the word before it.',
+        explanation: '**laba baabuur**: two cars. The number word sits before the thing-word, so **laba** (two) counts the **baabuur**.',
+        repair: {
+          id: 'l10-detail-a-r', type: 'multiple_choice', objectiveIds: ['number-words'],
+          question: 'How many months does the page list?',
+          options: ['three', 'one', 'two', 'seven'],
+          correctAnswer: 'three',
+          hint: 'Find **bilood**, then read the word before it.',
+          explanation: '**saddex bilood**: three months. **saddex** is three.',
+        },
+      },
+    },
+    {
+      id: '10-teach-numbers',
+      type: 'teach',
+      isNew: true,
+      title: 'The number words',
+      content:
+        'Counting off runs:\n\n' +
+        '**kow, laba, saddex, afar, shan, lix, toddobaar, sideed, sagaal, toban**\n\n' +
+        'one, two, three, four, five, six, seven, eight, nine, ten.\n\n' +
+        'Grammar books print these with tone marks; this course writes them plain, the way everyday Somali writing does. The shapes are the same words.',
+    },
+    {
+      id: '10-notice-1',
+      type: 'notice',
+      exercise: {
+        id: 'l10-n1', type: 'multiple_choice', objectiveIds: ['number-words'],
+        question: 'Which word is "seven"?',
+        options: ['toddobaar', 'sideed', 'sagaal', 'toban'],
+        correctAnswer: 'toddobaar',
+        hint: 'Count up to it: kow, laba, saddex, afar, shan, lix …',
+        explanation: '**toddobaar** is seven. **sideed** is eight, **sagaal** is nine, **toban** is ten — the last four run together, so anchor them as a group.',
+        repair: {
+          id: 'l10-n1-r', type: 'multiple_choice', objectiveIds: ['number-words'],
+          question: 'Which word is "five"?',
+          options: ['shan', 'lix', 'afar', 'sagaal'],
+          correctAnswer: 'shan',
+          hint: 'It sits right after **afar** (four).',
+          explanation: '**shan** is five: afar, shan, lix — four, five, six.',
+        },
+      },
+    },
+    {
+      id: '10-teach-counting',
+      type: 'teach',
+      isNew: true,
+      title: 'Numbers reshape some words',
+      content:
+        'Put a number before a thing-word and one of two things happens.\n\n' +
+        'Most words stay put: **hal buug**, **laba baabuur**, **saddex buug**, **toddoba nin**.\n\n' +
+        'Some grow an ending when counted: **kab** → **laba kabood** (two shoes), **bil** → **saddex bilood** (three months), **maalin** → **afar maalmood** (four days).\n\n' +
+        'And "the" moves onto the number: **labada wiil** (the two boys), **saddexda buug** (the three books).\n\n' +
+        'You do not need to build the changed shapes yet. Read them; produce only the ones this lesson drills.',
+    },
+    {
+      id: '10-notice-2',
+      type: 'notice',
+      exercise: {
+        id: 'l10-n2', type: 'fill_blank', objectiveIds: ['counting-with-nouns'],
+        question: '**laba ___** — two cars',
+        options: ['baabuur', 'bilood', 'kabood'],
+        correctAnswer: 'baabuur',
+        hint: 'Most thing-words stay put after a number.',
+        explanation: '**laba baabuur**: two cars. **baabuur** keeps its plain shape; only some words (like **bil** → **bilood**) grow an ending when counted.',
+        repair: {
+          id: 'l10-n2-r', type: 'fill_blank', objectiveIds: ['counting-with-nouns'],
+          question: '**saddex ___** — three months',
+          options: ['bilood', 'baabuur', 'buug'],
+          correctAnswer: 'bilood',
+          hint: '**bil** (month) is one of the words that grows an ending.',
+          explanation: '**saddex bilood**: three months. **bil** becomes **bilood** when counted — one of the shape-changers.',
+        },
+      },
+    },
+    {
+      id: '10-complete-1',
+      type: 'complete',
+      exercise: {
+        id: 'l10-c1', type: 'unscramble', objectiveIds: ['counting-with-nouns', 'hal-vs-kow'],
+        question: 'Build: one book',
+        words: ['hal', 'buug'],
+        answer: 'hal buug',
+        hint: 'The number word goes first.',
+        explanation: '**hal buug**: one book. Number first, thing-word after it, in its plain shape.',
+        repair: {
+          id: 'l10-c1-r', type: 'unscramble', objectiveIds: ['counting-with-nouns'],
+          question: 'Build: two cars',
+          words: ['baabuur', 'laba'],
+          answer: 'laba baabuur',
+          hint: 'The number word goes first.',
+          explanation: '**laba baabuur**: two cars. Number first, then the thing-word unchanged.',
+        },
+      },
+    },
+    {
+      id: '10-teach-hal-kow',
+      type: 'teach',
+      isNew: true,
+      title: 'Two ways to say one',
+      content:
+        '**kow** is for counting off: **kow, laba, saddex …**\n\n' +
+        'In front of a thing, "one" is **hal**: **hal buug** (one book), **hal baabuur** (one car), **hal hooyo** (one mother).\n\n' +
+        'Standing alone, "one" is **mid** — meet it here, use it later.\n\n' +
+        'The test: if a thing-word follows, use **hal**.',
+    },
+    {
+      id: '10-notice-3',
+      type: 'notice',
+      exercise: {
+        id: 'l10-n3', type: 'multiple_choice', objectiveIds: ['hal-vs-kow'],
+        question: 'You are counting off: 1, 2, 3 … Which word is "one"?',
+        options: ['kow', 'hal', 'mid'],
+        correctAnswer: 'kow',
+        hint: 'No thing-word follows it here.',
+        explanation: 'Counting off uses **kow**: kow, laba, saddex. **hal** is the "one" that sits before a thing-word, as in **hal buug**.',
+        repair: {
+          id: 'l10-n3-r', type: 'multiple_choice', objectiveIds: ['hal-vs-kow'],
+          question: 'Which word goes before **hooyo** to mean "one mother"?',
+          options: ['hal', 'kow', 'mid'],
+          correctAnswer: 'hal',
+          hint: 'A thing-word follows, so counting-off **kow** is out.',
+          explanation: '**hal hooyo**: one mother. Before a thing-word, "one" is always **hal**, never **kow**.',
+        },
+      },
+    },
+    {
+      id: '10-coach-counting',
+      type: 'coach',
+      title: 'Learning move: read the number with its word',
+      content:
+        'Read a number and its thing-word as one unit, exactly like a describing pair. First take the number, then the shape of the word after it: same shape (**laba baabuur**) or grown ending (**laba kabood**). The grown ending is information, not a mistake — it tells you the word is being counted even before you translate the number.',
+    },
+    {
+      id: '10-produce-1',
+      type: 'produce',
+      exercise: {
+        id: 'l10-p1', type: 'unscramble', objectiveIds: ['counting-with-nouns'],
+        question: 'Build: three books',
+        words: ['saddex', 'buug'],
+        answer: 'saddex buug',
+        hint: '**buug** stays in its plain shape when counted.',
+        explanation: '**saddex buug**: three books. Number first; **buug** is one of the words that stays put.',
+        repair: {
+          id: 'l10-p1-r', type: 'unscramble', objectiveIds: ['counting-with-nouns'],
+          question: 'Build: one car',
+          words: ['baabuur', 'hal'],
+          answer: 'hal baabuur',
+          hint: 'Which "one" goes before a thing-word?',
+          explanation: '**hal baabuur**: one car. Before a thing-word, "one" is **hal**.',
+        },
+      },
+    },
+    {
+      id: '10-passage-b', type: 'passage',
+      passage: {
+        id: 'l10-text-b',
+        label: 'A packing list',
+        lines: [
+          { somali: 'afar maalmood', gloss: 'four days' },
+          { somali: 'laba kabood', gloss: 'two shoes' },
+          { somali: 'saddexda buug', gloss: 'the three books', note: 'The "the" moved onto the number.' },
+        ],
+      },
+      content: 'A fresh list, with one new twist.',
+    },
+    {
+      id: '10-detail-b', type: 'notice', exercise: {
+        id: 'l10-detail-b', type: 'multiple_choice', objectiveIds: ['counting-with-nouns', 'number-words'],
+        question: 'Which line is about days?',
+        options: ['afar maalmood', 'laba kabood', 'saddexda buug'],
+        correctAnswer: 'afar maalmood',
+        hint: '**maalmood** is the counted shape of **maalin** (day).',
+        explanation: '**afar maalmood**: four days. **maalin** grows its counted shape **maalmood**, and **afar** is four.',
+        repair: {
+          id: 'l10-detail-b-r', type: 'multiple_choice', objectiveIds: ['counting-with-nouns'],
+          question: 'Which line names something you wear?',
+          options: ['laba kabood', 'afar maalmood', 'saddexda buug'],
+          correctAnswer: 'laba kabood',
+          hint: '**kab** is a shoe.',
+          explanation: '**laba kabood**: two shoes — **kab** grows to **kabood** when counted.',
+        },
+      },
+    },
+    {
+      id: '10-produce-2',
+      type: 'produce',
+      exercise: {
+        id: 'l10-p2', type: 'translate', objectiveIds: ['hal-vs-kow', 'counting-with-nouns'],
+        question: 'Type the Somali for "one book".',
+        answer: 'hal buug',
+        hint: 'Which "one" goes before a thing-word?',
+        explanation: '**hal buug**: one book. **hal** is the before-a-noun "one"; **kow** is for counting off.',
+        repair: {
+          id: 'l10-p2-r', type: 'translate', objectiveIds: ['counting-with-nouns'],
+          question: 'Type the Somali for "two boys".',
+          answer: 'laba wiil',
+          hint: 'Number first; **wiil** stays in its plain shape.',
+          explanation: '**laba wiil**: two boys. **wiil** is one of the words that stays put when counted.',
+        },
+      },
+    },
+    {
+      id: '10-payoff',
+      type: 'payoff',
+      prompt: 'Count on a page, "the" included.',
+      content: '**saddexda buug** — the three books. Number first, thing-word shaped by counting, and "the" riding on the number. Three small facts you can now read at a glance.',
+    },
+    {
+      id: '10-summary',
+      type: 'summary',
+      title: 'What you can do now',
+      content:
+        '• Numbers 1–10: **kow laba saddex afar shan lix toddobaar sideed sagaal toban**.\n' +
+        '• Number first, then the thing-word: **laba baabuur**.\n' +
+        '• Some words grow an ending when counted: **laba kabood**, **saddex bilood**.\n' +
+        '• "One" before a thing is **hal**; counting off starts with **kow**.\n' +
+        '• "The" moves onto the number: **labada wiil**.',
+    },
+  ],
+};
+
+// ============================================================================
+// LESSON 11 — Relation Words: To, In, From, With
+// ============================================================================
+
+const LESSON_11: Lesson = {
+  id: 11,
+  unitId: 3,
+  title: 'Relation Words: To, In, From, With',
+  flowVersion: 2,
+  newItems: ['11-teach-four', '11-teach-position', '11-teach-frames'],
+  objectives: ['relation-words', 'relation-word-position', 'relation-word-choice'],
+  cards: [
+    {
+      id: '11-blueprint',
+      type: 'blueprint',
+      blueprintSlot: 'DO',
+      content: `${BOX}\n\nThe last small words sit just before the DO box. They say how a thing in the statement relates to the action: to it, in it, from it, with it.`,
+    },
+    {
+      id: '11-promise',
+      type: 'promise',
+      prompt: 'Read and use the four relation words: **u** (to, for), **ku** (in, on, with), **ka** (from), **la** (with, together).',
+    },
+    {
+      id: '11-passage-a', type: 'passage',
+      passage: {
+        id: 'l11-text-a',
+        label: 'A message about work',
+        lines: [
+          { somali: 'Wuxuu ku shaqeeyaa warshadda.', gloss: 'He works at the factory.', note: 'One small word links warshadda to the action.' },
+        ],
+      },
+      content: 'Read the message first. Explanation comes after your answer.',
+    },
+    {
+      id: '11-gist-a', type: 'notice', exercise: {
+        id: 'l11-gist-a', type: 'multiple_choice', objectiveIds: ['relation-words'],
+        question: 'What is this message mainly telling you?',
+        options: [
+          'where he works',
+          'what he builds',
+          'when he works',
+          'who he works for',
+        ],
+        correctAnswer: 'where he works',
+        hint: '**warshadda** is a place: the factory.',
+        explanation: 'The message says where: **warshadda**, at the factory. A small word before the action ties the place to **shaqeeyaa** (works).',
+        repair: {
+          id: 'l11-gist-a-r', type: 'multiple_choice', objectiveIds: ['relation-words'],
+          question: 'A reader thinks this message says what he builds. What does it actually say?',
+          options: [
+            'where he works',
+            'what he makes',
+            'when he starts',
+            'who pays him',
+          ],
+          correctAnswer: 'where he works',
+          hint: 'Nothing in the line names a product.',
+          explanation: '**Wuxuu ku shaqeeyaa warshadda**: he works at the factory. Place, not product — the line answers "where".',
+        },
+      },
+    },
+    {
+      id: '11-detail-a', type: 'notice', exercise: {
+        id: 'l11-detail-a', type: 'multiple_choice', objectiveIds: ['relation-words', 'relation-word-position'],
+        question: 'Which small word links **warshadda** to the action?',
+        options: ['ku', 'u', 'ka', 'la'],
+        correctAnswer: 'ku',
+        hint: 'It sits just before the action word.',
+        explanation: '**ku** does the linking: it sits right before **shaqeeyaa** and points back at **warshadda** — works IN/AT the factory.',
+        repair: {
+          id: 'l11-detail-a-r', type: 'multiple_choice', objectiveIds: ['relation-word-position'],
+          question: 'The word doing the linking here sits…',
+          options: [
+            'just before the action word',
+            'just before warshadda',
+            'at the very start of the line',
+            'at the very end of the line',
+          ],
+          correctAnswer: 'just before the action word',
+          hint: 'Find **shaqeeyaa**, then look one word left.',
+          explanation: '**ku** hugs the action word: …**ku shaqeeyaa**. The noun it talks about, **warshadda**, sits at the other end.',
+        },
+      },
+    },
+    {
+      id: '11-teach-four',
+      type: 'teach',
+      isNew: true,
+      title: 'Four small relation words',
+      content:
+        'Somali has just four of these. Each one names a basic relation:\n\n' +
+        '• **u**: to, for — a goal\n' +
+        '• **ku**: in, on, at, with (using) — a place or a tool\n' +
+        '• **ka**: from — a source\n' +
+        '• **la**: with — company\n\n' +
+        'They never stand before their noun the way English words like "in" or "to" do. Where they sit instead is the next card.',
+    },
+    {
+      id: '11-notice-1',
+      type: 'notice',
+      exercise: {
+        id: 'l11-n1', type: 'multiple_choice', objectiveIds: ['relation-words'],
+        question: 'Which relation word means "from"?',
+        options: ['ka', 'u', 'ku', 'la'],
+        correctAnswer: 'ka',
+        hint: 'Think of the bird leaving the tree.',
+        explanation: '**ka** is from: a source. **u** is to/for, **ku** is in/on, **la** is with.',
+        repair: {
+          id: 'l11-n1-r', type: 'multiple_choice', objectiveIds: ['relation-words'],
+          question: 'Which relation word means "with" (company)?',
+          options: ['la', 'u', 'ku', 'ka'],
+          correctAnswer: 'la',
+          hint: 'Being together with someone or something.',
+          explanation: '**la** is with, in company. **ku** can also translate "with", but only for tools — using something, not accompanying someone.',
+        },
+      },
+    },
+    {
+      id: '11-teach-position',
+      type: 'teach',
+      isNew: true,
+      title: 'They hug the action word',
+      content:
+        'A relation word sits just before the action word — never before the noun it talks about:\n\n' +
+        '• **gabadhu laybreeriga way ku qortaa**: the girl writes in the library\n\n' +
+        'Read it backwards from the action: **qortaa** (writes) → **ku** (in) → points back at **laybreeriga** (the library). The noun comes early; its relation word waits by the action.\n\n' +
+        'This is the signal-hugs-the-action pattern you already know, with one more small word joining in.',
+    },
+    {
+      id: '11-notice-2',
+      type: 'notice',
+      exercise: {
+        id: 'l11-n2', type: 'marker_identification', objectiveIds: ['relation-word-position'],
+        question: 'Type the relation word in this line.',
+        somali: 'Gabadhu laybreeriga way ku qortaa.',
+        answer: 'ku',
+        hint: 'It sits just before the action word.',
+        explanation: '**ku** is the relation word: it hugs **qortaa** and points back at **laybreeriga** — writes IN the library.',
+        repair: {
+          id: 'l11-n2-r', type: 'marker_identification', objectiveIds: ['relation-word-position'],
+          question: 'Which word is the relation word here? Type it.',
+          somali: 'Wuxuu ku shaqeeyaa warshadda.',
+          answer: 'ku',
+          hint: 'One word here is a small linker that means in/at.',
+          explanation: '**ku** again: just before **shaqeeyaa**, pointing back at **warshadda** — works at the factory.',
+        },
+      },
+    },
+    {
+      id: '11-teach-frames',
+      type: 'teach',
+      isNew: true,
+      title: 'One frame per relation',
+      content:
+        '• goal: **Maxmuud waan u sheegayaa** — I will tell Maxmuud. The telling goes TO him.\n' +
+        '• place: **wuxuu ku shaqeeyaa warshadda** — he works at the factory.\n' +
+        '• source: **shimbirtu geedka way ka duushay** — the bird flew FROM the tree.\n' +
+        '• company: **waxa uu la joogaa ari** — he is WITH the goats and sheep.\n\n' +
+        'One relation per statement is enough for now. Stacking two relation words in one statement is a later-unit skill.',
+    },
+    {
+      id: '11-notice-3',
+      type: 'notice',
+      exercise: {
+        id: 'l11-n3', type: 'multiple_choice', objectiveIds: ['relation-word-choice'],
+        question: '**shimbirtu geedka way ka duushay** — the bird flew ___ the tree.',
+        options: ['from', 'to', 'with', 'in'],
+        correctAnswer: 'from',
+        hint: '**ka** marks a source: where the motion starts.',
+        explanation: '**ka** is from: the tree is where the flight starts. **geedka** (the tree) is named early; **ka** waits by the action word.',
+        repair: {
+          id: 'l11-n3-r', type: 'multiple_choice', objectiveIds: ['relation-word-choice'],
+          question: '**Maxmuud waan u sheegayaa** — the telling goes ___ Maxmuud.',
+          options: ['to', 'from', 'with', 'in'],
+          correctAnswer: 'to',
+          hint: '**u** marks a goal: who the telling is for.',
+          explanation: '**u** is to/for: Maxmuud is the goal of the telling. A person as the aim of an action takes **u**.',
+        },
+      },
+    },
+    {
+      id: '11-coach-relations',
+      type: 'coach',
+      title: 'Learning move: action first, then look left',
+      content:
+        'To read a relation word, find the action word first. Immediately to its left sits any relation word; then ask which earlier noun it points at. **ka** with a place means the motion starts there. **ku** with a place means the action happens there. **la** with a person or animal means company. **u** with a person means the action aims at them. Action, relation, noun: three beats, always in that order.',
+    },
+    {
+      id: '11-complete-1',
+      type: 'complete',
+      exercise: {
+        id: 'l11-c1', type: 'marker_identification', objectiveIds: ['relation-word-choice', 'relation-word-position'],
+        question: 'Type the word that carries "with" in this line.',
+        somali: 'Maanta Maxamed waan la joogay.',
+        answer: 'la',
+        hint: 'It sits just before the action word **joogay**.',
+        explanation: '**la** is with (company): today I was WITH Maxamed. It hugs the action word and points back at **Maxamed**.',
+        repair: {
+          id: 'l11-c1-r', type: 'marker_identification', objectiveIds: ['relation-word-choice'],
+          question: 'Type the word that carries "in(to)" here.',
+          somali: 'Caano koobka ku shub.',
+          answer: 'ku',
+          hint: 'The milk ends up inside the cup.',
+          explanation: '**ku** is in/on: the milk goes IN the cup. It sits just before **shub** (pour).',
+        },
+      },
+    },
+    {
+      id: '11-produce-1',
+      type: 'produce',
+      exercise: {
+        id: 'l11-p1', type: 'translate', objectiveIds: ['relation-words'],
+        question: 'Type the Somali relation word for "with" (company).',
+        answer: 'la',
+        hint: 'Being together with someone.',
+        explanation: '**la** is with, in company — being with a person or animal. Tools take **ku** instead; that distinction comes with practice.',
+        repair: {
+          id: 'l11-p1-r', type: 'translate', objectiveIds: ['relation-words'],
+          question: 'Type the Somali relation word for "from".',
+          answer: 'ka',
+          hint: 'A source: where something starts.',
+          explanation: '**ka** is from: the source of a motion or an origin.',
+        },
+      },
+    },
+    {
+      id: '11-passage-b', type: 'passage',
+      passage: {
+        id: 'l11-text-b',
+        label: 'A note on the kitchen counter',
+        lines: [
+          { somali: 'Caano koobka ku shub.', gloss: 'Pour milk into the cup.', note: 'A command: the relation word still sits before the action.' },
+        ],
+      },
+      content: 'One more line, a new shape: a command.',
+    },
+    {
+      id: '11-detail-b', type: 'notice', exercise: {
+        id: 'l11-detail-b', type: 'multiple_choice', objectiveIds: ['relation-word-choice'],
+        question: 'What is being poured?',
+        options: ['caano', 'koobka', 'ku'],
+        correctAnswer: 'caano',
+        hint: 'The first word names the stuff; the action word is last.',
+        explanation: '**caano** is milk — the stuff being poured. **koobka** (the cup) is where it goes, and **ku** is the small word that says "in".',
+        repair: {
+          id: 'l11-detail-b-r', type: 'multiple_choice', objectiveIds: ['relation-word-choice'],
+          question: 'Where does the milk go?',
+          options: ['koobka', 'caano', 'ku'],
+          correctAnswer: 'koobka',
+          hint: 'Which noun does **ku** point back at?',
+          explanation: '**ku** points back at **koobka**: the milk goes in the cup.',
+        },
+      },
+    },
+    {
+      id: '11-produce-2',
+      type: 'produce',
+      exercise: {
+        id: 'l11-p2', type: 'translate', objectiveIds: ['relation-words'],
+        question: 'Type the Somali relation word for "to, for".',
+        answer: 'u',
+        hint: 'A goal: who or what an action aims at.',
+        explanation: '**u** is to/for: the goal relation, as in **Maxmuud waan u sheegayaa** — the telling goes to Maxmuud.',
+        repair: {
+          id: 'l11-p2-r', type: 'translate', objectiveIds: ['relation-words'],
+          question: 'Type the Somali relation word for "in, on".',
+          answer: 'ku',
+          hint: 'A place where something happens.',
+          explanation: '**ku** is in/on/at: the place relation, as in working **ku** the factory.',
+        },
+      },
+    },
+    {
+      id: '11-payoff',
+      type: 'payoff',
+      prompt: 'Read a relation you have never been drilled on.',
+      content: '**Shimbirtu geedka way ka duushay.** The bird flew from the tree. You found the action (**duushay**), read the word on its left (**ka** = from), and pointed it back at **geedka**. That is the whole skill.',
+    },
+    {
+      id: '11-summary',
+      type: 'summary',
+      title: 'What you can do now',
+      content:
+        '• Four relation words: **u** to/for, **ku** in/on, **ka** from, **la** with.\n' +
+        '• They sit just before the action word and point back at an earlier noun.\n' +
+        '• One relation per statement, for now: a place, a source, a goal, or company.\n' +
+        '• Next unit: bending the shape — time, negation, and questions.',
+    },
+  ],
+};
+
+
 export const AUTHORED_LESSONS: Lesson[] = [
   LESSON_1,
   LESSON_2,
@@ -2963,6 +3832,9 @@ export const AUTHORED_LESSONS: Lesson[] = [
   LESSON_6,
   LESSON_7,
   LESSON_8,
+  LESSON_9,
+  LESSON_10,
+  LESSON_11,
 ];
 
 /** Highest built lesson id. Only built lessons appear here — never stubs. */

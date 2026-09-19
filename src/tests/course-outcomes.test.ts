@@ -25,7 +25,7 @@ describe('course outcomes', () => {
   it('keeps transfer evidence in the approved vertical-slice lessons', () => {
     const transfer = COURSE_OUTCOMES.flatMap((o) => o.evidence)
       .filter((e) => e.mode === 'unseen-reading' || e.mode === 'written-interaction');
-    expect([...new Set(transfer.flatMap((e) => e.lessonIds))].sort()).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect([...new Set(transfer.flatMap((e) => e.lessonIds))].sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
   });
 
   it('points specific evidence ids at real exercises in the named lessons', () => {
@@ -70,6 +70,6 @@ describe('all-lesson transfer evidence', () => {
 
   it('records delayed transfer for every lesson without treating immediate practice as evidence', () => {
     const delayed = COURSE_OUTCOMES.flatMap((outcome) => outcome.evidence).filter((e) => e.mode === 'delayed-transfer');
-    expect([...new Set(delayed.flatMap((e) => e.lessonIds))].sort()).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect([...new Set(delayed.flatMap((e) => e.lessonIds))].sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
   });
 });

@@ -50,6 +50,18 @@ const OBJECTIVE_LABELS: Record<string, string> = {
   'order-verb-last': 'The action word usually comes last',
   'order-signal-hugs-verb': 'The signal sits right before the action word',
   'order-waxa-moves-it': 'waxa sends the spotlighted words past the verb',
+  // Lesson 9
+  'adjective-position': 'A describing word follows the word it describes',
+  'adjective-definiteness': '"The" stays on the thing-word, not the describing word',
+  'adjective-subject-marking': 'Doer-marking moves to the last word of the pair',
+  // Lesson 10
+  'number-words': 'The number words one to ten',
+  'counting-with-nouns': 'A number sits before the word it counts',
+  'hal-vs-kow': 'Two ways to say "one": hal before a word, kow when counting',
+  // Lesson 11
+  'relation-words': 'The four relation words: u, ku, ka, la',
+  'relation-word-position': 'A relation word sits just before the action word',
+  'relation-word-choice': 'Which relation word: place, source, goal, or company',
 };
 
 /** objective id → the lesson that declares it. Derived from the course. */

@@ -161,6 +161,34 @@ export const TOP_500_WORDS: VocabWord[] = [
   { rank: 94, somali: 'tegey', english: 'went', pos: 'verb', lessonId: 8, confidence: 'single-source', sources: ['Orwin p.41'] },
   { rank: 95, somali: 'cabbay', english: 'drank', pos: 'verb', lessonId: 8, confidence: 'single-source', sources: ['Orwin p.41'] },
 
+  // ── Lesson 9: describing words ─────────────────────────────────────────
+  { rank: 96, somali: 'cusub', english: 'new', pos: 'adjective', lessonId: 9, confidence: 'verified', sources: ['Orwin p.63', 'Saeed §4.4.1'] },
+  { rank: 97, somali: 'yar', english: 'small', pos: 'adjective', lessonId: 9, confidence: 'verified', sources: ['Nilsson 2023 p.76', 'Orwin p.63', 'Saeed §4.4.1'] },
+  { rank: 98, somali: 'weyn', english: 'big', pos: 'adjective', lessonId: 9, confidence: 'verified', sources: ['Nilsson 2023 p.75', 'Orwin p.64', 'Saeed §4.4.1'] },
+  { rank: 99, somali: 'dheer', english: 'tall, long', pos: 'adjective', lessonId: 9, confidence: 'verified', sources: ['Orwin p.64', 'Saeed §4.4.1'] },
+
+  // ── Lesson 10: number words ────────────────────────────────────────────
+  { rank: 100, somali: 'kow', english: 'one (counting off)', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.57', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 101, somali: 'hal', english: 'one (before a noun)', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.45', 'Saeed §4.1.4', 'Orwin p.68'] },
+  { rank: 102, somali: 'laba', english: 'two', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 103, somali: 'saddex', english: 'three', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 104, somali: 'afar', english: 'four', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 105, somali: 'shan', english: 'five', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 106, somali: 'lix', english: 'six', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 107, somali: 'toddobaar', english: 'seven', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 108, somali: 'sideed', english: 'eight', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 109, somali: 'sagaal', english: 'nine', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 110, somali: 'toban', english: 'ten', pos: 'numeral', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.56', 'Saeed §4.1.4', 'Orwin p.67'] },
+  { rank: 111, somali: 'baabuur', english: 'car, truck', pos: 'noun', lessonId: 10, confidence: 'verified', sources: ['Nilsson 2023 p.45', 'Saeed §4.1.4'] },
+
+  // ── Lesson 11: relation words ──────────────────────────────────────────
+  { rank: 112, somali: 'u', english: 'to, for (goal)', pos: 'preposition', lessonId: 11, confidence: 'verified', sources: ['Saeed §4.5', 'Orwin p.80', 'Nilsson 2023 §5.2'] },
+  { rank: 113, somali: 'ku', english: 'in, on, at, with (means)', pos: 'preposition', lessonId: 11, confidence: 'verified', sources: ['Saeed §4.5', 'Orwin p.80', 'Nilsson 2023 §5.2'] },
+  { rank: 114, somali: 'ka', english: 'from, about (source)', pos: 'preposition', lessonId: 11, confidence: 'verified', sources: ['Saeed §4.5', 'Orwin p.80', 'Nilsson 2023 §5.2'] },
+  { rank: 115, somali: 'la', english: 'with (company)', pos: 'preposition', lessonId: 11, confidence: 'verified', sources: ['Saeed §4.5', 'Orwin p.80', 'Nilsson 2023 §5.2'] },
+  { rank: 116, somali: 'shaqeeyaa', english: 'works', pos: 'verb', lessonId: 11, confidence: 'verified', sources: ['Saeed §4.5', 'Nilsson 2023 p.167'] },
+  { rank: 117, somali: 'qortaa', english: 'writes (she/you)', pos: 'verb', lessonId: 11, confidence: 'verified', sources: ['Nilsson 2023 p.75', 'Orwin p.79'] },
+
 ];
 
 /** All words taught in a given lesson (1–14 for Phase 6 core), in learning order. */
@@ -192,6 +220,9 @@ const CONTEXTUAL_VOCABULARY: Record<number, readonly string[]> = {
   6: ['wuu', 'way', 'wuxuu', 'waxay'],
   7: ['keen', 'keenaa', 'keentaa', 'keenaan'],
   8: ['shaah', 'tegey', 'cabbay'],
+  9: ['cusub', 'yar', 'weyn', 'dheer'],
+  10: ['kow', 'hal', 'laba', 'saddex', 'afar', 'shan', 'lix', 'toddobaar', 'sideed', 'sagaal', 'toban'],
+  11: ['u', 'ku', 'ka', 'la', 'shaqeeyaa', 'qortaa'],
 };
 
 export function getContextualVocabForLesson(lessonId: number): VocabWord[] {
