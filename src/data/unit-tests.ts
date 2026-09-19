@@ -94,8 +94,30 @@ export function getUnitObjectives(unitId: number): string[] {
  * this way the test moves from "what you just learned" to "what you still
  * remember", which is also the order the two feel different in.
  */
-export function composeUnitTest(unitId: number, maxCarryBack = 13): PracticeExercise[] {
-  const own = getUnitTest(unitId)?.items ?? [];
+/**
+ * Verified unseen-reading items for the first assessment pass.
+ *
+ * These are existing bank items that present a sentence or form configuration
+ * the learner did not answer in the lesson. Keeping the registry explicit lets
+ * tests stop us from relabelling a familiar specimen as unseen evidence.
+ */
+export const UNSEEN_READING_ITEM_IDS: Record<number, readonly string[]> = {
+  1: ['u1-t09', 'u1-t10', 'u1-t11'],
+  2: ['u2-t03', 'u2-t06', 'u2-t07', 'u2-t20', 'u2-t23'],
+};
+
+/**
+ * Deterministic test composition for an attempt.
+ *
+ * Attempt zero preserves the established bank order. Later attempts rotate the
+ * bank so a retake starts with a different pool instead of rewarding memory of
+ * the immediately preceding sequence. Nothing is random: the same attempt
+ * number always produces the same auditable test.
+ */
+export function composeUnitTest(unitId: number, maxCarryBack = 13, attempt = 0): PracticeExercise[] {
+  const bank = getUnitTest(unitId)?.items ?? [];
+  const offset = bank.length ? ((attempt % bank.length) + bank.length) % bank.length : 0;
+  const own = offset ? [...bank.slice(offset), ...bank.slice(0, offset)] : bank;
   if (!own.length) return [];
 
   const earlier = UNITS.filter((u) => u.id < unitId).map((u) => u.id);
@@ -115,4 +137,3 @@ export function composeUnitTest(unitId: number, maxCarryBack = 13): PracticeExer
 
   return [...own, ...carried];
 }
-
