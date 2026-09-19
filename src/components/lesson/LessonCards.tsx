@@ -629,16 +629,6 @@ function PassageCard({ card }: { card: TeachingCard }) {
   const passage = card.passage!;
   return (
     <div className="space-y-5">
-      <motion.p
-        custom={0}
-        variants={contentStagger}
-        initial="hidden"
-        animate="visible"
-        className="text-caption1 font-semibold uppercase tracking-[0.14em] text-label-3"
-      >
-        {passage.label}
-      </motion.p>
-
       <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="list-group">
         {passage.lines.map((line, i) => {
           const shown = Boolean(revealed[i]);
