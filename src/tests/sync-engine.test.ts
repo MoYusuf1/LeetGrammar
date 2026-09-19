@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { startProgressSync, type ProgressSyncDeps, type SyncState } from '@/lib/sync-engine';
-import type { UserProgress } from '@/stores/progress-store';
+import type { UserProgress } from '@/domain/progress/types';
 
 const base = (over: Partial<UserProgress> = {}): UserProgress => ({
   completedLessons: [], streak: 0, lastStudyDate: '', practiceScores: {}, activityLog: [],
