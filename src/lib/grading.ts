@@ -49,3 +49,16 @@ export function displayAnswer(exercise: PracticeExercise): string {
   if (Array.isArray(exercise.answer)) return exercise.answer.join(' · ');
   return exercise.answer ?? '';
 }
+
+/* ─── Verdicts ─────────────────────────────────────────────────────────── */
+
+/** Items the learner grades for themselves against the explanation. */
+export function isSelfGraded(exercise: PracticeExercise): boolean {
+  return exercise.type === 'translate' || exercise.type === 'marker_identification';
+}
+
+/** True/false for checkable items; null when the item is self-graded. */
+export function verdictOf(exercise: PracticeExercise, answer: string | null): boolean | null {
+  if (isSelfGraded(exercise)) return null;
+  return isAnswerCorrect(exercise, answer);
+}
