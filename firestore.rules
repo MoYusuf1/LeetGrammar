@@ -2,16 +2,28 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
-      function isOwner() { return request.auth != null && request.auth.uid == userId; }
-      function validProgressDocument() {
-        return request.resource.data.keys().hasOnly(['schemaVersion', 'progress', 'updatedAt'])
-          && request.resource.data.schemaVersion == 7
-          && request.resource.data.progress is map;
+      function isOwner() {
+        return request.auth != null && request.auth.uid == userId;
       }
+
+      // This contract mirrors src/domain/progress/document.ts. Deny unknown
+      // top-level fields and old/new schema versions until the app explicitly
+      // supports them.
+      function validProgressDocument() {
+        return request.resource.data.keys().hasAll(['schemaVersion', 'progress', 'updatedAt'])
+          && request.resource.data.keys().hasOnly(['schemaVersion', 'progress', 'updatedAt'])
+          && request.resource.data.schemaVersion == 8
+          && request.resource.data.progress is map
+          && request.resource.data.updatedAt is timestamp;
+      }
+
       allow read: if isOwner();
       allow create, update: if isOwner() && validProgressDocument();
       allow delete: if isOwner();
     }
-    match /{document=**} { allow read, write: if false; }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }
