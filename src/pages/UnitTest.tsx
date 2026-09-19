@@ -3,7 +3,8 @@
  *
  * Route: /unit-test/:id  (HashRouter, so #/unit-test/1)
  *
- * Three phases:
+ * Three phases, each a component under components/unit-test/; this file is
+ * only the phase machine and the state they share:
  *   intro    — what the test covers and what passing takes
  *   test     — one item at a time, no hints and no feedback until the end
  *   results  — score, per-objective breakdown, every missed item, correctives
@@ -29,44 +30,22 @@
  */
 
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router';
-import { motion } from 'framer-motion';
-import { Check, X, RotateCcw } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router';
 import { getUnit, getUnitTest, composeUnitTest } from '@/data/unit-tests';
-import { describeObjective } from '@/data/objectives';
-import type { ExerciseType, PracticeExercise } from '@/data/types';
 import {
-  MASTERY_THRESHOLD,
   gradeUnitTest,
   selectCorrectivesItems,
-  tallyByObjective,
   isUnitComplete,
   type UnitTestResult,
 } from '@/lib/assessment';
-import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
 import { useProgressStore } from '@/stores/progress-store';
-import AnswerInput from '@/components/lesson/AnswerInput';
-import RichText from '@/components/RichText';
-import Somali from '@/components/Somali';
+import CenteredNotice from '@/components/shared/CenteredNotice';
+import TestIntro from '@/components/unit-test/TestIntro';
+import TestSession from '@/components/unit-test/TestSession';
+import TestResults from '@/components/unit-test/TestResults';
+import Correctives from '@/components/unit-test/Correctives';
 
 type Phase = 'intro' | 'test' | 'results' | 'correctives';
-
-const PASS_MARK = Math.round(MASTERY_THRESHOLD * 100);
-
-/**
- * What each question mode is called in the UI. Knowt's practice tests name
- * the mode on every question (multiple choice, true/false, written) so the
- * learner always knows what is being asked of them; ours do the same job for
- * this course's exercise shapes.
- */
-const QUESTION_MODE: Record<ExerciseType, string> = {
-  multiple_choice: 'Multiple choice',
-  fill_blank: 'Fill in the blank',
-  matching: 'Matching',
-  unscramble: 'Sentence builder',
-  translate: 'Written answer',
-  marker_identification: 'Spot the marker',
-};
 
 export default function UnitTestPage() {
   const { id } = useParams<{ id: string }>();
@@ -98,7 +77,7 @@ export default function UnitTestPage() {
   );
 
   if (!unit || !bank) {
-    return <Centered>No test exists for that unit yet.</Centered>;
+    return <CenteredNotice>No test exists for that unit yet.</CenteredNotice>;
   }
 
   const answer = current ? responses[current.id] ?? null : null;
@@ -122,154 +101,38 @@ export default function UnitTestPage() {
     setPhase('intro');
   };
 
-  /* ─── Intro ────────────────────────────────────────────────────────────── */
-
   if (phase === 'intro') {
-    const record = store.getUnitTestRecord?.(unitId);
     return (
-      <Shell onClose={() => navigate('/learn')} title={bank.name}>
-        <h1 className="text-title1 font-bold text-label">{bank.name}</h1>
-        <p className="mt-2 text-title3 text-label-2">{bank.description}</p>
-
-        {/* The modes the learner will meet, up front — Knowt shows the test's
-            question types before you start; so do we. */}
-        <div className="mt-5 flex flex-wrap gap-2">
-          {[...new Set(items.map((it) => it.type))].map((t) => (
-            <span
-              key={t}
-              className="rounded-full bg-fill px-3 py-1 text-caption2 font-semibold uppercase tracking-wider text-label-2"
-            >
-              {QUESTION_MODE[t]}
-            </span>
-          ))}
-        </div>
-
-        <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
-          <Row label="Questions" value={`${items.length}`} first />
-          <Row label="Attempt set" value={`${priorAttempts + 1}`} />
-          <Row label="To pass" value={`${PASS_MARK}%`} />
-          <Row label="Hints" value="Off, this one is on you" />
-          <Row label="Answers" value="Shown at the end, with what you missed" />
-          {record && (
-            <Row
-              label="Your best"
-              value={`${record.bestPercentage}% over ${record.attempts} ${record.attempts === 1 ? 'try' : 'tries'}`}
-            />
-          )}
-        </dl>
-
-        <p className="mt-4 text-footnote text-label-3">
-          Retakes rotate to a different deterministic item order, so the result reflects the language rather than memory of the previous sequence.
-        </p>
-
-        <p className="mt-3 text-footnote text-label-3">
-          Miss too much of one topic and you will be sent back through a short set of
-          questions on that topic alone, not the whole test again.
-        </p>
-
-        {/* Stated, not enforced. The criterion is real; the lock is not. */}
-        {!unlocked && (
-          <p className="mt-3 text-footnote text-label-3">
-            You have not finished lessons {unit.lessonIds[0]}–{unit.lessonIds.at(-1)} yet. The
-            test only asks about what they teach, so expect to miss what you have not met.
-          </p>
-        )}
-
-        <button
-          onClick={() => setPhase('test')}
-          className="pressable mt-6 w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-        >
-          Start the test
-        </button>
-      </Shell>
+      <TestIntro
+        bank={bank}
+        items={items}
+        priorAttempts={priorAttempts}
+        record={store.getUnitTestRecord?.(unitId)}
+        unlocked={unlocked}
+        lessonRange={[unit.lessonIds[0], unit.lessonIds.at(-1) ?? unit.lessonIds[0]]}
+        onStart={() => setPhase('test')}
+        onClose={() => navigate('/learn')}
+      />
     );
   }
-
-  /* ─── Test ─────────────────────────────────────────────────────────────── */
 
   if (phase === 'test' && current) {
     const answered = Object.values(responses).filter((r) => r !== null && r !== '').length;
-    const isLast = index === items.length - 1;
     return (
-      <Shell
-        onClose={() => setPhase('intro')}
+      <TestSession
         title={bank.name}
-        below={
-          /* Knowt keeps the test's progress on screen at all times. A bar
-             that fills as questions are answered; 34 dots rendered as an
-             unreadable smudge, so they are gone. */
-          <div
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={items.length}
-            aria-valuenow={answered}
-            aria-label={`${answered} of ${items.length} answered`}
-            className="h-1.5 overflow-hidden rounded-full bg-fill"
-          >
-            <div
-              className="h-full rounded-full bg-accent transition-[width] duration-300 ease-out"
-              style={{ width: `${(answered / items.length) * 100}%` }}
-            />
-          </div>
-        }
-      >
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <span className="rounded-full bg-fill px-3 py-1 text-caption2 font-semibold uppercase tracking-wider text-label-2">
-            {QUESTION_MODE[current.type]}
-          </span>
-          <span className="text-caption2 tabular-nums text-label-3">
-            Question {index + 1} of {items.length}
-          </span>
-        </div>
-
-        <ItemQuestion exercise={current} />
-        <div className="mt-5">
-          {/* Keyed so each item gets its own input state — a word bank assembled
-              on item 5 must not leak into item 6. */}
-          <AnswerInput
-            key={current.id}
-            exercise={current}
-            answer={answer}
-            checked={false}
-            onSelect={setAnswer}
-            variant="quiz"
-          />
-        </div>
-
-        <div className="glass glass-bottom sticky bottom-0 -mx-4 mt-7 px-4 pt-3">
-          <div className="flex gap-3">
-            <button
-              onClick={() => setIndex((i) => Math.max(0, i - 1))}
-              disabled={index === 0}
-              className="rounded-xl bg-fill px-5 py-4 text-body font-medium text-label transition-colors hover:bg-fill disabled:opacity-30"
-            >
-              Back
-            </button>
-            {isLast ? (
-              <button
-                onClick={finish}
-                className="pressable flex-1 rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-              >
-                Finish · {answered}/{items.length} answered
-              </button>
-            ) : (
-              <button
-                onClick={() => setIndex((i) => Math.min(items.length - 1, i + 1))}
-                className="pressable flex-1 rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-              >
-                Next
-              </button>
-            )}
-          </div>
-          <p className="mt-2 text-center text-caption2 text-label-3">
-            Skipping is allowed: an unanswered question is marked wrong.
-          </p>
-        </div>
-      </Shell>
+        items={items}
+        index={index}
+        answer={answer}
+        answered={answered}
+        onClose={() => setPhase('intro')}
+        onBack={() => setIndex((i) => Math.max(0, i - 1))}
+        onNext={() => setIndex((i) => Math.min(items.length - 1, i + 1))}
+        onFinish={finish}
+        onAnswer={setAnswer}
+      />
     );
   }
-
-  /* ─── Correctives ──────────────────────────────────────────────────────── */
 
   if (phase === 'correctives') {
     return (
@@ -281,378 +144,19 @@ export default function UnitTestPage() {
     );
   }
 
-  /* ─── Results ──────────────────────────────────────────────────────────── */
-
   if (phase === 'results' && result) {
-    const tally = tallyByObjective(items, responses);
-    const missed = items.filter((item) => !isAnswerCorrect(item, responses[item.id] ?? null));
-    /* Knowt hands back feedback on every question, not only the failures.
-       The right answers are the shorter list to render, so they get a
-       compact section of their own below the misses. */
-    const nailed = items.filter((item) => isAnswerCorrect(item, responses[item.id] ?? null));
-
     return (
-      <Shell onClose={() => navigate('/learn')} title="Results">
-        <div className="pt-2 text-center">
-          <div
-            className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-fill"
-          >
-            <span
-              className={`text-title1 font-semibold tabular-nums ${
-                result.passed ? 'text-green' : 'text-accent'
-              }`}
-            >
-              {result.percentage}%
-            </span>
-          </div>
-          <h1 className="mt-5 text-title1 font-semibold text-label">
-            {result.passed ? 'Unit passed' : 'Not there yet'}
-          </h1>
-          <p className="mt-1 text-body text-label-2">
-            {result.correctItems} of {result.totalItems} correct · {PASS_MARK}% needed
-          </p>
-        </div>
-
-        {/* Per-objective breakdown */}
-        <h2 className="mb-2.5 mt-8 text-footnote font-semibold text-label">How each topic went</h2>
-        <div className="overflow-hidden rounded-xl bg-elevated">
-          {[...tally.entries()].map(([objectiveId, score], i) => {
-            const info = describeObjective(objectiveId);
-            const failed = result.failedObjectives.includes(objectiveId);
-            return (
-              <div
-                key={objectiveId}
-                className={`flex items-center gap-3 px-4 py-3 ${
-                  i === 0 ? '' : 'border-t border-separator'
-                }`}
-              >
-                <span
-                  className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ${
-                    failed ? 'bg-fill text-red' : 'bg-fill text-green'
-                  }`}
-                >
-                  {failed ? <X size={13} /> : <Check size={13} />}
-                </span>
-                <span className="min-w-0 flex-1 text-footnote text-label">{info.label}</span>
-                <span className="flex-shrink-0 text-caption2 tabular-nums text-label-3">
-                  {score.correct}/{score.total}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        <h2 className="mb-2.5 mt-8 text-footnote font-semibold text-label">What you can do</h2>
-        <div className="overflow-hidden rounded-xl bg-elevated">
-          {result.outcomeScores.map((outcome, i) => (
-            <div key={outcome.outcomeId} className={`px-4 py-3 ${i === 0 ? '' : 'border-t border-separator'}`}>
-              <div className="flex items-center gap-3">
-                <span className="min-w-0 flex-1 text-footnote text-label">{outcome.canDo}</span>
-                <span className="flex-shrink-0 text-caption2 tabular-nums text-label-3">{outcome.percentage}%</span>
-              </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-fill">
-                <div className="h-full rounded-full bg-accent" style={{ width: `${outcome.percentage}%` }} />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Correctives */}
-        {result.failedObjectives.length > 0 && (
-          <div className="mt-6 rounded-xl bg-fill p-4">
-            <p className="text-footnote font-semibold text-accent">Go back over these</p>
-            <ul className="mb-4 mt-2 space-y-1.5">
-              {result.failedObjectives.map((objectiveId) => {
-                const info = describeObjective(objectiveId);
-                return (
-                  <li key={objectiveId} className="text-footnote text-label">
-                    {info.label}
-                    {info.lessonId && (
-                      <Link
-                        to={`/lesson/${info.lessonId}`}
-                        className="ml-1.5 font-medium text-accent hover:underline"
-                      >
-                        Lesson {info.lessonId}: {info.lessonTitle}
-                      </Link>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-            <button
-              onClick={() => setPhase('correctives')}
-              className="pressable w-full rounded-xl bg-accent py-3.5 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-            >
-              Review incorrect only · {correctives.length} {correctives.length === 1 ? 'question' : 'questions'}
-            </button>
-          </div>
-        )}
-
-        {/* What you missed */}
-        {missed.length > 0 && (
-          <>
-            <h2 className="mb-2.5 mt-8 text-footnote font-semibold text-label">
-              What you missed ({missed.length})
-            </h2>
-            <div className="space-y-2.5">
-              {missed.map((item) => (
-                <div key={item.id} className="rounded-xl bg-elevated p-4">
-                  <p className="text-footnote font-medium text-label">
-                    <RichText text={item.question} />
-                  </p>
-                  <p className="mt-2 text-footnote text-label-2">
-                    Your answer:{' '}
-                    <span className="text-red">
-                      {responses[item.id]?.trim() ? responses[item.id] : '(left blank)'}
-                    </span>
-                  </p>
-                  <p className="text-footnote text-label-2">
-                    Correct:{' '}
-                    <span className="text-green">
-                      <Somali inherit>{displayAnswer(item)}</Somali>
-                    </span>
-                  </p>
-                  <p className="mt-2 text-footnote leading-relaxed text-label-2">
-                    <RichText text={item.explanation} />
-                  </p>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* What you got right — feedback on every question, not only misses. */}
-        {nailed.length > 0 && (
-          <>
-            <h2 className="mb-2.5 mt-8 text-footnote font-semibold text-label">
-              What you got right ({nailed.length})
-            </h2>
-            <div className="overflow-hidden rounded-xl bg-elevated">
-              {nailed.map((item, i) => (
-                <div
-                  key={item.id}
-                  className={`flex items-start gap-3 px-4 py-3 ${i === 0 ? '' : 'border-t border-separator'}`}
-                >
-                  <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-fill text-green">
-                    <Check size={13} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-footnote font-medium text-label">
-                      <RichText text={item.question} />
-                    </p>
-                    <p className="mt-1 text-footnote text-label-2">
-                      <Somali inherit>{displayAnswer(item)}</Somali>
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        <div className="mt-8 space-y-3">
-          <button
-            onClick={restart}
-            className="pressable flex w-full items-center justify-center gap-2 rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Retake the test
-          </button>
-          <button
-            onClick={() => navigate('/learn')}
-            className="pressable w-full rounded-xl py-4 text-body font-semibold text-label transition-colors hover:bg-fill"
-          >
-            Done
-          </button>
-        </div>
-      </Shell>
+      <TestResults
+        result={result}
+        items={items}
+        responses={responses}
+        correctiveCount={correctives.length}
+        onCorrectives={() => setPhase('correctives')}
+        onRetake={restart}
+        onDone={() => navigate('/learn')}
+      />
     );
   }
 
-  return <Centered>Something went wrong loading the test.</Centered>;
-}
-
-/* ─── Correctives ────────────────────────────────────────────────────────── */
-
-/**
- * Correctives is practice, not assessment: hints are visible, every answer is
- * checked immediately, and nothing here is scored or stored. The point is to
- * put the missed rule back in front of the learner, not to re-measure them.
- */
-function Correctives({
-  items,
-  onDone,
-  onBack,
-}: {
-  items: PracticeExercise[];
-  onDone: () => void;
-  onBack: () => void;
-}) {
-  const [index, setIndex] = useState(0);
-  const [answer, setAnswer] = useState<string | null>(null);
-  const [checked, setChecked] = useState(false);
-
-  const current = items[index];
-  if (!current) {
-    return (
-      <Shell onClose={onBack} title="Correctives">
-        <p className="text-body text-label-2">Nothing to practise.</p>
-      </Shell>
-    );
-  }
-
-  const isLast = index === items.length - 1;
-  const correct = isAnswerCorrect(current, answer);
-
-  const next = () => {
-    if (isLast) return onDone();
-    setIndex((i) => i + 1);
-    setAnswer(null);
-    setChecked(false);
-  };
-
-  return (
-    <Shell onClose={onBack} title="Correctives" progress={`${index + 1}/${items.length}`}>
-      <ItemQuestion exercise={current} />
-      <div className="mt-5">
-        <AnswerInput
-          key={current.id}
-          exercise={current}
-          answer={answer}
-          checked={checked}
-          onSelect={(a) => !checked && setAnswer(a)}
-        />
-      </div>
-
-      <div className="mt-5 rounded-xl bg-fill p-4">
-        <p className="text-subhead text-label">
-          <RichText text={current.hint} />
-        </p>
-      </div>
-
-      {checked && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-4 rounded-xl bg-elevated p-4"
-        >
-          <p className={`mb-1 text-footnote font-semibold ${correct ? 'text-green' : 'text-red'}`}>
-            {correct ? (
-              'Correct'
-            ) : (
-              <>
-                Not quite. The answer is{' '}
-                <Somali inherit>{displayAnswer(current)}</Somali>
-              </>
-            )}
-          </p>
-          <p className="text-footnote leading-relaxed text-label">
-            <RichText text={current.explanation} />
-          </p>
-        </motion.div>
-      )}
-
-      <div className="glass glass-bottom sticky bottom-0 -mx-4 mt-6 px-4 pt-3">
-        {checked ? (
-          <button
-            onClick={next}
-            className="pressable w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-          >
-            {isLast ? 'Back to results' : 'Continue'}
-          </button>
-        ) : (
-          <button
-            onClick={() => answer && setChecked(true)}
-            disabled={!answer}
-            className={`pressable w-full rounded-xl py-4 text-body font-semibold transition-colors ${
-              answer
-                ? 'bg-accent text-accent-ink hover:opacity-90'
-                : 'cursor-not-allowed bg-fill text-label-3'
-            }`}
-          >
-            Check answer
-          </button>
-        )}
-      </div>
-    </Shell>
-  );
-}
-
-/* ─── Shared bits ────────────────────────────────────────────────────────── */
-
-function ItemQuestion({ exercise }: { exercise: PracticeExercise }) {
-  return (
-    <div>
-      <p className="text-title3 font-medium text-label">
-        <RichText text={exercise.question} />
-      </p>
-      {exercise.somali && (
-        <div className="mt-3 rounded-xl bg-elevated px-4 py-4 text-center">
-          <Somali size="hero">{exercise.somali}</Somali>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/** A task view: full-screen over /learn, closed rather than navigated back. */
-function Shell({
-  children,
-  onClose,
-  title,
-  progress,
-  below,
-}: {
-  children: React.ReactNode;
-  onClose: () => void;
-  title: string;
-  progress?: string;
-  /** A second row inside the glass header — the test progress bar lives here. */
-  below?: React.ReactNode;
-}) {
-  return (
-    <div className="flex min-h-[100dvh] flex-col bg-bg">
-      <header className="glass glass-top sticky top-0 z-20 px-4 pt-safe-t">
-        <div className="mx-auto flex max-w-column items-center gap-3 py-2.5">
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
-          >
-            <X className="h-[18px] w-[18px]" />
-          </button>
-          <span className="min-w-0 flex-1 truncate text-footnote font-medium text-label">{title}</span>
-          {progress && (
-            <span className="flex-shrink-0 text-caption2 tabular-nums text-label-3">{progress}</span>
-          )}
-        </div>
-        {below && <div className="mx-auto max-w-column pb-3">{below}</div>}
-      </header>
-
-      <main className="mx-auto w-full max-w-column flex-1 px-4 pb-[calc(1.5rem+var(--safe-b))] pt-5">
-        {children}
-      </main>
-    </div>
-  );
-}
-
-function Centered({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4">
-      <div className="max-w-sm text-center text-body text-label-2">{children}</div>
-    </div>
-  );
-}
-
-function Row({ label, value, first }: { label: string; value: string; first?: boolean }) {
-  return (
-    <div
-      className={`flex items-baseline justify-between gap-3 px-4 py-3 ${
-        first ? '' : 'border-t border-separator'
-      }`}
-    >
-      <dt className="text-footnote text-label-2">{label}</dt>
-      <dd className="text-right text-footnote font-medium text-label">{value}</dd>
-    </div>
-  );
+  return <CenteredNotice>Something went wrong loading the test.</CenteredNotice>;
 }
