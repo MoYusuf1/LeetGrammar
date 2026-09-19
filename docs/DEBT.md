@@ -63,7 +63,7 @@ leads recorded in [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §9.
 **distributed practice**. The course had the first twice over (in-lesson
 practice, unit test) and none of the second. Both halves now exist.
 
-**Homework (Layer 2)** — `src/lib/homework.ts`, page at `/#/homework/:id`.
+**Homework (Layer 2)** — `src/lib/homework`, page at `/#/homework/:id`.
 12 items, **33% carried back** from earlier lessons, 67–100% production for
 lessons 3+, immediate metalinguistic feedback, scored and **gating nothing**.
 Items are *composed* from existing verified material rather than authored, so
@@ -84,7 +84,7 @@ per-prompt history (`exerciseProgress`, synced since schema v8) that nothing
 read. Homework now leads each group with the prompts the learner has missed —
 most-missed, then longest-unseen — and homework answers feed the same history,
 so a form missed in practice is what the next set opens with. The mechanism
-and its regression tests live in `src/lib/homework.ts` and
+and its regression tests live in `src/lib/homework` and
 `src/tests/homework.test.ts`; the design argument is COURSE_DESIGN §0b.4.
 
 **Fixed intervals, not SM-2.** `lib/srs.ts` implements SM-2 with ease factors
