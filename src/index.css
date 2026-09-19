@@ -364,6 +364,10 @@
     height: 4.5rem;
     margin-inline: calc(clamp(2.25rem, 5vw, 4rem) * -1);
     padding-inline: clamp(2.25rem, 5vw, 4rem);
+    /* The fixed profile trigger occupies the toolbar's right edge on iPad.
+       Reserve its width plus breathing room so the course label never sits
+       underneath it at the 768–1023px tablet breakpoint. */
+    padding-right: calc(clamp(2.25rem, 5vw, 4rem) + 3.25rem);
     align-items: center;
     justify-content: space-between;
     border-bottom: .5px solid var(--separator);

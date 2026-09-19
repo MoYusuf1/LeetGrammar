@@ -44,7 +44,7 @@ export default function ProfileSheet({ open, onClose }: { open: boolean; onClose
             <div className="mt-10 text-center">
               <h2 className="text-title1 font-bold tracking-tight">That decode is the whole course.</h2>
               <p className="mx-auto mt-3 max-w-sm text-body leading-relaxed text-label-2">
-                Every lesson breaks real Somali sentences into who, the small signal, and what is said, until spoken Somali and media stop being noise. You can already read it. This teaches you to understand it.
+                Every lesson breaks real Somali sentences into who, the small signal, and what is said. You learn to follow that shape across new written examples, then recall it without the lesson in front of you.
               </p>
             </div>
 
