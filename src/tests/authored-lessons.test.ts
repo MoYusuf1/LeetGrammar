@@ -219,6 +219,7 @@ describe('authored-lessons: every card renders the content it carries', () => {
     payoff: ['prompt', 'content'],
     predict: ['prompt', 'content'],
     teach: ['content'],
+    coach: ['content'],
     example: ['content'],
     notice: ['exercise'],
     complete: ['exercise'],

@@ -56,10 +56,10 @@ export function buildSteps(cards: FlowCard[]): Step[] {
   let runStart = 0;
 
   const flushRun = () => {
-    if (run.length > 0) {
-      steps.push({ cards: run, startIndex: runStart });
-      run = [];
+    for (let offset = 0; offset < run.length; offset += 3) {
+      steps.push({ cards: run.slice(offset, offset + 3), startIndex: runStart + offset });
     }
+    run = [];
   };
 
   cards.forEach((card, i) => {
