@@ -63,7 +63,14 @@ describe('authored-lessons: exercises are answerable', () => {
   const allExercises: Array<{ ex: PracticeExercise; where: string }> = [];
   for (const lesson of AUTHORED_LESSONS) {
     lesson.cards.forEach((card, i) => {
-      if (card.exercise) allExercises.push({ ex: card.exercise, where: `lesson ${lesson.id} card ${i} (${card.id})` });
+      if (card.exercise) {
+        allExercises.push({ ex: card.exercise, where: `lesson ${lesson.id} card ${i} (${card.id})` });
+        /* Repair items are served to learners exactly like their parents, so
+           every shape gate below applies to them too. */
+        if (card.exercise.repair) {
+          allExercises.push({ ex: card.exercise.repair, where: `lesson ${lesson.id} card ${i} (${card.id})/repair` });
+        }
+      }
     });
   }
 
@@ -223,7 +230,8 @@ describe('authored-lessons: vocabulary alignment', () => {
  */
 describe('authored-lessons: every card renders the content it carries', () => {
   /** Fields RenderCard actually reads, per card type. */
-  const RENDERS: Record<string, Array<'prompt' | 'content' | 'exercise' | 'vocab'>> = {
+  const RENDERS: Record<string, Array<'prompt' | 'content' | 'exercise' | 'vocab' | 'passage'>> = {
+    passage: ['passage', 'content'],
     blueprint: ['prompt', 'content'],
     connect: ['prompt', 'content'],
     promise: ['prompt', 'content'],
@@ -247,7 +255,7 @@ describe('authored-lessons: every card renders the content it carries', () => {
           ignored.push(`L${lesson.id}/${card.id}: type "${card.type}" has no renderer branch`);
           continue;
         }
-        for (const field of ['prompt', 'content', 'exercise'] as const) {
+        for (const field of ['prompt', 'content', 'exercise', 'passage'] as const) {
           if (card[field] && !rendered.includes(field)) {
             ignored.push(`L${lesson.id}/${card.id}: "${field}" is set but a ${card.type} card never renders it`);
           }
@@ -262,7 +270,7 @@ describe('authored-lessons: every card renders the content it carries', () => {
     for (const lesson of AUTHORED_LESSONS) {
       for (const card of lesson.cards) {
         const rendered = RENDERS[card.type] ?? [];
-        if (!rendered.some((f) => f !== 'vocab' && card[f as 'prompt' | 'content' | 'exercise'])) {
+        if (!rendered.some((f) => f !== 'vocab' && card[f as 'prompt' | 'content' | 'exercise' | 'passage'])) {
           blank.push(`L${lesson.id}/${card.id} (${card.type}) renders nothing`);
         }
       }
@@ -313,6 +321,76 @@ describe('authored-lessons: reusable learning moves', () => {
       for (const coach of coaches) {
         expect(coach.title, `lesson ${lesson.id} coach has no title`).toBeTruthy();
         expect(coach.content?.length ?? 0, `lesson ${lesson.id} coach is too thin`).toBeGreaterThan(120);
+      }
+    }
+  });
+});
+
+describe('authored-lessons: flow-2 architecture (Learn→Repair→Retention)', () => {
+  const flow2 = AUTHORED_LESSONS.filter((l) => l.flowVersion === 2);
+  const passagesOf = (lesson: (typeof AUTHORED_LESSONS)[number]) =>
+    lesson.cards.filter((c) => c.type === 'passage' && c.passage);
+
+  it('every flow-2 lesson carries an original and a lexically distinct transfer passage', () => {
+    for (const lesson of flow2) {
+      const passages = passagesOf(lesson);
+      expect(passages.length, `lesson ${lesson.id}: needs two passages`).toBeGreaterThanOrEqual(2);
+      const tokens = (card: (typeof passages)[number]) =>
+        new Set(
+          card.passage!.lines.flatMap((l) => l.somali.toLowerCase().replace(/[.?!,]+$/, '').split(/\s+/)),
+        );
+      const distinct = passages.some((a, i) =>
+        passages.slice(i + 1).some((b) => {
+          const ta = tokens(a);
+          const tb = tokens(b);
+          return [...ta].filter((t) => !tb.has(t)).length + [...tb].filter((t) => !ta.has(t)).length >= 2;
+        }),
+      );
+      expect(distinct, `lesson ${lesson.id}: transfer passage must differ from the original by at least two tokens`).toBe(true);
+    }
+  });
+
+  it('in flow-2 lessons the text and its gist question precede rule talk', () => {
+    for (const lesson of flow2) {
+      const firstPassage = lesson.cards.findIndex((c) => c.type === 'passage');
+      const firstGist = lesson.cards.findIndex((c) => c.exercise?.id.includes('gist'));
+      const firstTeach = lesson.cards.findIndex((c) => (c.type === 'teach' || c.type === 'example') && c.isNew);
+      expect(firstPassage, `lesson ${lesson.id}: no passage`).toBeGreaterThanOrEqual(0);
+      expect(firstGist, `lesson ${lesson.id}: no gist exercise`).toBeGreaterThan(firstPassage);
+      if (firstTeach !== -1) {
+        expect(firstTeach, `lesson ${lesson.id}: explanation before gist`).toBeGreaterThan(firstGist);
+      }
+    }
+  });
+
+  it('every exercise in a flow-2 lesson has a fresh repair item on a shared objective', () => {
+    for (const lesson of flow2) {
+      const mainIds = new Set(lesson.cards.filter((c) => c.exercise).map((c) => c.exercise!.id));
+      for (const card of lesson.cards) {
+        if (!card.exercise) continue;
+        const repair = card.exercise.repair;
+        expect(repair, `${card.id}: missing repair item`).toBeDefined();
+        expect(mainIds.has(repair!.id), `${card.id}: repair id collides`).toBe(false);
+        expect(repair!.id, `${card.id}: repair reuses parent id`).not.toBe(card.exercise.id);
+        expect(
+          repair!.objectiveIds.some((o) => card.exercise!.objectiveIds.includes(o)),
+          `${card.id}: repair shares no objective with its parent`,
+        ).toBe(true);
+        expect(repair!.question, `${card.id}: repair repeats the parent question`).not.toBe(card.exercise.question);
+expect('repair' in repair!, `${card.id}: repair items must not nest`).toBe(false);
+      }
+    }
+  });
+
+  it('passage cards are real microtexts: a label, 1-4 lines, a gloss per line', () => {
+    for (const lesson of flow2) {
+      for (const card of passagesOf(lesson)) {
+        expect(card.passage!.label, `${card.id}: no label`).toBeTruthy();
+        expect(card.passage!.lines.length, `${card.id}: a microtext is 1-4 lines`).toBeGreaterThanOrEqual(1);
+        expect(card.passage!.lines.length, `${card.id}: a microtext is 1-4 lines`).toBeLessThanOrEqual(4);
+        for (const line of card.passage!.lines) {
+          expect(line.gloss, `${card.id}: unglossed line "${line.somali}"`).toBeTruthy();
+        }
       }
     }
   });

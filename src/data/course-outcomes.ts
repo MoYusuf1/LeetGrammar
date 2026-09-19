@@ -44,8 +44,8 @@ export const COURSE_OUTCOMES: CourseOutcome[] = [
       'order-signal-hugs-verb', 'order-waxa-moves-it',
     ],
     evidence: [
-      { mode: 'guided-retrieval', lessonIds: [1, 5, 8], evidenceIds: ['l1-n1', 'l5-n1', 'l8-n2'], implemented: true, note: 'Core lesson retrieval.' },
-      { mode: 'context-transfer', lessonIds: [1], evidenceIds: ['l1-transfer-gist'], implemented: true, note: 'A familiar sourced sentence is read in a new caption context; this does not claim an unseen string.' },
+      { mode: 'guided-retrieval', lessonIds: [1, 5, 8], evidenceIds: ['l1-gist-a', 'l5-n1', 'l8-n2'], implemented: true, note: 'Core lesson retrieval.' },
+      { mode: 'context-transfer', lessonIds: [1], evidenceIds: ['l1-transfer-gist'], implemented: true, note: 'A genuinely unseen sourced class page (Sahro waa macallimad …) is read with the same routine; the memorized-answer distractor proves the read is fresh.' },
       { mode: 'unseen-reading', lessonIds: [1, 2, 3, 4, 5, 6, 7, 8], evidenceIds: ['unit-bank:lesson-transfer'], implemented: true, note: 'Every lesson has an audited, sourced parallel-text set in LESSON_TRANSFER_ITEM_IDS; the items are absent from that lesson and machine-gradable.' },
       { mode: 'delayed-transfer', lessonIds: [1, 2, 3, 4, 5, 6, 7, 8], evidenceIds: ['homework:all-lessons'], implemented: true, note: 'Only scheduled-due homework counts; each lesson re-composes verified material and excludes verbatim lesson prompts.' },
     ],
@@ -79,7 +79,7 @@ export const COURSE_OUTCOMES: CourseOutcome[] = [
     objectiveIds: ['decode-statement', 'noun-gender-diagnostic', 'article-assimilation', 'signal-focus-before', 'signal-focus-end', 'order-signal-hugs-verb'],
     evidence: [
       { mode: 'guided-retrieval', lessonIds: [1, 2, 3, 5, 8], evidenceIds: ['metalinguistic-feedback'], implemented: true, note: 'Every checked item explains the clue.' },
-      { mode: 'context-transfer', lessonIds: [1], evidenceIds: ['l1-transfer-detail'], implemented: true, note: 'The familiar sentence is justified in a new caption task.' },
+      { mode: 'context-transfer', lessonIds: [1], evidenceIds: ['l1-transfer-detail'], implemented: true, note: 'The decisive clue is named on an unseen caption page.' },
       { mode: 'unseen-reading', lessonIds: [5, 8], evidenceIds: ['l5-transfer-gap', 'l8-transfer-parse'], implemented: true, note: 'Later vertical-slice transfer questions ask for the decisive clue in new configurations.' },
     ],
   },

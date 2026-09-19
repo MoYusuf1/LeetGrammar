@@ -159,16 +159,24 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   nal: { gloss: 'lamp, electric light', gender: 'm', sources: ['N §6.1', 'Wikt'] },
   inan: { gloss: 'boy (masc.) / girl (fem.) — distinguished only by tone', sources: ['N §6.1', 'W-gram'] },
 
-  // ── Subject-case forms (N §11.1) ────────────────────────────────────────
-  wiilku: { gloss: 'the boy (subject)', gender: 'm', sources: ['N §11.1', 'W-gram'] },
-  anigu: { gloss: 'I (subject)', sources: ['N §11.1', 'W-gram'] },
-  gabdhuhu: { gloss: 'the girls (subject)', gender: 'f', sources: ['N §11.1', 'W-gram'] },
-  tani: { gloss: 'this (f, subject)', sources: ['N §11.1', 'W-gram'] },
-  kani: { gloss: 'this (m, subject)', sources: ['N §11.1', 'W-gram'] },
-  magacaygu: { gloss: 'my name (subject)', sources: ['N §11.1', 'W-gram'] },
+  // ── Subject-case forms (N §13.1, printed pp.160–161) ────────────────────
+  // These cited "N §11.1" until the Sept 2026 rework; §11.1 is the present
+  // tense. The subject-case statement — final –a replaced by –u, illustrated
+  // with "Wíilku waa macállin" — is §13.1(a). W-gram's nominative-case
+  // section states the same rule independently.
+  wiilku: { gloss: 'the boy (subject)', gender: 'm', sources: ['N §13.1', 'W-gram'] },
+  anigu: { gloss: 'I (subject)', sources: ['N §13.1', 'W-gram'] },
+  gabdhuhu: { gloss: 'the girls (subject)', gender: 'f', sources: ['N §13.1', 'W-gram'] },
+  tani: { gloss: 'this (f, subject)', sources: ['N §13.1', 'W-gram'] },
+  kani: { gloss: 'this (m, subject)', sources: ['N §13.1', 'W-gram'] },
+  magacaygu: { gloss: 'my name (subject)', sources: ['N §13.1', 'W-gram'] },
 
   // ── Sentence signal ─────────────────────────────────────────────────────
-  waa: { gloss: 'statement signal', sources: ['N §11.1', 'W-gram'] },
+  // N citation corrected in the Sept 2026 rework: §11.1 is the present tense.
+  // The statement use of waa with a noun predicate is the printed-p.179
+  // discussion ("the particle waa relates to … the predicative complement"),
+  // exemplified by "Sahro waa macallimad" and "Cumar waa arday wanaagsan".
+  waa: { gloss: 'statement signal', sources: ['N p.179', 'W-gram'] },
 
   // ── Contracted signal + pronoun (N §5.1 "wáa uu → wúu") ─────────────────
   // Second source is W-gram, which lists wuu and way as contractions of waa.
@@ -275,10 +283,43 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   tegey: { gloss: 'went', sources: ['O p.41'], confidence: 'single' },
   cabbay: { gloss: 'drank', sources: ['O p.41'], confidence: 'single' },
   koob: { gloss: 'cup', sources: ['O p.42', 'SA p.51'] },
+
+  // ── LESSON 1 microtexts (Sept 2026 rework) ──────────────────────────────
+  // Every line of both Lesson 1 passages is lifted from Nilsson, with the
+  // gloss he prints. `Wiilku waa macallin` is his §13.1(a) subject-case
+  // example; `Sahro waa macallimad` and `Cumar waa arday wanaagsan` are his
+  // printed-p.179 waa-predicate examples; `Wiilkaygu waa macallin` ("My son
+  // is a teacher") is the second §13.1(a) example.
+  //
+  // arday: Nilsson's p.51 person wordlist ("árday / ardayád — student,
+  // pupil") and Orwin's p.31 reading-practice vocabulary ("ardey — student")
+  // and dialogue ("Maxamed waa ardey"). Orwin spells it ardey; the course
+  // ships Nilsson's standard spelling. Two independent authors.
+  arday: { gloss: 'student, pupil', sources: ['N p.51', 'O p.31'] },
+  // wanaagsan: Nilsson p.179 ("Cumar waa arday wanaagsan — Omar is a good
+  // pupil"); Orwin p.26 (lesson title "Subax wanaagsan — Good morning") and
+  // his glossary ("wanaagsan — good"). Two independent authors.
+  wanaagsan: { gloss: 'good', sources: ['N p.179', 'O p.26'] },
+  // macallimad: attested twice in Nilsson (p.51 wordlist, p.179 example) but
+  // nowhere outside him — one author is one source (rule S5). Recognition
+  // only: it appears in a passage line, never as a produced answer.
+  macallimad: { gloss: 'teacher (feminine)', sources: ['N p.51', 'N p.179'], confidence: 'single' },
+  // wiilkaygu: Nilsson §13.1(a) only ("Wíilkaygu waa macállin — My son is a
+  // teacher"). Recognition only.
+  wiilkaygu: { gloss: 'my son (subject)', sources: ['N §13.1'], confidence: 'single' },
 };
 
 /** Proper nouns that appear in sourced example sentences. */
-export const VERIFIED_PROPER_NOUNS = new Set(['axmed', 'sahra', 'cali', 'cambara']);
+export const VERIFIED_PROPER_NOUNS = new Set([
+  'axmed',
+  'sahra',
+  'cali',
+  'cambara',
+  // Lesson 1 passages (Sept 2026 rework): Cumar is Nilsson's p.179 example
+  // name; Sahro is Sahra's subject-tone form in "Sahro waa macallimad".
+  'cumar',
+  'sahro',
+]);
 
 /** Is this form cleared to show a learner? Case-insensitive. */
 export function isVerifiedForm(form: string): boolean {
