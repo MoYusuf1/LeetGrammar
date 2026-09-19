@@ -74,7 +74,8 @@ export default function UnitTestPage() {
   // The composed test, not the raw bank: this unit's items plus carried-back
   // items from earlier units. See composeUnitTest() for why carry-back is
   // composed rather than authored.
-  const items = useMemo(() => composeUnitTest(unitId), [unitId]);
+  const priorAttempts = store.getUnitTestRecord?.(unitId)?.attempts ?? 0;
+  const items = useMemo(() => composeUnitTest(unitId, 13, priorAttempts), [unitId, priorAttempts]);
   const current = items[index];
 
   const correctives = useMemo(
@@ -118,6 +119,7 @@ export default function UnitTestPage() {
 
         <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
+          <Row label="Attempt set" value={`${priorAttempts + 1}`} />
           <Row label="To pass" value={`${PASS_MARK}%`} />
           <Row label="Hints" value="Off, this one is on you" />
           <Row label="Answers" value="Shown at the end, with what you missed" />
@@ -130,6 +132,10 @@ export default function UnitTestPage() {
         </dl>
 
         <p className="mt-4 text-footnote text-label-3">
+          Retakes rotate to a different deterministic item order, so the result reflects the language rather than memory of the previous sequence.
+        </p>
+
+        <p className="mt-3 text-footnote text-label-3">
           Miss too much of one topic and you will be sent back through a short set of
           questions on that topic alone, not the whole test again.
         </p>
