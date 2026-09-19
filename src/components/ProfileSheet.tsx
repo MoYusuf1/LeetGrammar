@@ -3,7 +3,6 @@ import { Download, LogOut, RefreshCw, X } from 'lucide-react';
 import { useAuthSync } from '@/contexts/AuthSyncContext';
 import { snapshotProgress } from '@/lib/progress-sync';
 import { useProgressStore } from '@/stores/progress-store';
-import Somali from '@/components/Somali';
 
 const labels = { local: 'On this device', syncing: 'Syncing', synced: 'Synced', offline: 'Offline', error: 'Needs attention' } as const;
 
@@ -25,33 +24,21 @@ export default function ProfileSheet({ open, onClose }: { open: boolean; onClose
       </header>
       <main className="mx-auto max-w-[38rem] px-5 pb-[calc(3rem+var(--safe-b))] pt-8">
         {!ready ? <p className="text-center text-label-2">Loading account…</p> : !user ? (
+          /* Sign in, and nothing else. The demo decode and the course pitch
+             used to live here; the learner asked for a screen that says what
+             it is and offers the one action. */
           <section className="flex min-h-[70dvh] flex-col justify-center">
-            {/* Lead with the learning, not the account. The sentence is the
-                course's own landing specimen, and the three rows under it are
-                the decode routine Lesson 1 teaches — slot names match the
-                blueprint, so the first lesson already looks familiar. */}
             <div className="text-center">
-              <Somali size="hero">Wiilku waa macallin.</Somali>
-              <p className="mt-2 text-body text-label-2">&ldquo;The boy is a teacher.&rdquo;</p>
-            </div>
-
-            <div className="mx-auto mt-8 w-full max-w-sm">
-              <Decode slot="WHO" form="Wiilku" meaning="the boy" first />
-              <Decode slot="SIGNAL" form="waa" meaning="a plain statement" />
-              <Decode slot="WHAT" form="macallin" meaning="a teacher" />
-            </div>
-
-            <div className="mt-10 text-center">
-              <h2 className="text-title1 font-bold tracking-tight">That decode is the whole course.</h2>
+              <h2 className="text-title1 font-bold tracking-tight">Sign in</h2>
               <p className="mx-auto mt-3 max-w-sm text-body leading-relaxed text-label-2">
-                Every lesson breaks real Somali sentences into who, the small signal, and what is said. You learn to follow that shape across new written examples, then recall it without the lesson in front of you.
+                Sync your lessons and review schedule across devices.
               </p>
             </div>
 
             <div className="mx-auto mt-8 w-full max-w-sm">
               <button onClick={() => void signIn()} className="w-full rounded-xl bg-accent px-5 py-3.5 text-headline font-semibold text-accent-ink active:opacity-70">Continue with Google</button>
               <p className="mt-4 text-center text-caption1 leading-relaxed text-label-3">
-                Your lessons, review schedule, and the prompts you miss sync across devices. Progress already on this device merges on first sign-in. No password is stored by LeetGrammar.
+                Progress already on this device merges on first sign-in. No password is stored by LeetGrammar.
               </p>
               <p className="mt-2 text-center text-caption1 leading-relaxed text-label-3">
                 It works without an account too. Everything simply stays on this device.
@@ -79,14 +66,4 @@ export default function ProfileSheet({ open, onClose }: { open: boolean; onClose
     </div>
   );
 }
-function Decode({ slot, form, meaning, first }: { slot: string; form: string; meaning: string; first?: boolean }) {
-  return (
-    <div className={`grid grid-cols-[4.5rem_1fr_auto] items-baseline gap-3 py-2.5 ${first ? '' : 'border-t border-separator'}`}>
-      <span className="text-caption2 font-semibold uppercase tracking-wider text-label-3">{slot}</span>
-      <Somali size="lg">{form}</Somali>
-      <span className="text-right text-footnote text-label-2">{meaning}</span>
-    </div>
-  );
-}
-
 function Stat({ label, value }: { label: string; value: string | number }) { return <div className="border-b border-r border-separator px-4 py-5"><p className="text-title1 font-semibold tabular-nums">{value}</p><p className="mt-1 text-footnote text-label-2">{label}</p></div>; }
