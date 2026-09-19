@@ -293,6 +293,21 @@ export default function UnitTestPage() {
           })}
         </div>
 
+        <h2 className="mb-2.5 mt-8 text-footnote font-semibold text-label">What you can do</h2>
+        <div className="overflow-hidden rounded-xl bg-elevated">
+          {result.outcomeScores.map((outcome, i) => (
+            <div key={outcome.outcomeId} className={`px-4 py-3 ${i === 0 ? '' : 'border-t border-separator'}`}>
+              <div className="flex items-center gap-3">
+                <span className="min-w-0 flex-1 text-footnote text-label">{outcome.canDo}</span>
+                <span className="flex-shrink-0 text-caption2 tabular-nums text-label-3">{outcome.percentage}%</span>
+              </div>
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-fill">
+                <div className="h-full rounded-full bg-accent" style={{ width: `${outcome.percentage}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* Correctives */}
         {result.failedObjectives.length > 0 && (
           <div className="mt-6 rounded-xl bg-fill p-4">
