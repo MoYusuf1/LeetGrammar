@@ -4,7 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { repairQueue, servingForRepair, exerciseIndex } from '@/lib/repair';
-import type { ExerciseProgress } from '@/stores/progress-store';
+import type { ExerciseProgress } from '@/domain/progress/types';
 
 const p = (attempts: number, correct: number, misses: number, at: string): ExerciseProgress => ({
   attempts,
