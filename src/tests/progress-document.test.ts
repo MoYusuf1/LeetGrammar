@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import firestoreRules from '../../firestore.rules?raw';
 import {
   decodeProgressDocument,
   InvalidProgressDocumentError,
@@ -26,4 +27,15 @@ describe('progress document decoder', () => {
       .toThrow('invalid shape');
   });
 
+});
+
+
+describe('checked-in Firestore contract', () => {
+  it('accepts only owner writes with the exact schema-v8 envelope', () => {
+    expect(firestoreRules).toContain('request.auth.uid == userId');
+    expect(firestoreRules).toContain("hasAll(['schemaVersion', 'progress', 'updatedAt'])");
+    expect(firestoreRules).toContain("hasOnly(['schemaVersion', 'progress', 'updatedAt'])");
+    expect(firestoreRules).toContain(`request.resource.data.schemaVersion == ${PROGRESS_SCHEMA_VERSION}`);
+    expect(firestoreRules).toContain('request.resource.data.updatedAt is timestamp');
+  });
 });
