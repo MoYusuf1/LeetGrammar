@@ -183,3 +183,64 @@ describe('homework: it leans on production', () => {
     }
   });
 });
+
+/**
+ * REGRESSION GUARD: the per-prompt history (`exerciseProgress`) was recorded
+ * on every checked answer — in lessons and, once this landed, in homework —
+ * and then read *nowhere*. A learner could miss the same form on every return
+ * and homework would keep serving the plain rotation, because composeHomework
+ * took no history at all. These tests pin the fix: a missed prompt leads its
+ * group, outranking even the production weighting of §1.8.
+ */
+describe('homework: misses lead the set', () => {
+  const lesson3 = AUTHORED_LESSONS.find((l) => l.id === 3)!;
+  const own3 = new Set(lesson3.objectives);
+  const isOwn = (i: PracticeExercise) => i.objectiveIds.some((o) => own3.has(o));
+
+  it('a missed recognition prompt outranks an unmissed production prompt in its own lesson', () => {
+    // Aim at the lesson's own authored exercises, not at whatever the composed
+    // set happened to include — the set is only 12 of the whole pool.
+    const target = lesson3.cards
+      .map((c) => c.exercise)
+      .find((e): e is PracticeExercise => !!e && !PRODUCTION.includes(e.type) && e.objectiveIds.some((o) => own3.has(o)));
+    expect(target, 'lesson 3 has no recognition item of its own to aim at').toBeDefined();
+    const items = composeHomework(3, 0, undefined, [], {
+      [target!.id]: { misses: 3, lastAttemptAt: '2026-09-01T00:00:00.000Z' },
+    });
+    expect(items[0]?.id).toBe(target!.id);
+  });
+
+  it('a missed carried-back prompt leads the carry-back half', () => {
+    const baseline = composeHomework(3).filter((i) => !isOwn(i));
+    // Aim at a carried prompt that is NOT already leading, or the test cannot
+    // fail when ranking is off — it would pass on the plain rotation alone.
+    const target = baseline[baseline.length - 1];
+    expect(target, 'lesson 3 carries nothing back to aim at').toBeDefined();
+    const items = composeHomework(3, 0, undefined, [], {
+      [target.id]: { misses: 2, lastAttemptAt: '2026-09-01T00:00:00.000Z' },
+    });
+    const carried = items.filter((i) => !isOwn(i));
+    expect(carried[0]?.id).toBe(target.id);
+  });
+
+  it('among missed prompts, the one missed most and seen longest ago leads', () => {
+    const baseline = composeHomework(3);
+    const own = baseline.filter((i) => isOwn(i));
+    expect(own.length).toBeGreaterThanOrEqual(2);
+    const [first, second] = own;
+    const items = composeHomework(3, 0, undefined, [], {
+      [first.id]: { misses: 1, lastAttemptAt: '2026-09-10T00:00:00.000Z' },
+      [second.id]: { misses: 4, lastAttemptAt: '2026-09-12T00:00:00.000Z' },
+    });
+    expect(items[0]?.id).toBe(second.id);
+    expect(items[1]?.id).toBe(first.id);
+  });
+
+  it('an empty history changes nothing — ranking is strictly opt-in', () => {
+    for (const lesson of laterLessons) {
+      expect(composeHomework(lesson.id, 1, undefined, [lesson.id - 1], {})).toEqual(
+        composeHomework(lesson.id, 1, undefined, [lesson.id - 1]),
+      );
+    }
+  });
+});

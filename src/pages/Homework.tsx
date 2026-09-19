@@ -73,12 +73,24 @@ export default function HomeworkPage() {
     return dueLessons(s.reviewSchedule ?? {}, s.completedLessons ?? []);
   });
 
+  // The miss history, snapshotted at mount for the same reason as the queue:
+  // a set cannot reprioritize mid-attempt when these very answers record new
+  // misses. What the learner gets wrong *here* leads the *next* set.
+  const [history] = useState(() => useProgressStore.getState().exerciseProgress ?? {});
+
   const items = useMemo(
-    () => composeHomework(lessonId, attempt, undefined, due),
-    [lessonId, attempt, due],
+    () => composeHomework(lessonId, attempt, undefined, due, history),
+    [lessonId, attempt, due, history],
   );
   const current = items[index];
   const carried = useMemo(() => carryBackCount(lessonId, items), [lessonId, items]);
+  // How many items in this set are back because the learner missed them
+  // before. Shown in the intro so a re-served form reads as deliberate, not
+  // as the set repeating itself.
+  const retried = useMemo(
+    () => items.filter((i) => (history[i.id]?.misses ?? 0) > 0).length,
+    [items, history],
+  );
   const [missed, setMissed] = useState<string[]>([]);
 
   if (!lesson || items.length === 0) {
@@ -111,7 +123,12 @@ export default function HomeworkPage() {
 
   const check = () => {
     if (!answer || !current) return;
-    if (isAnswerCorrect(current, answer)) {
+    const right = isAnswerCorrect(current, answer);
+    // Homework answers feed the same per-prompt history as lesson answers, so
+    // a form missed here is what the next set leads with. Without this call
+    // the history only ever learned from Layer 1.
+    store.recordExerciseAttempt(current.id, right);
+    if (right) {
       setCorrect((c) => c + 1);
     } else {
       // Kept so the end of the set can say what to look at again. This is the
@@ -136,6 +153,7 @@ export default function HomeworkPage() {
         <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
           <Row label="Questions" value={`${items.length}`} first />
           <Row label="Due for review" value={`${carried}`} />
+          {retried > 0 && <Row label="Back from your misses" value={`${retried}`} />}
           <Row label="Hints" value="On, this is practice" />
           <Row label="Scoring" value="Not marked" />
         </dl>

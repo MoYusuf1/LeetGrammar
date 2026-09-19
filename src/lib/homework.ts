@@ -36,6 +36,22 @@
  * carry-back is drawn from lessons the schedule says are owed, most overdue
  * first, and falls back to any earlier lesson only if that runs short. Passing
  * nothing keeps the old behaviour, which is what the validator and the tests do.
+
+MISSES OUTRANK EVERYTHING ELSE
+
+The schedule says *when* material should come back. The per-prompt attempt
+history says *what* should come back first. Every graded retrieval — in a
+lesson, in homework, anywhere — records attempts and misses per prompt into
+`exerciseProgress` in the progress store, and that record syncs with the
+account. Until this parameter existed, that history was written and never
+read: homework served the same rotation to a learner who had missed a form
+four times as to one who had never missed it. Error-driven repetition is the
+oldest finding in the retrieval literature — the items you fail are exactly
+the items worth re-testing — so when `history` is supplied, missed prompts
+lead their group: most-missed first, then the longest since the last attempt.
+Recognition and production weighting still apply *within* what is owed; a miss
+simply outranks both. Rotation across attempts is unchanged, so a retry still
+serves a different set rather than the same ranking again.
  *
  * WHAT IT IS NOT
  *
@@ -57,6 +73,42 @@ export const HOMEWORK_SIZE = 12;
 
 /** Share of the set that must come from earlier lessons. Design rule `A3`. */
 export const CARRY_BACK_SHARE = 0.3;
+
+/**
+ * The slice of the progress store's per-prompt history this module reads.
+ * Declared structurally rather than imported from `stores/progress-store.ts`
+ * so `validate-course.mjs` can import this file under Node's type stripping
+ * without pulling in zustand. `Record<string, ExerciseProgress>` satisfies it.
+ */
+export interface AttemptRecord {
+  misses: number;
+  lastAttemptAt: string;
+}
+export type AttemptHistory = Record<string, AttemptRecord>;
+
+/**
+ * Missed prompts first, then everything else in its existing order.
+ *
+ * A stable sort, so within "never missed" the caller's ordering (production
+ * weight, due order) is untouched — a miss is the only thing that outranks
+ * them. Among missed prompts: more misses first, then the longest since the
+ * last attempt, so the form decaying longest leads. Deterministic, which the
+ * attempt-rotation tests rely on.
+ */
+function missedFirst(items: PracticeExercise[], history: AttemptHistory): PracticeExercise[] {
+  if (!history || Object.keys(history).length === 0) return items;
+  const key = (id: string): [number, number, string] => {
+    const h = history[id];
+    return h && h.misses > 0 ? [0, -h.misses, h.lastAttemptAt] : [1, 0, ''];
+  };
+  return [...items].sort((a, b) => {
+    const ka = key(a.id);
+    const kb = key(b.id);
+    if (ka[0] !== kb[0]) return ka[0] - kb[0];
+    if (ka[1] !== kb[1]) return ka[1] - kb[1];
+    return ka[2] < kb[2] ? -1 : ka[2] > kb[2] ? 1 : 0;
+  });
+}
 
 const PRODUCTION_TYPES = new Set(['translate', 'unscramble', 'marker_identification']);
 
@@ -119,13 +171,18 @@ function productionFirst(items: PracticeExercise[]): PracticeExercise[] {
  * decayed — rather than whatever happens to sit earliest in the course. Omit it
  * and carry-back behaves as it always did.
  *
- * Returns fewer than `size` items only when the pool genuinely has fewer.
+ * `history` is the per-prompt attempt record (`exerciseProgress`). When
+supplied, prompts the learner has missed lead their group — most-missed,
+then longest since last attempt. Omit it and ranking is unchanged.
+
+Returns fewer than `size` items only when the pool genuinely has fewer.
  */
 export function composeHomework(
   lessonId: number,
   attempt = 0,
   size = HOMEWORK_SIZE,
   due: number[] = [],
+  history: AttemptHistory = {},
 ): PracticeExercise[] {
   // A lesson that does not exist gets nothing. Without this the carry-back
   // filter (`lessonId < 99`) matches the entire course and happily composes a
@@ -135,8 +192,11 @@ export function composeHomework(
   const all = pool();
   const own = objectivesOf(lessonId);
 
-  const current = productionFirst(
-    all.filter((p) => p.lessonId === lessonId && p.item.objectiveIds.some((o) => own.includes(o))).map((p) => p.item),
+  const current = missedFirst(
+    productionFirst(
+      all.filter((p) => p.lessonId === lessonId && p.item.objectiveIds.some((o) => own.includes(o))).map((p) => p.item),
+    ),
+    history,
   );
   // Carry-back candidates, due-first. `due` is already ordered most-overdue-first
   // by dueLessons(), and that order is preserved here so the lesson decaying
@@ -153,15 +213,18 @@ export function composeHomework(
   // which is the opposite of what drawing from the queue is for. Production
   // weighting (§1.8) is a preference *within* what is owed, not above it.
   const earlier = [
-    ...productionFirst(
-      anyEarlier
-        .filter((p) => isDue.has(p.lessonId))
-        .sort((a, b) => (rank.get(a.lessonId) ?? 0) - (rank.get(b.lessonId) ?? 0))
-        .map((p) => p.item),
+    ...missedFirst(
+      productionFirst(
+        anyEarlier
+          .filter((p) => isDue.has(p.lessonId))
+          .sort((a, b) => (rank.get(a.lessonId) ?? 0) - (rank.get(b.lessonId) ?? 0))
+          .map((p) => p.item),
+      ),
+      history,
     ),
     // Anything not due, as filler. Without this a learner with an empty queue
     // gets no carry-back at all, which would silently switch interleaving off.
-    ...productionFirst(anyEarlier.filter((p) => !isDue.has(p.lessonId)).map((p) => p.item)),
+    ...missedFirst(productionFirst(anyEarlier.filter((p) => !isDue.has(p.lessonId)).map((p) => p.item)), history),
   ];
 
   const wantBack = earlier.length ? Math.max(1, Math.round(size * CARRY_BACK_SHARE)) : 0;
