@@ -71,7 +71,7 @@ export default function HomeworkPage() {
   const [correct, setCorrect] = useState(0);
 
   // Carry-back is drawn from the review queue rather than from "any earlier
-  // lesson" — one mechanism instead of two (lib/homework.ts, COURSE_DESIGN
+  // lesson" — one mechanism instead of two (lib/homework, COURSE_DESIGN
   // §1.17). Read once at mount so the set cannot reshuffle mid-attempt when
   // finishing changes what is due.
   const [due] = useState(() => {
