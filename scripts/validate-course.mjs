@@ -44,11 +44,17 @@ const fail = (id, msg) => errors.push({ id, msg });
 const warn = (id, msg) => warnings.push({ id, msg });
 const pass = (id, msg) => passes.push({ id, msg });
 
-/** Every exercise in the course, with a human-readable location. */
+/** Every exercise in the course, with a human-readable location. Repair items
+    are exercises too — they sit behind a miss, so they are walked with their
+    parent and checked by the same sourcing and shape gates. */
 const allExercises = AUTHORED_LESSONS.flatMap((lesson) =>
-  lesson.cards
-    .filter((c) => c.exercise)
-    .map((c) => ({ ex: c.exercise, lesson: lesson.id, where: `L${lesson.id}/${c.id}` })),
+  lesson.cards.filter((c) => c.exercise).flatMap((c) => {
+    const entries = [{ ex: c.exercise, lesson: lesson.id, where: `L${lesson.id}/${c.id}` }];
+    if (c.exercise.repair) {
+      entries.push({ ex: c.exercise.repair, lesson: lesson.id, where: `L${lesson.id}/${c.id}/repair` });
+    }
+    return entries;
+  }),
 );
 
 /** All learner-visible prose, per lesson. */
@@ -1040,6 +1046,147 @@ function checkDocFreshness() {
 }
 
 // ============================================================================
+// FLOW-2 ARCHITECTURE — Learn→Repair→Retention gates (Sept 2026 rework)
+//
+// These apply only to lessons that declare `flowVersion: 2`, so the course is
+// retrofitted one lesson at a time and a half-built lesson fails loudly the
+// moment its flag is flipped. The architecture they enforce:
+//   whole text before rule talk (F1/F2) · gist before detail (F2) · a repair
+//   item behind every exercise (F4) · a genuinely new transfer text (F3) ·
+//   text-first prose (F5) · passage lines as sourced as any answer (F6).
+// ============================================================================
+
+const flow2Lessons = AUTHORED_LESSONS.filter((l) => l.flowVersion === 2);
+const passageCardsOf = (lesson) => lesson.cards.filter((c) => c.type === 'passage' && c.passage);
+const passageTokens = (card) =>
+  new Set(
+    card.passage.lines.flatMap((line) =>
+      line.somali.toLowerCase().replace(/[.?!,]+$/, '').split(/\s+/),
+    ),
+  );
+
+/** F1 + F3: at least two passages, and some pair differs by >= 2 tokens. */
+function checkFlowPassages() {
+  const problems = [];
+  for (const lesson of flow2Lessons) {
+    const passages = passageCardsOf(lesson);
+    if (passages.length < 2) {
+      problems.push(`L${lesson.id}: flow-2 needs an original passage and a transfer passage — found ${passages.length}`);
+      continue;
+    }
+    let distinct = false;
+    for (let i = 0; i < passages.length && !distinct; i++) {
+      for (let j = i + 1; j < passages.length && !distinct; j++) {
+        const a = passageTokens(passages[i]);
+        const b = passageTokens(passages[j]);
+        const diff = [...a].filter((t) => !b.has(t)).length + [...b].filter((t) => !a.has(t)).length;
+        if (diff >= 2) distinct = true;
+      }
+    }
+    if (!distinct) {
+      problems.push(
+        `L${lesson.id}: no two passages differ by at least two tokens — a transfer text the learner can answer from memory of the original is not a transfer text`,
+      );
+    }
+  }
+  if (problems.length) fail('F1', `Passage problems:\n      ${problems.join('\n      ')}`);
+  else pass('F1', `Every flow-2 lesson has an original and a genuinely new transfer passage (${flow2Lessons.length} lessons)`);
+}
+
+/** F2: whole text before rule talk; gist before detail before explanation. */
+function checkFlowOrder() {
+  const problems = [];
+  for (const lesson of flow2Lessons) {
+    const cards = lesson.cards;
+    const firstPassage = cards.findIndex((c) => c.type === 'passage');
+    const firstGist = cards.findIndex((c) => c.exercise && c.exercise.id.includes('gist'));
+    const firstTeach = cards.findIndex((c) => (c.type === 'teach' || c.type === 'example') && c.isNew);
+    if (firstPassage === -1) continue; // F1 reports this
+    if (firstGist === -1) {
+      problems.push(`L${lesson.id}: no gist exercise (id containing "gist") after the first passage`);
+      continue;
+    }
+    if (firstGist < firstPassage) {
+      problems.push(`L${lesson.id}: the gist question (${cards[firstGist].id}) comes before the text it asks about`);
+    }
+    if (firstTeach !== -1 && firstTeach < firstGist) {
+      problems.push(`L${lesson.id}: the rule is explained (${cards[firstTeach].id}) before the learner has read for the gist`);
+    }
+  }
+  if (problems.length) fail('F2', `Flow-order problems:\n      ${problems.join('\n      ')}`);
+  else pass('F2', 'In flow-2 lessons the whole text and the gist question precede rule talk');
+}
+
+/**
+ * F4: a repair item behind every exercise. A miss must buy a FRESH parallel
+ * item, never the same one again — the answer was just revealed on screen.
+ */
+function checkFlowRepairs() {
+  const problems = [];
+  for (const lesson of flow2Lessons) {
+    const seenIds = new Set(lesson.cards.filter((c) => c.exercise).map((c) => c.exercise.id));
+    for (const card of lesson.cards) {
+      if (!card.exercise) continue;
+      const r = card.exercise.repair;
+      if (!r) {
+        problems.push(`L${lesson.id}/${card.id}: no repair item`);
+        continue;
+      }
+      if (r.id === card.exercise.id) problems.push(`L${lesson.id}/${card.id}: repair reuses its parent's id`);
+      if (seenIds.has(r.id)) problems.push(`L${lesson.id}/${card.id}: repair id ${r.id} collides with a main exercise`);
+      if (!r.objectiveIds?.some((o) => card.exercise.objectiveIds.includes(o))) {
+        problems.push(`L${lesson.id}/${card.id}: repair targets no shared objective — it must re-test what was missed`);
+      }
+      if (r.question === card.exercise.question) problems.push(`L${lesson.id}/${card.id}: repair repeats the parent question verbatim`);
+      if (r.repair !== undefined) problems.push(`L${lesson.id}/${card.id}: a repair item must not carry its own repair`);
+    }
+  }
+  if (problems.length) fail('F4', `Repair problems:\n      ${problems.join('\n      ')}`);
+  else pass('F4', 'Every exercise in every flow-2 lesson has a fresh, parallel repair item');
+}
+
+/**
+ * F5: text-first prose. The course teaches reading; "listen", "speech" and
+ * "sounding it out" are claims the product does not deliver on. Banned in
+ * learner-facing text of flow-2 lessons (the older lessons are scrubbed as
+ * they are retrofitted).
+ */
+function checkFlowTextFirst() {
+  const AUDIO = /\b(listen|listens|listening|listener|hear|hears|heard|hearing|speech|spoken|audio|sounding? it out)\b/i;
+  const problems = [];
+  for (const lesson of flow2Lessons) {
+    const prose = proseOf(lesson);
+    const m = AUDIO.exec(prose);
+    if (m) problems.push(`L${lesson.id}: "${m[0]}" — flow-2 lessons are text-first; rephrase for reading`);
+  }
+  if (problems.length) fail('F5', `Audio-era language in flow-2 lessons:\n      ${problems.join('\n      ')}`);
+  else pass('F5', 'Flow-2 lessons make no listening or speech claims');
+}
+
+/** F6: passage lines are learner-facing Somali — sourced like any answer. */
+function checkFlowPassageSourcing() {
+  const unverified = [];
+  const shape = [];
+  for (const lesson of flow2Lessons) {
+    for (const card of passageCardsOf(lesson)) {
+      const { label, lines } = card.passage;
+      if (!label) shape.push(`L${lesson.id}/${card.id}: passage needs a label (what this text IS)`);
+      if (!lines?.length || lines.length > 4) shape.push(`L${lesson.id}/${card.id}: a microtext is 1–4 lines, found ${lines?.length ?? 0}`);
+      for (const line of lines ?? []) {
+        if (!line.gloss) shape.push(`L${lesson.id}/${card.id}: every line needs a gloss behind the tap`);
+        for (const token of line.somali.split(/\s+/)) {
+          const clean = token.replace(/[.?!,]+$/, '');
+          if (clean && !isVerifiedForm(clean)) unverified.push(`L${lesson.id}/${card.id}: "${clean}"`);
+        }
+      }
+    }
+  }
+  const problems = [...shape, ...unverified.map((u) => `unverified Somali: ${u}`)];
+  if (problems.length) fail('F6', `Passage sourcing problems:\n      ${problems.join('\n      ')}`);
+  else pass('F6', 'Every Somali token in every flow-2 passage is registry-verified, with a gloss');
+}
+
+// ============================================================================
 // REPORT
 // ============================================================================
 
@@ -1075,6 +1222,11 @@ checkBankObjectiveCoverage();
 checkObjectiveLabels();
 checkDocClaims();
 checkDocFreshness();
+checkFlowPassages();
+checkFlowOrder();
+checkFlowRepairs();
+checkFlowTextFirst();
+checkFlowPassageSourcing();
 
 for (const p of passes) console.log(`  \x1b[32m✓\x1b[0m ${p.id}  ${p.msg}`);
 if (warnings.length) console.log('');

@@ -41,54 +41,76 @@ const LESSON_1: Lesson = {
   id: 1,
   unitId: 1,
   title: 'Reading for Meaning',
+  flowVersion: 2,
   cards: [
     {
       id: '1-blueprint', type: 'blueprint', blueprintSlot: ['WHO', 'SIGNAL'],
-      content: `${BOX}\n\nYou already read Somali. Start where real understanding starts: find the WHO or thing, find the small signal, then decode what the sentence says about them.`,
+      content: `${BOX}\n\nYou already read Somali. Start where real understanding starts: find the WHO or thing, find the small signal, then take what the sentence says about them. Three passes — **WHO → SIGNAL → WHAT** — and a line of Somali stops being a list of words.`,
     },
     {
       id: '1-promise', type: 'promise',
-      prompt: 'By the end, you will decode a common Somali statement as a sentence, not as a list of translated words: **Wiilku waa macallin** — “The boy is a teacher.”',
+      prompt: 'By the end, you will read two short Somali class-page captions and say who is a teacher and who is a student — including one caption you have never seen.',
     },
     {
-      id: '1-predict', type: 'predict',
-      prompt: 'Read **Wiilku waa macallin** once. Without looking anything up, guess which word names the boy, which word is the small signal, and which word tells you what he is. Commit to a guess before you continue.',
+      id: '1-passage-a', type: 'passage',
+      passage: {
+        id: 'l1-text-a',
+        label: 'A class page, two captions',
+        lines: [
+          { somali: 'Wiilku waa macallin.', gloss: 'The boy is a teacher.' },
+          { somali: 'Cumar waa arday wanaagsan.', gloss: 'Omar is a good student.', note: 'Cumar is a name — Omar.' },
+        ],
+      },
+      content: 'Read this class page once, all the way through. Do not stop on any single word — say to yourself what the page is about, roughly. Then move on.',
     },
     {
-      id: '1-notice-1', type: 'notice', exercise: {
-        id: 'l1-n1', type: 'multiple_choice', objectiveIds: ['decode-statement'],
-        question: 'In **Wiilku waa macallin**, which word carries the useful content “teacher”?',
-        options: ['macallin', 'Wiilku', 'waa', 'none of them'], correctAnswer: 'macallin',
-        hint: 'Start with the content words. One names a person; one names what that person is.',
-        explanation: '**Macallin** means “teacher.” Finding the content words first gives you the sentence frame before you work out the small grammar signal between them.',
+      id: '1-gist-a', type: 'notice', exercise: {
+        id: 'l1-gist-a', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+        question: 'What is this class page telling you, roughly?',
+        options: [
+          'who is a teacher and who is a student',
+          'what the boy and Omar are doing today',
+          'where the boy and Omar study',
+          'how old the boy and Omar are',
+        ],
+        correctAnswer: 'who is a teacher and who is a student',
+        hint: 'You do not need every word. Ask: is this page about people, places, or events?',
+        explanation: 'Both captions name a person and say what he is: the boy is a teacher, Omar is a student. That is the gist, and you could get it before knowing every ending. Gist first, details second — that order is the whole reading routine.',
+        repair: {
+          id: 'l1-gist-a-r', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+          question: 'Look at the class page once more. Which line of it is about a student?',
+          options: ['the second line', 'the first line', 'both lines', 'neither line'],
+          correctAnswer: 'the second line',
+          hint: 'One caption is about the boy; the other is about Omar.',
+          explanation: 'The second caption, **Cumar waa arday wanaagsan**, says Omar is a good student. The first is about the boy, a teacher. Reading for the gist means knowing which line carries which person.',
+        },
       },
     },
     {
-      id: '1-vocab-strategy', type: 'teach', title: 'Decode before you translate', isNew: true,
-      content: 'When speech or captions move quickly, do not stop at every word. Use a three-pass routine:\n\n1. **WHO:** catch the WHO, thing, or topic.\n2. **Signal:** find the small word that tells you what kind of statement you are hearing.\n3. **WHAT:** catch what is being said about the WHO.\n\nIn **Wiilku waa macallin**, those passes give you **Wiilku | waa | macallin**. You can understand the line before you can explain every ending.',
-    },
-    {
-      id: '1-coach-first-pass', type: 'coach', title: 'Do not solve every word',
-      content: `On a first pass, your job is not a perfect translation. Ask three questions in order:
-
-1. **Who or what is this about?**
-2. **Which small word organizes the statement?**
-3. **What useful meaning survives even if one ending is unclear?**
-
-Then say the gist in plain English. Return for details only after the sentence has a shape. This is how you keep up with captions and speech instead of getting trapped on word one.`,
-    },
-    {
-      id: '1-notice-2', type: 'notice', exercise: {
-        id: 'l1-n2', type: 'multiple_choice', objectiveIds: ['find-signal'],
-        question: 'Which word in **Wiilku waa macallin** is the small sentence signal?',
-        options: ['waa', 'Wiilku', 'macallin', 'wiil'], correctAnswer: 'waa',
-        hint: 'The signal is not the WHO and not what he is. It is the short word between them.',
-        explanation: '**Waa** marks a plain statement. It is not the English word “is”; it tells you that the speaker is making an ordinary statement with no special spotlight.',
+      id: '1-detail-a', type: 'notice', exercise: {
+        id: 'l1-detail-a', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+        question: 'Who is the teacher in these captions?',
+        options: ['the boy', 'Cumar', 'both of them', 'neither of them'],
+        correctAnswer: 'the boy',
+        hint: 'Match each caption to its person: the first names the boy, the second names Omar.',
+        explanation: '**Wiilku waa macallin** says the boy is a teacher; Omar is the student. The tempting wrong answer is Omar, because “student” and “teacher” sit side by side on the page — the detail check is what keeps them attached to the right person.',
+        repair: {
+          id: 'l1-detail-a-r', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+          question: 'And who is the student in these captions?',
+          options: ['Cumar', 'the boy', 'both of them', 'neither of them'],
+          correctAnswer: 'Cumar',
+          hint: 'One caption says teacher; the other says student.',
+          explanation: '**Cumar waa arday wanaagsan** says Omar is a good student. Each caption keeps its own person: boy — teacher, Omar — student.',
+        },
       },
     },
     {
-      id: '1-teach-signal', type: 'teach', title: 'The small word changes how you listen', isNew: true,
-      content: '**Waa** marks a plain statement. Treat it as a listening signpost, not a word to translate one-for-one.\n\n• **Wiilku waa macallin.**  *The boy is a teacher.*\n\nSomali uses small signal words to organize meaning. They are easy to miss in fast speech, but once you notice them, long lines become easier to break apart. Later lessons add the signals that spotlight one part of a sentence.',
+      id: '1-coach-routine', type: 'coach', title: 'Three passes, in order',
+      content: 'You just did the whole routine without naming it. First pass: **WHO** — which people does this page name? Second: **SIGNAL** — which small word sits in the middle of each line? Third: **WHAT** — what does it say each person is? Use the passes in that order on anything you read: gist before details, and details before any single stubborn word.',
+    },
+    {
+      id: '1-teach-signal', type: 'teach', title: 'The small word between the chunks', isNew: true,
+      content: 'Both captions have the same shape: a person, a small word, then what that person is.\n\n• **Wiilku | waa | macallin.**  *The boy | is | a teacher.*\n• **Cumar | waa | arday wanaagsan.**  *Omar | is | a good student.*\n\nThat small word is **waa**. It marks a plain statement — the writer is simply telling you something, not singling anything out. Do not translate it one-for-one as the English “is”; read it as a signpost that says *plain statement ahead*, then take the chunks on either side of it together.',
     },
     {
       id: '1-complete-1', type: 'complete', exercise: {
@@ -96,75 +118,106 @@ Then say the gist in plain English. Return for details only after the sentence h
         question: 'Complete the plain statement: **Wiilku ___ macallin.**',
         options: ['waa', 'baa', 'waxa', 'ay'], correctAnswer: 'waa',
         hint: 'You need the signal for an ordinary statement, with nothing singled out.',
-        explanation: '**Wiilku waa macallin** is a plain statement: “The boy is a teacher.” **Waa** is the signpost for that ordinary statement.',
-      },
-    },
-    {
-      id: '1-complete-2', type: 'complete', exercise: {
-        id: 'l1-c2', type: 'multiple_choice', objectiveIds: ['decode-statement'],
-        question: 'A caption reads **Wiilku waa macallin**. What is the whole line telling you?',
-        options: ['The boy is a teacher', 'The teacher is a boy', 'The boy greets a teacher', 'A teacher sees the boy'], correctAnswer: 'The boy is a teacher',
-        hint: 'Keep the three chunks in order: the boy | plain statement | teacher.',
-        explanation: '**Wiilku** is the boy as the subject, **waa** marks a plain statement, and **macallin** supplies “teacher.” Together: “The boy is a teacher.”',
+        explanation: '**Wiilku waa macallin** is a plain statement: “The boy is a teacher.” **Waa** is the signpost for that. **Baa** and **waxa** are spotlight signals from later lessons — wrong here, because nothing is being singled out.',
+        repair: {
+          id: 'l1-c1-r', type: 'fill_blank', objectiveIds: ['find-signal'],
+          question: 'Same move, fresh line: **Cumar ___ arday wanaagsan.**',
+          options: ['waa', 'baa', 'waxa', 'ay'], correctAnswer: 'waa',
+          hint: 'An ordinary statement about Omar — nothing singled out.',
+          explanation: '**Cumar waa arday wanaagsan** — “Omar is a good student” — takes the same plain-statement signal. The person and the meaning changed; the signal did not.',
+        },
       },
     },
     {
       id: '1-produce-1', type: 'produce', exercise: {
         id: 'l1-p1', type: 'unscramble', objectiveIds: ['build-statement'],
-        question: 'Build the Somali line “The boy is a teacher.”',
-        words: ['macallin', 'Wiilku', 'waa'], answer: 'Wiilku waa macallin',
-        hint: 'WHO first, then the plain-statement signal, then the meaning.',
-        explanation: '**Wiilku waa macallin** follows the decoding routine in production: WHO **Wiilku**, SIGNAL **waa**, WHAT **macallin**.',
+        question: 'Build the caption “Omar is a good student.”',
+        words: ['arday', 'Cumar', 'wanaagsan', 'waa'], answer: 'Cumar waa arday wanaagsan',
+        hint: 'WHO first, then the plain-statement signal, then what he is.',
+        explanation: '**Cumar waa arday wanaagsan** follows the routine in production: WHO **Cumar**, SIGNAL **waa**, WHAT **arday wanaagsan**. Four parts now — the shape holds.',
+        repair: {
+          id: 'l1-p1-r', type: 'unscramble', objectiveIds: ['build-statement'],
+          question: 'Build the caption “The boy is a teacher.”',
+          words: ['macallin', 'Wiilku', 'waa'], answer: 'Wiilku waa macallin',
+          hint: 'WHO first, then the signal, then the meaning.',
+          explanation: '**Wiilku waa macallin** — WHO **Wiilku**, SIGNAL **waa**, WHAT **macallin**. The same three passes, built by you this time.',
+        },
       },
     },
     {
-      id: '1-complete-3', type: 'complete', exercise: {
-        id: 'l1-c3', type: 'multiple_choice', objectiveIds: ['decode-statement', 'find-signal'],
-        question: 'You hear a fast line and catch **Wiilku ... macallin**. What should you listen for between the two content words?',
-        options: ['the sentence signal', 'a spelling rule', 'the alphabet name', 'an English article'], correctAnswer: 'the sentence signal',
-        hint: 'Use the same three-pass routine: WHO, SIGNAL, WHAT.',
-        explanation: 'Listen for the small signal between the content chunks. In this line it is **waa**, and recognizing it lets you decode the sentence as a plain statement.',
+      id: '1-passage-b', type: 'passage',
+      passage: {
+        id: 'l1-text-b',
+        label: 'Another class page',
+        lines: [
+          { somali: 'Sahro waa macallimad.', gloss: 'Sahra is a teacher.', note: 'Sahro is Sahra\u2019s name at the head of a sentence.' },
+          { somali: 'Wiilkaygu waa macallin.', gloss: 'My son is a teacher.', note: 'Wiilkaygu means “my son” — read it as one WHO chunk.' },
+        ],
       },
+      content: 'A page you have never seen. Same routine, no new rules: read it through once and take the gist before anything else.',
     },
     {
       id: '1-transfer-gist', type: 'notice', exercise: {
         id: 'l1-transfer-gist', type: 'multiple_choice', objectiveIds: ['decode-statement', 'find-signal'],
-        question: 'A new caption reads **Wiilku waa macallin**. Without translating word by word, what is its shape?',
-        options: ['the boy | plain statement | teacher', 'a teacher | spotlight | man', 'a man | action | teacher', 'a question about a teacher'],
-        correctAnswer: 'the boy | plain statement | teacher',
-        hint: 'Use the routine on the sentence in front of you: WHO, SIGNAL, WHAT.',
-        explanation: '**Wiilku** is the WHO, **waa** marks a plain statement, and **macallin** supplies teacher. The noun changed, but the decoding routine did not.',
+        question: 'Who is the teacher in THESE captions?',
+        options: ['Sahra', 'the boy', 'Cumar', 'no one'],
+        correctAnswer: 'Sahra',
+        hint: 'This is a new page. Read the captions in front of you, not the ones from before.',
+        explanation: '**Sahro waa macallimad** — Sahra is a teacher. “The boy” was the answer on the last page, and it is the trap here: a memorized answer names the boy, a read answer names Sahra. **Macallimad** is simply the word for a woman teacher.',
+        repair: {
+          id: 'l1-transfer-gist-r', type: 'multiple_choice', objectiveIds: ['decode-statement'],
+          question: 'In the second caption, **Wiilkaygu waa macallin**, what is the writer\u2019s son?',
+          options: ['a teacher', 'a student', 'a name', 'a school'],
+          correctAnswer: 'a teacher',
+          hint: 'Use the same three passes: WHO, signal, WHAT.',
+          explanation: '**Wiilkaygu | waa | macallin** — my son | plain statement | teacher. An unfamiliar WHO chunk does not change the routine: the signal is still **waa**, and the word after it still says what the person is.',
+        },
       },
     },
     {
-      id: '1-transfer-detail', type: 'complete', exercise: {
-        id: 'l1-transfer-detail', type: 'multiple_choice', objectiveIds: ['decode-statement'],
-        question: 'Which clue proves **Wiilku waa macallin** is a plain statement rather than a spotlighted contrast?',
-        options: ['the signal waa', 'the first letter of Wiilku', 'the length of macallin', 'the final -u by itself'],
+      id: '1-transfer-detail', type: 'notice', exercise: {
+        id: 'l1-transfer-detail', type: 'multiple_choice', objectiveIds: ['find-signal'],
+        question: 'Which clue proves both class pages are plain statements rather than spotlighted contrasts?',
+        options: ['the signal waa', 'the names at the start', 'the word macallin', 'the length of the lines'],
         correctAnswer: 'the signal waa',
         hint: 'One small word tells you what kind of statement you are reading.',
-        explanation: '**waa** is the decisive clue: it marks a neutral statement. The content words identify the man and teacher, but they do not set the statement type.',
+        explanation: '**Waa** is the decisive clue on every line of both pages: it marks an ordinary statement. The people and the content words change from caption to caption; the signal is what stays.',
+        repair: {
+          id: 'l1-transfer-detail-r', type: 'multiple_choice', objectiveIds: ['find-signal'],
+          question: 'In **Sahro waa macallimad**, which word is the signal?',
+          options: ['waa', 'Sahro', 'macallimad', 'there is none'],
+          correctAnswer: 'waa',
+          hint: 'Not the WHO and not what she is — the small word between them.',
+          explanation: '**Waa** sits between the person and what she is, marking a plain statement. New page, new person, same signal.',
+        },
       },
     },
     {
       id: '1-whole-write', type: 'produce', exercise: {
         id: 'l1-whole-write', type: 'translate', objectiveIds: ['build-statement'],
-        question: 'Write the complete Somali profile line “The boy is a teacher.” from memory.',
+        question: 'Write the caption line “The boy is a teacher.” from memory.',
         answer: 'Wiilku waa macallin',
-        hint: 'Build WHO → SIGNAL → WHAT. Keep the whole sentence together.',
-        explanation: '**Wiilku waa macallin** is one complete written statement. Rebuilding the full line is the bridge from choosing parts to holding a whole sentence in memory.',
+        hint: 'Build WHO → SIGNAL → WHAT. Keep the whole line together.',
+        explanation: '**Wiilku waa macallin** is one complete written statement. Rebuilding a full line from memory is the bridge from choosing parts to holding a whole sentence.',
+        repair: {
+          id: 'l1-whole-write-r', type: 'translate', objectiveIds: ['build-statement'],
+          question: 'Write the caption line “Omar is a good student.”',
+          answer: 'Cumar waa arday wanaagsan',
+          hint: 'WHO → SIGNAL → WHAT — four parts this time.',
+          explanation: '**Cumar waa arday wanaagsan** — Omar, the plain-statement signal, then what he is. If your words were in the right order with **waa** in the middle, count it.',
+        },
       },
     },
     {
       id: '1-payoff', type: 'payoff',
-      prompt: 'Now read it once more: **Wiilku waa macallin.**\n\nYou are not sounding it out or translating three isolated words. You are decoding a person, a sentence signal, and the information carried about him. That is the routine you will reuse with captions, dialogue, and longer sentences.',
+      prompt: 'Back to the first class page: **Wiilku waa macallin. Cumar waa arday wanaagsan.**\n\nYou are not matching isolated words or spelling each line out letter by letter. You are reading two captions the way they were written — a person, a plain-statement signal, and what that person is. And when a new page put Sahra in the teacher\u2019s place, you read that too.',
     },
     {
       id: '1-summary', type: 'summary', title: 'What you can do now',
-      content: 'Read for meaning in three passes: **WHO → SIGNAL → WHAT**. In **Wiilku waa macallin**, the WHO is the boy, **waa** marks a plain statement, and **macallin** gives the meaning. Next you will expand the people-and-things vocabulary that can fill those sentence slots.',
+      content: 'Read a short Somali caption or profile line in three passes: **WHO → SIGNAL → WHAT**. **Waa** marks a plain statement; the words around it say who and what. You read two real class pages, including one you had never seen — that is the skill every later lesson builds on. Next: the words that fill the WHO box, and why Somali hides their gender in writing.',
     },
   ],
-  newItems: ['1-vocab-strategy', '1-teach-signal'],
+  newItems: ['1-teach-signal'],
   objectives: ['decode-statement', 'find-signal', 'build-statement'],
 };
 

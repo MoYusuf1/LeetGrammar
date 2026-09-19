@@ -171,6 +171,17 @@ Lesson 5 blank payoff. **[checked — two tests, both proven to bite]**
 **4.3 A lesson opens on the blueprint and ends on the summary, with a payoff in
 between.** **[checked — T1]**
 
+**4.4 Flow v2 (Learn → Repair → Retention).** A lesson with `flowVersion: 2`
+teaches through real reading, not bare sentences: a `passage` card (a sourced
+class page of 1–4 verified lines, tap-to-reveal gloss) comes first, then a gist
+exercise, a detail exercise, the teach, then fading retrieval — and the flow
+closes with a second, genuinely unseen passage the same routine transfers to.
+Every exercise in the lesson carries a `repair` — a fresh parallel item on the
+same objective that the player serves after a miss, never a same-item retry;
+first-attempt misses resurface once each in a short end-of-lesson retry round.
+The repair is a sibling, not a harder version: same objective, new surface.
+**[checked — F1–F6, all proven to bite]**
+
 ---
 
 ## When you break one of these

@@ -44,7 +44,7 @@ import LessonMenu from './LessonMenu';
 import LessonToolbar from './LessonToolbar';
 import FeedbackSheet from './FeedbackSheet';
 import Prose from './Prose';
-import { buildSteps, stepForCard, isRetrieval, type FlowCard, type VocabFlowCard } from './steps';
+import { buildSteps, stepForCard, isRetrieval, type FlowCard, type Step, type VocabFlowCard } from './steps';
 import Somali from '@/components/Somali';
 import RichText from '@/components/RichText';
 import GlossarySheet from '@/components/GlossarySheet';
@@ -78,6 +78,21 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const [noMotion] = useState(prefersNoMotion);
   const stepScrollRef = useRef<HTMLDivElement>(null);
 
+  /* ─── Repair + end-of-lesson retry ──────────────────────────────────────
+     Two mechanisms, one source (Busuu's Mistake Repair; Knowt's rounds-to-
+     mastery):
+     • REPAIR. A missed exercise with a `repair` item swaps to that FRESH
+       parallel item instead of offering the same one again — a retry on the
+       item just failed is recognition of an answer just revealed.
+     • RETRY ROUND. Every first-attempt miss is remembered; when the learner
+       reaches the end of the authored lesson, the missed items come back
+       once each, after the whole lesson as spacing. That is the retrieval
+       that actually fixes them, and it is what separates "finished the
+       cards" from "can still do it at the end". */
+  const [servingRepair, setServingRepair] = useState(false);
+  const [sessionMisses, setSessionMisses] = useState<string[]>([]);
+  const [retrySteps, setRetrySteps] = useState<Step[]>([]);
+
   /*
    * Card flow = the authored cards plus an injected vocabulary deck.
    *
@@ -109,20 +124,26 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   }, [content, lessonId]);
 
   const steps = useMemo(() => buildSteps(cards), [cards]);
+  const allSteps = useMemo(() => [...steps, ...retrySteps], [steps, retrySteps]);
 
   const [stepIndex, setStepIndex] = useState(() =>
     stepForCard(buildSteps(cards), useProgressStore.getState().getLessonCardPosition(lessonId)),
   );
+  /** True once the learner is past the authored flow, in the retry round. */
+  const inRetryRound = stepIndex >= steps.length;
 
-  const step = steps[stepIndex];
-  const isLastStep = stepIndex === steps.length - 1;
+  const step = allSteps[stepIndex];
+  const isLastStep = stepIndex === allSteps.length - 1;
   const exercise = step?.exercise;
+  /** The item actually on screen: the step's exercise, or its fresh repair
+      after a miss. Repair items carry their own hint and explanation. */
+  const activeExercise = servingRepair && exercise?.repair ? exercise.repair : exercise;
 
   /* Persist the card index this step starts at, not the step index. */
   useEffect(() => {
-    const start = steps[stepIndex]?.startIndex ?? 0;
+    const start = allSteps[stepIndex]?.startIndex ?? 0;
     useProgressStore.getState().setLessonCardPosition(lessonId, start);
-  }, [stepIndex, steps, lessonId]);
+  }, [stepIndex, allSteps, lessonId]);
 
   // Each step is a new page. A long vocabulary step can leave this internal
   // pane scrolled far below the top; reset it so the next card never opens as
@@ -143,14 +164,48 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     setPracticeAnswer(null);
     setPracticeChecked(false);
     setShowHint(false);
+    setServingRepair(false);
   };
 
   const goNext = useCallback(() => {
-    if (isLastStep) return finish();
+    if (isLastStep) {
+      /* End of the authored flow: missed items come back once each before
+         the lesson is allowed to end. Built here, not upfront, because the
+         queue depends on what the learner missed. */
+      if (sessionMisses.length > 0 && retrySteps.length === 0 && content) {
+        const byId = new Map(
+          content.cards.filter((c) => c.exercise).map((c) => [c.exercise!.id, c.exercise!]),
+        );
+        const base = cards.length;
+        const intro: TeachingCard = {
+          id: 'retry-intro',
+          type: 'coach',
+          title: 'Once more, from memory',
+          content:
+            'A few items slipped earlier. They come back now, once each — no hints this time unless you ask. This round is the one that makes them stay.',
+        };
+        const extra: Step[] = [{ cards: [intro], startIndex: base }];
+        sessionMisses.forEach((id, k) => {
+          const ex = byId.get(id);
+          if (!ex) return;
+          extra.push({
+            cards: [{ id: `retry-${ex.id}`, type: 'produce', exercise: ex }],
+            startIndex: base + 1 + k,
+            exercise: ex,
+          });
+        });
+        setRetrySteps(extra);
+        setDirection(1);
+        setStepIndex((i) => i + 1);
+        resetStepState();
+        return;
+      }
+      return finish();
+    }
     setDirection(1);
     setStepIndex((i) => i + 1);
     resetStepState();
-  }, [isLastStep, finish]);
+  }, [isLastStep, finish, sessionMisses, retrySteps.length, content, cards.length]);
 
   const goPrev = useCallback(() => {
     if (stepIndex === 0) return;
@@ -200,12 +255,12 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
         role="progressbar"
         aria-valuenow={stepIndex + 1}
         aria-valuemin={1}
-        aria-valuemax={steps.length}
-        aria-label={`Step ${stepIndex + 1} of ${steps.length}`}
+        aria-valuemax={allSteps.length}
+        aria-label={`Step ${stepIndex + 1} of ${allSteps.length}`}
       >
         <div
           className="h-full bg-accent transition-[width] duration-300"
-          style={{ width: `${((stepIndex + 1) / steps.length) * 100}%` }}
+          style={{ width: `${((stepIndex + 1) / allSteps.length) * 100}%` }}
         />
       </div>
 
@@ -281,12 +336,21 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
         onBack={goPrev}
         onForward={goNext}
         action={
-          exercise && !practiceChecked
+          activeExercise && !practiceChecked
             ? {
                 label: 'Check',
                 onClick: () => {
-                  if (!practiceAnswer || !exercise) return;
-                  progress.recordExerciseAttempt(exercise.id, verdictOf(exercise, practiceAnswer) !== false);
+                  if (!practiceAnswer || !activeExercise) return;
+                  const verdict = verdictOf(activeExercise, practiceAnswer);
+                  progress.recordExerciseAttempt(activeExercise.id, verdict !== false);
+                  /* A first-attempt miss on an authored exercise joins the
+                     end-of-lesson retry round — including a miss that a
+                     repair item later fixes, because one fresh success does
+                     not undo the original slip. Retry-round items are not
+                     re-queued (the round runs once). */
+                  if (verdict === false && exercise && !inRetryRound) {
+                    setSessionMisses((m) => (m.includes(exercise.id) ? m : [...m, exercise.id]));
+                  }
                   setPracticeChecked(true);
                 },
                 disabled: !practiceAnswer,
@@ -297,13 +361,30 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
         }
       />
 
-      {exercise && practiceChecked && (
+      {activeExercise && practiceChecked && (
         <FeedbackSheet
-          correct={verdictOf(exercise, practiceAnswer)}
-          heading={<FeedbackHeading exercise={exercise} answer={practiceAnswer} />}
-          explanation={<RichText text={exercise.explanation} />}
-          continueLabel={verdictOf(exercise, practiceAnswer) === false ? 'Try again' : isLastStep ? 'Finish lesson' : 'Continue'}
-          onContinue={verdictOf(exercise, practiceAnswer) === false ? resetStepState : goNext}
+          correct={verdictOf(activeExercise, practiceAnswer)}
+          heading={<FeedbackHeading exercise={activeExercise} answer={practiceAnswer} />}
+          explanation={<RichText text={activeExercise.explanation} />}
+          continueLabel={
+            verdictOf(activeExercise, practiceAnswer) === false
+              ? !servingRepair && !inRetryRound && exercise?.repair
+                ? 'Try a fresh one'
+                : 'Try again'
+              : isLastStep
+                ? 'Finish lesson'
+                : 'Continue'
+          }
+          onContinue={
+            verdictOf(activeExercise, practiceAnswer) === false
+              ? !servingRepair && !inRetryRound && exercise?.repair
+                ? () => {
+                    resetStepState();
+                    setServingRepair(true);
+                  }
+                : resetStepState
+              : goNext
+          }
         />
       )}
 
@@ -431,6 +512,9 @@ function RenderCard({
     case 'vocab':
       return <VocabCard words={(card as VocabFlowCard).words} lessonTitle={(card as VocabFlowCard).lessonTitle} />;
 
+    case 'passage':
+      return card.passage ? <PassageCard card={card} /> : null;
+
     case 'teach':
     case 'example':
       return <TeachCard card={card} />;
@@ -539,6 +623,66 @@ function VocabCard({ words, lessonTitle }: { words: VocabWord[]; lessonTitle: st
     </div>
   );
 }
+
+/* ─── Passage Card ─────────────────────────────────────────────────────── */
+
+/**
+ * A short, real text — the unit the whole lesson is built around.
+ *
+ * Glosses sit behind a tap, per line. That is LingQ's in-context help rather
+ * than a parallel translation: the learner commits to the gist first (the
+ * very next card asks for it), and help is available but costs a deliberate
+ * action. Showing the English open would make every gist question answerable
+ * without reading any Somali at all.
+ */
+function PassageCard({ card }: { card: TeachingCard }) {
+  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
+  const passage = card.passage!;
+  return (
+    <div className="space-y-5">
+      <motion.p
+        custom={0}
+        variants={contentStagger}
+        initial="hidden"
+        animate="visible"
+        className="text-caption1 font-semibold uppercase tracking-[0.14em] text-label-3"
+      >
+        {passage.label}
+      </motion.p>
+
+      <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="list-group">
+        {passage.lines.map((line, i) => {
+          const shown = Boolean(revealed[i]);
+          return (
+            <div key={i} className="list-row px-4 py-4">
+              <button
+                onClick={() => setRevealed((r) => ({ ...r, [i]: !r[i] }))}
+                aria-expanded={shown}
+                aria-label={shown ? `Hide the meaning of line ${i + 1}` : `Show the meaning of line ${i + 1}`}
+                className="w-full text-left"
+              >
+                <Somali size="lg">{line.somali}</Somali>
+                {shown ? (
+                  <p className="mt-1.5 text-subhead text-label-2">{line.gloss}</p>
+                ) : (
+                  <p className="mt-1.5 text-footnote text-label-3">Tap for the meaning</p>
+                )}
+                {shown && line.note && <p className="mt-1 text-footnote text-label-3">{line.note}</p>}
+              </button>
+            </div>
+          );
+        })}
+      </motion.div>
+
+      {card.content && (
+        <motion.div custom={2} variants={contentStagger} initial="hidden" animate="visible">
+          <Prose text={card.content} />
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
 
 /* ─── Teach Card ─────────────────────────────────────────────────────────── */
 

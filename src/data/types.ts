@@ -27,6 +27,7 @@ export type CardType =
   | 'produce'     // full production, no scaffold
   | 'payoff'      // build the exact sentence promised at lesson start
   | 'summary'     // lesson wrap-up
+  | 'passage'     // a short sourced microtext (2-4 lines); glosses hidden behind a tap
   | 'vocab';      // vocabulary list (synthetic, generated per lesson)
 
 // ============================================================================
@@ -86,6 +87,16 @@ export interface PracticeExercise {
 
   // Objective mapping for correctives
   objectiveIds: string[];       // Which lesson objectives this item targets
+
+  /**
+   * REPAIR — a fresh, parallel item served after a miss (Busuu's Mistake
+   * Repair pattern: explain the misconception, then retry on a NEW item,
+   * never the same one again). Optional on old lessons; the flow-2
+   * validator gates (F4) require it on every exercise in a flow-2 lesson.
+   * A repair item never carries its own repair — one fresh retry, then the
+   * miss goes to the end-of-lesson round and the home repair queue.
+   */
+  repair?: Omit<PracticeExercise, 'repair'>;
 }
 
 // ============================================================================
@@ -101,6 +112,32 @@ export interface PracticeExercise {
 export const BLUEPRINT_SLOTS = ['WHO', 'SIGNAL', 'WHAT', 'DO'] as const;
 export type BlueprintSlot = (typeof BLUEPRINT_SLOTS)[number];
 
+/**
+ * One line of a microtext: the Somali, its plain-English gloss (revealed on
+ * tap, never before), and an optional note (e.g. what an unfamiliar name is).
+ * Every `somali` token is gated against the verified-form registry — a
+ * passage is sourced text, never composed (Lesson conventions 2.2).
+ */
+export interface PassageLine {
+  somali: string;
+  gloss: string;
+  note?: string;
+}
+
+/**
+ * A short, real text the lesson is built around: a caption, a profile, a
+ * page from a class book. 2-4 lines, one situation. The transfer passage in
+ * a lesson must differ from the original in at least two content tokens
+ * (validator gate F3) so "read the new text" cannot be answered from memory
+ * of the old one.
+ */
+export interface Passage {
+  id: string;
+  /** What this text IS, in the learner's world: "A class page", "Two profiles". */
+  label: string;
+  lines: PassageLine[];
+}
+
 export interface Card {
   id: string;
   type: CardType;
@@ -111,6 +148,7 @@ export interface Card {
   prompt?: string;              // for blueprint/connect/promise/predict
   content?: string;             // long-form for teach/example cards
   exercise?: PracticeExercise;  // for practice cards (notice/complete/produce)
+  passage?: Passage;            // for passage cards
   vocab?: string[];             // for vocab cards (list of Somali words)
 
   // Blueprint state — used in blueprint card only.
@@ -140,6 +178,15 @@ export interface Lesson {
   // Metadata for validation
   newItems: string[];          // IDs of cards marked isNew (must be ≤4 per lesson)
   objectives: string[];        // e.g. ["waa_statement", "subject_verb_matching"]
+
+  /**
+   * 2 = built to the Learn→Repair→Retention architecture (Sept 2026 rework):
+   * whole text before rule talk, gist before detail, a repair item behind
+   * every exercise, and a lexically distinct transfer passage. The validator
+   * enforces the F-gates on flow-2 lessons only, so the course can be
+   * retrofitted one lesson at a time. Omit on lessons not yet rebuilt.
+   */
+  flowVersion?: 2;
 }
 
 // ============================================================================
