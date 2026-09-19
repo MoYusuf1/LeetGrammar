@@ -69,8 +69,8 @@ export const COURSE_OUTCOMES: CourseOutcome[] = [
     canDo: 'I can notice when a first reading fails and use the signal or ending to repair it.',
     objectiveIds: ['signal-focus-before', 'signal-focus-end', 'verb-ending-ambiguity', 'order-waxa-moves-it'],
     evidence: [
-      { mode: 'written-interaction', lessonIds: [5], evidenceIds: ['l5-transfer-gap'], implemented: true, note: 'An insufficient first answer must be repaired from the signal.' },
-      { mode: 'unseen-reading', lessonIds: [5, 8], evidenceIds: ['l5-transfer-gap', 'l8-transfer-parse'], implemented: true, note: 'New context prevents specimen recall.' },
+      { mode: 'written-interaction', lessonIds: [5], evidenceIds: ['l5-gist-b'], implemented: true, note: 'An insufficient first answer must be repaired from the signal.' },
+      { mode: 'unseen-reading', lessonIds: [5, 8], evidenceIds: ['l5-gist-b', 'l8-transfer-parse'], implemented: true, note: 'New context prevents specimen recall.' },
     ],
   },
   {
@@ -80,7 +80,7 @@ export const COURSE_OUTCOMES: CourseOutcome[] = [
     evidence: [
       { mode: 'guided-retrieval', lessonIds: [1, 2, 3, 5, 8], evidenceIds: ['metalinguistic-feedback'], implemented: true, note: 'Every checked item explains the clue.' },
       { mode: 'context-transfer', lessonIds: [1], evidenceIds: ['l1-transfer-detail'], implemented: true, note: 'The decisive clue is named on an unseen caption page.' },
-      { mode: 'unseen-reading', lessonIds: [5, 8], evidenceIds: ['l5-transfer-gap', 'l8-transfer-parse'], implemented: true, note: 'Later vertical-slice transfer questions ask for the decisive clue in new configurations.' },
+      { mode: 'unseen-reading', lessonIds: [5, 8], evidenceIds: ['l5-gist-b', 'l8-transfer-parse'], implemented: true, note: 'Later vertical-slice transfer questions ask for the decisive clue in new configurations.' },
     ],
   },
 ];

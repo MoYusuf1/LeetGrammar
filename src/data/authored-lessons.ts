@@ -1334,25 +1334,68 @@ const LESSON_5: Lesson = {
       content: `${BOX}\n\nA new box, and the reason Somali feels unpredictable. The SIGNAL sits right after WHO, and it decides which word the sentence is really about.`,
     },
     {
-      id: '5-connect',
-      type: 'connect',
-      prompt:
-        'You can fill the WHO box: **wiil**, **wiilka**, **Wiilku**, **isaga**. You have also been using one signal all along without naming it: **waa**. Today you meet the other two, and find out what they change.',
-    },
-    {
       id: '5-promise',
       type: 'promise',
       prompt:
         'By the end you will read two sentences made of **exactly the same words**. One means "SAHRA is greeting her friend". The other means "Sahra is greeting her FRIEND". You will know which is which.',
     },
     {
-      id: '5-predict',
-      type: 'predict',
-      prompt:
-        'Here are two real Somali sentences. The words are the same. Only the small word in the middle changes.\n\n' +
-        '**Sahra baa salaamaysa saaxiibkeed.**\n' +
-        '**Sahra waxa ay salaamaysaa saaxiibkeed.**\n\n' +
-        'Both mean "Sahra is greeting her friend". Before reading on, guess what the difference is. English would do it with your **voice**. Somali cannot.',
+      id: '5-passage-a', type: 'passage',
+      passage: {
+        id: 'l5-text-a',
+        label: 'Two captions under one photo',
+        lines: [
+          { somali: 'Sahra baa salaamaysa saaxiibkeed.', gloss: 'SAHRA is greeting her friend.', note: 'Read both lines. The words are the same.' },
+          { somali: 'Sahra waxa ay salaamaysaa saaxiibkeed.', gloss: 'Sahra is greeting her FRIEND.', note: 'Only the small word near the start changed, and the meaning moved with it.' },
+        ],
+      },
+      content: 'A photo of Sahra greeting her friend, captioned twice. Same words in both lines. Read them once, then answer.',
+    },
+    {
+      id: '5-gist-a', type: 'notice', exercise: {
+        id: 'l5-gist-a', type: 'multiple_choice', objectiveIds: ['signal-statement'],
+        question: 'The two captions use exactly the same words. What is different between them?',
+        options: [
+          'the small word in the middle, and which word each line is about',
+          'the person doing the greeting',
+          'who the friend is',
+          'nothing: they mean exactly the same thing',
+        ],
+        correctAnswer: 'the small word in the middle, and which word each line is about',
+        hint: 'Put the lines side by side. One small word swapped, and the English under each line changed with it.',
+        explanation: '**baa** in the first line, **waxa** in the second. That one swap moves the spotlight: the first is about SAHRA, the second about her FRIEND.',
+        repair: {
+          id: 'l5-gist-a-r', type: 'multiple_choice', objectiveIds: ['signal-statement'],
+          question: 'A reader says the two captions say exactly the same thing. What do they actually disagree about?',
+          options: [
+            'which word each caption is about',
+            'whether Sahra has a friend',
+            'whether the greeting happened',
+            'nothing: the reader is right',
+          ],
+          correctAnswer: 'which word each caption is about',
+          hint: 'The action is the same in both. What changes is the word each line singles out.',
+          explanation: 'Both captions describe the same greeting. They disagree about the spotlight: SAHRA in the first, her FRIEND in the second. The signal word decides.',
+        },
+      },
+    },
+    {
+      id: '5-detail-a', type: 'notice', exercise: {
+        id: 'l5-detail-a', type: 'multiple_choice', objectiveIds: ['signal-focus-before'],
+        question: 'In the first caption, which word is the spotlight on?',
+        options: ['Sahra', 'saaxiibkeed', 'baa', 'salaamaysa'],
+        correctAnswer: 'Sahra',
+        hint: 'The English under the line says it in capital letters.',
+        explanation: 'The first caption means "**SAHRA** is greeting her friend". The word right before **baa** is the one being singled out.',
+        repair: {
+          id: 'l5-detail-a-r', type: 'multiple_choice', objectiveIds: ['signal-focus-before'],
+          question: 'In **Gabadhu bariiska baa cuntay**: "The girl ate the rice": which word is the spotlight on?',
+          options: ['bariiska', 'Gabadhu', 'cuntay', 'baa'],
+          correctAnswer: 'bariiska',
+          hint: 'Look immediately to the left of **baa**. ',
+          explanation: '**baa** singles out the word right before it: **bariiska**, the rice. "The girl ate **THE RICE**."',
+        },
+      },
     },
     {
       id: '5-teach',
@@ -1390,6 +1433,30 @@ const LESSON_5: Lesson = {
         'Use **waa** when you would say the English sentence evenly, with no word pushed harder than the rest.',
     },
     {
+      id: '5-complete-2',
+      type: 'complete',
+      exercise: {
+        id: 'l5-c2',
+        type: 'multiple_choice',
+        objectiveIds: ['signal-statement'],
+        question:
+          'You just want to state a plain fact: "The boy is a teacher": with no word singled out. Which signal?',
+        options: ['waa', 'baa', 'waxa', 'ayaa'],
+        correctAnswer: 'waa',
+        hint: 'Two of these spotlight something. One just states.',
+        explanation:
+          '**waa** marks an ordinary statement: **Wiilku waa macallin.** Using **baa** or **waxa** would claim you are contrasting something with something else, which changes what the listener thinks you mean.',
+        repair: {
+          id: 'l5-c2-r', type: 'multiple_choice', objectiveIds: ['signal-statement'],
+          question: 'You want to state a flat fact, "Cumar is a student", with nothing singled out: Cumar ___ arday. Which signal fills the gap?',
+          options: ['waa', 'baa', 'waxa', 'ayaa'],
+          correctAnswer: 'waa',
+          hint: 'Two of these spotlight something. One just states.',
+          explanation: '**waa** marks an ordinary statement: **Cumar waa arday.** **baa** or **waxa** would claim a contrast you did not mean.',
+        },
+      },
+    },
+    {
       id: '5-teach-baa',
       type: 'teach',
       isNew: true,
@@ -1416,6 +1483,14 @@ const LESSON_5: Lesson = {
         explanation:
           '**baa** spotlights whatever is immediately before it, and here that is **bariiska**: the rice. So it means "The girl ate **THE RICE**".\n\n' +
           'Notice what did *not* work: the girl is the first thing in the sentence and the one doing the eating, and she is **not** the spotlight. Reaching for the first noun is the habit to break: only the position of **baa** tells you.',
+        repair: {
+          id: 'l5-n1-r', type: 'multiple_choice', objectiveIds: ['signal-focus-before'],
+          question: 'In **Sahra baa salaamaysa saaxiibkeed**: "Sahra is greeting her friend": which words is the spotlight on?',
+          options: ['Sahra: the one greeting', 'saaxiibkeed: her friend', 'salaamaysa: is greeting', 'nothing in particular'],
+          correctAnswer: 'Sahra: the one greeting',
+          hint: 'Find **baa**, then look immediately to its left.',
+          explanation: '**baa** spotlights whatever sits immediately before it, and here that is **Sahra**. It means "**SAHRA** is greeting her friend", not someone else.',
+        },
       },
     },
     {
@@ -1442,6 +1517,14 @@ const LESSON_5: Lesson = {
         hint: 'The signal is the word that carries no meaning of its own. Every other word here could be translated on its own; one cannot.',
         explanation:
           '**baa** is the signal. It carries no meaning you could translate on its own: its whole job is to mark that the word before it, **Sahra**, is the one being spotlighted.',
+        repair: {
+          id: 'l5-n2-r', type: 'marker_identification', objectiveIds: ['signal-focus-before'],
+          question: 'Which word here is the signal: the one doing the spotlighting?',
+          somali: 'Gabadhu bariiska baa cuntay',
+          answer: 'baa',
+          hint: 'One word here carries no meaning you could translate on its own. That is the signal.',
+          explanation: '**baa** is the signal. Its whole job is to mark that the word before it, **bariiska**, is the one being spotlighted.',
+        },
       },
     },
     {
@@ -1473,6 +1556,14 @@ const LESSON_5: Lesson = {
         hint: '**waxa** points forward, not back. Look at what finishes the sentence.',
         explanation:
           '**waxa** spotlights whatever ends the sentence, and that is **saaxiibkeed** (her friend). The sentence means "Sahra is greeting her **FRIEND**": the same words as the **baa** version, spotlighting the opposite end.',
+        repair: {
+          id: 'l5-n3-r', type: 'multiple_choice', objectiveIds: ['signal-focus-end'],
+          question: 'Which signal spotlights the word that ENDS a sentence?',
+          options: ['waxa', 'baa', 'waa', 'ayaa'],
+          correctAnswer: 'waxa',
+          hint: 'One signal points left; the other points right, to the end.',
+          explanation: '**waxa** spotlights whatever ends the sentence. **baa** and **ayaa** point left instead, and **waa** spotlights nothing.',
+        },
       },
     },
     {
@@ -1489,22 +1580,14 @@ const LESSON_5: Lesson = {
         hint: 'You are spotlighting the word that comes **before** the gap.',
         explanation:
           '**baa** spotlights what is immediately before it, so putting it straight after **Sahra** makes Sahra the point of the sentence. **waxa** would push the spotlight to the far end instead.',
-      },
-    },
-    {
-      id: '5-complete-2',
-      type: 'complete',
-      exercise: {
-        id: 'l5-c2',
-        type: 'multiple_choice',
-        objectiveIds: ['signal-statement'],
-        question:
-          'You just want to state a plain fact: "The boy is a teacher": with no word singled out. Which signal?',
-        options: ['waa', 'baa', 'waxa', 'ayaa'],
-        correctAnswer: 'waa',
-        hint: 'Two of these spotlight something. One just states.',
-        explanation:
-          '**waa** marks an ordinary statement: **Wiilku waa macallin.** Using **baa** or **waxa** would claim you are contrasting something with something else, which changes what the listener thinks you mean.',
+        repair: {
+          id: 'l5-c1-r', type: 'multiple_choice', objectiveIds: ['signal-focus-before'],
+          question: 'You want to say it was THE RICE the girl ate, not something else: Gabadhu bariiska ___ cuntay. Which signal fills the gap?',
+          options: ['baa', 'waxa', 'waa', 'ay'],
+          correctAnswer: 'baa',
+          hint: 'The spotlight must land on the word just before the gap.',
+          explanation: '**baa** right after **bariiska** spotlights the rice: "The girl ate **THE RICE**". **waxa** would push the spotlight to the end instead.',
+        },
       },
     },
     {
@@ -1521,6 +1604,72 @@ const LESSON_5: Lesson = {
         hint: 'It is not **ay**: that is the short "she". The signal comes first of the two.',
         explanation:
           '**waxa** is the signal. **ay** is the short pronoun "she" sitting behind it. Together they point the spotlight at the end of the sentence, onto **saaxiibkeed**.',
+        repair: {
+          id: 'l5-p1-r', type: 'multiple_choice', objectiveIds: ['signal-focus-end'],
+          question: 'To push the spotlight onto the LAST word of a sentence, which signal do you reach for?',
+          options: ['waxa', 'baa', 'waa', 'ay'],
+          correctAnswer: 'waxa',
+          hint: 'It is the signal that points forward, to the end.',
+          explanation: '**waxa** points at whatever ends the sentence. **baa** points backward, **waa** points nowhere, and **ay** is a short pronoun, not a signal.',
+        },
+      },
+    },
+    {
+      id: '5-passage-b', type: 'passage',
+      passage: {
+        id: 'l5-text-b',
+        label: 'Two notes on a door',
+        lines: [
+          { somali: 'Gabadhu bariiska baa cuntay.', gloss: 'The girl ate THE RICE.', note: 'One of these notes singles a word out.' },
+          { somali: 'Wiilku waa macallin.', gloss: 'The boy is a teacher.', note: 'The other just states a fact.' },
+        ],
+      },
+      content: 'Different words this time, same skill. One note contrasts a word; the other does not. Read both, then answer.',
+    },
+    {
+      id: '5-gist-b', type: 'notice', exercise: {
+        id: 'l5-gist-b', type: 'multiple_choice', objectiveIds: ['signal-focus-before'],
+        question: 'One of these notes singles a word out. Which note, and which word?',
+        options: [
+          'the first: bariiska, the rice',
+          'the second: macallin, the teacher',
+          'both: each singles out its subject',
+          'neither: both are plain statements',
+        ],
+        correctAnswer: 'the first: bariiska, the rice',
+        hint: 'Find the note with **baa** in it, then look immediately to its left.',
+        explanation: '**Gabadhu bariiska baa cuntay** spotlights **bariiska**: the girl ate THE RICE. The second note uses **waa**, which singles out nothing.',
+        repair: {
+          id: 'l5-gist-b-r', type: 'multiple_choice', objectiveIds: ['signal-focus-before'],
+          question: 'In the first note, which word does **baa** point at?',
+          options: ['bariiska', 'Gabadhu', 'cuntay', 'Wiilku'],
+          correctAnswer: 'bariiska',
+          hint: '**baa** points immediately left.',
+          explanation: '**baa** sits right after **bariiska**, so the rice is the spotlighted word.',
+        },
+      },
+    },
+    {
+      id: '5-detail-b', type: 'notice', exercise: {
+        id: 'l5-detail-b', type: 'multiple_choice', objectiveIds: ['signal-statement'],
+        question: 'What makes the second note a plain statement with nothing singled out?',
+        options: ['the signal waa', 'the signal baa', 'the signal waxa', 'the -u on Wiilku'],
+        correctAnswer: 'the signal waa',
+        hint: 'Look at the small word between Wiilku and macallin.',
+        explanation: '**waa** marks a flat statement: **Wiilku waa macallin.** The -u only marks Wiilku as the subject; it is **waa** that says "just a fact".',
+        repair: {
+          id: 'l5-detail-b-r', type: 'multiple_choice', objectiveIds: ['signal-statement'],
+          question: 'Which of the two notes would you write to state a flat fact, no word singled out?',
+          options: [
+            'Wiilku waa macallin.',
+            'Gabadhu bariiska baa cuntay.',
+            'both of them',
+            'neither of them',
+          ],
+          correctAnswer: 'Wiilku waa macallin.',
+          hint: 'One signal states; the other spotlights.',
+          explanation: '**Wiilku waa macallin** uses **waa**, the plain statement signal. The other note uses **baa**, which always spotlights something.',
+        },
       },
     },
     {
@@ -1542,26 +1691,19 @@ const LESSON_5: Lesson = {
         hint: 'Spotlight on **Sahra** means the signal must sit immediately after her name.',
         explanation:
           'With **baa** directly after **Sahra**, the spotlight lands on Sahra. The **waxa** version spotlights **saaxiibkeed** instead: "Sahra is greeting her FRIEND". Same words, opposite meaning, and nothing but the signal tells you which.',
-      },
-    },
-    {
-      id: '5-transfer-gap', type: 'notice', exercise: {
-        id: 'l5-transfer-gap', type: 'multiple_choice', objectiveIds: ['signal-focus-before'],
-        question: 'A note says **Gabadhu bariiska baa cuntay**. Someone replies, “It tells us the girl is the contrast.” What repair does the signal require?',
-        options: ['No: baa points left to bariiska, so the rice is contrasted', 'Yes: the first noun is always contrasted', 'No: cuntay is contrasted because it is last', 'There is not enough information to tell'],
-        correctAnswer: 'No: baa points left to bariiska, so the rice is contrasted',
-        hint: 'Treat the first reply as a guess. Find **baa**, then inspect only what is immediately before it.',
-        explanation: 'The first reading fails the signal check. **baa** sits after **bariiska**, so the repair is “the RICE,” not “the girl.” This is written clarification: the clue changes the answer.',
-      },
-    },
-    {
-      id: '5-transfer-response', type: 'produce', exercise: {
-        id: 'l5-transfer-response', type: 'marker_identification', objectiveIds: ['signal-focus-before', 'signal-focus-end'],
-        question: 'Reply with the signal you would tell a reader to check first in this line.',
-        somali: 'Gabadhu bariiska baa cuntay',
-        answer: 'baa',
-        hint: 'Your reply is one word: the signal that settles the disagreement.',
-        explanation: '**baa** is the useful reply because it tells the other reader where to look next: immediately left, at **bariiska**. The response repairs meaning, not just spelling.',
+        repair: {
+          id: 'l5-p2-r', type: 'multiple_choice', objectiveIds: ['signal-focus-before', 'signal-focus-end'],
+          question: 'Which of these means "Sahra is greeting her **FRIEND**": the friend and nobody else?',
+          options: [
+            'Sahra waxa ay salaamaysaa saaxiibkeed.',
+            'Sahra baa salaamaysa saaxiibkeed.',
+            'Wiilku waa macallin.',
+            'Neither: they mean the same thing.',
+          ],
+          correctAnswer: 'Sahra waxa ay salaamaysaa saaxiibkeed.',
+          hint: 'Spotlight at the END of the sentence. Which signal points there?',
+          explanation: '**waxa** pushes the spotlight to the last word, **saaxiibkeed**. The **baa** version spotlights Sahra instead. Same words; only the signal decides.',
+        },
       },
     },
     {
