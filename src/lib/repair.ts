@@ -23,7 +23,7 @@
 
 import { AUTHORED_LESSONS } from '@/data/authored-lessons';
 import type { PracticeExercise } from '@/data/types';
-import type { ExerciseProgress } from '@/stores/progress-store';
+import type { ExerciseProgress } from '@/domain/progress/types';
 
 /** Queued ids, oldest unresolved slip first. */
 export function repairQueue(progress: Record<string, ExerciseProgress> | undefined): string[] {
