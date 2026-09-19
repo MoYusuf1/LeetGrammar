@@ -29,6 +29,7 @@
 import { useMemo, useState } from 'react';
 import { BookOpen, UserRound } from 'lucide-react';
 import ProfileSheet from '@/components/ProfileSheet';
+import CircleIconButton from '@/components/shared/CircleIconButton';
 import { useAuthSync } from '@/contexts/AuthSyncContext';
 import { useNavigate } from 'react-router';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
@@ -60,8 +61,8 @@ export default function LearnPage() {
   return (
     <div className="learn-page min-h-[100dvh] bg-bg">
       <div className="learn-actions fixed right-4 top-[calc(0.75rem+var(--safe-t))] z-20 flex gap-2">
-        <button onClick={() => navigate('/syllabus')} aria-label="Open syllabus" className="grid h-10 w-10 place-items-center rounded-full bg-fill backdrop-blur active:opacity-60"><BookOpen size={20}/></button>
-        <button onClick={() => setProfileOpen(true)} aria-label="Open profile" className="grid h-10 w-10 place-items-center rounded-full bg-fill backdrop-blur active:opacity-60"><UserRound size={20}/></button>
+        <CircleIconButton label="Open syllabus" finish="fill" onClick={() => navigate('/syllabus')}><BookOpen size={20}/></CircleIconButton>
+        <CircleIconButton label="Open profile" finish="fill" onClick={() => setProfileOpen(true)}><UserRound size={20}/></CircleIconButton>
       </div>
       <ProfileSheet open={profileOpen} onClose={() => setProfileOpen(false)} />
       <div className="learn-shell mx-auto px-5 pt-safe-t">
