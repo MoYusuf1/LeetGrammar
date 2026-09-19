@@ -240,7 +240,7 @@ const LESSON_2: Lesson = {
     {
       id: '2-promise',
       type: 'promise',
-      prompt: 'By the end you will know why the boy\u2019s word on the noticeboard ends one way and the hand\u2019s ends another \u2014 and why you could never have seen it in the bare words.',
+      prompt: 'Explain why “the boy” and “the hand” take different endings, even though the bare nouns hide the difference.',
     },
     {
       id: '2-passage-a', type: 'passage',
@@ -291,7 +291,7 @@ const LESSON_2: Lesson = {
           options: ['He is a teacher', 'He is a student', 'His hand is dirty', 'He is at school'],
           correctAnswer: 'He is a teacher',
           hint: 'Read the first line as WHO, SIGNAL, WHAT.',
-          explanation: '**Wiilku waa macallin** \u2014 the boy is a teacher. You read this line last lesson; the noticeboard uses the same shape.',
+          explanation: '**Wiilku waa macallin** means “the boy is a teacher”: WHO, SIGNAL, WHAT.',
         },
       },
     },
@@ -305,7 +305,7 @@ const LESSON_2: Lesson = {
       title: 'Every noun has a gender',
       content:
         'Here is what the two tails were carrying. Every Somali noun is either **masculine** or **feminine**. This is a grammar label, not a statement about the world: **buug** (book) is masculine and **kab** (shoe) is feminine.\n\n' +
-        'It matters because gender decides the ending a noun takes \u2014 the noticeboard\u2019s **-ku** and **-tu** were that choice, and next lesson you will build the endings yourself. Get the gender wrong and the word comes out wrong.\n\n' +
+        'Gender decides the ending a noun takes: **-ku** or **-tu** here. Get the gender wrong and the word comes out wrong.\n\n' +
         'Some nouns you can guess from meaning:\n' +
         '\u2022 **nin** (man), **wiil** (boy): masculine\n' +
         '\u2022 **naag** (woman), **gabadh** (girl): feminine\n\n' +
@@ -521,7 +521,7 @@ const LESSON_2: Lesson = {
       id: '2-payoff',
       type: 'payoff',
       prompt:
-        'Two pages read, and the routine never changed: WHO, SIGNAL, WHAT.\n\nBut the tails talk now:\n\n**wiilku** (the boy) \u2192 k-type \u2192 masculine\n**gacantu** (the hand) \u2192 t-type \u2192 feminine\n**guriga** (the house) \u2192 masculine\n**magaalada** (the city) \u2192 feminine\n\nNext lesson: how those endings are actually built \u2014 and why they sometimes change shape.',
+        'The pattern stays WHO, SIGNAL, WHAT. The endings now carry more:\n\n**wiilku** (the boy) \u2192 k-type \u2192 masculine\n**gacantu** (the hand) \u2192 t-type \u2192 feminine\n**guriga** (the house) \u2192 masculine\n**magaalada** (the city) \u2192 feminine',
     },
     {
       id: '2-summary',
@@ -549,7 +549,7 @@ const LESSON_3: Lesson = {
       id: '3-blueprint',
       type: 'blueprint',
       blueprintSlot: ['WHO', 'WHAT'],
-      content: `${BOX}\n\nStill the WHO box. Last lesson: which gender a noun has. Today: the ending that shows it.`,
+      content: `${BOX}\n\nThe WHO box now carries its gender in the ending.`,
     },
     {
       id: '3-passage-a', type: 'passage',
@@ -2865,7 +2865,7 @@ const LESSON_8: Lesson = {
         id: 'l8-text-b',
         label: 'A two-line update',
         lines: [
-          { somali: 'Wuu keenaa.', gloss: 'He brings.', note: 'You built lines like this last lesson.' },
+          { somali: 'Wuu keenaa.', gloss: 'He brings.', note: 'A complete plain statement.' },
           { somali: 'Way keentaa.', gloss: 'She brings.', note: 'Watch what stays put and what changes.' },
         ],
       },
