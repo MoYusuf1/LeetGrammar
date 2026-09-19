@@ -157,6 +157,32 @@ function productionFirst(items: PracticeExercise[]): PracticeExercise[] {
   ];
 }
 
+
+/** True only when the lesson itself is owed by the spaced-review schedule. */
+export function isDelayedTransferSession(lessonId: number, due: number[]): boolean {
+  return due.includes(lessonId);
+}
+
+/**
+ * Evidence from a delayed session that is not a verbatim repeat of a lesson
+ * prompt. These are the items that can support a delayed-transfer claim.
+ */
+export function delayedTransferItems(
+  lessonId: number,
+  attempt = 0,
+  due: number[] = [],
+  history: AttemptHistory = {},
+): PracticeExercise[] {
+  if (!isDelayedTransferSession(lessonId, due)) return [];
+  const lessonQuestions = new Set(
+    AUTHORED_LESSONS.find((lesson) => lesson.id === lessonId)?.cards
+      .flatMap((card) => card.exercise ? [card.exercise.question.trim().toLowerCase()] : []) ?? [],
+  );
+  return composeHomework(lessonId, attempt, HOMEWORK_SIZE, due, history).filter(
+    (item) => !lessonQuestions.has(item.question.trim().toLowerCase()),
+  );
+}
+
 /**
  * A homework set for one lesson.
  *
