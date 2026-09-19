@@ -18,12 +18,21 @@
 import type { PracticeExercise } from '@/data/types';
 import { AUTHORED_LESSONS } from '@/data/authored-lessons';
 import { isAnswerCorrect } from '@/lib/grading';
+import { COURSE_OUTCOMES } from '@/data/course-outcomes';
 
 export const MASTERY_THRESHOLD = 0.85; // 85% to pass unit test
 
 /**
  * Unit test result — tracks performance per objective
  */
+export interface OutcomeScore {
+  outcomeId: string;
+  canDo: string;
+  correct: number;
+  total: number;
+  percentage: number;
+}
+
 export interface UnitTestResult {
   unitId: number;
   score: number; // 0–1
@@ -32,6 +41,7 @@ export interface UnitTestResult {
   totalItems: number;
   correctItems: number;
   failedObjectives: string[]; // Objectives where score < 85%
+  outcomeScores: OutcomeScore[]; // Can-do evidence, derived from the same graded items
   timestamp: number;
 }
 
@@ -72,6 +82,13 @@ export function scoreUnitTest(
     })
     .map(([objective]) => objective);
 
+  const outcomeScores: OutcomeScore[] = COURSE_OUTCOMES.map((outcome) => {
+    const scores = [...itemScores.entries()].filter(([objective]) => outcome.objectiveIds.includes(objective));
+    const total = scores.reduce((sum, [, value]) => sum + value.total, 0);
+    const correct = scores.reduce((sum, [, value]) => sum + value.correct, 0);
+    return { outcomeId: outcome.id, canDo: outcome.canDo, correct, total, percentage: total ? Math.round((correct / total) * 100) : 0 };
+  }).filter((score) => score.total > 0);
+
   return {
     unitId,
     score,
@@ -80,6 +97,7 @@ export function scoreUnitTest(
     totalItems: totalCount,
     correctItems: correctCount,
     failedObjectives,
+    outcomeScores,
     timestamp: Date.now(),
   };
 }
