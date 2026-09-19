@@ -241,6 +241,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
       step={step}
       lessonTitle={content.title}
       doneSlots={doneSlots}
+      activeExercise={activeExercise}
       practiceAnswer={practiceAnswer}
       practiceChecked={practiceChecked}
       showHint={showHint}
@@ -442,6 +443,7 @@ function StepView({
   step,
   lessonTitle,
   doneSlots,
+  activeExercise,
   practiceAnswer,
   practiceChecked,
   showHint,
@@ -451,6 +453,8 @@ function StepView({
   lessonTitle: string;
   /** Blueprint boxes filled by earlier lessons. */
   doneSlots: BlueprintSlot[];
+  /** The item actually served: the step exercise, or its repair after a miss. */
+  activeExercise?: TeachingCard['exercise'];
   practiceAnswer: string | null;
   practiceChecked: boolean;
   showHint: boolean;
@@ -465,6 +469,7 @@ function StepView({
           lessonTitle={lessonTitle}
           showTitle={i === 0}
           doneSlots={doneSlots}
+          activeExercise={activeExercise}
           practiceAnswer={practiceAnswer}
           practiceChecked={practiceChecked}
           showHint={showHint}
@@ -480,6 +485,7 @@ function RenderCard({
   lessonTitle,
   showTitle,
   doneSlots,
+  activeExercise,
   practiceAnswer,
   practiceChecked,
   showHint,
@@ -489,6 +495,7 @@ function RenderCard({
   lessonTitle: string;
   showTitle: boolean;
   doneSlots: BlueprintSlot[];
+  activeExercise?: TeachingCard['exercise'];
   practiceAnswer: string | null;
   practiceChecked: boolean;
   showHint: boolean;
@@ -524,16 +531,25 @@ function RenderCard({
 
     case 'notice':
     case 'complete':
-    case 'produce':
-      return card.exercise ? (
+    case 'produce': {
+      /* After a miss the player serves the repair, and the repair must be what
+         the learner SEES — grading against the fresh item while the original
+         stays on screen is the regression this override fixes. */
+      const served =
+        card.exercise && activeExercise &&
+        (activeExercise.id === card.exercise.id || card.exercise.repair?.id === activeExercise.id)
+          ? activeExercise
+          : card.exercise;
+      return served ? (
         <PracticeCard
-          exercise={card.exercise}
+          exercise={served}
           answer={practiceAnswer}
           checked={practiceChecked}
           showHint={showHint}
           onSelect={onPracticeSelect}
         />
       ) : null;
+    }
 
     case 'summary':
       return <SummaryCard card={card} />;
