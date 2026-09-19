@@ -606,7 +606,7 @@ const LESSON_3: Lesson = {
     },
     {
       id: '3-coach-endings', type: 'coach', title: 'Same page, two tails',
-      content: 'Both entries do the same job — noun, then its "the" form — but look at the tails: **guriga** grows a **g**, **magaalada** grows a **d**. Last lesson told you why: the ending shows the noun\'s gender, k-type for masculine, t-type for feminine. So far you have only read the clue. Now you build it.',
+      content: 'Both entries pair a noun with its “the” form. **Guriga** grows a **g**; **magaalada** grows a **d**. The ending shows gender: k-type for masculine, t-type for feminine. Now build the forms.',
     },
     {
       id: '3-teach',
@@ -1070,8 +1070,7 @@ const LESSON_4: Lesson = {
         '• **aad**: you\n' +
         '• **uu**: he\n' +
         '• **ay**: she / they\n\n' +
-        'You will see these fused onto **waa**, the statement signal, in the next unit: **waa + uu** becomes **wuu**.\n\n' +
-        'For now just recognise them. They are short, they are everywhere, and they are not the same words as **aniga / adiga / isaga / iyada**.',
+        'These short forms fuse onto signals: **waa + uu** becomes **wuu**. Recognise them as distinct from **aniga / adiga / isaga / iyada**.',
     },
     {
       id: '4-notice-2',
@@ -1539,8 +1538,7 @@ const LESSON_5: Lesson = {
         'So the two signals split the work cleanly:\n\n' +
         '• **baa** → look **left**, at the word just before it\n' +
         '• **waxa** → look **right**, at the word that ends the sentence\n\n' +
-        'You will also see **waxa** written **waxaa**. Same word.\n\n' +
-        'One thing to notice and not worry about yet: **waxa ay**. The little **ay** is the short "she" from last lesson, riding along behind the signal. Next lesson those two fuse into a single word.',
+        '**Waxa** may be written **waxaa**. In **waxa ay**, the short “she” follows the signal; together they fuse into one word.',
     },
     {
       id: '5-notice-3',
