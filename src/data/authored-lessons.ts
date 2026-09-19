@@ -2598,25 +2598,63 @@ const LESSON_8: Lesson = {
       content: `${BOX}\n\nEvery box is filled. The last question is what order they come in, and the answer is not the English one.`,
     },
     {
-      id: '8-connect',
-      type: 'connect',
-      prompt:
-        'You have all the pieces: **WHO**, the **SIGNAL** (even squashed onto a pronoun), and the **DO** box with an ending that matches who. Today: the order they stand in.',
-    },
-    {
       id: '8-promise',
       type: 'promise',
       prompt:
         'By the end you will read **Nin shaah wuu cabbay**: four words in an order English would never use. You will know exactly why each one sits where it does.',
     },
     {
-      id: '8-predict',
-      type: 'predict',
-      prompt:
-        'Here is a real Somali sentence meaning **"A man drank tea."**\n\n' +
-        '**Nin shaah wuu cabbay.**\n\n' +
-        'The words are: *nin* a man · *shaah* tea · *wuu* the signal + he · *cabbay* drank.\n\n' +
-        'Before reading on: what has moved, compared with the English?',
+      id: '8-passage-a', type: 'passage',
+      passage: {
+        id: 'l8-text-a',
+        label: 'Two lines from a story',
+        lines: [
+          { somali: 'Nin shaah wuu cabbay.', gloss: 'A man drank tea.', note: 'Four words, in an order English would never use.' },
+          { somali: 'Nin waa tegey.', gloss: 'A man went.', note: 'Same man, plainer line.' },
+        ],
+      },
+      content: 'Two lines from a short story. Read them both slowly, then answer.',
+    },
+    {
+      id: '8-gist-a', type: 'notice', exercise: {
+        id: 'l8-gist-a', type: 'multiple_choice', objectiveIds: ['order-verb-last'],
+        question: 'Where is the action word in each of these lines?',
+        options: [
+          'at the end of the line',
+          'right after the man, as in English',
+          'at the very start',
+          'the two lines put it in different places',
+        ],
+        correctAnswer: 'at the end of the line',
+        hint: 'Find **cabbay** (drank) and **tegey** (went) in the two lines.',
+        explanation: '**cabbay** ends the first line and **tegey** ends the second. Somali gets to the action after everything it was done to.',
+        repair: {
+          id: 'l8-gist-a-r', type: 'multiple_choice', objectiveIds: ['order-verb-last'],
+          question: 'In **Nin shaah wuu cabbay**, which word is the action?',
+          options: ['cabbay, the last word', 'nin, the first word', 'shaah, in the middle', 'wuu, the signal'],
+          correctAnswer: 'cabbay, the last word',
+          hint: 'The action is the word that tells what happened.',
+          explanation: '**cabbay** (drank) is the action, and it sits last. **nin** is who, **shaah** is what was drunk, **wuu** is the signal.',
+        },
+      },
+    },
+    {
+      id: '8-detail-a', type: 'notice', exercise: {
+        id: 'l8-detail-a', type: 'multiple_choice', objectiveIds: ['order-signal-hugs-verb'],
+        question: 'In the second line, which word sits immediately before the action?',
+        options: ['waa, the signal', 'Nin, the man', 'nothing comes before it', 'shaah, the tea'],
+        correctAnswer: 'waa, the signal',
+        hint: '**Nin waa tegey**: three words. The middle one does a signalling job.',
+        explanation: '**waa** sits immediately before **tegey**. That pairing, signal then action, is the most reliable landmark in a Somali sentence.',
+        repair: {
+          id: 'l8-detail-a-r', type: 'multiple_choice', objectiveIds: ['order-signal-hugs-verb'],
+          question: 'In the first line, which word sits immediately before **cabbay**?',
+          options: ['wuu, the squashed signal', 'shaah, the tea', 'Nin, the man', 'nothing'],
+          correctAnswer: 'wuu, the squashed signal',
+          hint: 'Even with tea wedged into the sentence, one word still hugs the verb.',
+          explanation: '**wuu** (**waa** + **uu**) sits right before **cabbay**. **shaah** moved in earlier, but the signal never leaves the verb.',
+        },
+      },
     },
     {
       id: '8-teach-verb-last',
@@ -2656,6 +2694,14 @@ const LESSON_8: Lesson = {
         hint: 'Line the two up word by word: *a man / tea / he / drank*.',
         explanation:
           '**cabbay** (drank) is last, and **shaah** (tea) comes before it. English would say "a man drank tea"; Somali gets to the action after telling you what it was done to.',
+        repair: {
+          id: 'l8-n1-r', type: 'multiple_choice', objectiveIds: ['order-verb-last'],
+          question: 'English says "a man drank tea". In the Somali line **Nin shaah wuu cabbay**, what comes right before the action word?',
+          options: ['shaah: the thing being drunk', 'nin: the man', 'waa: the plain signal', 'nothing: cabbay comes first'],
+          correctAnswer: 'shaah: the thing being drunk',
+          hint: 'The action is last. Whatever it was done to stands in front of it.',
+          explanation: '**shaah** (tea) comes before **cabbay** (drank). Somali tells you what was acted on before it gives you the action.',
+        },
       },
     },
     {
@@ -2688,6 +2734,19 @@ const LESSON_8: Lesson = {
         hint: 'The signal keeps as close to the verb as it can, and it sits in front.',
         explanation:
           'The signal hugs the verb from in front, so whatever follows it is the action word. That holds even when other words move around, which makes it the most dependable landmark in the sentence.',
+        repair: {
+          id: 'l8-n2-r', type: 'multiple_choice', objectiveIds: ['order-signal-hugs-verb'],
+          question: 'You are reading a long Somali sentence and you spot the signal **baa**. What do you know immediately?',
+          options: [
+            'The action word is the next thing along',
+            'The sentence has just ended',
+            'The action word is right before it',
+            'The next word is the subject',
+          ],
+          correctAnswer: 'The action word is the next thing along',
+          hint: 'Every signal keeps as close to the verb as it can, from in front.',
+          explanation: 'Like **wuu**, **baa** hugs the verb from in front. Find any signal and the action word is immediately to its right.',
+        },
       },
     },
     {
@@ -2704,6 +2763,14 @@ const LESSON_8: Lesson = {
         hint: 'A plain statement, nothing spotlighted, and it belongs right before the verb.',
         explanation:
           '**Nin waa tegey.** The plain-statement signal **waa** sits immediately before **tegey** (went). **baa** and **waxa** would both claim something is being spotlighted.',
+        repair: {
+          id: 'l8-c1-r', type: 'multiple_choice', objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
+          question: 'Put the pieces of "A man drank tea" in order:  Nin shaah ___ cabbay.',
+          options: ['wuu', 'waa', 'waxa', 'ma'],
+          correctAnswer: 'wuu',
+          hint: 'The doer is "he", and the signal sits right before the verb.',
+          explanation: '**Nin shaah wuu cabbay.** **wuu** (**waa** + **uu**) carries "he" and hugs **cabbay** from in front. **waxa** would push something to the end.',
+        },
       },
     },
     {
@@ -2736,6 +2803,14 @@ const LESSON_8: Lesson = {
         hint: '**waxa** spotlights whatever finishes the sentence, so what has to move?',
         explanation:
           '**waxa** spotlights the end, so the spotlighted words go past the verb to get there. **baa** does the opposite: it spotlights what sits immediately before it, and leaves the verb at the end.',
+        repair: {
+          id: 'l8-n3-r', type: 'multiple_choice', objectiveIds: ['order-waxa-moves-it'],
+          question: 'Which signal can push the spotlighted words past the verb, to the very end?',
+          options: ['waxa', 'baa', 'waa', 'ma'],
+          correctAnswer: 'waxa',
+          hint: 'Only one signal spotlights the END of the sentence.',
+          explanation: '**waxa** spotlights the end, so the spotlighted words must go past the verb to get there. **baa** and **waa** leave the verb last.',
+        },
       },
     },
     {
@@ -2751,6 +2826,14 @@ const LESSON_8: Lesson = {
         hint: 'Who first, then the signal. Here the signal is next to what the boy *is*, since there is no action word.',
         explanation:
           '**Wiilku waa macallin.** The subject leads, and **waa** sits immediately before what is being said about him: the same slot the action word would occupy if there were one.',
+        repair: {
+          id: 'l8-p1-r', type: 'unscramble', objectiveIds: ['order-signal-hugs-verb'],
+          question: 'Build "I bring.": signal and action word, in the order Somali puts them.',
+          words: ['keenaa', 'waan'],
+          answer: 'waan keenaa',
+          hint: 'The signal hugs the verb from in front.',
+          explanation: '**waan keenaa.** The signal **waan** (**waa** + **aan**) comes first and **keenaa** follows immediately, never the other way round.',
+        },
       },
     },
     {
@@ -2766,16 +2849,72 @@ const LESSON_8: Lesson = {
         hint: 'The signal hugs the verb from in front.',
         explanation:
           '**wuu keenaa.** The signal comes first and the action word follows immediately, never the other way round.',
+        repair: {
+          id: 'l8-p2-r', type: 'unscramble', objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
+          question: 'Build "she brings": signal and action word, in the order Somali puts them.',
+          words: ['keentaa', 'way'],
+          answer: 'way keentaa',
+          hint: 'The signal hugs the verb from in front.',
+          explanation: '**way keentaa.** The signal comes first and the action word follows immediately, never the other way round.',
+        },
       },
     },
     {
-      id: '8-transfer-parse', type: 'notice', exercise: {
-        id: 'l8-transfer-parse', type: 'multiple_choice', objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
-        question: 'Read the new two-line note:\n\n**Wuu keenaa.**\n**Way keentaa.**\n\nWhat stays in the same position in both lines?',
-        options: ['the signal comes immediately before the action', 'the action comes before the signal', 'the same person is acting', 'the action ending never changes'],
+      id: '8-passage-b', type: 'passage',
+      passage: {
+        id: 'l8-text-b',
+        label: 'A two-line update',
+        lines: [
+          { somali: 'Wuu keenaa.', gloss: 'He brings.', note: 'You built lines like this last lesson.' },
+          { somali: 'Way keentaa.', gloss: 'She brings.', note: 'Watch what stays put and what changes.' },
+        ],
+      },
+      content: 'One more short exchange. Read both lines, then answer.',
+    },
+    {
+      id: '8-gist-b', type: 'notice', exercise: {
+        id: 'l8-gist-b', type: 'multiple_choice', objectiveIds: ['order-signal-hugs-verb'],
+        question: 'What stays in the same position in both lines?',
+        options: [
+          'the signal comes immediately before the action',
+          'the action comes before the signal',
+          'the same person is acting',
+          'the action ending never changes',
+        ],
         correctAnswer: 'the signal comes immediately before the action',
         hint: 'Compare the job of the first word with the job of the second word in each line.',
-        explanation: 'Both lines keep SIGNAL → DO: **wuu | keenaa**, **way | keentaa**. The person and verb ending change, but the signal still hugs the action from in front.',
+        explanation: 'Both lines keep SIGNAL → DO: **wuu | keenaa**, **way | keentaa**. The person and the verb ending change, but the signal still hugs the action from in front.',
+        repair: {
+          id: 'l8-gist-b-r', type: 'multiple_choice', objectiveIds: ['order-signal-hugs-verb'],
+          question: 'In both lines, what sits immediately to the right of the signal?',
+          options: ['the action word', 'the person', 'the thing acted on', 'the end of the sentence'],
+          correctAnswer: 'the action word',
+          hint: '**wuu | keenaa** and **way | keentaa**: read the second slot in each.',
+          explanation: 'In both lines the action word follows its signal directly. That adjacency is the thing that never moves.',
+        },
+      },
+    },
+    {
+      id: '8-detail-b', type: 'notice', exercise: {
+        id: 'l8-detail-b', type: 'multiple_choice', objectiveIds: ['order-verb-last'],
+        question: 'In **Wuu keenaa**, where is the action word?',
+        options: [
+          'at the end: right after the signal',
+          'at the start of the line',
+          'before the signal',
+          'there is no action word',
+        ],
+        correctAnswer: 'at the end: right after the signal',
+        hint: 'Two words: signal, then what?',
+        explanation: '**keenaa** (bring) is last, immediately after **wuu**. Signal, then action, then nothing: the verb is at the end again.',
+        repair: {
+          id: 'l8-detail-b-r', type: 'multiple_choice', objectiveIds: ['order-verb-last'],
+          question: 'In **Way keentaa**, which word is the action, and where does it sit?',
+          options: ['keentaa, at the end', 'way, at the start', 'keentaa, before the signal', 'there is no action word'],
+          correctAnswer: 'keentaa, at the end',
+          hint: 'The action tells what happened: bringing.',
+          explanation: '**keentaa** is the action and it finishes the line, right after the signal **way**.',
+        },
       },
     },
     {
@@ -2785,6 +2924,13 @@ const LESSON_8: Lesson = {
         answer: 'wuu keenaa\nway keentaa',
         hint: 'Each line begins with its squashed signal, followed immediately by the matching action word.',
         explanation: '**wuu keenaa** and **way keentaa** form a short connected update. Each sentence keeps SIGNAL → DO, while both halves change together to keep the person consistent.',
+        repair: {
+          id: 'l8-connected-write-r', type: 'translate', objectiveIds: ['order-signal-hugs-verb', 'order-verb-last'],
+          question: 'Write the two-line update: "You bring." then "They bring." Use one Somali sentence per line.',
+          answer: 'waad keentaa\nway keenaan',
+          hint: 'Each line begins with its squashed signal, followed immediately by the matching action word.',
+          explanation: '**waad keentaa** and **way keenaan**: each line keeps SIGNAL → DO, and both halves change together to keep the person consistent.',
+        },
       },
     },
     {
