@@ -53,10 +53,15 @@ describe('servingForRepair', () => {
     expect(served!.id).toBe('l1-gist-a');
   });
 
-  it('serves an exercise itself when it has no repair', () => {
-    const [id, entry] = [...exerciseIndex()].find(([, e]) => !e.parentId && !e.exercise.repair)!;
-    expect(servingForRepair(id)!.id).toBe(id);
-    expect(entry.exercise.id).toBe(id);
+  it('carries a repair behind every course exercise', () => {
+    // Design rule: a miss is always met by a fresh parallel item, so the
+    // `?? entry.exercise` fallback in servingForRepair has no live specimen
+    // left in the course. This is the invariant that replaced it.
+    for (const [id, entry] of exerciseIndex()) {
+      if (!entry.parentId) {
+        expect(entry.exercise.repair, `${id} must carry a repair`).toBeDefined();
+      }
+    }
   });
 
   it('returns undefined for ids the course does not carry', () => {
