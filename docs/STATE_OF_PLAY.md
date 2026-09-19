@@ -34,7 +34,7 @@ source-verified.
 | 7 | Action Words | 15 | 6 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
 | 8 | Putting It In Order | 16 | 6 | the action word lands last; the signal hugs the verb; `waxa` sends the spotlight past it |
 
-**Totals:** 129 authored cards · 54 exercises · 35% production.
+**Totals:** 138 authored cards · 61 exercises · 36% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
 The course opens on — and lands on — **`Wiilku waa macallin.`** ("The boy is a teacher."), a
