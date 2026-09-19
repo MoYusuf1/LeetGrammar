@@ -17,64 +17,13 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { defaultProgress, type UnitTestRecord, type UserProgress } from '@/domain/progress/types';
 import type { UnitTestResult } from '@/lib/assessment';
-import { seedReview, advanceReview, type ReviewSchedule } from '@/lib/review';
 
 const STORAGE_KEY = 'leet-somali-progress-v8';
+import { seedReview, advanceReview } from '@/lib/review';
 
-/**
- * What a learner has done on a unit test.
- *
- * Both numbers are kept on purpose: `best` is what the learner has achieved and
- * should not be taken away by a bad retry, while `last` is what correctives has
- * to work from — the objectives missed on the most recent attempt.
- */
-export interface UnitTestRecord {
-  unitId: number;
-  attempts: number;
-  bestPercentage: number;
-  passed: boolean; // has ever reached the mastery threshold
-  last: UnitTestResult;
-}
-
-export interface ExerciseProgress { attempts: number; correct: number; misses: number; lastAttemptAt: string; }
-
-export interface UserProgress {
-  completedLessons: number[];
-  streak: number;
-  lastStudyDate: string;
-  practiceScores: Record<number, number>;
-  activityLog: string[]; // Array of YYYY-MM-DD strings
-
-  // Lesson card positions (resume where you left off)
-  lessonCardPositions: Record<number, number>;
-
-  // Unit test results, keyed by unit id
-  unitTestResults: Record<number, UnitTestRecord>;
-
-  /**
-   * When each finished lesson is next owed a review, keyed by lesson id.
-   * Seeded on completion, advanced when its homework is done. Fixed intervals
-   * per §1.4 — see lib/review.ts.
-   */
-  reviewSchedule: ReviewSchedule;
-
-  // Per-prompt retrieval history. Misses survive sign-in so the same weak point
-  // can be repeated and later review can adapt across devices.
-  exerciseProgress: Record<string, ExerciseProgress>;
-}
-
-const defaultProgress: UserProgress = {
-  completedLessons: [],
-  streak: 0,
-  lastStudyDate: '',
-  practiceScores: {},
-  activityLog: [],
-  lessonCardPositions: {},
-  unitTestResults: {},
-  reviewSchedule: {},
-  exerciseProgress: {},
-};
+export type { ExerciseProgress, UnitTestRecord, UserProgress } from '@/domain/progress/types';
 
 function getToday(): string {
   return new Date().toISOString().split('T')[0];
