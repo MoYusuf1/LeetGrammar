@@ -34,7 +34,7 @@ source-verified.
 | 7 | Action Words | 15 | 6 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
 | 8 | Putting It In Order | 16 | 6 | the action word lands last; the signal hugs the verb; `waxa` sends the spotlight past it |
 
-**Totals:** 125 authored cards · 54 exercises · 35% production.
+**Totals:** 129 authored cards · 54 exercises · 35% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
 The course opens on — and lands on — **`Wiilku waa macallin.`** ("The boy is a teacher."), a
@@ -117,7 +117,7 @@ It is now four real segments that highlight the slot from the data.
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
 | Tests | 116, across 8 files |
-| Validator | 23 checks passing, 0 errors, 4 open warnings |
+| Validator | 20 checks passing, 0 errors, 4 open warnings |
 | Sources | 8 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary, + 3 dictionaries (`JF`, `SA`, `AW`) |
 | Deployment | Vercel, auto-deploys from `main` |
 
