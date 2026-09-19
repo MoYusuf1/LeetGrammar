@@ -1,7 +1,10 @@
 /**
  * LessonCards — the teaching engine.
  *
- * A lesson is a deck of STEPS, paged with the toolbar at the bottom.
+ * A lesson is a deck of STEPS, paged with the toolbar at the bottom. This
+ * file owns the flow: the vocab-deck injection, the repair and retry-round
+ * machinery, navigation and progress persistence. The cards themselves each
+ * live under cards/ and are routed by cards/StepView.tsx.
  *
  * NO SWIPE. It was tried and removed. Two real bugs made it unreliable — the
  * drag surface was only as tall as its text, so most of the screen did nothing,
@@ -34,20 +37,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, MoreHorizontal, Lightbulb } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent } from '@/data/authored-lessons';
-import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
-import { displayAnswer, isAnswerCorrect, isSelfGraded, verdictOf } from '@/lib/grading';
-import { getContextualVocabForLesson, type VocabWord } from '@/data/vocabulary';
-import AnswerInput from './AnswerInput';
-import { stripBoxArt } from './box-art';
+import type { Card as TeachingCard } from '@/data/types';
+import { verdictOf } from '@/lib/grading';
+import { getContextualVocabForLesson } from '@/data/vocabulary';
 import LessonMenu from './LessonMenu';
 import LessonToolbar from './LessonToolbar';
 import FeedbackSheet from './FeedbackSheet';
-import Prose from './Prose';
 import { buildSteps, stepForCard, isRetrieval, type FlowCard, type Step, type VocabFlowCard } from './steps';
-import Somali from '@/components/Somali';
+import StepView from './cards/StepView';
+import { FeedbackHeading } from './cards/PracticeCard';
+import CircleIconButton from '@/components/shared/CircleIconButton';
 import RichText from '@/components/RichText';
 import GlossarySheet from '@/components/GlossarySheet';
-import { contentStagger } from './motion';
 import { prefersNoMotion } from '@/lib/reduced-motion';
 
 interface LessonCardsProps {
@@ -64,8 +65,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const navigate = useNavigate();
   const progress = useProgressStore();
   const content = getLessonContent(lessonId);
-  // Which blueprint boxes earlier lessons already filled. Derived from the
-  // course, so it stays true as lessons are added or retagged.
 
   const [direction, setDirection] = useState(1);
   const [practiceAnswer, setPracticeAnswer] = useState<string | null>(null);
@@ -262,14 +261,14 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
         />
       </div>
 
-      <button
+      <CircleIconButton
+        label="Close lesson"
         onClick={() => navigate('/learn')}
-        aria-label="Close lesson"
-        className="glass pressable fixed left-4 z-30 flex h-10 w-10 items-center justify-center rounded-full text-label"
+        className="fixed left-4 z-30 text-label"
         style={{ top: 'calc(var(--safe-t) + 14px)' }}
       >
         <X className="h-[18px] w-[18px]" />
-      </button>
+      </CircleIconButton>
 
       <div
         className="fixed right-4 z-30 flex items-center gap-2"
@@ -278,28 +277,26 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
         {/* The hint is a lamp you switch on, not something sitting open on the
             card telling you the answer's shape before you have tried. */}
         {exercise && (
-          <button
-            onClick={() => setShowHint((s) => !s)}
-            aria-label={showHint ? 'Hide hint' : 'Show hint'}
+          <CircleIconButton
+            label={showHint ? 'Hide hint' : 'Show hint'}
             aria-pressed={showHint}
-            className={`glass pressable flex h-10 w-10 items-center justify-center rounded-full ${
-              showHint ? 'text-label' : 'text-label-2'
-            }`}
+            onClick={() => setShowHint((s) => !s)}
+            className={showHint ? 'text-label' : 'text-label-2'}
           >
             <Lightbulb
               className="h-[18px] w-[18px]"
               fill={showHint ? 'currentColor' : 'none'}
             />
-          </button>
+          </CircleIconButton>
         )}
 
-        <button
+        <CircleIconButton
+          label="Lesson options"
           onClick={() => setShowMenu(true)}
-          aria-label="Lesson options"
-          className="glass pressable flex h-10 w-10 items-center justify-center rounded-full text-label"
+          className="text-label"
         >
           <MoreHorizontal className="h-[18px] w-[18px]" />
-        </button>
+        </CircleIconButton>
       </div>
 
       {/* The step area is a fixed pane that scrolls internally, so the toolbar
@@ -397,405 +394,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
       )}
 
       {showGlossary && <GlossarySheet onClose={() => setShowGlossary(false)} />}
-    </div>
-  );
-}
-
-/* ─── Feedback helpers ───────────────────────────────────────────────────── */
-
-export function FeedbackHeading({
-  exercise,
-  answer,
-}: {
-  exercise: PracticeExercise;
-  answer: string | null;
-}) {
-  if (isSelfGraded(exercise)) {
-    return (
-      <>
-        Answer: <Somali inherit>{displayAnswer(exercise)}</Somali>
-      </>
-    );
-  }
-  if (isAnswerCorrect(exercise, answer)) return <>Correct</>;
-  return (
-    <>
-      Not quite. The answer is <Somali inherit>{displayAnswer(exercise)}</Somali>
-    </>
-  );
-}
-
-/* ─── Step Renderer ──────────────────────────────────────────────────────── */
-
-function StepView({
-  step,
-  lessonTitle,
-  activeExercise,
-  practiceAnswer,
-  practiceChecked,
-  showHint,
-  onPracticeSelect,
-}: {
-  step: { cards: FlowCard[]; exercise?: TeachingCard['exercise'] };
-  lessonTitle: string;
-  /** The item actually served: the step exercise, or its repair after a miss. */
-  activeExercise?: TeachingCard['exercise'];
-  practiceAnswer: string | null;
-  practiceChecked: boolean;
-  showHint: boolean;
-  onPracticeSelect: (a: string) => void;
-}) {
-  return (
-    <article className="lesson-article space-y-9">
-      {step.cards.map((card, i) => (
-        <RenderCard
-          key={i}
-          card={card}
-          lessonTitle={lessonTitle}
-          showTitle={i === 0}
-          activeExercise={activeExercise}
-          practiceAnswer={practiceAnswer}
-          practiceChecked={practiceChecked}
-          showHint={showHint}
-          onPracticeSelect={onPracticeSelect}
-        />
-      ))}
-    </article>
-  );
-}
-
-function RenderCard({
-  card,
-  lessonTitle,
-  showTitle,
-  activeExercise,
-  practiceAnswer,
-  practiceChecked,
-  showHint,
-  onPracticeSelect,
-}: {
-  card: FlowCard;
-  lessonTitle: string;
-  showTitle: boolean;
-  activeExercise?: TeachingCard['exercise'];
-  practiceAnswer: string | null;
-  practiceChecked: boolean;
-  showHint: boolean;
-  onPracticeSelect: (a: string) => void;
-}) {
-  switch (card.type) {
-    case 'blueprint':
-    case 'connect':
-    case 'promise':
-    case 'payoff':
-    case 'predict':
-      return (
-        <IntroCard
-          card={card}
-          lessonTitle={lessonTitle}
-          showTitle={showTitle}
-        />
-      );
-
-    case 'vocab':
-      return <VocabCard words={(card as VocabFlowCard).words} lessonTitle={(card as VocabFlowCard).lessonTitle} />;
-
-    case 'passage':
-      return card.passage ? <PassageCard card={card} /> : null;
-
-    case 'teach':
-    case 'example':
-      return <TeachCard card={card} />;
-
-    case 'coach':
-      return <CoachCard card={card} />;
-
-    case 'notice':
-    case 'complete':
-    case 'produce': {
-      /* After a miss the player serves the repair, and the repair must be what
-         the learner SEES — grading against the fresh item while the original
-         stays on screen is the regression this override fixes. */
-      const served =
-        card.exercise && activeExercise &&
-        (activeExercise.id === card.exercise.id || card.exercise.repair?.id === activeExercise.id)
-          ? activeExercise
-          : card.exercise;
-      return served ? (
-        <PracticeCard
-          exercise={served}
-          answer={practiceAnswer}
-          checked={practiceChecked}
-          showHint={showHint}
-          onSelect={onPracticeSelect}
-        />
-      ) : null;
-    }
-
-    case 'summary':
-      return <SummaryCard card={card} />;
-
-    default:
-      return null;
-  }
-}
-
-/* ─── Intro Card ─────────────────────────────────────────────────────────── */
-
-function IntroCard({
-  card,
-  lessonTitle,
-  showTitle,
-}: {
-  card: TeachingCard;
-  lessonTitle: string;
-  showTitle: boolean;
-}) {
-  return (
-    <div className="space-y-5">
-      {showTitle && (
-        <motion.h1
-          custom={0}
-          variants={contentStagger}
-          initial="hidden"
-          animate="visible"
-          className="text-title1 font-bold text-label"
-        >
-          {lessonTitle}
-        </motion.h1>
-      )}
-
-      {card.prompt && (
-        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <Prose text={card.prompt} />
-        </motion.div>
-      )}
-
-      {card.content && (
-        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <Prose text={stripBoxArt(card.content)} />
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
-/* ─── Vocab Card ─────────────────────────────────────────────────────────── */
-
-function VocabCard({ words, lessonTitle }: { words: VocabWord[]; lessonTitle: string }) {
-  return (
-    <div className="space-y-4">
-      <div>
-        <p className="text-caption uppercase tracking-wider text-label-3">Vocabulary in context</p>
-        <h2 className="mt-1 text-title2 font-semibold text-label">Words used in {lessonTitle}</h2>
-        <p className="mt-2 text-subhead text-label-2">These are the words this lesson uses to carry its pattern. Read them here, then meet them again in the examples and questions.</p>
-      </div>
-      <motion.div
-        custom={0}
-        variants={contentStagger}
-        initial="hidden"
-        animate="visible"
-        className="list-group"
-      >
-      {words.map((w) => (
-        <div key={w.rank} className="list-row flex items-baseline justify-between gap-3 px-4 py-3">
-          <div className="min-w-0">
-            <Somali size="lg">{w.somali}</Somali>
-            <p className="mt-0.5 text-subhead text-label-2">{w.english}</p>
-          </div>
-          <span className="flex-shrink-0 text-caption2 uppercase tracking-wider text-label-3">
-            {w.pos}
-          </span>
-        </div>
-      ))}
-      </motion.div>
-    </div>
-  );
-}
-
-/* ─── Passage Card ─────────────────────────────────────────────────────── */
-
-/**
- * A short, real text — the unit the whole lesson is built around.
- *
- * Glosses sit behind a tap, per line. That is LingQ's in-context help rather
- * than a parallel translation: the learner commits to the gist first (the
- * very next card asks for it), and help is available but costs a deliberate
- * action. Showing the English open would make every gist question answerable
- * without reading any Somali at all.
- */
-function PassageCard({ card }: { card: TeachingCard }) {
-  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
-  const passage = card.passage!;
-  return (
-    <div className="space-y-5">
-      <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible" className="list-group">
-        {passage.lines.map((line, i) => {
-          const shown = Boolean(revealed[i]);
-          return (
-            <div key={i} className="list-row px-4 py-4">
-              <button
-                onClick={() => setRevealed((r) => ({ ...r, [i]: !r[i] }))}
-                aria-expanded={shown}
-                aria-label={shown ? `Hide the meaning of line ${i + 1}` : `Show the meaning of line ${i + 1}`}
-                className="w-full text-left"
-              >
-                <Somali size="lg">{line.somali}</Somali>
-                {shown ? (
-                  <p className="mt-1.5 text-subhead text-label-2">{line.gloss}</p>
-                ) : (
-                  <p className="mt-1.5 text-footnote text-label-3">Tap for the meaning</p>
-                )}
-                {shown && line.note && <p className="mt-1 text-footnote text-label-3">{line.note}</p>}
-              </button>
-            </div>
-          );
-        })}
-      </motion.div>
-
-      {card.content && (
-        <motion.div custom={2} variants={contentStagger} initial="hidden" animate="visible">
-          <Prose text={card.content} />
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
-
-/* ─── Teach Card ─────────────────────────────────────────────────────────── */
-
-function TeachCard({ card }: { card: TeachingCard }) {
-  return (
-    <div className="space-y-4">
-      {/* The card's own title is a real heading now, not a grey eyebrow. */}
-      {card.title && (
-        <motion.h2
-          custom={0}
-          variants={contentStagger}
-          initial="hidden"
-          animate="visible"
-          className="text-title2 font-semibold text-label"
-        >
-          {card.title}
-        </motion.h2>
-      )}
-
-      {card.content && (
-        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          {/* Renders white. It rendered grey for the whole life of the previous
-              version because `text-label-2` in this component's own class list
-              outranked the `text-label` the caller passed — Tailwind emits
-              `.text-label` first, and class strings have no specificity. */}
-          <Prose text={card.content} />
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
-/* ─── Learning move ─────────────────────────────────────────────────────── */
-
-function CoachCard({ card }: { card: TeachingCard }) {
-  return (
-    <motion.aside
-      custom={0}
-      variants={contentStagger}
-      initial="hidden"
-      animate="visible"
-      className="learning-move rounded-2xl border border-accent/20 bg-accent/[0.08] p-5 sm:p-6"
-    >
-      <p className="mb-2 text-caption1 font-semibold uppercase tracking-[0.14em] text-accent">
-        Learning move
-      </p>
-      {card.title && <h2 className="text-title2 font-semibold text-label">{card.title}</h2>}
-      {card.content && (
-        <div className="mt-3">
-          <Prose text={card.content} />
-        </div>
-      )}
-    </motion.aside>
-  );
-}
-
-/* ─── Practice Card ──────────────────────────────────────────────────────── */
-
-export function PracticeCard({
-  exercise,
-  answer,
-  checked,
-  showHint,
-  onSelect,
-}: {
-  exercise: PracticeExercise;
-  answer: string | null;
-  checked: boolean;
-  showHint: boolean;
-  onSelect: (a: string) => void;
-}) {
-  return (
-    <div className="space-y-6">
-      <motion.div custom={0} variants={contentStagger} initial="hidden" animate="visible">
-        <p className="text-title2 font-semibold leading-[1.3] text-label">
-          <RichText text={exercise.question} />
-        </p>
-        {exercise.somali && (
-          <div className="mt-5 text-center">
-            <Somali size="hero">{exercise.somali}</Somali>
-          </div>
-        )}
-      </motion.div>
-
-      {/* Keyed by exercise id, and it must stay keyed. AnswerInput holds the
-          assembled word bank for an unscramble in its own state; without a key
-          React reuses the instance across cards, so the words tapped on one
-          card arrive already-placed on the next and its own chips render as
-          spent. Check then stays disabled forever — a softlock the learner can
-          only escape via Reset. It went unnoticed until Lesson 8 became the
-          first lesson with two unscrambles in a row. */}
-      <AnswerInput key={exercise.id} exercise={exercise} answer={answer} checked={checked} onSelect={onSelect} />
-
-      {(exercise.type === 'translate' || exercise.type === 'marker_identification') && (
-        <p className="text-footnote text-label-3">
-          Type your best answer, then check: you grade yourself against the explanation.
-        </p>
-      )}
-
-      {showHint && (
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl bg-fill p-4"
-        >
-          <p className="text-subhead text-label">
-            <RichText text={exercise.hint} />
-          </p>
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
-/* ─── Summary Card ───────────────────────────────────────────────────────── */
-
-function SummaryCard({ card }: { card: TeachingCard }) {
-  return (
-    <div className="space-y-5">
-      <motion.h2
-        custom={0}
-        variants={contentStagger}
-        initial="hidden"
-        animate="visible"
-        className="text-title1 font-bold text-label"
-      >
-        {card.title}
-      </motion.h2>
-
-      {card.content && (
-        <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
-          <Prose text={card.content} />
-        </motion.div>
-      )}
     </div>
   );
 }
