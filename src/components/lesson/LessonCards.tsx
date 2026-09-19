@@ -28,7 +28,7 @@
  *     progress both depend on that.
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MoreHorizontal, Lightbulb } from 'lucide-react';
@@ -76,6 +76,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [noMotion] = useState(prefersNoMotion);
+  const stepScrollRef = useRef<HTMLDivElement>(null);
 
   /*
    * Card flow = the authored cards plus an injected vocabulary deck.
@@ -122,6 +123,13 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     const start = steps[stepIndex]?.startIndex ?? 0;
     useProgressStore.getState().setLessonCardPosition(lessonId, start);
   }, [stepIndex, steps, lessonId]);
+
+  // Each step is a new page. A long vocabulary step can leave this internal
+  // pane scrolled far below the top; reset it so the next card never opens as
+  // an apparently blank screen.
+  useEffect(() => {
+    stepScrollRef.current?.scrollTo({ top: 0, behavior: 'instant' });
+  }, [stepIndex]);
 
   /* ─── Navigation ───────────────────────────────────────────────────────── */
 
@@ -245,7 +253,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
           never moves between a short step and a long one. */}
       {/* Bottom padding clears the floating toolbar, which no longer occupies
           layout space now that it is fixed. */}
-      <div className="flex-1 overflow-y-auto overscroll-contain px-5 pb-[calc(6rem+var(--safe-b))] pt-[calc(var(--safe-t)+74px)]">
+      <div ref={stepScrollRef} className="flex-1 overflow-y-auto overscroll-contain px-5 pb-[calc(6rem+var(--safe-b))] pt-[calc(var(--safe-t)+74px)]">
         <div className="mx-auto max-w-column">
           {noMotion ? (
             deck
