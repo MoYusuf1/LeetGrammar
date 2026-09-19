@@ -25,10 +25,9 @@ export default function ProfileSheet({ open, onClose }: { open: boolean; onClose
       <main className="mx-auto max-w-[38rem] px-5 pb-[calc(3rem+var(--safe-b))] pt-8">
         {!ready ? <p className="text-center text-label-2">Loading account…</p> : !user ? (
           <section className="flex min-h-[70dvh] flex-col items-center justify-center">
-            <h2 className="text-title1 font-bold tracking-tight">Sign in</h2>
             <button
               onClick={() => void signIn()}
-              className="mt-8 flex w-full max-w-sm items-center justify-center gap-3 rounded-xl bg-accent px-5 py-3.5 text-headline font-semibold text-accent-ink active:opacity-70"
+              className="flex w-full max-w-sm items-center justify-center gap-3 rounded-xl bg-accent px-5 py-3.5 text-headline font-semibold text-accent-ink active:opacity-70"
             >
               <GoogleMark />
               <span>Sign in with Google</span>

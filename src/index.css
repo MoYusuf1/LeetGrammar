@@ -75,9 +75,9 @@
     --font-ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
       'Inter', system-ui, 'Segoe UI', sans-serif;
 
-    /* New York — Apple's system serif. Also an iPhone font, so the target
-       language gets its own voice without breaking the native feel. */
-    --font-somali: ui-serif, 'New York', 'Source Serif 4', Georgia, serif;
+    /* One coherent iOS-style sans serif system. Somali stays visually strong
+       through size and weight, never through a bookish Times-style face. */
+    --font-somali: var(--font-ui);
 
     --column: 30rem;
     --safe-b: env(safe-area-inset-bottom, 0px);
@@ -448,4 +448,38 @@
     margin-inline: calc(clamp(5rem, 9vw, 10rem) * -1);
     padding-inline: clamp(5rem, 9vw, 10rem);
   }
+}
+
+
+/* Clean reading shell. Large screens use the same calm contents page as phone,
+   with more breathing room instead of a separate course-dashboard skin. */
+@media (min-width: 768px) {
+  :root { --column: 46rem; }
+  .learn-page { background: var(--bg); }
+  .learn-shell { display: block; width: 100%; max-width: 54rem; min-height: 100dvh; margin: 0 auto; padding: 0 2rem; background: var(--bg); }
+  .learn-content { padding: 0; background: transparent; }
+  .learn-large-toolbar { display: flex; min-height: 4.5rem; margin: 0; padding: 1rem 3.75rem 1rem 0; justify-content: flex-end; align-items: center; border-bottom: .5px solid var(--separator); color: var(--label-2); font-size: .9375rem; font-weight: 500; }
+  .learn-content main { width: 100%; max-width: 46rem; margin: 3rem auto 0; }
+  .profile-trigger { right: max(1.25rem, calc((100vw - 54rem) / 2 + 2rem)); top: 1rem; }
+}
+@media (min-width: 1024px) {
+  :root { --column: 48rem; }
+  .learn-shell { max-width: 58rem; padding-inline: 3rem; }
+  .learn-content { padding-inline: 0; }
+  .learn-large-toolbar { margin-inline: 0; padding-inline: 0 3.75rem; }
+  .learn-content main { max-width: 48rem; margin-top: 3.5rem; }
+  .profile-trigger { right: max(1.25rem, calc((100vw - 58rem) / 2 + 3rem)); }
+}
+@media (min-width: 1440px) {
+  .learn-shell { display: block; grid-template-columns: none; }
+  .learn-content { padding-inline: 0; }
+  .learn-large-toolbar { margin-inline: 0; padding-inline: 0 3.75rem; }
+}
+
+.lesson-article { font-family: var(--font-ui); }
+.lesson-article .so,
+.lesson-article .so-hero { font-family: var(--font-ui); letter-spacing: -0.01em; }
+@media (min-width: 768px) {
+  .lesson-container { --column: 46rem; }
+  .lesson-container .lesson-article { padding: 1rem 0 2rem; }
 }

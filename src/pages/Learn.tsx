@@ -27,8 +27,9 @@
  */
 
 import { useMemo, useState } from 'react';
-import { ClipboardCheck, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 import ProfileSheet from '@/components/ProfileSheet';
+import { useAuthSync } from '@/contexts/AuthSyncContext';
 import { useNavigate } from 'react-router';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
 import { UNITS, getUnitTest } from '@/data/unit-tests';
@@ -39,6 +40,7 @@ import { useProgressStore } from '@/stores/progress-store';
 export default function LearnPage() {
   const navigate = useNavigate();
   const store = useProgressStore();
+  const { user } = useAuthSync();
   const [profileOpen, setProfileOpen] = useState(false);
 
   const grouped = useMemo(
@@ -56,8 +58,6 @@ export default function LearnPage() {
      label, and it is why there is no separate continue button. */
   const current = LESSON_LIST.find((l) => !completed.includes(l.lessonId))?.lessonId;
 
-  const completedCount = completed.length;
-  const dueCount = due.size;
   /* Unresolved slips, fed by every recorded exercise attempt. The one
      actionable row on this page that is not a lesson. */
   const repairCount = repairQueue(store.exerciseProgress).length;
@@ -67,31 +67,10 @@ export default function LearnPage() {
       <button onClick={() => setProfileOpen(true)} aria-label="Open profile" className="profile-trigger fixed right-4 top-[calc(0.75rem+var(--safe-t))] z-20 grid h-10 w-10 place-items-center rounded-full bg-fill backdrop-blur active:opacity-60"><UserRound size={20}/></button>
       <ProfileSheet open={profileOpen} onClose={() => setProfileOpen(false)} />
       <div className="learn-shell mx-auto px-5 pt-safe-t">
-        <aside className="learn-sidebar" aria-label="Course overview">
-          <div>
-            <p className="text-caption2 font-semibold uppercase tracking-[0.14em] text-label-3">Course</p>
-            <h1 className="mt-3 text-large font-bold tracking-tight text-label">Somali</h1>
-            <p className="mt-3 max-w-[17rem] text-footnote leading-relaxed text-label-2">
-              A sourced grammar course built around the shape of a real Somali sentence.
-            </p>
-          </div>
-
-          <dl className="mt-10 grid grid-cols-2 gap-x-5 gap-y-6">
-            <div>
-              <dt className="text-caption2 uppercase tracking-wider text-label-3">Finished</dt>
-              <dd className="mt-1 text-title2 font-semibold tabular-nums text-label">
-                {completedCount}<span className="text-label-3">/{LESSON_LIST.length}</span>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-caption2 uppercase tracking-wider text-label-3">Review</dt>
-              <dd className="mt-1 text-title2 font-semibold tabular-nums text-label">{dueCount}</dd>
-            </div>
-          </dl>
-        </aside>
-
         <div className="learn-content">
-          <div className="learn-large-toolbar" aria-hidden="true"><span>LeetGrammar</span><span>Somali Course</span></div>
+          <div className="learn-large-toolbar" aria-label="Learner">
+            <span>{user?.displayName?.trim() || ''}</span>
+          </div>
           <header className="learn-mobile-header pb-10 pt-12">
             <h1 className="text-large font-bold tracking-tight text-label">Somali</h1>
           </header>
@@ -157,8 +136,8 @@ export default function LearnPage() {
                     onClick={() => navigate(`/unit-test/${unit.id}`)}
                     className="mt-2 grid w-full grid-cols-[2.75rem_1fr] items-center gap-3 py-3 text-left active:opacity-50"
                   >
-                    <span aria-hidden className="grid h-8 w-8 place-items-center rounded-lg bg-fill text-label-2">
-                      <ClipboardCheck size={18} strokeWidth={1.8} />
+                    <span aria-hidden className="text-title1 font-light leading-[1.3] tabular-nums text-label-3">
+                      T{unit.id}
                     </span>
                     <span className="min-w-0">
                       <span className="block text-title3 font-medium text-label">{bank.name}</span>
