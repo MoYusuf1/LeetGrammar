@@ -25,16 +25,18 @@ import type { PracticeExercise, TestBank, Unit } from './types';
 import { AUTHORED_LESSONS } from './authored-lessons.ts';
 import { UNIT_1_TEST } from './unit-banks/unit-1.ts';
 import { UNIT_2_TEST } from './unit-banks/unit-2.ts';
+import { UNIT_3_TEST } from './unit-banks/unit-3.ts';
 
-export { UNIT_1_TEST, UNIT_2_TEST };
+export { UNIT_1_TEST, UNIT_2_TEST, UNIT_3_TEST };
 
 /** Every bank that exists. A unit with no bank simply has no test. */
-export const TEST_BANKS: TestBank[] = [UNIT_1_TEST, UNIT_2_TEST];
+export const TEST_BANKS: TestBank[] = [UNIT_1_TEST, UNIT_2_TEST, UNIT_3_TEST];
 
 /** Unit names are editorial; membership is derived from the lessons themselves. */
 const UNIT_NAMES: Record<number, string> = {
   1: 'Filling the WHO box',
   2: 'Assembling the shape',
+  3: 'Describe, count, and locate',
 };
 
 /**
@@ -116,11 +118,17 @@ export const LESSON_TRANSFER_ITEM_IDS: Record<number, readonly string[]> = {
   6: ['u2-t11', 'u2-t12', 'u2-t13'],
   7: ['u2-t14', 'u2-t15', 'u2-t17'],
   8: ['u2-t20', 'u2-t23', 'u2-t24'],
+  9: ['u3-t01', 'u3-t02', 'u3-t05', 'u3-t06'],
+  10: ['u3-t09', 'u3-t10', 'u3-t11', 'u3-t12'],
+  11: ['u3-t15', 'u3-t16', 'u3-t17', 'u3-t18'],
 };
 
 export const UNSEEN_READING_ITEM_IDS: Record<number, readonly string[]> = {
   1: ['u1-t09', 'u1-t10', 'u1-t11'],
   2: ['u2-t03', 'u2-t06', 'u2-t07', 'u2-t20', 'u2-t23'],
+  // u3-t18 ("Ninkan baa Cadan ka yimi", Saeed §4.5 ex. 104) is a sentence the
+  // lessons never show: genuinely unseen reading, machine-gradable.
+  3: ['u3-t18'],
 };
 
 /**
