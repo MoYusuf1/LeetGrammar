@@ -33,12 +33,11 @@ import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MoreHorizontal, Lightbulb } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
-import { getLessonContent, slotsCompletedBefore } from '@/data/authored-lessons';
-import type { Card as TeachingCard, PracticeExercise, BlueprintSlot } from '@/data/types';
+import { getLessonContent } from '@/data/authored-lessons';
+import type { Card as TeachingCard, PracticeExercise } from '@/data/types';
 import { displayAnswer, isAnswerCorrect, isSelfGraded, verdictOf } from '@/lib/grading';
 import { getContextualVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import AnswerInput from './AnswerInput';
-import Blueprint from './Blueprint';
 import { stripBoxArt } from './box-art';
 import LessonMenu from './LessonMenu';
 import LessonToolbar from './LessonToolbar';
@@ -67,7 +66,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
   const content = getLessonContent(lessonId);
   // Which blueprint boxes earlier lessons already filled. Derived from the
   // course, so it stays true as lessons are added or retagged.
-  const doneSlots = useMemo(() => slotsCompletedBefore(lessonId), [lessonId]);
 
   const [direction, setDirection] = useState(1);
   const [practiceAnswer, setPracticeAnswer] = useState<string | null>(null);
@@ -240,7 +238,6 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
     <StepView
       step={step}
       lessonTitle={content.title}
-      doneSlots={doneSlots}
       activeExercise={activeExercise}
       practiceAnswer={practiceAnswer}
       practiceChecked={practiceChecked}
@@ -433,7 +430,6 @@ export function FeedbackHeading({
 function StepView({
   step,
   lessonTitle,
-  doneSlots,
   activeExercise,
   practiceAnswer,
   practiceChecked,
@@ -442,8 +438,6 @@ function StepView({
 }: {
   step: { cards: FlowCard[]; exercise?: TeachingCard['exercise'] };
   lessonTitle: string;
-  /** Blueprint boxes filled by earlier lessons. */
-  doneSlots: BlueprintSlot[];
   /** The item actually served: the step exercise, or its repair after a miss. */
   activeExercise?: TeachingCard['exercise'];
   practiceAnswer: string | null;
@@ -452,14 +446,13 @@ function StepView({
   onPracticeSelect: (a: string) => void;
 }) {
   return (
-    <div className="space-y-9">
+    <article className="lesson-article space-y-9">
       {step.cards.map((card, i) => (
         <RenderCard
           key={i}
           card={card}
           lessonTitle={lessonTitle}
           showTitle={i === 0}
-          doneSlots={doneSlots}
           activeExercise={activeExercise}
           practiceAnswer={practiceAnswer}
           practiceChecked={practiceChecked}
@@ -467,7 +460,7 @@ function StepView({
           onPracticeSelect={onPracticeSelect}
         />
       ))}
-    </div>
+    </article>
   );
 }
 
@@ -475,7 +468,6 @@ function RenderCard({
   card,
   lessonTitle,
   showTitle,
-  doneSlots,
   activeExercise,
   practiceAnswer,
   practiceChecked,
@@ -485,7 +477,6 @@ function RenderCard({
   card: FlowCard;
   lessonTitle: string;
   showTitle: boolean;
-  doneSlots: BlueprintSlot[];
   activeExercise?: TeachingCard['exercise'];
   practiceAnswer: string | null;
   practiceChecked: boolean;
@@ -503,7 +494,6 @@ function RenderCard({
           card={card}
           lessonTitle={lessonTitle}
           showTitle={showTitle}
-          doneSlots={doneSlots}
         />
       );
 
@@ -556,12 +546,10 @@ function IntroCard({
   card,
   lessonTitle,
   showTitle,
-  doneSlots,
 }: {
   card: TeachingCard;
   lessonTitle: string;
   showTitle: boolean;
-  doneSlots: BlueprintSlot[];
 }) {
   return (
     <div className="space-y-5">
@@ -581,12 +569,6 @@ function IntroCard({
         <motion.div custom={1} variants={contentStagger} initial="hidden" animate="visible">
           <Prose text={card.prompt} />
         </motion.div>
-      )}
-
-      {/* Drawn, not typeset — the content still carries the old box-drawing art,
-          which is stripped here. See Blueprint.tsx. */}
-      {card.type === 'blueprint' && (
-        <Blueprint slot={card.blueprintSlot} done={doneSlots} />
       )}
 
       {card.content && (
