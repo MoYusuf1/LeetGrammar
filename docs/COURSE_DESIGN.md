@@ -5,7 +5,9 @@
 >
 > (`PONYTAIL_DEBT.md` stays separate: it tracks *code* debt, not teaching design.)
 >
-> **Status:** design settled, four core decisions made (Part 0), **amended August 2026**
+> **Status:** design settled, four core decisions made (Part 0), **amended August 2026**,
+> **method restated end to end September 2026** (Part 0b — the learner now reads Somali
+> already, the target is media comprehension, and the account exists)
 > after a research review — see the `Correction` and `Tension` blocks in §1.16, §3.1 and
 > §3.2, plus new §1.17, §1.17b, §1.18, §2.0 and §2.0b. The review itself lived in
 > `TEACHING_OPTIONS.md`, which was folded in here and deleted; it is in git history at
@@ -31,6 +33,97 @@
 >
 > Sourcing rules referenced here are enforced by `npm run validate:course`
 > against `src/data/verified-forms.ts`; see `docs/SOMALI_SOURCES.md`.
+
+---
+
+# Part 0b — The method, restated (September 2026)
+
+> Two things changed since Part 0, and together they justify restating the whole
+> method in one place. First, **the learner changed**: he reads Somali already,
+> so the alphabet is no longer a prerequisite the course may spend a lesson on —
+> the course starts at the sentence. Second, **the account exists**: progress,
+> the review schedule, and every missed prompt sync across devices, so a
+> retrieval history is now something the course can *use*, not just record.
+>
+> This part runs from the outcome backwards: outcome → lesson loop → feedback →
+> review system → content. Where an older section disagrees with this one, this
+> one wins; where it agrees, the older section carries the detail and the
+> citations.
+
+## 0b.1 The outcome decides everything
+
+**Understand common spoken Somali and media.** Not pass a grammar quiz, not
+recite rules — follow what people actually say. The learner arrives literate:
+reading is his starting tool, not the subject.
+
+That makes the working unit of the whole course **the sentence, decoded in
+three passes: WHO → SIGNAL → WHAT.** Catch who or what the sentence is about,
+catch the small word that says what kind of sentence it is, catch what is said
+about them. Grammar enters as listening signposts — `waa`, `baa`, the "the"
+ending — never as terminology (D4 stands). The blueprint on every lesson's
+first card *is* this routine, and Lesson 1 now teaches it directly instead of
+the alphabet.
+
+## 0b.2 The lesson loop is retrieval with a short fuse
+
+One lesson, one point, and the learner is producing before the end:
+
+1. **Predict before being taught.** The learner commits to a guess about a real
+   sentence up front. A wrong guess costs nothing and buys attention —
+   the explanation that follows lands on a question the learner already asked.
+2. **Notice** the new thing inside a sourced example (guided recognition).
+3. **Explain** it in plain English, once, next to the example.
+4. **Retrieve with support** — complete, choose, fill (recognition).
+5. **Retrieve cold** — build the sentence (production, §1.8's recall-over-
+   recognition).
+6. **Payoff** — the same sentence read again, now understood, so the lesson
+   ends on demonstrated ability rather than summary.
+
+No more than three cards pass without retrieval (rule `T2` enforces this).
+A wrong answer **retries the step rather than advancing** — continuing past a
+miss was the old behaviour, and it taught learners that guessing is free.
+Every checked answer writes the per-prompt attempt history (`exerciseProgress`)
+that §0b.4 spends.
+
+## 0b.3 Feedback: immediate, specific, and never a verdict
+
+Every miss gets an instant, metalinguistic, plain-English explanation — the
+best-supported version of teacher-free correction (§1.7, d = 1.21). A miss is
+treated as information, not failure: the sheet says "Try again", the prompt
+comes back, and the miss is recorded so the review system can find it later.
+Right and wrong are carried by glyph and wording, never colour (UI conventions
+§2) — the feedback's job is to teach, not to judge.
+
+## 0b.4 The review system: spacing decides when, misses decide what
+
+The three layers stand (§3.2): in-lesson practice learns, homework retains,
+the unit test measures. On top of them, two schedulers that are really one:
+
+- **Fixed-interval spacing** (§1.4) says *when* a lesson comes back: 1, 3, 7,
+  21, 60, 180, 365 days, permanent by design (§2.0b). Doing a lesson's homework
+  *is* the review; carry-back draws from the due queue (§1.17 successive
+  relearning — one mechanism, not two).
+- **Error-driven repetition** says *what* comes back first: every graded
+  retrieval anywhere (lesson, homework) updates the per-prompt history, and a
+  homework set leads each group with the prompts the learner has missed —
+  most-missed, then longest-unseen. The oldest finding in the retrieval
+  literature is that the items you fail are the ones worth re-testing; until
+  September 2026 the history was written and never read.
+
+Because the history and the schedule sync with the account, a miss on the
+phone is re-served on the laptop. The learner never manages any of this: he
+opens the app, and what is due and what he gets wrong is simply there.
+
+## 0b.5 Content: sourced, sentence-first, narrow
+
+Nothing here relaxes a sourcing rule — the missing native speaker makes them
+*more* load-bearing, not less (D2, §1.12). Every Somali form needs the
+registry; cut what you cannot source. Within that wall, the authoring order is
+comprehension-first: a lesson opens with a real sourced statement, builds the
+minimum grammar needed to decode it, and ends with the learner producing that
+shape — not with a paradigm looking for a use. Narrow and correct over broad
+and decorative still holds: fewer lessons, each one finishable, each one
+aimed at media.
 
 ---
 
@@ -71,6 +164,13 @@ being asked to acquire English linguistics terminology as a prerequisite to Soma
 ## The learner
 
 One person, building this for himself.
+
+> **Correction (September 2026).** Two bullets below have been overtaken, and
+> Part 0b now owns both. He **reads Somali already** — literacy is the starting
+> tool, so the course opens at the sentence, not the alphabet. And the target
+> has sharpened from "make the formula legible" to **understanding common
+> spoken Somali and media**. "Text-only" still describes the medium; it no
+> longer describes the ambition.
 
 - **Not a Somali speaker**, and **no native speaker available to check anything — ever.**
   Confirmed as impossible, not merely difficult, including for a one-off audit of the
@@ -693,7 +793,8 @@ it?* If yes, it's out.
 
 | Unit | # | Lesson | Why it's core |
 |---|---|---|---|
-| **1** — Building blocks | 1 | Sounds & Spelling | Can't read anything without it |
+| **1** — Building blocks | 1 | Reading for Meaning | The decode routine (WHO → SIGNAL → WHAT); the learner reads already |
+| | 1b | *(retired)* Sounds & Spelling | Cut September 2026 — the learner arrives literate |
 | | 2 | Naming Things | Nouns + he-words/she-words |
 | | 3 | The, A, This, That | Noun phrases |
 | | 4 | I, You, He, She, We, They | Pronouns — direct setup for Unit 2 |

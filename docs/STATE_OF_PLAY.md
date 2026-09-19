@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-08-18. Now the inventory only — the plan and the
+> comes next. **Last updated:** 2026-09-18. Now the inventory only — the plan and the
 > debt live in their own files, linked below.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
@@ -17,24 +17,27 @@
 ---
 ## What exists
 
-An **8-lesson Somali course** in 2 units, local-only, no accounts, progress in
-`localStorage`. Every Somali form in it is source-verified.
+An **8-lesson Somali course** in 2 units, local-first with an **optional Google
+account** — progress, the review schedule, and the per-prompt miss history live in
+`localStorage` and sync through Firestore (schema v8, owner-only rules, offline
+cache, merge on first sign-in, JSON export). Every Somali form in it is
+source-verified.
 
 | Lesson | Title | Cards | Exercises | Teaches |
 | --- | --- | --- | --- | --- |
-| 1 | Sounds & Spelling | 12 | 5 | alphabet; no P/V/Z; dh/kh/sh; the throat letters **c** and **x**; doubled vowels |
+| 1 | Reading for Meaning | 13 | 6 | the decode routine WHO → SIGNAL → WHAT on a sourced statement; `waa` as a listening signpost; predict-before-teach. **Assumes Somali literacy** — the alphabet lesson was retired in Sept 2026 |
 | 2 | Naming Things | 15 | 6 | noun gender; why it is invisible in writing; reading gender off the "the" form |
 | 3 | Saying "The" | 17 | 9 | the article is a suffix; all eight assimilation outcomes; no indefinite article |
 | 4 | I, You, He, She | 15 | 6 | eight pronouns; inclusive/exclusive "we"; short subject pronouns; the subject marker |
 | 5 | The Signal Words | 17 | 7 | `waa` plain statement; `baa`/`ayaa` spotlight what precedes; `waxa` spotlights what ends the sentence |
-| 6 | Squishing | 15 | 5 | signals fuse with short pronouns — `wuu`, `way`, `waxay`, and the irregular `wuxuu` |
+| 6 | Squishing | 18 | 8 | signals fuse with short pronouns — `wuu`, `way`, `waxay`, and the irregular `wuxuu` |
 | 7 | Action Words | 15 | 6 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
 | 8 | Putting It In Order | 16 | 6 | the action word lands last; the signal hugs the verb; `waxa` sends the spotlight past it |
 
 **Totals:** 125 authored cards · 54 exercises · 35% production.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
-The course lands on **`Wiilku waa macallin.`** ("The boy is a teacher."), a
+The course opens on — and lands on — **`Wiilku waa macallin.`** ("The boy is a teacher."), a
 sentence taken from the reference grammar in which every part is something the
 learner built: `wiil` + the `-ka` article + the `-u` subject marker + `waa`.
 
@@ -90,8 +93,11 @@ What it is now, and the reasoning that is not recoverable from the code:
 
 Routes: `/learn` is home; lesson, homework and unit test are full-screen task
 views entered and closed. (`/worksheet` was deleted in Aug 2026.) Landing,
-Profile, Glossary and the lesson index were deleted — the glossary became a sheet opened from inside a
-lesson, where a learner actually meets a term.
+Glossary and the lesson index were deleted — the glossary became a sheet opened from inside a
+lesson, where a learner actually meets a term. Profile returned in Sept 2026 as a
+sheet over `/learn`: signed out it is the sign-in screen and leads with the
+course's decode specimen; signed in it shows sync state, learning stats, and the
+JSON export.
 
 Full visual conventions, and the list of things already tried and rejected, are
 in [UI_CONVENTIONS.md](./UI_CONVENTIONS.md). Read it before changing anything
@@ -110,8 +116,8 @@ It is now four real segments that highlight the slot from the data.
 | Vocabulary entries | 95, of which **90** are 2-source verified |
 | Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
 | Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
-| Tests | 109, across 7 files |
-| Validator | 22 checks passing, 0 errors, 4 open warnings |
+| Tests | 116, across 8 files |
+| Validator | 23 checks passing, 0 errors, 4 open warnings |
 | Sources | 8 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary, + 3 dictionaries (`JF`, `SA`, `AW`) |
 | Deployment | Vercel, auto-deploys from `main` |
 

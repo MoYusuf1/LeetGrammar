@@ -407,6 +407,6 @@ export const UNIT_1_TEST: TestBank = {
   id: 'unit-1-test',
   name: 'Unit 1 Test',
   description:
-    'Everything from lessons 1 to 4: reading the letters, noun gender, building the "the" ending, pronouns and the subject marker.',
+    'Everything from lessons 1 to 4: decoding a plain statement, noun gender, building the "the" ending, pronouns and the subject marker.',
   items: UNIT_1_ITEMS,
 };

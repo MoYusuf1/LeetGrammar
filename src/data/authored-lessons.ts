@@ -34,7 +34,7 @@ export interface LessonSummary {
 const BOX = '┌──────┬────────┬────────┬──────┐\n│ WHO  │ SIGNAL │  WHAT  │  DO  │\n└──────┴────────┴────────┴──────┘';
 
 // ============================================================================
-// LESSON 1 — Sounds & Spelling
+// LESSON 1 — Reading for Meaning
 // ============================================================================
 
 const LESSON_1: Lesson = {
@@ -147,7 +147,7 @@ const LESSON_2: Lesson = {
     {
       id: '2-connect',
       type: 'connect',
-      prompt: 'Last lesson you learned to read Somali letters. Now the first box of the sentence: the thing the sentence is about.',
+      prompt: 'Last lesson you decoded your first whole statement — **Wiilku waa macallin**: the boy, the plain-statement signal, and what he is. Now the first box of the sentence: the thing the sentence is about.',
     },
     {
       id: '2-promise',
