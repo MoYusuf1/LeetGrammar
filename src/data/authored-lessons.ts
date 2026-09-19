@@ -952,21 +952,72 @@ const LESSON_4: Lesson = {
       content: `${BOX}\n\nLast time in the WHO box. Pronouns, and the marker that says "this one is the subject".`,
     },
     {
-      id: '4-connect',
-      type: 'connect',
-      prompt: 'You can name a thing (wiil) and make it definite (wiilka). Now: replacing it with "he", and flagging it as the doer.',
-    },
-    {
       id: '4-promise',
       type: 'promise',
       prompt: 'By the end you will build a complete, correct Somali sentence: **Wiilku waa macallin.**: "The boy is a teacher."',
     },
     {
-      id: '4-predict',
-      type: 'predict',
-      prompt:
-        'English has one word for "we", and it is quietly ambiguous: "we are going" may or may not include the WHO you are talking to.\n\n' +
-        'Somali makes you choose. Before reading on, guess what goes wrong if you pick the wrong one.',
+      id: '4-passage-a', type: 'passage',
+      passage: {
+        id: 'l4-text-a',
+        label: 'A staff noticeboard',
+        lines: [
+          { somali: 'Aamina waa macallimad.', gloss: 'Aamina is a teacher.', note: 'A name, a signal word, and what she is.' },
+          { somali: 'Cumar waa arday wanaagsan.', gloss: 'Cumar is a good student.', note: 'Same shape, second name.' },
+        ],
+      },
+      content: 'A school noticeboard introduces the staff. Two lines, two names. Read it once, then answer.',
+    },
+    {
+      id: '4-gist-a', type: 'notice', exercise: {
+        id: 'l4-gist-a', type: 'multiple_choice', objectiveIds: ['sentence-shape'],
+        question: 'What is this noticeboard page telling you?',
+        options: [
+          'who each person is, and what they are',
+          'the times of each class',
+          'a list of classroom rules',
+          'the names of every subject in the school',
+        ],
+        correctAnswer: 'who each person is, and what they are',
+        hint: 'Each line pairs a name with what that person is.',
+        explanation: '**Aamina waa macallimad** — Aamina is a teacher. **Cumar waa arday wanaagsan** — Cumar is a good student. Every line answers the same two questions: who, and what are they.',
+        repair: {
+          id: 'l4-gist-a-r', type: 'multiple_choice', objectiveIds: ['sentence-shape'],
+          question: 'A second board reads: **Maryan waa macallimad wanaagsan.** What does it tell you?',
+          options: [
+            'who Maryan is, and what she is like',
+            'where Maryan teaches',
+            'when Maryan starts work',
+            'how many classes Maryan has',
+          ],
+          correctAnswer: 'who Maryan is, and what she is like',
+          hint: 'Same shape as before: a name, then what that person is.',
+          explanation: '**Maryan waa macallimad wanaagsan** — Maryan is a good teacher. Who, then what she is.',
+        },
+      },
+    },
+    {
+      id: '4-detail-a', type: 'notice', exercise: {
+        id: 'l4-detail-a', type: 'multiple_choice', objectiveIds: ['sentence-shape'],
+        question: 'Find the word **waa** on the page. What is its job?',
+        options: [
+          'It signals that the line is a statement',
+          'It marks which noun is the subject',
+          'It is the verb "to be", conjugated for each person',
+          'It turns the line into a question',
+        ],
+        correctAnswer: 'It signals that the line is a statement',
+        hint: 'It sits in the same place in every line, between the name and the description.',
+        explanation: '**waa** is the statement signal: it announces that the line states a fact. It does not change shape for different people, and it does not ask anything.',
+        repair: {
+          id: 'l4-detail-a-r', type: 'multiple_choice', objectiveIds: ['sentence-shape'],
+          question: 'In **Wiilku waa macallin**, which word is the statement signal?',
+          options: ['waa', 'Wiilku', 'macallin', 'the -u on the end'],
+          correctAnswer: 'waa',
+          hint: 'Look for the word that appears in every statement, whatever the sentence is about.',
+          explanation: '**waa** is the signal. **Wiilku** is the subject and **macallin** is what he is; those change from sentence to sentence, but the signal stays.',
+        },
+      },
     },
     {
       id: '4-teach',
@@ -987,32 +1038,6 @@ const LESSON_4: Lesson = {
         '**"They" has no gender.** **Iyaga** covers any group. There is no separate feminine "they".',
     },
     {
-      id: '4-teach-short',
-      type: 'teach',
-      title: 'The short subject pronouns',
-      content:
-        'Alongside those, Somali has a set of short pronouns that sit next to the sentence signal:\n\n' +
-        '• **aan**: I\n' +
-        '• **aad**: you\n' +
-        '• **uu**: he\n' +
-        '• **ay**: she / they\n\n' +
-        'You will see these fused onto **waa**, the statement signal, in the next unit: **waa + uu** becomes **wuu**.\n\n' +
-        'For now just recognise them. They are short, they are everywhere, and they are not the same words as **aniga / adiga / isaga / iyada**.',
-    },
-    {
-      id: '4-coach-roles',
-      type: 'coach',
-      title: 'Choose the role before the form',
-      content:
-        `Before changing an ending, point to the role in the message:
-
-1. **WHO is doing or being described?** That phrase is the subject.
-2. **Is the listener inside “we”?** Choose the pronoun from the real group, not from the English word.
-3. **What is said about the WHO?** Do not mark that description as another subject.
-
-Meaning chooses the form. If you start with the ending, two plausible-looking answers can hide the real mistake.`,
-    },
-    {
       id: '4-notice-1',
       type: 'notice',
       exercise: {
@@ -1025,7 +1050,28 @@ Meaning chooses the form. If you start with the ending, two plausible-looking an
         hint: 'One "we" shuts the listener out of the group; the other pulls them in.',
         explanation:
           '**Annaga** is the exclusive "we": it means "us, not you". **Innaga** would wrongly include your friend in a trip they did not go on.',
+        repair: {
+          id: 'l4-n1-r', type: 'multiple_choice', objectiveIds: ['pronouns-inclusive-exclusive'],
+          question: 'You are inviting the person you are talking to into your group\u2019s plan. Which "we" do you use?',
+          options: ['innaga', 'annaga', 'idinka', 'iyada'],
+          correctAnswer: 'innaga',
+          hint: 'This time the listener belongs inside the "we".',
+          explanation: '**Innaga** pulls the listener into the group: "we, you and I". **Annaga** would shut them out of a plan they are part of.',
+        },
       },
+    },
+    {
+      id: '4-teach-short',
+      type: 'teach',
+      title: 'The short subject pronouns',
+      content:
+        'Alongside those, Somali has a set of short pronouns that sit next to the sentence signal:\n\n' +
+        '• **aan**: I\n' +
+        '• **aad**: you\n' +
+        '• **uu**: he\n' +
+        '• **ay**: she / they\n\n' +
+        'You will see these fused onto **waa**, the statement signal, in the next unit: **waa + uu** becomes **wuu**.\n\n' +
+        'For now just recognise them. They are short, they are everywhere, and they are not the same words as **aniga / adiga / isaga / iyada**.',
     },
     {
       id: '4-notice-2',
@@ -1040,6 +1086,14 @@ Meaning chooses the form. If you start with the ending, two plausible-looking an
         hint: 'Three of these are singular or second-person. Only one refers to a group being talked about.',
         explanation:
           '**Iyaga** is "they", for any group regardless of gender. **Iyada** is "she", **isaga** is "he", and **idinka** is plural "you".',
+        repair: {
+          id: 'l4-n2-r', type: 'multiple_choice', objectiveIds: ['pronouns-subject'],
+          question: 'Which pronoun means "she"?',
+          options: ['iyada', 'iyaga', 'isaga', 'innaga'],
+          correctAnswer: 'iyada',
+          hint: 'Match the vowels: "he" and "she" differ only in the middle.',
+          explanation: '**Iyada** is "she". **Isaga** is "he", **iyaga** is "they", and **innaga** is the inclusive "we".',
+        },
       },
     },
     {
@@ -1066,7 +1120,28 @@ Meaning chooses the form. If you start with the ending, two plausible-looking an
         hint: 'The final -a of the subject changes to -u.',
         explanation:
           'As the subject, **wiilka** becomes **Wiilku**: the final -a shifts to -u. **Wiilku waa macallin**: "The boy is a teacher."',
+        repair: {
+          id: 'l4-c1-r', type: 'multiple_choice', objectiveIds: ['subject-case'],
+          question: 'Make **gacanta** (the hand) the subject of a sentence: ___ waa wasakh.',
+          options: ['Gacantu', 'Gacanta', 'Gacanti', 'Gacantii'],
+          correctAnswer: 'Gacantu',
+          hint: 'Same rule: the final -a of the subject changes to -u.',
+          explanation: '**Gacanta** becomes **Gacantu** as the subject: **Gacantu waa wasakh**: "The hand is dirty."',
+        },
       },
+    },
+    {
+      id: '4-coach-roles',
+      type: 'coach',
+      title: 'Choose the role before the form',
+      content:
+        `Before changing an ending, point to the role in the message:
+
+1. **WHO is doing or being described?** That phrase is the subject.
+2. **Is the listener inside “we”?** Choose the pronoun from the real group, not from the English word.
+3. **What is said about the WHO?** Do not mark that description as another subject.
+
+Meaning chooses the form. If you start with the ending, two plausible-looking answers can hide the real mistake.`,
     },
     {
       id: '4-complete-2',
@@ -1086,6 +1161,14 @@ Meaning chooses the form. If you start with the ending, two plausible-looking an
         hint: 'Only one noun phrase in a sentence is the doer. Which one is it here?',
         explanation:
           'Only the **subject** takes the marker. **Wiilku** is the subject; **macallin** describes what he is, so it stays in its bare form, which also means "a teacher", since Somali has no word for "a".',
+        repair: {
+          id: 'l4-c2-r', type: 'multiple_choice', objectiveIds: ['subject-case'],
+          question: 'In **Gacantu waa wasakh**, which word is the subject?',
+          options: ['Gacantu', 'waa', 'wasakh', 'all three words equally'],
+          correctAnswer: 'Gacantu',
+          hint: 'The subject is the one the sentence is about, and it carries the changed ending.',
+          explanation: '**Gacantu** is the subject: it names what the sentence is about, and its -a became -u. **Wasakh** describes the hand, so it stays plain.',
+        },
       },
     },
     {
@@ -1104,6 +1187,14 @@ Meaning chooses the form. If you start with the ending, two plausible-looking an
         hint: 'Subject first, then the signal word waa, then what he is.',
         explanation:
           '**Wiilku waa macallin.** Subject (Wiilku) → signal (waa) → what he is (macallin). That order (WHO then SIGNAL then the rest) is the shape of the whole language.',
+        repair: {
+          id: 'l4-p1-r', type: 'unscramble', objectiveIds: ['subject-case', 'sentence-shape'],
+          question: 'Put these in order to say "Cumar is a student."',
+          words: ['arday', 'Cumar', 'waa'],
+          answer: 'Cumar waa arday',
+          hint: 'Name first, then the signal, then what he is.',
+          explanation: '**Cumar waa arday.** Name (Cumar) → signal (waa) → what he is (arday). Same shape as before.',
+        },
       },
     },
     {
@@ -1118,6 +1209,71 @@ Meaning chooses the form. If you start with the ending, two plausible-looking an
         hint: 'This is the inclusive one: the "we" that pulls the listener in.',
         explanation:
           '**Innaga** is the inclusive "we", meaning "you and I". **Annaga** would exclude the WHO you are speaking to.',
+        repair: {
+          id: 'l4-p2-r', type: 'translate', objectiveIds: ['pronouns-inclusive-exclusive'],
+          question: 'Write the Somali pronoun for "we" when the person you are speaking to is **not** part of the group.',
+          answer: 'annaga',
+          hint: 'This is the exclusive one: the "we" that shuts the listener out.',
+          explanation: '**Annaga** is the exclusive "we": "us, not you". **Innaga** would wrongly pull your listener into the group.',
+        },
+      },
+    },
+    {
+      id: '4-passage-b', type: 'passage',
+      passage: {
+        id: 'l4-text-b',
+        label: 'The same board, updated',
+        lines: [
+          { somali: 'Wiilku waa macallin.', gloss: 'The boy is a teacher.', note: 'This time the subject is an ordinary noun with a "the" ending, and its tail has changed.' },
+          { somali: 'Maryan waa macallimad wanaagsan.', gloss: 'Maryan is a good teacher.', note: 'A name again, so its shape stays the same.' },
+        ],
+      },
+      content: 'The board has been updated. One line names a person; the other describes a boy with words you already own.',
+    },
+    {
+      id: '4-transfer-gist', type: 'notice', exercise: {
+        id: 'l4-gist-b', type: 'multiple_choice', objectiveIds: ['sentence-shape'],
+        question: 'What does the line **Maryan waa macallimad wanaagsan** tell you?',
+        options: [
+          'who Maryan is, and what she is like',
+          'where Maryan is going',
+          'what Maryan is doing right now',
+          'who is talking to Maryan',
+        ],
+        correctAnswer: 'who Maryan is, and what she is like',
+        hint: 'Same sentence shape as the first board: who, then what.',
+        explanation: '**Maryan waa macallimad wanaagsan** — Maryan is a good teacher. The shape you learned on the first board reads this one too.',
+        repair: {
+          id: 'l4-gist-b-r', type: 'multiple_choice', objectiveIds: ['sentence-shape'],
+          question: 'What does **Wiilku waa macallin** tell you?',
+          options: [
+            'who the boy is, and what he is',
+            'what the boy is doing',
+            'where the boy lives',
+            'who teaches the boy',
+          ],
+          correctAnswer: 'who the boy is, and what he is',
+          hint: 'Read it with the same shape: who, then what.',
+          explanation: '**Wiilku waa macallin** — the boy is a teacher. Who, then what he is.',
+        },
+      },
+    },
+    {
+      id: '4-transfer-detail', type: 'notice', exercise: {
+        id: 'l4-detail-b', type: 'multiple_choice', objectiveIds: ['subject-case'],
+        question: 'On this page, which word changed its tail because it is the subject?',
+        options: ['Wiilku', 'waa', 'macallin', 'Maryan'],
+        correctAnswer: 'Wiilku',
+        hint: 'Look for the word whose usual -a ending has become -u.',
+        explanation: '**Wiilku** is the subject: underneath, it is **wiilka** with its final -a changed to -u. **Maryan** is a name, so it keeps its shape.',
+        repair: {
+          id: 'l4-detail-b-r', type: 'multiple_choice', objectiveIds: ['subject-case'],
+          question: '**Wiilka** is the boy. In this sentence the final **-a** became ___.',
+          options: ['-u', '-i', '-ta', '-ka'],
+          correctAnswer: '-u',
+          hint: 'The subject marker changes the last vowel of the word.',
+          explanation: 'The final **-a** became **-u**: wiilka → **Wiilku**. That is the subject marker doing its one job.',
+        },
       },
     },
     {
