@@ -25,9 +25,7 @@
  * flip. Every rule below is order-independent in its inputs.
  */
 
-import type { ExerciseProgress, UnitTestRecord, UserProgress } from '@/stores/progress-store';
-
-export type StoredProgress = UserProgress & { schemaVersion: 8; updatedAt: string };
+import type { ExerciseProgress, UnitTestRecord, UserProgress } from '@/domain/progress/types';
 
 export const progressKeys: (keyof UserProgress)[] = [
   'completedLessons', 'streak', 'lastStudyDate', 'practiceScores', 'activityLog',
