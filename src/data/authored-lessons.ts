@@ -2204,26 +2204,73 @@ const LESSON_7: Lesson = {
       content: `${BOX}\n\nThe last empty box. The action word goes here, and its ending changes depending on who is doing it.`,
     },
     {
-      id: '7-connect',
-      type: 'connect',
-      prompt:
-        'You can fill **WHO**, and you can read the **SIGNAL** even when it is squashed onto a pronoun: **wuu**, **way**, **wuxuu**. Today the thing they have all been pointing at: the action itself.',
-    },
-    {
       id: '7-promise',
       type: 'promise',
       prompt:
         'By the end you will look at **wuu keenaa** and **way keentaa** and say instantly who is doing the bringing. You will also know why the verb alone could never have told you.',
     },
     {
-      id: '7-predict',
-      type: 'predict',
-      prompt:
-        'Two forms of the same action word, "bring":\n\n' +
-        '**keenaa**\n' +
-        '**keentaa**\n\n' +
-        'One is used for *I* and *he*. The other for *you* and *she*.\n\n' +
-        'Before reading on, which is which, and what is the one letter doing the work?',
+      id: '7-passage-a', type: 'passage',
+      passage: {
+        id: 'l7-text-a',
+        label: 'Two messages in a thread',
+        lines: [
+          { somali: 'Waan keenaa.', gloss: 'I bring.', note: 'Same action word in both lines.' },
+          { somali: 'Wuu keenaa.', gloss: 'He brings.', note: 'Only the first word changed.' },
+        ],
+      },
+      content: 'Two short replies in a family chat. Read both lines, then answer.',
+    },
+    {
+      id: '7-gist-a', type: 'notice', exercise: {
+        id: 'l7-gist-a', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+        question: 'Both lines use the same action word. What is different between them?',
+        options: [
+          'who is doing the bringing: I in the first, he in the second',
+          'what is being brought',
+          'when the bringing happens',
+          'nothing: they mean the same thing',
+        ],
+        correctAnswer: 'who is doing the bringing: I in the first, he in the second',
+        hint: 'The second word is identical. Compare the first words.',
+        explanation: '**Waan keenaa**: I bring. **Wuu keenaa**: he brings. The verb did not change; the squashed signal in front did.',
+        repair: {
+          id: 'l7-gist-a-r', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+          question: 'A reader says the two lines must mean the same thing, because the action word is identical. What actually differs?',
+          options: [
+            'who brings: I in the first, he in the second',
+            'what is brought',
+            'the tense: one is past, one is present',
+            'nothing: the reader is right',
+          ],
+          correctAnswer: 'who brings: I in the first, he in the second',
+          hint: 'The verb **keenaa** covers more than one person. Something else narrows it down.',
+          explanation: '**keenaa** alone could be I or he. **waan** settles I; **wuu** settles he. The signal, not the verb, carries who.',
+        },
+      },
+    },
+    {
+      id: '7-detail-a', type: 'notice', exercise: {
+        id: 'l7-detail-a', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+        question: 'The action word is identical in both lines. Which word carries who is doing it?',
+        options: [
+          'the first word: the squashed signal',
+          'the last letter of the verb',
+          'the capital letter',
+          'both words together mean the same person',
+        ],
+        correctAnswer: 'the first word: the squashed signal',
+        hint: '**Waan** versus **wuu**: those unsquash into **waa** + a person.',
+        explanation: '**Waan** is **waa** + **aan** (I); **wuu** is **waa** + **uu** (he). The verb **keenaa** stays put; the signal picks the person.',
+        repair: {
+          id: 'l7-detail-a-r', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+          question: 'In **wuu keenaa**, which part narrows the doer down to "I or he"?',
+          options: ['the verb ending: -aa', 'the signal: wuu', 'the capital W', 'nothing narrows it at all'],
+          correctAnswer: 'the verb ending: -aa',
+          hint: 'One clue shortlists two people; the other clue picks one.',
+          explanation: 'The **-aa** ending shortlists *I* and *he*. Then **wuu** picks *he*. Two partial clues, one answer.',
+        },
+      },
     },
     {
       id: '7-teach',
@@ -2236,13 +2283,6 @@ const LESSON_7: Lesson = {
         '• **keenaa**: bring / brings\n' +
         '• **keentaa**: bring / brings, for a different set of people\n\n' +
         'That **t** is the whole difference, and it is doing a specific job.',
-    },
-    {
-      id: '7-coach-two-clues',
-      type: 'coach',
-      title: 'Use the ending and the signal together',
-      content:
-        'Treat the verb ending as a shortlist, not a final answer. First read the ending: **-aa** narrows the doer to I or he; **-taa** narrows it to you or she. Then move left to the fused signal and settle which person it is.\n\nIf the two clues disagree, stop and repair the parse. Do not guess from the verb alone. Good reading combines partial clues instead of asking one clue to do every job.',
     },
     {
       id: '7-teach-endings',
@@ -2277,6 +2317,14 @@ const LESSON_7: Lesson = {
         hint: 'Plurals carry an **n**. But the *you-plural* one also has the **t** of "you".',
         explanation:
           '**keenaan** is "they bring": the plural **n** with no **t**. **keentaan** has the **t** of *you*, so it is "you (plural) bring". **keennaa** is "we bring".',
+        repair: {
+          id: 'l7-n1-r', type: 'multiple_choice', objectiveIds: ['verb-person-endings'],
+          question: 'Which form would you use for **you (plural) bring**?',
+          options: ['keentaan', 'keenaan', 'keennaa', 'keentaa'],
+          correctAnswer: 'keentaan',
+          hint: 'It needs the **t** of *you* AND the **n** of plurals.',
+          explanation: '**keentaan** is "you (plural) bring": the **t** of *you* plus the plural **n**. **keenaan** is "they bring"; **keentaa** is singular *you* or *she*.',
+        },
       },
     },
     {
@@ -2313,7 +2361,27 @@ const LESSON_7: Lesson = {
         hint: 'How many people does **-aa** cover?',
         explanation:
           '**-aa** covers both *I* and *he*, so the verb alone is genuinely ambiguous. **waan keenaa** is "I bring"; **wuu keenaa** is "he brings". The signal in front carries who.',
+        repair: {
+          id: 'l7-n2-r', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+          question: 'You see the word **keentaa** with nothing in front of it. Who is doing the bringing?',
+          options: [
+            'You cannot tell: it is you or she, and the signal decides',
+            'She, definitely: -taa is the she ending',
+            'You, definitely: -taa is the you ending',
+            'They, because -taa is plural',
+          ],
+          correctAnswer: 'You cannot tell: it is you or she, and the signal decides',
+          hint: 'How many people does **-taa** cover?',
+          explanation: '**-taa** covers both *you* and *she*, so the verb alone is genuinely ambiguous. **waad keentaa** is "you bring"; **way keentaa** is "she brings".',
+        },
       },
+    },
+    {
+      id: '7-coach-two-clues',
+      type: 'coach',
+      title: 'Use the ending and the signal together',
+      content:
+        'Treat the verb ending as a shortlist, not a final answer. First read the ending: **-aa** narrows the doer to I or he; **-taa** narrows it to you or she. Then move left to the fused signal and settle which person it is.\n\nIf the two clues disagree, stop and repair the parse. Do not guess from the verb alone. Good reading combines partial clues instead of asking one clue to do every job.',
     },
     {
       id: '7-notice-3',
@@ -2328,6 +2396,14 @@ const LESSON_7: Lesson = {
         hint: '**way** unsquashes into **waa** + **ay**. And **-taa** covers you and she.',
         explanation:
           '**way** is **waa** + **ay** (she / they), and **-taa** covers *you* and *she*. Together they can only mean **she brings**: the signal rules out *you*, the ending rules out *they*.',
+        repair: {
+          id: 'l7-n3-r', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+          question: 'What does **waad keentaa** mean?',
+          options: ['you bring', 'she brings', 'they bring', 'we bring'],
+          correctAnswer: 'you bring',
+          hint: '**waad** unsquashes into **waa** + **aad**. And **-taa** covers you and she.',
+          explanation: '**waad** is **waa** + **aad** (you), and **-taa** covers *you* and *she*. Together they can only mean **you bring**: the signal rules out *she*.',
+        },
       },
     },
     {
@@ -2343,6 +2419,14 @@ const LESSON_7: Lesson = {
         hint: 'The *we* ending is **-naa**, and the stem already ends in n.',
         explanation:
           '**keennaa** is "we bring": the **-naa** ending on **keen** gives a doubled n. **keenaa** would be I or he; **keenaan** would be they.',
+        repair: {
+          id: 'l7-c1-r', type: 'multiple_choice', objectiveIds: ['verb-person-endings'],
+          question: 'Complete this so it means **they bring**:  way ___',
+          options: ['keenaan', 'keentaa', 'keentaan', 'keenaa'],
+          correctAnswer: 'keenaan',
+          hint: 'The *they* ending is **-aan**, with the plural **n** and no **t**.',
+          explanation: '**keenaan** is "they bring". **keentaa** would be you or she; **keentaan** would be you (plural).',
+        },
       },
     },
     {
@@ -2357,6 +2441,66 @@ const LESSON_7: Lesson = {
         hint: 'The ending with the **t** in it.',
         explanation:
           '**keentaa**: the **-taa** ending, which covers *you* and *she*. Which of the two it means is settled by the signal in front: **waad keentaa** (you) or **way keentaa** (she).',
+        repair: {
+          id: 'l7-p1-r', type: 'translate', objectiveIds: ['verb-person-endings'],
+          question: 'Type the form of **keen** that goes with **I** and **he**.',
+          answer: 'keenaa',
+          hint: 'The ending without the **t**.',
+          explanation: '**keenaa**: the **-aa** ending, which covers *I* and *he*. Which of the two it means is settled by the signal in front: **waan keenaa** or **wuu keenaa**.',
+        },
+      },
+    },
+    {
+      id: '7-passage-b', type: 'passage',
+      passage: {
+        id: 'l7-text-b',
+        label: 'Two more messages',
+        lines: [
+          { somali: 'Way keentaa.', gloss: 'She brings.', note: 'A new ending on the same action.' },
+          { somali: 'Waad keentaa.', gloss: 'You bring.', note: 'Same verb again, different signal.' },
+        ],
+      },
+      content: 'The same chat, later. The action word changed shape this time. Read both lines, then answer.',
+    },
+    {
+      id: '7-gist-b', type: 'notice', exercise: {
+        id: 'l7-gist-b', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+        question: 'What do these two lines tell you?',
+        options: [
+          'who brings: she in the first, you in the second',
+          'what is being brought',
+          'that the action changed',
+          'that both lines mean the same thing',
+        ],
+        correctAnswer: 'who brings: she in the first, you in the second',
+        hint: '**keentaa** covers you and she. The signals settle which.',
+        explanation: '**Way keentaa**: she brings. **Waad keentaa**: you bring. The **-taa** ending shortlists you/she; **way** and **waad** pick one each.',
+        repair: {
+          id: 'l7-gist-b-r', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+          question: 'In the second line, which word tells you the bringer is "you"?',
+          options: ['waad', 'keentaa', 'both words say it separately', 'neither: it could be she'],
+          correctAnswer: 'waad',
+          hint: 'The verb alone covers two people.',
+          explanation: '**keentaa** could be you or she. **waad** (**waa** + **aad**) is what pins it to *you*.',
+        },
+      },
+    },
+    {
+      id: '7-detail-b', type: 'notice', exercise: {
+        id: 'l7-detail-b', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+        question: 'In **way keentaa**, what rules out "you"?',
+        options: ['the signal way', 'the ending -taa', 'the capital letter', 'nothing: it can mean you'],
+        correctAnswer: 'the signal way',
+        hint: '**-taa** covers you and she both. Something else must exclude one.',
+        explanation: '**-taa** allows *you* and *she*. **way** is **waa** + **ay** (she/they), so *you* is ruled out by the signal, not the verb.',
+        repair: {
+          id: 'l7-detail-b-r', type: 'multiple_choice', objectiveIds: ['verb-ending-ambiguity'],
+          question: 'In **waad keentaa**, what rules out "she"?',
+          options: ['the signal waad', 'the ending -taa', 'the word order', 'nothing: it can mean she'],
+          correctAnswer: 'the signal waad',
+          hint: '**-taa** allows both. The other word excludes one.',
+          explanation: '**waad** is **waa** + **aad** (you), so *she* is ruled out by the signal. The verb alone could still be either.',
+        },
       },
     },
     {
@@ -2371,6 +2515,13 @@ const LESSON_7: Lesson = {
         hint: '**waa** squashed with **uu** (he), then the **-aa** form of **keen**.',
         explanation:
           '**wuu keenaa**: **waa** + **uu** carries "he", and **keenaa** is the **-aa** form. Swap the signal for **waan** and the identical verb now means "I bring".',
+        repair: {
+          id: 'l7-p2-r', type: 'translate', objectiveIds: ['verb-person-endings', 'verb-ending-ambiguity'],
+          question: 'Type the two words that mean **I bring**: signal first, then the action word.',
+          answer: 'waan keenaa',
+          hint: '**waa** squashed with **aan** (I), then the **-aa** form of **keen**.',
+          explanation: '**waan keenaa**: **waa** + **aan** carries "I", and **keenaa** is the **-aa** form. Swap the signal for **wuu** and the identical verb now means "he brings".',
+        },
       },
     },
     {
