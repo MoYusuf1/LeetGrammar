@@ -68,6 +68,16 @@ const LESSON_1: Lesson = {
       content: 'When speech or captions move quickly, do not stop at every word. Use a three-pass routine:\n\n1. **WHO:** catch the WHO, thing, or topic.\n2. **Signal:** find the small word that tells you what kind of statement you are hearing.\n3. **WHAT:** catch what is being said about the WHO.\n\nIn **Wiilku waa macallin**, those passes give you **Wiilku | waa | macallin**. You can understand the line before you can explain every ending.',
     },
     {
+      id: '1-coach-first-pass', type: 'coach', title: 'Do not solve every word',
+      content: `On a first pass, your job is not a perfect translation. Ask three questions in order:
+
+1. **Who or what is this about?**
+2. **Which small word organizes the statement?**
+3. **What useful meaning survives even if one ending is unclear?**
+
+Then say the gist in plain English. Return for details only after the sentence has a shape. This is how you keep up with captions and speech instead of getting trapped on word one.`,
+    },
+    {
       id: '1-notice-2', type: 'notice', exercise: {
         id: 'l1-n2', type: 'multiple_choice', objectiveIds: ['find-signal'],
         question: 'Which word in **Wiilku waa macallin** is the small sentence signal?',
@@ -212,6 +222,18 @@ const LESSON_2: Lesson = {
         explanation:
           '**Guriga** contains a **g** (a k-type ending) so **guri** is **masculine**. Feminine nouns would show a t-type ending instead, as in **naagta**.',
       },
+    },
+    {
+      id: '2-coach-pairs',
+      type: 'coach',
+      title: 'Store a noun with its clue',
+      content:
+        `A bare noun hides the gender clue, so do not memorize it alone. Store a two-part memory: **bare noun → “the” form**. Then retrieve in both directions:
+
+• See **guri**: recall **guriga**.
+• See **guriga**: strip the ending and recover **guri**.
+
+The pair turns an invisible fact into something you can inspect. The next questions make you read the clue rather than recite a label.`,
     },
     {
       id: '2-notice-2',
@@ -370,6 +392,20 @@ const LESSON_3: Lesson = {
         '• after **dh** → just **-a**: gabadh → **gabadha**\n' +
         '• after **l** → **-sha**, and the l disappears: bil → **bisha**\n\n' +
         'The **-sha** rule is the one to watch. **bil** → **bisha**, not "bilta".',
+    },
+    {
+      id: '3-coach-decision',
+      type: 'coach',
+      title: 'Run the same decision every time',
+      content:
+        `When you need the “the” form, do not search a list at random. Run one decision path:
+
+1. **Gender:** start from the masculine or feminine base ending.
+2. **Last sound:** check only the final sound of the noun.
+3. **Attach:** apply the matching change and write one word.
+4. **Read back:** confirm that you made a definite noun, not a new sentence.
+
+A fixed path reduces guessing. Speed comes after the path becomes automatic.`,
     },
     {
       id: '3-notice-1',
@@ -590,6 +626,19 @@ const LESSON_4: Lesson = {
         '• **ay**: she / they\n\n' +
         'You will see these fused onto **waa**, the statement signal, in the next unit: **waa + uu** becomes **wuu**.\n\n' +
         'For now just recognise them. They are short, they are everywhere, and they are not the same words as **aniga / adiga / isaga / iyada**.',
+    },
+    {
+      id: '4-coach-roles',
+      type: 'coach',
+      title: 'Choose the role before the form',
+      content:
+        `Before changing an ending, point to the role in the message:
+
+1. **WHO is doing or being described?** That phrase is the subject.
+2. **Is the listener inside “we”?** Choose the pronoun from the real group, not from the English word.
+3. **What is said about the WHO?** Do not mark that description as another subject.
+
+Meaning chooses the form. If you start with the ending, two plausible-looking answers can hide the real mistake.`,
     },
     {
       id: '4-notice-1',
