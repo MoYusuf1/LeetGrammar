@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { composeHomework, carryBackCount, HOMEWORK_SIZE, CARRY_BACK_SHARE } from '@/lib/homework';
+import { composeHomework, carryBackCount, delayedTransferItems, isDelayedTransferSession, HOMEWORK_SIZE, CARRY_BACK_SHARE } from '@/lib/homework';
 import { AUTHORED_LESSONS } from '@/data/authored-lessons';
 import { isAnswerCorrect } from '@/lib/grading';
 import type { PracticeExercise, ExerciseType } from '@/data/types';
@@ -242,5 +242,25 @@ describe('homework: misses lead the set', () => {
         composeHomework(lesson.id, 1, undefined, [lesson.id - 1]),
       );
     }
+  });
+});
+
+
+describe('homework: delayed transfer is earned, not assumed', () => {
+  it('only labels a lesson delayed when the review schedule says it is due', () => {
+    expect(isDelayedTransferSession(5, [2, 5])).toBe(true);
+    expect(isDelayedTransferSession(5, [2, 4])).toBe(false);
+  });
+
+  it('returns no delayed evidence for immediate practice', () => {
+    expect(delayedTransferItems(5, 0, [])).toEqual([]);
+  });
+
+  it('a due lesson exposes fresh transfer items rather than copied lesson prompts', () => {
+    const lesson = AUTHORED_LESSONS.find((item) => item.id === 5)!;
+    const lessonQuestions = new Set(lesson.cards.flatMap((card) => card.exercise ? [card.exercise.question.trim().toLowerCase()] : []));
+    const items = delayedTransferItems(5, 0, [5]);
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every((item) => !lessonQuestions.has(item.question.trim().toLowerCase()))).toBe(true);
   });
 });
