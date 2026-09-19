@@ -745,14 +745,22 @@ Each unit gets a one-line identity, and every lesson is a visible move within it
 | | | 6 Squishing | `SIGNAL` fuses with `WHO` → `wuu`, `bay`, `wuxuu` |
 | | | 7 Action Words | **`DO`** — and it matches `WHO` |
 | | | 8 Building a Sentence | the **full shape**, and how `SIGNAL` reorders the boxes |
-| **3** | **Bend the shape** | 9 When It Happens | `DO` changes for time |
-| | | 10 Saying "Not" | `SIGNAL` goes negative |
-| | | 11 Asking Questions | `SIGNAL` becomes a question |
-| **4** | **Decorate the boxes** | 12 Describing Words | `WHO`/`WHAT` can carry a description |
-| | | 13 Numbers & Amounts | `WHO`/`WHAT` can carry a count |
-| | | 14 Where & With What | a new `WHERE` box |
+| **3** | **Decorate the boxes** | 9 Describing Words | `WHO`/`WHAT` can carry a description |
+| | | 10 Numbers & Amounts | `WHO`/`WHAT` can carry a count |
+| | | 11 Where & With What | a new `WHERE` box |
+| **4** | **Bend the shape** | 12 When It Happens | `DO` changes for time |
+| | | 13 Saying "Not" | `SIGNAL` goes negative |
+| | | 14 Asking Questions | `SIGNAL` becomes a question |
 
-**Note what this reveals about Unit 3.** Negation and questions belong together not because
+> **Amended September 2026 — this order shipped.** Units 3 and 4 swapped:
+> describing/numbers/relations became Unit 3 (Lessons 9–11, built and live),
+> because its sourcing pass came back fully attestable while the tense/
+> negation/questions block still carried the open `ma` teaching-order question
+> and the `waa` dispute. Tense/negation/questions is now Unit 4 (Lessons
+> 12–14). The structural argument below is untouched — it is why those three
+> lessons still sit together as one unit.
+
+**Note what this reveals about the bend-the-shape unit (Unit 4 since Sept 2026).** Negation and questions belong together not because
 a syllabus says so, but because in Somali **both operate on the same slot** — the signal.
 Tense operates on the verb slot. That's a real structural grouping the learner can *see*,
 which is exactly the "intuitive and palatable" property being asked for. The unit names
@@ -1099,8 +1107,10 @@ words per session; UI shows confidence markers; word list is decoupled from less
 completion.
 
 ### Phase 6 — Units 3–4 (Lessons 9–14)
-Same DoD as Phase 2. **Unit 3 must make the shared-slot insight explicit** — negation and
-questions both act on `SIGNAL` — in the unit's `identity` string and in each lesson's
+Same DoD as Phase 2. **Unit 3 shipped in September 2026** as describing,
+number and relation words (see the amendment in §4B.1). The shared-slot
+insight — negation and questions both act on `SIGNAL` — now binds on **Unit
+4**: make it explicit in the unit's `identity` string and in each lesson's
 `connect` card.
 
 ### Phase 7 — Retire the old pipeline

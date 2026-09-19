@@ -1,7 +1,7 @@
 # State of play
 
 > Where the course actually stands, what is deliberately unfinished, and what
-> comes next. **Last updated:** 2026-09-18. Now the inventory only — the plan and the
+> comes next. **Last updated:** 2026-09-19. Now the inventory only — the plan and the
 > debt live in their own files, linked below.
 >
 > **Starting cold?** Read [WORKING_AGREEMENT.md](./WORKING_AGREEMENT.md) (the
@@ -17,7 +17,7 @@
 ---
 ## What exists
 
-An **8-lesson Somali course** in 2 units, local-first with an **optional Google
+An **11-lesson Somali course** in 3 units, local-first with an **optional Google
 account** — progress, the review schedule, and the per-prompt miss history live in
 `localStorage` and sync through Firestore (schema v8, owner-only rules, offline
 cache, merge on first sign-in, JSON export). Every Somali form in it is
@@ -25,16 +25,19 @@ source-verified.
 
 | Lesson | Title | Cards | Exercises | Teaches |
 | --- | --- | --- | --- | --- |
-| 1 | Reading for Meaning | 13 | 6 | the decode routine WHO → SIGNAL → WHAT on a sourced statement; `waa` as a listening signpost; predict-before-teach. **Assumes Somali literacy** — the alphabet lesson was retired in Sept 2026 |
-| 2 | Naming Things | 15 | 6 | noun gender; why it is invisible in writing; reading gender off the "the" form |
-| 3 | Saying "The" | 17 | 9 | the article is a suffix; all eight assimilation outcomes; no indefinite article |
-| 4 | I, You, He, She | 15 | 6 | eight pronouns; inclusive/exclusive "we"; short subject pronouns; the subject marker |
-| 5 | The Signal Words | 17 | 7 | `waa` plain statement; `baa`/`ayaa` spotlight what precedes; `waxa` spotlights what ends the sentence |
-| 6 | Squishing | 18 | 8 | signals fuse with short pronouns — `wuu`, `way`, `waxay`, and the irregular `wuxuu` |
-| 7 | Action Words | 15 | 6 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
-| 8 | Putting It In Order | 16 | 6 | the action word lands last; the signal hugs the verb; `waxa` sends the spotlight past it |
+| 1 | Reading for Meaning | 15 | 7 | the decode routine WHO → SIGNAL → WHAT on a sourced statement; `waa` as a listening signpost; predict-before-teach. **Assumes Somali literacy** — the alphabet lesson was retired in Sept 2026 |
+| 2 | Naming Things | 19 | 9 | noun gender; why it is invisible in writing; reading gender off the "the" form |
+| 3 | Saying "The" | 22 | 13 | the article is a suffix; all eight assimilation outcomes; no indefinite article |
+| 4 | I, You, He, She | 20 | 10 | eight pronouns; inclusive/exclusive "we"; short subject pronouns; the subject marker |
+| 5 | The Signal Words | 22 | 11 | `waa` plain statement; `baa`/`ayaa` spotlight what precedes; `waxa` spotlights what ends the sentence |
+| 6 | Squishing | 23 | 12 | signals fuse with short pronouns — `wuu`, `way`, `waxay`, and the irregular `wuxuu` |
+| 7 | Action Words | 20 | 10 | present-tense endings on `keen`; why `-aa` alone cannot say who, and how the signal settles it |
+| 8 | Putting It In Order | 21 | 11 | the action word lands last; the signal hugs the verb; `waxa` sends the spotlight past it |
+| 9 | Describing Words: Which One? | 18 | 8 | describing words follow the noun; "the" stays on the noun alone; the doer mark hops to the describing word |
+| 10 | Number Words: How Many? | 19 | 9 | the number words 1–10; the counted shape of a noun (`bil` → `bilood`); `hal` before a noun vs `kow` counting off |
+| 11 | Relation Words: To, In, From, With | 19 | 9 | `u`, `ku`, `ka`, `la`; they hug the action word and point back at an earlier noun; four source-attested frames |
 
-**Totals:** 138 authored cards · 66 exercises · 36% production.
+**Totals:** 218 authored cards · 218 exercises · 26% production.
 Lesson 1 is the first **flow v2** lesson (`flowVersion: 2`): Learn → Repair → Retention with two reading passages, a repair item behind every exercise, and an end-of-lesson retry round. Validator F1–F6 gate the new shape.
 Learners see one extra card per lesson — a vocabulary deck injected at runtime.
 
@@ -55,6 +58,17 @@ pass), with every one of its 15 production items rendering an input and grading
 real typed text. The commit that made those conversions could not check this —
 worth knowing that the routine exists and is documented in
 [ADDING_CONTENT.md](./ADDING_CONTENT.md).
+
+After Lesson 11, a **Unit 3 Test** is unlocked: 24 authored items — three per
+objective across the unit's nine objectives, so a corrective set never
+re-serves the exact item a learner just missed — plus 13 carried back from
+Units 1–2, composed to 37. **79% of the authored bank is production**; the
+composed test sits at 68%, clearing the 60% design target that Units 1 and 2
+structurally cannot (debt 8). The final item, `u3-t18`, is the unit's
+genuinely-unseen transfer sentence. Same mechanics: 85% passes, missed
+objectives route to correctives, entry on `/learn`, route `/#/unit-test/3`.
+Unit 3 itself (Lessons 9–11) was resequenced in September 2026 — see
+[PLAN.md](./PLAN.md).
 
 ### The interface
 
@@ -113,22 +127,25 @@ It is now four real segments that highlight the slot from the data.
 
 | | |
 | --- | --- |
-| Verified-form registry | **109** forms (**98** with 2+ citations; 4 derived on a rule; 7 single-source) |
-| Vocabulary entries | 95, of which **90** are 2-source verified |
-| Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 |
-| Bank production mix | Unit 1 **47%** · Unit 2 **46%** (target 60% — see debt 8) |
-| Tests | 137, across 9 files |
-| Validator | 24 checks passing, 0 errors, 8 open warnings |
-| Sources | 8 keys: Nilsson, **Orwin**, 2 Wikipedia pages, Wiktionary, + 3 dictionaries (`JF`, `SA`, `AW`) |
+| Verified-form registry | **170** forms (**138** with 2+ citations; 4 derived on a rule; 29 single-source) |
+| Vocabulary entries | 117, of which **112** are 2-source verified |
+| Unit test banks | Unit 1: 32 items · Unit 2: 26 authored + 13 carried back = 39 · Unit 3: 24 authored + 13 carried back = 37 |
+| Bank production mix | Unit 1 **47%** · Unit 2 **46%** · Unit 3 **79%** authored / **68%** as sat (target 60% — met by Unit 3; see debt 8) |
+| Tests | 190, across 14 files |
+| Validator | 20 checks passing, 0 errors, 6 open warnings |
+| Sources | 9 keys: Nilsson, **Orwin**, **Saeed** (reference grammar), 2 Wikipedia pages, Wiktionary, + 3 dictionaries (`JF`, `SA`, `AW`) |
 | Deployment | Vercel, auto-deploys from `main` |
 
 ---
 
 ## What is deliberately *not* built
 
-**Lessons 9–14 are planned, not written.** [COURSE_DESIGN.md](./COURSE_DESIGN.md)
+**Lessons 12–14 are planned, not written.** [COURSE_DESIGN.md](./COURSE_DESIGN.md)
 describes a 14-lesson target; that is the design, not the state. They appear
-nowhere in the UI — no stub rows, no "coming soon".
+nowhere in the UI — no stub rows, no "coming soon". Lessons 12–14 are the
+past-tense, negation and questions unit — **Unit 4** since the September 2026
+resequencing, which moved describing/number/relation words into Unit 3
+(Lessons 9–11, shipped) on the strength of its sourcing.
 
 This is a reversal of an earlier decision to build all 14 at once, which produced
 ten empty lessons and three exercises. The choice was **narrow and correct over

@@ -1,6 +1,6 @@
 # Known debt
 
-> **Last updated:** 2026-08-18, when this was split out of STATE_OF_PLAY.
+> **Last updated:** 2026-09-19 — Unit 3 shipped; items 1, 2 and 8 re-baselined.
 >
 > Every open problem in the course and the app, with why it is open. Items
 > marked ✅ are resolved and kept because the reasoning is worth not
@@ -15,13 +15,14 @@
 
 ---
 
-### 1. 5 of 95 vocabulary entries lack two sources 🟡
+### 1. 5 of 117 vocabulary entries lack two sources 🟡
 
 Was 60 with *no* citation at all, then 52. Three dictionaries arrived in August
 2026 and the pass against them, both grammars and Wiktionary took it to **5**.
-Registry: 109 forms, 98 with two or more independent citations (4 more are
-derived forms resting on a rule, 7 are genuinely thin). Method, traps and
-findings: [SOMALI_SOURCES.md](./SOMALI_SOURCES.md).
+Registry: 170 forms, 138 with two or more independent citations (4 more are
+derived forms resting on a rule, 29 are genuinely thin — most of them
+recognition-only illustration forms from the Unit 3 build, by design). Method,
+traps and findings: [SOMALI_SOURCES.md](./SOMALI_SOURCES.md).
 
 What remains is listed under the plan below; none of the five is a lookup that
 simply has not been done yet.
@@ -37,16 +38,20 @@ Wiktionary is already a source key and is the obvious next step. `fadlan`,
 `ilmo` and `masjid` appear in neither grammar under any spelling and need
 either a dictionary citation or cutting.
 
-### 2. 7 registry forms rest on a single source ⚪
+### 2. 29 registry forms rest on a single source ⚪
 
-Down from 18. Orwin's fusion tables on p.21 and p.93 were read on the page and
-resolved eight forms in one pass — `waad`, `baan`, `baad`, `buu`, `bay`,
-`ayaan`, `ayaad`, `ayuu` — on top of `nabad`, `subax`, `waan`, `ayay` earlier.
-Under **S6** those are now producible rather than read-only.
+Was down to 7, then the Unit 3 build (Sept 2026) added 20 more **on
+purpose**: Orwin and Saeed illustrate adjective/number/relation-word rules
+with sentences whose other words (`toostay`, `tagtay`, `kabood`, `riyaad`,
+`saddexda`, `toddobada`, `warshadda`, `laybreeriga`, `geedka`, `shimbirtu`,
+`duushay`, `koobka`, `shub`, `sheegayaa`, `joogaa`, `joogay`, `ari`,
+`maanta`, `ninkan`, `yimi`) appear in only one grammar. Under **S6** they are
+recognition-only — they can be read in passages and options, never demanded
+as a typed answer. That is the design working, not a regression.
 
-Run `npm run validate:course` for the live list; check **S4** prints it. As of
-this writing: `waxaan`, `waxaad`, `saaxiibkeed`, `saaxiibteed`, `salaamaysa`,
-`salaamaysaa`, `gabadhu`, `bariiska`, `tegey`, `cabbay`, `koob`.
+Run `npm run validate:course` for the live list; check **S4** prints it. The
+pre-Unit-3 remainder: `waxaan`, `waxaad`, `salaamaysa`, `salaamaysaa`,
+`gabadhu`, `tegey`, `cabbay`, `macallimad`, `wiilkaygu`.
 
 Most **genuinely cannot be resolved** with the two grammars in hand: some come
 from Nilsson's focus example and are absent from Orwin, others from Orwin's
@@ -185,6 +190,10 @@ directory is deleted (nothing imported any of its 53 components), and
 `npm run lint` now reports **zero errors**. Keep it there.
 
 ### 8. Test banks sit at 47% / 46% production against a 60% target ⚪
+
+**Unit 3 (Sept 2026) clears the bar: 79% authored, 68% as sat.** It was
+authored against the target from the start. Units 1 and 2 remain below, for
+the structural reasons below.
 
 Check `E9` now measures this every run and warns. It reports two figures,
 because they answer different questions: what the bank *author* wrote, and

@@ -1,7 +1,7 @@
 # The plan
 
 > What happens next and in what order, plus the decisions that need a human.
-> **Last updated:** 2026-08-18, when this was split out of STATE_OF_PLAY.
+> **Last updated:** 2026-09-19 — Unit 3 shipped (Lessons 9–11) after the September resequencing.
 >
 > **Split out of STATE_OF_PLAY.md in Aug 2026**, because "what is next" was the
 > most common question asked of that file and answering it meant paying for the
@@ -55,7 +55,7 @@ Four more rules fall out of the same experience:
 | 3 | Assessment engine | 🟡 tests, gating, correctives, cumulative, homework and spaced review all done; **retake pool still open** |
 | 4 | Unit 1 — Lessons 1–4 | ✅ |
 | 5 | Vocabulary track | ❌ blocked on a dictionary, not on effort |
-| 6 | Units 3–4 — Lessons 9–14 | ❌ Unit 3 sourced and ready; Unit 4 unverified |
+| 6 | Units 3–4 — Lessons 9–14 | 🟡 Unit 3 ✅ shipped Sept 2026 (Lessons 9–11: describing, number, relation words); Unit 4 (past/negation/questions, Lessons 12–14) sourced but unbuilt |
 | 7 | Retire `COURSE.md` + generator | ❌ trivial, deferred on purpose |
 
 ### Sequence from here
@@ -79,41 +79,48 @@ purchase.
 
 - **Negation before questions, or the reverse?** `ma` is written identically for
   both, so whichever is taught first becomes the learner's default reading.
-  Blocking for Lesson 10/11.
-- **Get a third grammar** — Saeed or Puglielli. This is the real Unit 3 blocker
-  and it is *not* lexical: Nilsson and Orwin disagree about `waa`, and no
-  dictionary adjudicates a grammar dispute. Six dictionaries did not shorten the
-  path to Unit 3 by a day.
+  Blocking for Unit 4 (now Lessons 13/14).
+- ~~**Get a third grammar**~~ — **DONE (Sept 2026).** Saeed's *Somali*
+  (Benjamins, 1999) is in the source system as `SG` and carries Unit 3's
+  adjective, numeral and preposition citations. It did not adjudicate the
+  `waa` dispute — that question is still open below and now belongs to Unit 4.
 - `haweeney` vs `naag`, and whether `COURSE.md` (9,399 orphaned lines) is
   deleted. Both low-stakes, neither blocking.
 
-**2 — Unit 3 (Lessons 9–11): past tense, negation, questions.** Sourcing pass
-first, and let its outcome reshape the lessons — that rule has already changed
-two lessons after they were planned. This is where `ma` finally gets taught,
-closing the promise Lesson 5's docstring made when it cut it.
+**2 — Unit 3 (Lessons 9–11): describing, number, and relation words — ✅
+shipped 2026-09-19.** This unit was resequenced with the user's approval
+(sequence A): COURSE_DESIGN had past tense/negation/questions here, but the
+sourcing audit found that block gated on the `ma` teaching-order question and
+a `waa` dispute between the grammars, while describing/counting/relation
+words were fully attestable once Saeed arrived. What shipped: three flow-2
+lessons, nine objectives, a 24-item test bank with three fresh items per
+objective, correctives coverage from the same bank, a genuinely-unseen
+transfer item (`u3-t18`), and the Syllabus roadmap renumbering. Past tense,
+negation and questions moved to Unit 4 (item 4 below).
 
 Two things fall out of that sourcing pass for free:
 
 - **The past-tense rule closes `tegey` and `cabbay`.** Both stems are already
   confirmed (`tag` at Awde p.48, `cab` at p.25); the only missing piece is a
-  double-attested rule, which Lesson 9 has to establish anyway. They then join
+  double-attested rule, which Lesson 12 has to establish anyway. They then join
   the derived tier like `keentaa`, taking the vocabulary gap from 5 to 3.
 - **Orwin's own past-tense `waa` examples are already located** and recorded in
   [SOMALI_SOURCES.md](./SOMALI_SOURCES.md) §7: `Ninku waa toosay`, `Bariisku waa
   karay`, `Gabadhu waa tagtay`. They were deliberately not used in Lesson 5
-  because Unit 2 teaches only the present. Unit 3 is where they belong — verify
+  because Unit 2 teaches only the present. Unit 4 is where they belong — verify
   on the page first, the Orwin dump is OCR and damaged nearby.
 
-**3 — Close the retake hole while authoring Unit 3, not after.** Every test
-shows all answers on its results screen and then serves identical items on
-retake. The fix is roughly double the items per objective — content, not code —
-so it is cheapest written alongside the Unit 3 bank.
+**3 — Close the retake hole — Unit 3 done, Units 1–2 still open.** Unit 3's
+bank carries three fresh items per objective, and `composeUnitTest` rotates
+bank order per attempt, so a retake is not the same run with the same layout.
+Every test still shows all answers on its results screen, and Units 1–2 still
+sit at two items per objective — doubling those banks remains the open part.
 
-**4 — Unit 4 (Lessons 12–14), sourcing pass first.** Adjectives and prepositions
-are well covered in both grammars. **Numerals are the flagged thin spot** —
-Orwin barely mentions them, so check before planning Lesson 13, not after.
-Expect Unit 4 to be the most lexical unit yet, which is where the three new
-dictionaries finally earn their place in content rather than repair.
+**4 — Unit 4 (Lessons 12–14): past tense, negation, questions — the old
+planned Unit 3.** Sourcing pass first, and let its outcome reshape the
+lessons. This is where `ma` finally gets taught, closing the promise Lesson
+5's docstring made when it cut it. The negation-before-questions question
+below is now this unit's fork.
 
 **5 — Standing debt. Opportunistic, never scheduled ahead of 1–4.**
 
@@ -137,9 +144,9 @@ open items are all in "Known debt" below; there is no separate unplanned pile.
 
 ## Open questions — these need a human decision
 
-**Should a third grammar be acquired before Unit 3 is authored?** Saeed's
-*Somali Reference Grammar* or Puglielli. This is the one open question with a
-price tag rather than a judgement, and it is the actual Unit 3 blocker.
+**~~Should a third grammar be acquired before Unit 3 is authored?~~ —
+ANSWERED (Sept 2026): yes, and it happened.** Saeed's *Somali* (1999) is
+registered as `SG`. The rest of this entry still stands as the reasoning:
 
 The August 2026 dictionary pass made the shape of the problem clear: three new
 dictionaries took the vocabulary gap from 52 to 5 and did **nothing** for Unit 3,
@@ -150,10 +157,10 @@ them agree" — with no tiebreak when they do not, and no third opinion when one
 silent. Nilsson's §12.3 entry for `waa` ends with the author's own note, *"Add
 examples!"*.
 
-**Does Unit 3 teach negation before questions, or the other way round?**
+**Does Unit 4 teach negation before questions, or the other way round?**
 `ma` is written identically in both roles, because tone is not written, so
 whichever comes first is the meaning the learner will reach for by default.
-COURSE_DESIGN puts negation at Lesson 10 and questions at 11; Orwin introduces
+The design puts negation at Lesson 13 and questions at 14; Orwin introduces
 `ma` as the interrogative classifier on p.15, long before the negative. Both
 orders are defensible and the sources do not settle it — it is a teaching
 judgement about which default is less harmful to unlearn later.
