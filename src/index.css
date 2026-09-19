@@ -483,3 +483,19 @@
   .lesson-container { --column: 46rem; }
   .lesson-container .lesson-article { padding: 1rem 0 2rem; }
 }
+
+/* Syllabus: a reading page, not another course shell. */
+.syllabus-article { font-family: var(--font-ui); }
+.syllabus-section { margin-top: 4rem; padding-top: 3rem; border-top: .5px solid var(--separator); }
+.syllabus-section > h2,
+.syllabus-section > div > h2 { font-size: 1.5rem; line-height: 1.25; font-weight: 700; letter-spacing: -.02em; }
+.roadmap-dot { color: var(--label-3); }
+@media (min-width: 768px) {
+  .learn-actions { right: max(1.25rem, calc((100vw - 54rem) / 2 + 2rem)); top: 1rem; }
+  .learn-large-toolbar { padding-right: 7rem; }
+  .syllabus-section { margin-top: 5rem; padding-top: 4rem; }
+}
+@media (min-width: 1024px) {
+  .learn-actions { right: max(1.25rem, calc((100vw - 58rem) / 2 + 3rem)); }
+  .learn-large-toolbar { padding-right: 7rem; }
+}
