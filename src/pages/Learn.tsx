@@ -34,7 +34,6 @@ import { useNavigate } from 'react-router';
 import { LESSON_LIST, type LessonSummary } from '@/data/authored-lessons';
 import { UNITS, getUnitTest } from '@/data/unit-tests';
 import { dueLessons } from '@/lib/review';
-import { repairQueue } from '@/lib/repair';
 import { useProgressStore } from '@/stores/progress-store';
 
 export default function LearnPage() {
@@ -58,10 +57,6 @@ export default function LearnPage() {
      label, and it is why there is no separate continue button. */
   const current = LESSON_LIST.find((l) => !completed.includes(l.lessonId))?.lessonId;
 
-  /* Unresolved slips, fed by every recorded exercise attempt. The one
-     actionable row on this page that is not a lesson. */
-  const repairCount = repairQueue(store.exerciseProgress).length;
-
   return (
     <div className="learn-page min-h-[100dvh] bg-bg">
       <div className="learn-actions fixed right-4 top-[calc(0.75rem+var(--safe-t))] z-20 flex gap-2">
@@ -79,29 +74,6 @@ export default function LearnPage() {
           </header>
 
           <main className="pb-[calc(4rem+var(--safe-b))]">
-          {/* The repair row. Rendered only while something is unresolved — a
-              row you cannot press is furniture, and an empty queue is nothing
-              to act on. Same type-on-background shape as the unit test row. */}
-          {repairCount > 0 && (
-            <section className="mb-12">
-              <button
-                onClick={() => navigate('/repair')}
-                className="grid w-full grid-cols-[2.75rem_1fr] items-baseline gap-3 py-3 text-left active:opacity-50"
-              >
-                <span aria-hidden className="text-title2 font-light text-label-3">
-                  ·
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-title3 font-semibold text-label">
-                    Put right what slipped
-                  </span>
-                  <span className="mt-0.5 block text-footnote text-label-2">
-                    {repairCount === 1 ? '1 item waiting' : `${repairCount} items waiting`}
-                  </span>
-                </span>
-              </button>
-            </section>
-          )}
           {grouped.map(({ unit, lessons }) => {
             const bank = getUnitTest(unit.id);
             return (
@@ -143,8 +115,7 @@ export default function LearnPage() {
                       T{unit.id}
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-title3 font-medium text-label">{bank.name}</span>
-                      <span className="mt-0.5 block text-footnote text-label-2">Check what you remember</span>
+                      <span className="block text-title3 font-medium text-label">Unit Test</span>
                     </span>
                   </button>
                 )}
