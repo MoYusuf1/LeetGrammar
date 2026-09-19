@@ -28,9 +28,12 @@ a form to the registry only after recording its sources here.
 | --- | --- |
 | **N** | Morgan Nilsson, *Beginner's Somali Grammar*, University of Gothenburg, 25 Aug 2023. https://morgannilsson.se/BeginnersSomaliGrammar.Aug2023.pdf |
 | **O** | Martin Orwin, *Colloquial Somali: A Complete Language Course*, Routledge (Colloquial Series). **Not redistributable** — supply your own copy, see below. |
+| **SG** | John I. Saeed, *Somali* (London Oriental and African Language Library 10), John Benjamins, 1999. The project's third grammar, added Sept 2026 for Unit 3. Cite as `SG §n.n.n`; text dump in `sources/Saeed_1999_Somali.txt`. **Not the same key as `SA` below.** |
 | **W-alpha** | Wikipedia, *Somali Latin alphabet*. https://en.wikipedia.org/wiki/Somali_Latin_alphabet |
 | **W-gram** | Wikipedia, *Somali grammar*. https://en.wikipedia.org/wiki/Somali_grammar |
 | **Wikt** | Wiktionary, Somali entries. https://en.wiktionary.org/ |
+
+**Key collision warning.** `SA` (below) is Suleiman Mohamoud Adam's dictionary; `SG` (above) is Saeed's grammar. They are different authors and works. Unit 3 citations use `SG §…`; dictionary citations use `SA p.…`. Never collapse them.
 
 **Dictionaries** (added Aug 2026). Cited as `s.v. "headword"` rather than by
 page: the folios are not in either scan's text layer, and a headword is
@@ -742,6 +745,92 @@ the obvious next one to work through.
 
 ---
 
+
+## 13. Unit 3 sourcing — describing, number, and relation words (September 2026)
+
+Unit 3 (Lessons 9–11) shipped 2026-09-19 after a user-approved resequencing:
+this content moved ahead of past tense / negation / questions (now Unit 4)
+because the sourcing pass came back clean. Every citation below was verified
+on the page or in the section text; Orwin page citations were verified on the
+PDF page images, never from the OCR dump.
+
+### A new source key: `SG`
+
+John I. Saeed, *Somali* (London Oriental and African Language Library 10),
+John Benjamins, 1999 — the project's third grammar, acquired for this unit.
+Cited as `SG §n.n.n` from the text dump in `sources/Saeed_1999_Somali.txt`.
+
+**`SG` is not `SA`.** `SA` is Suleiman Mohamoud Adam's *New Student
+Dictionary* (HAAN, 1999); `SG` is Saeed's grammar. Different authors,
+different works — under the independence rule they count separately, and
+confusing the keys would corrupt every citation added this round.
+
+### Describing words (Lesson 9)
+
+- **Position and definiteness.** Orwin p.63 (verified on the PDF): the
+  adjective follows the noun, and the definite ending attaches to the noun
+  alone — `guri cusub` → `guriga cusub`, never `*guriga cusubka`.
+  Saeed §4.4.1 lists the adjective class (`cusub`, `weyn`, `yar`, `dheer`).
+  Nilsson p.76: gender and definiteness do not change the adjective's shape
+  (`gabar yar`, `wiil yar` — same `yar`).
+- **Doer-marking hops to the adjective.** Orwin pp.63–64 (verified on the
+  PDF): `Ninka dheeri waa tagay`, `Gabadha yari waa toostay` — the noun drops
+  to its plain shape and the subject ending lands on the last word of the
+  pair. Saeed §4.4.4 gives `dheeri` / `wanaagsani` / `yari` directly.
+- **Kept out of forced production, per the approved audit:** adjective
+  reduplication (recognition-only), predicate adjectives, and the disputed
+  analyses. The course teaches the observable forms, not the controversy.
+
+### Number words (Lesson 10)
+
+- **1–10.** Orwin p.67 (verified on the PDF): the full table `ków … toban`;
+  Saeed §4.1.4 the same inventory; Nilsson p.56. The sources print tone marks
+  (`ków`, `siddéed`); the course ships standard unmarked orthography — the
+  normalization is recorded here, per project rule.
+- **Counted shapes.** Orwin p.68 (verified on the PDF): `afar dal`,
+  `laba kabood`, `saddex buug`, `toddoba nin`, `sagaal riyaad`,
+  `laba naagood`, `saddexda buug`, `toddobada nin`, `hal buug`, `hal naag`,
+  `mid`. Saeed §4.1.4: the counted-noun form (`saddex wiil`,
+  `toddoba maalmood`); §4.6.4: `laba bilood`. Nilsson p.45:
+  `hal buug`, `laba baabuur`, `dhowr maalmood`, `immisa bilood`; p.56:
+  `laba wiil`, `labada wiil`, `saddex bilood`.
+- **`hal` vs `kow`.** Saeed §4.1.4 states `kow` is replaced by `hal` before a
+  noun (`hal baabuur`); Nilsson p.57 gives `kow` counting off; Orwin p.68 has
+  `hal buug` / `hal naag`. The disputed label for the counted noun (genitive
+  vs "counting form") is not taught — the learner learns the shapes.
+- Only these source-cleared forms ship; no disputed counting labels in
+  production.
+
+### Relation words (Lesson 11)
+
+- **The inventory.** Saeed §4.5 gives the four adpositions `u`, `ku`, `ka`,
+  `la` with examples; Orwin p.80 (verified on the PDF) the same four in his
+  particle table (`ú/kú/ká/lá`); Nilsson §5.2 (p.27) and p.153 list the same
+  four genuine prepositions.
+- **Position.** Orwin p.79 (verified on the PDF): the preposition sits just
+  before the verb and points back at its noun — `Gabadhu laybreeriga way ku
+  qortaa`. Never in front of the noun, unlike English.
+- **The four taught frames, each from a source sentence:** `ku` + place
+  (Saeed §4.5 ex. 102: `ku shaqeeyaa warshadda`), `ka` + source (Saeed §4.5
+  ex. 104: `Ninkan baa Cadan ka yimi`), `u` + goal (Orwin p.80: `Maxmuud
+  waan u sheegayaa`), `la` + company (Orwin p.80: `Maanta Maxamed waan la
+  joogay`; Nilsson p.127: `la joogaa ari`).
+- **One flagged disagreement:** Nilsson p.167 prints `ká shaqeeyaa` where
+  Saeed (ex. 102) has `ku shaqeeyaa warshadda`. The course teaches the Saeed
+  frame and registers the Nilsson form as a variant note only.
+- Particle clusters, contractions, idioms and abstract uses stay out of
+  forced production, per the audit.
+
+### Recognition-only forms this unit added
+
+`toostay`, `tagtay`, `kabood`, `riyaad`, `saddexda`, `toddobada`,
+`warshadda`, `laybreeriga`, `geedka`, `shimbirtu`, `duushay`, `koobka`,
+`shub`, `sheegayaa`, `joogaa`, `joogay`, `ari`, `maanta`, `ninkan`, `yimi` —
+each attested in one grammar's example sentences. They may be read in
+passages and options; check S6 keeps them out of typed answers. Kirk's 1905
+grammar was consulted as a historical control only and is not cited for any
+learner-facing form.
+
 ## Status
 
 - ✅ Alphabet, pronouns, gender, articles, subject case: **2-source verified**
@@ -753,10 +842,12 @@ the obvious next one to work through.
 - ✅ 10 example sentences: sourced to N
 - ✅ **All Somali in exercise answers and lesson prose is registry-verified**
   and enforced by `npm run validate:course`
-- ⚠️ **58 of 79 vocabulary entries still lack sources.** They appear in lesson
-  vocab decks, so a learner sees them. The validator reports this every run and
-  will keep reporting it until they are checked — that is the next content job.
-- ⚠️ 2 registry forms (`nabad`, `subax`) rest on a single source.
+- ⚠️ 5 of 117 vocabulary entries still lack two sources (validator `S3`
+  prints the live list). They appear in lesson vocab decks, so a learner sees
+  them — closing them is a standing content job.
+- ⚠️ 29 registry forms rest on a single source (`S4` prints the live list);
+  the 20 added by Unit 3 are recognition-only by design (see §13).
+- ✅ Unit 3 (describing, number, relation words) sourced and shipped — §13.
 
 
 ## 12. Drive workbook cross-check for the fusion practice expansion

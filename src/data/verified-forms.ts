@@ -20,9 +20,17 @@
  *   O       Orwin, Colloquial Somali, Routledge. Cite as `O p.NN` using the
  *           book's printed page number. The PDF is scanned: verify on the page
  *           itself, never from the pdftotext dump, which drops table columns.
+ *   SG      Saeed, Somali (London Oriental and African Language Library 10),
+ *           John Benjamins, 1999. The reference grammar; cite as `SG §n.n.n`.
  *   W-alpha Wikipedia, Somali Latin alphabet
  *   W-gram  Wikipedia, Somali grammar
  *   Wikt    Wiktionary, Somali entries
+ *   SA      Suleiman Mohamoud Adam, New Student Dictionary, HAAN, 1999.
+ *           A dictionary, NOT Saeed: cite as `SA p.NN`. `SA` and `SG` are
+ *           different authors and works; never collapse them.
+ *   AW      Awde et al., Somali-English / English-Somali Dictionary &
+ *           Phrasebook, Hippocrene, 1999. Orwin is a co-author, so under the
+ *           independence rule AW counts as O, not as a second source.
  */
 
 export type Gender = 'm' | 'f' | null;
@@ -315,6 +323,121 @@ export const VERIFIED_FORMS: Record<string, VerifiedForm> = {
   // ("wasákh –da dirt, filth") — one author; Wiktionary's Somali adjective
   // entry ("wasakh — dirty") is the second, independent source.
   wasakh: { gloss: 'dirty', sources: ['N p.125', 'Wikt'] },
+// ── UNIT 3 (Sept 2026): describing words, number words, relation words ──
+  // ORTHOGRAPHY: the sources print tone marks (á é í ó ú); the course ships
+  // plain orthography, so every Unit 3 form below is the tone-stripped
+  // spelling (dheér → dheer, ków → kow, ú → u). This normalization is
+  // explicit, recorded here and in docs/SOMALI_SOURCES.md — never copy a
+  // tone-marked form into learner content silently.
+  //
+  // Lesson 9 — describing words (adjectives). Position and definiteness:
+  // Orwin printed p.63, verified on the PDF page ("the adjective follows the
+  // noun"; the definite article attaches only to the noun: guri cusub →
+  // guriga cusub). Nilsson printed pp.75–76: same order, and "gender and
+  // definiteness of a noun has no effect on an accompanying adjective"
+  // (gabar yar / wiil yar). Doer-marking on the final describing word: Orwin
+  // pp.63–64, verified (Ninka dheeri waa tagay; Gabadha yari waa toostay),
+  // agreeing with Saeed §4.4.4 (dheer → dheeri, yár → yari, wanaagsán →
+  // wanaagsani). Reduplicated describing words (yaryar, waaweyn) are
+  // deliberately NOT registered or taught: both sources show them and both
+  // say they are optional, and they disagree about the plural nuance — so
+  // Unit 3 keeps them out of production entirely.
+  cusub: { gloss: 'new', sources: ['O p.63', 'SG §4.4.1'] },
+  yar: { gloss: 'small', sources: ['N p.76', 'O p.63', 'SG §4.4.1'] },
+  yari: { gloss: 'small (doer-marked)', sources: ['O p.64', 'SG §4.4.4'] },
+  weyn: { gloss: 'big', sources: ['N p.75', 'O p.64', 'SG §4.4.1'] },
+  dheer: { gloss: 'tall, long', sources: ['O p.64', 'SG §4.4.1'] },
+  dheeri: { gloss: 'tall (doer-marked)', sources: ['O p.63', 'SG §4.4.4'] },
+  // toostay / tagtay: the feminine past forms in Orwin's two verified
+  // examples (pp.63–64). Orwin only, so they stay recognition-only.
+  toostay: { gloss: 'she/it (f) got up', sources: ['O p.64'], confidence: 'single' },
+  tagtay: { gloss: 'went (she/it f)', sources: ['O p.64'], confidence: 'single' },
+  // tagay: Orwin p.63 (Ninku waa tagay, verified) and Nilsson's §13.1.5j
+  // time-adverbial example ("Toddobáadkii hore aábbe wuxuu tagay magaaló
+  // kale"). Two independent authors — producible.
+  tagay: { gloss: 'went (he/it m)', sources: ['O p.63', 'N §13.1.5j'] },
+  // shimbir: Orwin p.63 (shimbir yar, verified); Saeed §4.1.1.4 attests the
+  // stem (áf shimbiréed 'the mouth of a bird', case chapter). Two authors.
+  shimbir: { gloss: 'bird', gender: 'f', sources: ['O p.63', 'SG §4.1.1.4'] },
+
+  // Lesson 10 — number words. The 1–10 table agrees across three authors:
+  // Nilsson printed p.56, Saeed §4.1.4 (printed pp.69–71), Orwin printed
+  // p.67 (verified on the PDF page). Spellings are normalized (toddobá →
+  // toddobaar, siddéed → sideed). Counted-noun forms: Nilsson p.45 (hal
+  // buug, laba baabuur, dhowr maalmood, immisa bilood), Saeed §4.1.4
+  // (sàddex wíil, toddobà maalmóod), Orwin p.68, verified (áfar dál, labá
+  // kabóod, sáddex buúg, toddobá nín, sagáal riyaád, labá naagóod).
+  // Definite on the number: Orwin p.68 (sáddexda buúg, toddobáda nín),
+  // Nilsson p.56 (labáda wiil), Saeed §4.1.4 (labádíi waraabé). hal vs kow:
+  // Nilsson pp.45/57, Saeed §4.1.4 ("replaced by hál"), Orwin p.68 (hál
+  // buúg; ków for counting; míd standing alone).
+  kow: { gloss: 'one (counting off)', sources: ['N p.57', 'SG §4.1.4', 'O p.67'] },
+  hal: { gloss: 'one (before a noun)', sources: ['N p.45', 'SG §4.1.4', 'O p.68'] },
+  laba: { gloss: 'two', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  saddex: { gloss: 'three', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  afar: { gloss: 'four', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  shan: { gloss: 'five', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  lix: { gloss: 'six', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  toddobaar: { gloss: 'seven', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  sideed: { gloss: 'eight', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  sagaal: { gloss: 'nine', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  toban: { gloss: 'ten', sources: ['N p.56', 'SG §4.1.4', 'O p.67'] },
+  mid: { gloss: 'one (standing alone)', sources: ['O p.68', 'SG §4.1.4'] },
+  dhowr: { gloss: 'a few, several', sources: ['N p.45', 'SG §4.1.4'] },
+  immisa: { gloss: 'how many', sources: ['N p.45', 'SG §4.1.4'] },
+  baabuur: { gloss: 'car, truck', gender: 'm', sources: ['N p.45', 'SG §4.1.4'] },
+  maalmood: { gloss: 'days (counted form)', sources: ['N p.45', 'SG §4.1.4'] },
+  bilood: { gloss: 'months (counted form)', sources: ['N p.56', 'SG §4.6.4'] },
+  naagood: { gloss: 'women (counted form)', sources: ['O p.68', 'SG §4.1.1.4'] },
+  hooyo: { gloss: 'mother', gender: 'f', sources: ['N p.45', 'SG §4.1.1.3'] },
+  maalin: { gloss: 'day', gender: 'f', sources: ['SG §4.1.1', 'N §13.1.5j'] },
+  labada: { gloss: 'the two', sources: ['N p.56', 'SG §4.1.4'] },
+  // Orwin-only counted and definite forms: recognition only.
+  kabood: { gloss: 'shoes (counted form)', sources: ['O p.68'], confidence: 'single' },
+  riyaad: { gloss: 'goats (counted form)', sources: ['O p.68'], confidence: 'single' },
+  saddexda: { gloss: 'the three', sources: ['O p.68'], confidence: 'single' },
+  toddobada: { gloss: 'the seven', sources: ['O p.68'], confidence: 'single' },
+
+  // Lesson 11 — relation words (preverbal prepositions). The four-member set
+  // and core glosses agree across three authors: Saeed §4.5 (ú 'to, for';
+  // kú 'in, into, on, at, with (by means of)'; ká 'from, away from, out of';
+  // lá 'with (in company with)'), Orwin printed p.80, verified (ú to/for,
+  // kú at/in/by means of, ká from/about, lá with), Nilsson §5.2 and his
+  // prepositions chapter (printed p.153: "only four genuine prepositions",
+  // placed in the predicate before the verb). Position: Orwin p.79,
+  // verified ("always immediately before the verb and never before the noun
+  // they refer to"). NOTE: Nilsson p.167 lists "ká shaqeeyaa — works in a
+  // place" while Saeed's §4.5 example (102) is "ku shaqeeyaa warshadda" —
+  // the course teaches the Saeed frame and flags the collocation variance in
+  // SOMALI_SOURCES.md rather than resolving it.
+  u: { gloss: 'to, for (goal)', sources: ['SG §4.5', 'O p.80', 'N §5.2'] },
+  ku: { gloss: 'in, on, at, with (means)', sources: ['SG §4.5', 'O p.80', 'N §5.2'] },
+  ka: { gloss: 'from, about (source)', sources: ['SG §4.5', 'O p.80', 'N §5.2'] },
+  la: { gloss: 'with (company)', sources: ['SG §4.5', 'O p.80', 'N §5.2'] },
+  // shaqeeyaa: Saeed §4.5 example (102) "Wuxuu ku shaqeeyaa warshadda";
+  // Nilsson p.167 collocation list. Two authors — producible.
+  shaqeeyaa: { gloss: 'works', sources: ['SG §4.5', 'N p.167'] },
+  // qortaa: Nilsson p.75 wordlist (qoraa, qortaa writes); Orwin p.79
+  // verified (Gabadhu laybreeriga way ku qortaa). Two authors.
+  qortaa: { gloss: 'writes (she/you)', sources: ['N p.75', 'O p.79'] },
+  // Single-source sentence material below: it may be read (passages,
+  // examples, options), never produced as an answer (gate S6).
+  warshadda: { gloss: 'the factory', sources: ['SG §4.5'], confidence: 'single' },
+  laybreeriga: { gloss: 'the library', sources: ['O p.79'], confidence: 'single' },
+  geedka: { gloss: 'the tree', sources: ['O p.80'], confidence: 'single' },
+  shimbirtu: { gloss: 'the bird (doer form)', sources: ['O p.80'], confidence: 'single' },
+  duushay: { gloss: 'flew', sources: ['O p.80'], confidence: 'single' },
+  koobka: { gloss: 'the cup', sources: ['O p.80'], confidence: 'single' },
+  shub: { gloss: 'pour! (command)', sources: ['O p.80'], confidence: 'single' },
+  sheegayaa: { gloss: 'will tell', sources: ['O p.80'], confidence: 'single' },
+  joogaa: { gloss: 'is (staying), is present', sources: ['N p.127'], confidence: 'single' },
+  joogay: { gloss: 'was (with)', sources: ['O p.80'], confidence: 'single' },
+  ari: { gloss: 'goats and sheep', sources: ['N p.127'], confidence: 'single' },
+  maanta: { gloss: 'today', sources: ['O p.80'], confidence: 'single' },
+  // Saeed §4.5 example (104) "Ninkan baa Cadan ka yimi" — the unit-3 unseen
+  // reading item. Single-source forms: recognition only.
+  ninkan: { gloss: 'this man', sources: ['SG §4.5'], confidence: 'single' },
+  yimi: { gloss: 'came', sources: ['SG §4.5'], confidence: 'single' },
 };
 
 /** Proper nouns that appear in sourced example sentences. */
@@ -333,6 +456,13 @@ export const VERIFIED_PROPER_NOUNS = new Set([
   // good teacher") and a named speaker in Orwin's dialogues.
   'aamina',
   'maryan',
+  // Unit 3 (Sept 2026): Maxamed in Orwin's verified p.80 example ("Maanta
+  // Maxamed waan la joogay") and his dialogues; Maxmuud in the same page's
+  // example ("Maxmuud waan u sheegayaa"); Cadan (Aden) in Saeed's §4.5
+  // example (104, "Ninkan baa Cadan ka yimi").
+  'maxamed',
+  'maxmuud',
+  'cadan',
 ]);
 
 /** Is this form cleared to show a learner? Case-insensitive. */
