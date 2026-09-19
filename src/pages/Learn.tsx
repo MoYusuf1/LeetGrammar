@@ -27,7 +27,7 @@
  */
 
 import { useMemo, useState } from 'react';
-import { UserRound } from 'lucide-react';
+import { BookOpen, UserRound } from 'lucide-react';
 import ProfileSheet from '@/components/ProfileSheet';
 import { useAuthSync } from '@/contexts/AuthSyncContext';
 import { useNavigate } from 'react-router';
@@ -64,7 +64,10 @@ export default function LearnPage() {
 
   return (
     <div className="learn-page min-h-[100dvh] bg-bg">
-      <button onClick={() => setProfileOpen(true)} aria-label="Open profile" className="profile-trigger fixed right-4 top-[calc(0.75rem+var(--safe-t))] z-20 grid h-10 w-10 place-items-center rounded-full bg-fill backdrop-blur active:opacity-60"><UserRound size={20}/></button>
+      <div className="learn-actions fixed right-4 top-[calc(0.75rem+var(--safe-t))] z-20 flex gap-2">
+        <button onClick={() => navigate('/syllabus')} aria-label="Open syllabus" className="grid h-10 w-10 place-items-center rounded-full bg-fill backdrop-blur active:opacity-60"><BookOpen size={20}/></button>
+        <button onClick={() => setProfileOpen(true)} aria-label="Open profile" className="grid h-10 w-10 place-items-center rounded-full bg-fill backdrop-blur active:opacity-60"><UserRound size={20}/></button>
+      </div>
       <ProfileSheet open={profileOpen} onClose={() => setProfileOpen(false)} />
       <div className="learn-shell mx-auto px-5 pt-safe-t">
         <div className="learn-content">
