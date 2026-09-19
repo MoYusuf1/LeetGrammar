@@ -31,9 +31,8 @@
  */
 
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router';
-import { motion } from 'framer-motion';
-import { X, RotateCcw } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router';
+import { RotateCcw } from 'lucide-react';
 import { getLessonContent } from '@/data/authored-lessons';
 import { composeHomework, carryBackCount, delayedTransferItems, isDelayedTransferSession } from '@/lib/homework';
 import { dueLessons } from '@/lib/review';
@@ -42,6 +41,13 @@ import { useProgressStore } from '@/stores/progress-store';
 import AnswerInput from '@/components/lesson/AnswerInput';
 import RichText from '@/components/RichText';
 import Somali from '@/components/Somali';
+import TaskShell from '@/components/shared/TaskShell';
+import CenteredNotice from '@/components/shared/CenteredNotice';
+import { FactList, FactRow } from '@/components/shared/FactList';
+import ExerciseQuestion from '@/components/shared/ExerciseQuestion';
+import PracticeFeedback from '@/components/shared/PracticeFeedback';
+import PracticeActionBar from '@/components/shared/PracticeActionBar';
+import { PrimaryButton, SecondaryButton } from '@/components/shared/buttons';
 
 type Phase = 'intro' | 'working' | 'done';
 
@@ -56,7 +62,7 @@ export default function HomeworkPage() {
   // Each scheduled return should be a different set, so the attempt starts at
   // however many times this lesson has already come back.
   const [attempt, setAttempt] = useState(
-    () => useProgressStore.getState().reviewSchedule?.[parseInt(id ?? '1', 10)]?.reviewCount ?? 0,
+    () => useProgressStore.getState().reviewSchedule?.[lessonId]?.reviewCount ?? 0,
   );
   const [phase, setPhase] = useState<Phase>('intro');
   const [index, setIndex] = useState(0);
@@ -99,7 +105,7 @@ export default function HomeworkPage() {
   const [missed, setMissed] = useState<string[]>([]);
 
   if (!lesson || items.length === 0) {
-    return <Centered>There is no homework for that lesson.</Centered>;
+    return <CenteredNotice withBackLink>There is no homework for that lesson.</CenteredNotice>;
   }
 
   const start = () => {
@@ -148,22 +154,22 @@ export default function HomeworkPage() {
 
   if (phase === 'intro') {
     return (
-      <Shell onClose={() => navigate('/learn')} title="Practice">
+      <TaskShell onClose={() => navigate('/learn')} title="Practice">
         <h1 className="text-title1 font-bold text-label">{lesson.title}</h1>
         <p className="mt-2 text-title3 text-label-2">
           A mixed set, most of it from this lesson, some from earlier ones so the older
           material does not go quiet.
         </p>
 
-        <dl className="mt-6 overflow-hidden rounded-xl bg-elevated">
-          <Row label="Questions" value={`${items.length}`} first />
-          <Row label="Due for review" value={`${carried}`} />
-          <Row label="Session" value={delayed ? 'Delayed transfer' : 'Practice'} />
-          {delayed && <Row label="Fresh transfer items" value={`${delayedEvidence}`} />}
-          {retried > 0 && <Row label="Back from your misses" value={`${retried}`} />}
-          <Row label="Hints" value="On, this is practice" />
-          <Row label="Scoring" value="Not marked" />
-        </dl>
+        <FactList className="mt-6">
+          <FactRow label="Questions" value={`${items.length}`} first />
+          <FactRow label="Due for review" value={`${carried}`} />
+          <FactRow label="Session" value={delayed ? 'Delayed transfer' : 'Practice'} />
+          {delayed && <FactRow label="Fresh transfer items" value={`${delayedEvidence}`} />}
+          {retried > 0 && <FactRow label="Back from your misses" value={`${retried}`} />}
+          <FactRow label="Hints" value="On, this is practice" />
+          <FactRow label="Scoring" value="Not marked" />
+        </FactList>
 
         <p className="mt-4 text-footnote text-label-3">
           {delayed
@@ -171,13 +177,10 @@ export default function HomeworkPage() {
             : 'Come back when this lesson is due rather than repeating it straight away. Only a scheduled return counts as delayed transfer.'}
         </p>
 
-        <button
-          onClick={start}
-          className="pressable mt-6 w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-        >
+        <PrimaryButton onClick={start} className="mt-6">
           Start
-        </button>
-      </Shell>
+        </PrimaryButton>
+      </TaskShell>
     );
   }
 
@@ -185,7 +188,7 @@ export default function HomeworkPage() {
 
   if (phase === 'done') {
     return (
-      <Shell onClose={() => navigate('/learn')} title="Practice">
+      <TaskShell onClose={() => navigate('/learn')} title="Practice">
         {/* No percentage, no badge, no ring. The learner wrote these questions;
             a score here would measure recall of their own authoring and would be
             read as a verdict on their Somali. What replaces it is the only part
@@ -215,42 +218,35 @@ export default function HomeworkPage() {
         )}
 
         <div className="mt-8 space-y-3">
-          <button
-            onClick={() => navigate('/learn')}
-            className="pressable w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-          >
-            Done
-          </button>
-          <button
+          <PrimaryButton onClick={() => navigate('/learn')}>Done</PrimaryButton>
+          <SecondaryButton
             onClick={() => {
               setAttempt((a) => a + 1);
               start();
             }}
-            className="pressable flex w-full items-center justify-center gap-2 rounded-xl py-4 text-body font-semibold text-label transition-colors hover:bg-fill"
+            className="flex items-center justify-center gap-2"
           >
             <RotateCcw className="h-4 w-4" />
             Again, fresh questions
-          </button>
+          </SecondaryButton>
         </div>
-      </Shell>
+      </TaskShell>
     );
   }
 
   /* ─── Working ──────────────────────────────────────────────────────────── */
 
-  if (!current) return <Centered>Something went wrong loading the homework.</Centered>;
+  if (!current) return <CenteredNotice withBackLink>Something went wrong loading the homework.</CenteredNotice>;
 
-  const isRight = isAnswerCorrect(current, answer);
+  const isLast = index === items.length - 1;
   const fromEarlier = !lesson.objectives.some((o) => current.objectiveIds.includes(o));
 
   return (
-    <Shell
+    <TaskShell
       onClose={() => setPhase('intro')}
       title="Practice"
       progress={`${index + 1}/${items.length}`}
     >
-      {/* Naming a carried-back item is deliberate: §1.5 wants the learner to
-          notice that practice is interleaved, not to be quietly surprised. */}
       {/* Naming a carried-back item stays, because §1.5 wants the learner to
           notice that practice is interleaved rather than be quietly surprised.
           It is a quiet line now rather than a small-caps eyebrow. */}
@@ -258,14 +254,7 @@ export default function HomeworkPage() {
         <p className="text-footnote text-label-2">From an earlier lesson</p>
       )}
 
-      <p className="mt-1.5 text-title3 font-medium text-label">
-        <RichText text={current.question} />
-      </p>
-      {current.somali && (
-        <div className="mt-3 rounded-xl bg-elevated px-4 py-4 text-center">
-          <Somali size="hero">{current.somali}</Somali>
-        </div>
-      )}
+      <ExerciseQuestion exercise={current} className="mt-1.5" />
 
       <div className="mt-5">
         {/* Keyed so an assembled word bank cannot leak into the next item. */}
@@ -284,121 +273,16 @@ export default function HomeworkPage() {
         </p>
       </div>
 
-      {checked && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-4 rounded-xl bg-elevated p-4"
-        >
-          <p className={`mb-1 text-footnote font-semibold ${isRight ? 'text-green' : 'text-red'}`}>
-            {isRight ? (
-              'Correct'
-            ) : (
-              <>
-                Not quite. The answer is{' '}
-                <Somali inherit>{displayAnswer(current)}</Somali>
-              </>
-            )}
-          </p>
-          <p className="text-footnote leading-relaxed text-label">
-            <RichText text={current.explanation} />
-          </p>
-        </motion.div>
-      )}
+      {checked && <PracticeFeedback exercise={current} answer={answer} />}
 
-      <div className="glass glass-bottom sticky bottom-0 -mx-4 mt-6 px-4 pt-3">
-        {checked ? (
-          <button
-            onClick={next}
-            className="pressable w-full rounded-xl bg-accent py-4 text-body font-semibold text-accent-ink transition-colors hover:opacity-90"
-          >
-            {index === items.length - 1 ? 'Finish' : 'Continue'}
-          </button>
-        ) : (
-          <button
-            onClick={check}
-            disabled={!answer}
-            className={`pressable w-full rounded-xl py-4 text-body font-semibold transition-colors ${
-              answer
-                ? 'bg-accent text-accent-ink hover:opacity-90'
-                : 'cursor-not-allowed bg-fill text-label-3'
-            }`}
-          >
-            Check answer
-          </button>
-        )}
-      </div>
-    </Shell>
-  );
-}
-
-/* ─── Shared bits ────────────────────────────────────────────────────────── */
-
-/**
- * A task view: full-screen over /learn, closed rather than navigated back from.
- * The X is the affordance because this is a thing you finish or abandon, not a
- * page in a hierarchy.
- */
-function Shell({
-  children,
-  onClose,
-  title,
-  progress,
-}: {
-  children: React.ReactNode;
-  onClose: () => void;
-  title: string;
-  progress?: string;
-}) {
-  return (
-    <div className="flex min-h-[100dvh] flex-col bg-bg">
-      <header className="glass glass-top sticky top-0 z-20 px-4 pt-safe-t">
-        <div className="mx-auto flex max-w-column items-center gap-3 py-2.5">
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="-ml-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-label-3 transition-colors hover:bg-fill hover:text-label"
-          >
-            <X className="h-[18px] w-[18px]" />
-          </button>
-          <span className="flex-1 text-footnote font-medium text-label">{title}</span>
-          {progress && (
-            <span className="text-caption2 tabular-nums text-label-3">{progress}</span>
-          )}
-        </div>
-      </header>
-
-      <main className="mx-auto w-full max-w-column flex-1 px-4 pb-[calc(1.5rem+var(--safe-b))] pt-5">
-        {children}
-      </main>
-    </div>
-  );
-}
-
-function Centered({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4">
-      <div className="max-w-sm text-center text-body text-label-2">
-        {children}
-        <div className="mt-4">
-          <Link to="/learn" className="text-body font-medium text-accent hover:underline">
-            Back to lessons
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Row({ label, value, first }: { label: string; value: string; first?: boolean }) {
-  return (
-    <div
-      className={`flex items-baseline justify-between gap-3 px-4 py-3 ${
-        first ? '' : 'border-t border-separator'
-      }`}
-    >
-      <dt className="text-footnote text-label-2">{label}</dt>
-      <dd className="text-right text-footnote font-medium text-label">{value}</dd>
-    </div>
+      <PracticeActionBar
+        checked={checked}
+        canCheck={Boolean(answer)}
+        onCheck={check}
+        onNext={next}
+        isLast={isLast}
+        lastLabel="Finish"
+      />
+    </TaskShell>
   );
 }
