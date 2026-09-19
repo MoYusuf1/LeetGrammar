@@ -24,7 +24,7 @@
  * BUMP CACHE_VERSION when changing anything in this file.
  */
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `leetgrammar-${CACHE_VERSION}`;
 
 self.addEventListener('install', (event) => {
