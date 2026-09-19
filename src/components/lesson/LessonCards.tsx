@@ -35,7 +35,7 @@ import { X, MoreHorizontal, Lightbulb } from 'lucide-react';
 import { useProgressStore } from '@/stores/progress-store';
 import { getLessonContent, slotsCompletedBefore } from '@/data/authored-lessons';
 import type { Card as TeachingCard, PracticeExercise, BlueprintSlot } from '@/data/types';
-import { isAnswerCorrect, displayAnswer } from '@/lib/grading';
+import { displayAnswer, isAnswerCorrect, isSelfGraded, verdictOf } from '@/lib/grading';
 import { getContextualVocabForLesson, type VocabWord } from '@/data/vocabulary';
 import AnswerInput from './AnswerInput';
 import Blueprint from './Blueprint';
@@ -406,16 +406,7 @@ export default function LessonCards({ lessonId }: LessonCardsProps) {
 
 /* ─── Feedback helpers ───────────────────────────────────────────────────── */
 
-function isSelfGraded(exercise: PracticeExercise): boolean {
-  return exercise.type === 'translate' || exercise.type === 'marker_identification';
-}
-
-function verdictOf(exercise: PracticeExercise, answer: string | null): boolean | null {
-  if (isSelfGraded(exercise)) return null;
-  return isAnswerCorrect(exercise, answer);
-}
-
-function FeedbackHeading({
+export function FeedbackHeading({
   exercise,
   answer,
 }: {
@@ -757,7 +748,7 @@ function CoachCard({ card }: { card: TeachingCard }) {
 
 /* ─── Practice Card ──────────────────────────────────────────────────────── */
 
-function PracticeCard({
+export function PracticeCard({
   exercise,
   answer,
   checked,
