@@ -9,12 +9,12 @@ const UNIT_GUIDE: Record<number, { title: string; objective: string; assessment:
   1: {
     title: 'People and things',
     objective: 'Read and build the people-and-things part of a short statement using nouns, definiteness, pronouns, and subject marking.',
-    assessment: 'Unit 1 Test · unseen reading, form recognition, and short production',
+    assessment: 'Unseen reading, form recognition, and short production',
   },
   2: {
     title: 'Signals and actions',
     objective: 'Use signals, fused subjects, verb endings, and word order to decode and build short present-tense statements.',
-    assessment: 'Unit 2 Test · cumulative reading, signal choice, ordering, and production',
+    assessment: 'Cumulative reading, signal choice, ordering, and production',
   },
 };
 
@@ -48,8 +48,7 @@ export default function SyllabusPage() {
 
       <main className="syllabus-article mx-auto max-w-[46rem] px-5 pb-[calc(5rem+var(--safe-b))] pt-10 sm:px-8 sm:pt-14">
         <section>
-          <p className="text-caption1 font-semibold uppercase tracking-[0.13em] text-label-3">Somali · current course</p>
-          <h2 className="mt-3 text-large font-bold tracking-tight">Learn to read the structure of a Somali statement.</h2>
+          <h2 className="text-large font-bold tracking-tight">Learn to read the structure of a Somali statement.</h2>
           <p className="mt-4 max-w-[42rem] text-body leading-relaxed text-label-2">This is a text-first foundation course. You learn to notice the parts of a written statement, use their clues, and build short statements of your own.</p>
         </section>
 
@@ -67,8 +66,6 @@ export default function SyllabusPage() {
 
         <section className="syllabus-section">
           <div className="flex items-baseline justify-between gap-4"><h2>Roadmap</h2><span className="text-footnote text-label-3">2 units · 8 lessons</span></div>
-          <p className="mt-3 text-body leading-relaxed text-label-2">Each lesson adds one dependency. Unit tests are milestones, not new lessons.</p>
-
           <div className="mt-8 space-y-14">
             {UNITS.map((unit) => {
               const guide = UNIT_GUIDE[unit.id];
@@ -78,8 +75,7 @@ export default function SyllabusPage() {
                   <div className="grid grid-cols-[2.5rem_1fr] gap-4">
                     <span className="text-title1 font-light tabular-nums text-label-3">{String(unit.id).padStart(2, '0')}</span>
                     <div>
-                      <p className="text-caption1 font-semibold uppercase tracking-[0.12em] text-label-3">Current unit</p>
-                      <h3 className="mt-1 text-title1 font-bold">{guide.title}</h3>
+                      <h3 className="text-title1 font-bold">{guide.title}</h3>
                       <p className="mt-3 text-body leading-relaxed text-label-2">{guide.objective}</p>
                     </div>
                   </div>
@@ -97,8 +93,8 @@ export default function SyllabusPage() {
                     ))}
                     <li className="relative">
                       <span className="absolute -left-[2.23rem] top-1 grid h-4 w-4 place-items-center rounded-full bg-label text-bg"><Check size={10} strokeWidth={3}/></span>
-                      <p className="text-caption1 font-semibold uppercase tracking-[0.1em] text-label-3">Milestone</p>
-                      <p className="mt-1 text-body font-semibold">{guide.assessment}</p>
+                      <p className="text-body font-semibold">Unit Test</p>
+                      <p className="mt-1 text-footnote leading-relaxed text-label-2">{guide.assessment}</p>
                     </li>
                   </ol>
                 </article>
@@ -108,7 +104,7 @@ export default function SyllabusPage() {
         </section>
 
         <section className="syllabus-section">
-          <div className="flex items-baseline justify-between gap-4"><h2>What comes next</h2><span className="text-footnote text-label-3">Planned · not available</span></div>
+          <h2>What comes next</h2>
           <p className="mt-3 text-body leading-relaxed text-label-2">These units show the direction of the course. Their lesson order and wording may change as the source review closes.</p>
           <div className="mt-8 divide-y divide-separator border-y border-separator">
             {PLANNED_UNITS.map((unit) => (
@@ -116,8 +112,7 @@ export default function SyllabusPage() {
                 <div className="grid grid-cols-[2.5rem_1fr] gap-4">
                   <span className="text-title1 font-light tabular-nums text-label-3">{String(unit.id).padStart(2, '0')}</span>
                   <div>
-                    <p className="flex items-center gap-1.5 text-caption1 font-semibold uppercase tracking-[0.11em] text-label-3"><LockKeyhole size={12}/> Planned unit</p>
-                    <h3 className="mt-1 text-title2 font-bold">{unit.title}</h3>
+                    <h3 className="flex items-center gap-2 text-title2 font-bold"><LockKeyhole size={15}/>{unit.title}</h3>
                     <p className="mt-3 text-body leading-relaxed text-label-2">{unit.objective}</p>
                     <ol className="mt-4 space-y-2 text-body">{unit.lessons.map((lesson, i) => <li key={lesson} className="flex gap-3"><span className="w-5 text-label-3">{9 + (unit.id === 4 ? 3 : 0) + i}</span><span>{lesson}</span></li>)}</ol>
                     <p className="mt-4 text-footnote leading-relaxed text-label-3">{unit.note}</p>
