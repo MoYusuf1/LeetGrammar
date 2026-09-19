@@ -1,9 +1,9 @@
 /**
  * Stripping the sentence-blueprint ASCII out of lesson prose.
  *
- * Lives apart from Blueprint.tsx so that file only exports a component —
- * mixing components and plain functions in one module breaks React Fast
- * Refresh, which silently degrades to a full reload during development.
+ * Lives apart from any component file: mixing components and plain functions
+ * in one module breaks React Fast Refresh, which silently degrades to a full
+ * reload during development.
  *
  * The lesson data prepends a box-drawing constant to blueprint card content:
  *
