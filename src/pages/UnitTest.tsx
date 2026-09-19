@@ -25,7 +25,7 @@
  * misreading mid-test and inflates the score the correctives router depends on.
  * Both come back in correctives, which is practice.
  *
- * Grading is `gradeUnitTest()` in lib/assessment.ts — this page decides nothing
+ * Grading is `gradeUnitTest()` in lib/assessment — this page decides nothing
  * about right and wrong itself.
  */
 
