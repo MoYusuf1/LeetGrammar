@@ -16,22 +16,20 @@ const UNIT_GUIDE: Record<number, { title: string; objective: string; assessment:
     objective: 'Use signals, fused subjects, verb endings, and word order to decode and build short present-tense statements.',
     assessment: 'Cumulative reading, signal choice, ordering, and production',
   },
+  3: {
+    title: 'Describe, count, and locate',
+    objective: 'Read and build short statements that say which person or thing, how many, and one basic place, source, goal, or companion relation.',
+    assessment: 'Unseen reading, counting forms, relation-word choice, and short production',
+  },
 };
 
 const PLANNED_UNITS = [
   {
-    id: 3,
+    id: 4,
     title: 'Bend the shape',
     objective: 'Change a statement through time, negation, and questions while tracking what changes in the DO and SIGNAL positions.',
     lessons: ['When it happens', 'Saying “not”', 'Asking questions'],
-    note: 'Sequence under review. Negation is planned before questions; lessons are not yet available.',
-  },
-  {
-    id: 4,
-    title: 'Decorate the boxes',
-    objective: 'Add descriptions, amounts, and place or instrument phrases to the statement shape.',
-    lessons: ['Describing words', 'Numbers and amounts', 'Where and with what'],
-    note: 'Planned outline. Source verification is still open, especially for numerals.',
+    note: 'Renumbered in September 2026: this was the old planned Unit 3. Negation is planned before questions; lessons are not yet available.',
   },
 ];
 
@@ -65,7 +63,7 @@ export default function SyllabusPage() {
         </section>
 
         <section className="syllabus-section">
-          <div className="flex items-baseline justify-between gap-4"><h2>Roadmap</h2><span className="text-footnote text-label-3">2 units · 8 lessons</span></div>
+          <div className="flex items-baseline justify-between gap-4"><h2>Roadmap</h2><span className="text-footnote text-label-3">3 units · 11 lessons</span></div>
           <div className="mt-8 space-y-14">
             {UNITS.map((unit) => {
               const guide = UNIT_GUIDE[unit.id];
@@ -114,7 +112,7 @@ export default function SyllabusPage() {
                   <div>
                     <h3 className="flex items-center gap-2 text-title2 font-bold"><LockKeyhole size={15}/>{unit.title}</h3>
                     <p className="mt-3 text-body leading-relaxed text-label-2">{unit.objective}</p>
-                    <ol className="mt-4 space-y-2 text-body">{unit.lessons.map((lesson, i) => <li key={lesson} className="flex gap-3"><span className="w-5 text-label-3">{9 + (unit.id === 4 ? 3 : 0) + i}</span><span>{lesson}</span></li>)}</ol>
+                    <ol className="mt-4 space-y-2 text-body">{unit.lessons.map((lesson, i) => <li key={lesson} className="flex gap-3"><span className="w-5 text-label-3">{12 + i}</span><span>{lesson}</span></li>)}</ol>
                     <p className="mt-4 text-footnote leading-relaxed text-label-3">{unit.note}</p>
                   </div>
                 </div>
