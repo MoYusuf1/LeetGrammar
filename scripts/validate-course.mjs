@@ -34,7 +34,7 @@ import { fileURLToPath } from 'node:url';
 
 /** Repo root, for reading docs that make numeric claims (check D1). */
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-import { composeHomework, carryBackCount } from '../src/lib/homework.ts';
+import { composeHomework, carryBackCount } from '../src/lib/homework/index.ts';
 
 const errors = [];
 const warnings = [];
