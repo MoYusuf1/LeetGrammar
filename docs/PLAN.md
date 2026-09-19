@@ -239,7 +239,7 @@ Previously the one planned piece of work not yet done; now built and routed:
    (`src/data/unit-tests.ts`, 32 items).
 2. ✅ Covers every objective declared across the four lessons — enforced by
    validator check U3.
-3. ✅ [`assessment.ts`](../src/lib/assessment.ts) wired to it: scoring, the 85%
+3. ✅ [`assessment`](../src/lib/assessment/index.ts) wired to it: scoring, the 85%
    mastery gate, correctives routing for failed objectives. No longer a
    caller-less module.
 4. ✅ Surfaced in the UI: a gated row on `/learn` after Lesson 4, route
