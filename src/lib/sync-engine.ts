@@ -24,7 +24,7 @@
  */
 
 import { mergeProgress, snapshotProgress } from '@/lib/progress-sync';
-import type { UserProgress } from '@/stores/progress-store';
+import type { UserProgress } from '@/domain/progress/types';
 
 export type SyncState = 'local' | 'syncing' | 'synced' | 'offline' | 'error';
 
