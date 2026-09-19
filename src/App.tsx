@@ -4,9 +4,7 @@
  * SHAPE: /learn is the app. Everything else is a task the learner enters and
  * leaves — a lesson, its homework, a unit test — rendered full-screen over the
  * top with a close affordance, not a nav destination. There is no landing
- * page, no tab bar (a tab bar with one tab is just a bar), and no account
- * surface: progress has always been local-only in localStorage, so there was
- * never an account to hide.
+ * page, no tab bar (a tab bar with one tab is just a bar), while profile and sync live in a sheet rather than as a route.
  *
  * RETIRED: Landing, Profile and Glossary as routes. Their function is folded
  * in — progress into the /learn header, the glossary into a drawer opened from
