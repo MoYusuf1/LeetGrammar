@@ -14,7 +14,7 @@ import {
   mergeUnitTestResults,
   snapshotProgress,
 } from '@/lib/progress-sync';
-import type { ExerciseProgress, UnitTestRecord, UserProgress } from '@/stores/progress-store';
+import type { ExerciseProgress, UnitTestRecord, UserProgress } from '@/domain/progress/types';
 
 const base = (over: Partial<UserProgress> = {}): UserProgress => ({ completedLessons: [], streak: 0, lastStudyDate: '', practiceScores: {}, activityLog: [], lessonCardPositions: {}, unitTestResults: {}, reviewSchedule: {}, exerciseProgress: {}, ...over });
 
