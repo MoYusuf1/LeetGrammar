@@ -20,6 +20,7 @@ export type CardType =
   | 'promise'     // tell the learner what they'll be able to do by lesson end
   | 'predict'     // guess before a rule is revealed (retrieval event)
   | 'teach'       // explain the rule plainly
+  | 'coach'       // teach a reusable thinking move, not a new Somali rule
   | 'example'     // worked example, fully annotated
   | 'notice'      // structured input: comprehend only, hinges on target form
   | 'complete'    // partially-scaffolded production
