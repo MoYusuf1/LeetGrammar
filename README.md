@@ -4,7 +4,7 @@ A Somali grammar course for one adult learning alone, built so that every
 instructional choice traces to published evidence and every Somali form traces
 to two published sources.
 
-Text-only. Local-only — no accounts, no backend, progress in `localStorage`.
+Text-first and local-first. Progress persists in `localStorage`; optional Google sign-in syncs the same private progress document through Firebase.
 **8 lessons in 2 units**, 138 cards, 61 exercises, 58 unit-test items,
 109 source-verified forms.
 
