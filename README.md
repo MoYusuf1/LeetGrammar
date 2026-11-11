@@ -1,12 +1,10 @@
 # LeetGrammar
 
-A Somali grammar course for one adult learning alone, built so that every
-instructional choice traces to published evidence and every Somali form traces
-to two published sources.
+A Somali grammar course for one adult who learns alone.
 
-Text-first and local-first. Progress persists in `localStorage`; optional Google sign-in syncs the same private progress document through Firebase.
-**11 lessons in 3 units**, 218 cards, 218 exercises, 84 unit-test items,
-170 source-verified forms.
+Every Somali form in the course traces to two published sources. Every teaching choice traces to published research. The course is text-first and local-first: progress is saved in `localStorage` on the device, and optional Google sign-in syncs the same private progress through Firebase.
+
+**11 lessons in 3 units.** 218 cards, 218 exercises, 84 unit-test items, 170 source-verified forms.
 
 ---
 
@@ -45,7 +43,7 @@ Solving it is a large, cheap win toward listening that happens off the app.
 
 For scale: FSI puts Somali at roughly
 [1,100 class hours](https://www.fsi-language-courses.org/blog/fsi-language-difficulty/)
-to professional working proficiency. A 14-lesson app is not that, and says so.
+to professional working proficiency. An 11-lesson app is not that, and says so.
 
 ## The learner, and the constraint that shapes everything
 
@@ -83,7 +81,7 @@ of it, and where the evidence changed, the course changed.
 | Finding | Evidence | What it decided |
 |---|---|---|
 | **Explicit beats implicit, strongly** | [Norris & Ortega (2000)](https://onlinelibrary.wiley.com/doi/abs/10.1111/0023-8333.00136); [Goo et al.](https://benjamins.com/catalog/sibil.48.18goo), 34 studies | State the rule plainly. Never make the learner infer and hope. |
-| **Depth beats breadth** | [Schwartz et al. (2009)](https://onlinelibrary.wiley.com/doi/10.1002/sce.20328) — depth-present students held an edge equal to two-thirds of a year of instruction; breadth alone showed *no* advantage | Narrow permanently to ~14 lessons taught properly. Advanced topics are out of scope, not deferred. |
+| **Depth beats breadth** | [Schwartz et al. (2009)](https://onlinelibrary.wiley.com/doi/10.1002/sce.20328) — depth-present students held an edge equal to two-thirds of a year of instruction; breadth alone showed *no* advantage | Narrow permanently to 11 lessons taught properly. Advanced topics are out of scope, not deferred. |
 | **Working memory holds ~4 items** | Cowan; Mayer's segmenting principle | Hard cap: one grammar point and ≤4 new items per lesson. |
 | **Mobile learning works, with a floor** | MALL meta-analyses, e.g. [g = 0.792 for listening](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9479751/) | Design the *session*, not just the lesson: 5–10 focused minutes, always cleanly resumable. |
 
@@ -336,7 +334,7 @@ npm install
 npm run dev
 ```
 
-The app uses `HashRouter`: lessons are at `/#/lesson/1` through `/#/lesson/8`.
+The app uses `HashRouter`: lessons are at `/#/lesson/1` through `/#/lesson/11`.
 
 ## The documentation
 
